@@ -1,0 +1,38 @@
+Save file MUST have the extension .sav.
+
+Format:
+[Name]
+[Floor #]
+[Level]
+[Gold]
+[Stats point left]
+[Current exp]/[Level up exp]
+[Inventory Slots #]
+[Current HP]/[HP]
+[Current MP]/[MP]
+[PL STR]
+[PL MGK]
+[PL DEF]
+[PL RES]
+-1
+[Inventory Items by ID]
+-1
+[Weapon Slot#]
+[Armor Slot#]
+-1
+[Spells by ID]
+-1
+R,[x],[y],[sizex],[sizey]
+D,[x],[y],[sizex],[sizey],[rotation],[Door slot #0],[],[],[]
+R,[x],[y],[sizex],[sizey]
+-1
+[Stair's x],[Stair's y]
+-1
+[1/0: Shop exist or not.]
+[Shop's x],[Shop's y]
+-1
+[Enemy ID],[Health],[x],[y]
+-1
+[Item ID],[x],[y]
+-1
+[Amount of gold],[x],[y]
