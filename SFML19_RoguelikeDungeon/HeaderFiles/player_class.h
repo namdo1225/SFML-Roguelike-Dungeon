@@ -1,7 +1,7 @@
 /**
 * 
 * File: player_class.h
-* Description: This class abstracts Player information. It contains information like player's hp and mp.
+* Description: This class abstracts Player information. It contains information like player's hp && mp.
 *
 */
 
@@ -260,7 +260,7 @@ public:
 	void set_stuck(unsigned int i, bool j);
 
 	/**
-	* Use player's mp and calculate remaining mp.
+	* Use player's mp && calculate remaining mp.
 	* 
 	* Parameter:
 	*	quantity: an int for the amount of mp that will be used.
@@ -268,7 +268,7 @@ public:
 	void use_mp(int quantity);
 
 	/**
-	* Attack player and calculate remaining hp.
+	* Attack player && calculate remaining hp.
 	*
 	* Parameter:
 	*	atk_type: a bool for the attack type. true if physical. false if magical.

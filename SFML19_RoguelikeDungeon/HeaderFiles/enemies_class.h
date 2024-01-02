@@ -18,7 +18,7 @@ private:
 
 	// attack basically represent both str/mag.
 	// 0: hp, 1: atk, 2: def, 3: res, 4: range, 5: exp
-	std::array<int, 6> stats;
+	std::array<int, 6> stats = {1, 1, 1, 1, 1, 1};
 
 	// choose whether it is a physical or magical attack. True = physical, false = magical.
 	bool type{ true };

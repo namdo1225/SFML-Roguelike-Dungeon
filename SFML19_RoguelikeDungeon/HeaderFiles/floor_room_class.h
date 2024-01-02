@@ -233,7 +233,7 @@ public:
 	Room();
 
 	/**
-	* Setter for room's position and size.
+	* Setter for room's position && size.
 	*
 	* Parameter:
 	*	x: an int for the room's new x position.
@@ -244,7 +244,7 @@ public:
 	void set_pos_and_size(int x, int y, int sx, int sy);
 
 	/**
-	* Setter for door's position, size, and rotation.
+	* Setter for door's position, size, && rotation.
 	*
 	* Parameter:
 	*	x: an int for the door's new x position or width.
@@ -372,7 +372,7 @@ public:
 	Floor();
 
 	/**
-	* Helper method to set a room's position and size.
+	* Helper method to set a room's position && size.
 	*
 	* Parameter:
 	*	rand_door: an int for the rotation of the door.
@@ -391,7 +391,7 @@ public:
 		int rand_room_size, int rand_room_coord_2, int rand_room_size_2, bool& conflict_room, int& k);
 
 	/**
-	* Helper method to set door's position (can be either x or y).
+	* Helper method to set door's position (can be either x || y).
 	* 
 	* Parameter:
 	*	rand_door_coord: an int& for the coordinate that will be set as the door's coordinate (can be either x or y).
@@ -401,7 +401,7 @@ public:
 	void set_door_pos_1(int& rand_door_coord, int rand_coord, int rand_size);
 
 	/**
-	* Helper method to set door's position (can be either x or y).
+	* Helper method to set door's position (can be either x || y).
 	* 
 	* Parameter:
 	*	rand_door_coord: an int& for the coordinate that will be set as the door's coordinate (can be either x or y).
@@ -455,7 +455,7 @@ public:
 	*	z: a char. 'x' for the shop's x position. 'y' for the shop's y position.
 	*
 	* Return:
-	*	an int for the shop's x or y position.
+	*	an int for the shop's x || y position.
 	*/
 	int get_shop_pos(char z);
 
@@ -466,12 +466,12 @@ public:
 	*	z: a char. 'x' for the stair's x position. 'y' for the stair's y position.
 	*
 	* Return:
-	*	an int for the stair's x or y position.
+	*	an int for the stair's x || y position.
 	*/
 	int get_stair_pos(char z);
 
 	/**
-	* Draw the golds, collectibles, rooms, and doors on the game's window.
+	* Draw the golds, collectibles, rooms, && doors on the game's window.
 	*
 	* Parameter:
 	*	window: a sf::RenderWindow object where the map will be drawn on.

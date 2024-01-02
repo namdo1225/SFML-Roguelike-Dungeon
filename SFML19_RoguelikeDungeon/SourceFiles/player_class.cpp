@@ -117,7 +117,5 @@ void Player::draw(sf::RenderWindow& window, char draw) { (draw == 's') ? window.
 void Player::copy_stat(std::array<unsigned int, 6>& stats) { stats = stat; }
 
 bool Player::load_texture() {
-	if (!pl_tex.loadFromFile("Texture\\GG_02_Player.png"))
-		return false;
-	return true;
+	return pl_tex.loadFromFile("Texture\\GG_02_Player.png");
 }

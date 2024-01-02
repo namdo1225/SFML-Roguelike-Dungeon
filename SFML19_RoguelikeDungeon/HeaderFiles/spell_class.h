@@ -77,7 +77,7 @@ public:
 
 	/**
 	* A virtual method to be implemented by child class. This method returns
-	* information on the attack value, range, physical/magic type, and cost of spell.
+	* information on the attack value, range, physical/magic type, && cost of spell.
 	*
 	* Parameter:
 	*	player: A Player object that will be affected by the spell.
@@ -123,7 +123,7 @@ public:
 	* Static method to create a spell for game usage.
 	*
 	* Parameter:
-	*	id: An unsigned int for id of spell to search for and create
+	*	id: An unsigned int for id of spell to search for && create
 	*	font: An sf::Font for font type to pass in when creating spell.
 	* 
 	* Return:

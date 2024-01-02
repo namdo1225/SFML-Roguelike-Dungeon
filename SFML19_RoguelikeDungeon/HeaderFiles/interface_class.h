@@ -111,7 +111,7 @@ private:
 	Item* inv_select{ new Place_Holder() };
 	sf::RectangleShape inv_select_rect;
 
-	// spell_menu_ui (it uses the description box created in inventory ui and exit button in level up ui)
+	// spell_menu_ui (it uses the description box created in inventory ui && exit button in level up ui)
 	sf::Text spell_title;
 	std::vector<sf::RectangleShape> spell_slot_rect;
 	std::vector<Spell*> spells;
@@ -248,7 +248,7 @@ public:
 	void pl_sp_atk(Spell* spell);
 
 	/**
-	* Handles player dying and resetting the game. The title screen is loaded again.
+	* Handles player dying && resetting the game. The title screen is loaded again.
 	*/
 	void pl_game_over();
 
@@ -298,7 +298,7 @@ public:
 	void ene_overall();
 
 	/**
-	* Checks and handles enemy dying.
+	* Checks && handles enemy dying.
 	*/
 	void ene_dead();
 
@@ -344,7 +344,7 @@ public:
 	* Picks an item to be on the quick item slot/shortcut.
 	* 
 	* Parameter:
-	*	place: a char for how the next item will be picked. 's' to select and use item.
+	*	place: a char for how the next item will be picked. 's' to select && use item.
 	*		'r' or 'l' to select the left/right item of the currently selected item in 
 	*		inventory.
 	*/
@@ -368,7 +368,7 @@ public:
 	* Picks a spell to be on the quick spell slot/shortcut.
 	*
 	* Parameter:
-	*	place: a char for how the next spell will be picked. 's' to select and use spell.
+	*	place: a char for how the next spell will be picked. 's' to select && use spell.
 	*		'r' or 'l' to select the left/right spell of the currently selected spell in
 	*		inventory.
 	*/
@@ -591,7 +591,7 @@ public:
 	* Handles player moving or attacking.
 	*
 	* Parameter:
-	*	input: char. 'u', 'l', 'r', and 'd' for up, left, right, and down.
+	*	input: char. 'u', 'l', 'r', && 'd' for up, left, right, && down.
 	*	mode: an unsigned int for the mode. 0 = move. 1 = attack.
 	*/
 	void handle_player_action(char input, unsigned int mode);

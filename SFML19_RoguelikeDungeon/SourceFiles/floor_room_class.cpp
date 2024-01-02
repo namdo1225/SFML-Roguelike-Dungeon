@@ -34,9 +34,7 @@ void Collectible::set_pos(int x, int y) { rect.setPosition(x, y); }
 void Collectible::draw(sf::RenderWindow& window) { window.draw(rect); }
 
 bool Collectible::load_texture() {
-	if (!col_tex.loadFromFile("Texture\\GG_04_Items.png"))
-		return false;
-	return true;
+	return col_tex.loadFromFile("Texture\\GG_04_Items.png");
 }
 
 Gold_Collectible::Gold_Collectible() {
@@ -60,9 +58,7 @@ int Gold_Collectible::get_pos(char z) { return (z == 'x') ? rect.getPosition().x
 void Gold_Collectible::draw(sf::RenderWindow& window) { window.draw(rect); }
 
 bool Gold_Collectible::load_texture() {
-	if (!gold_tex.loadFromFile("Texture\\GG_01_Gold.png"))
-		return false;
-	return true;
+	return gold_tex.loadFromFile("Texture\\GG_01_Gold.png");
 }
 
 Stair::Stair() {
@@ -77,9 +73,7 @@ Stair::Stair(int x, int y) : Stair() {
 }
 
 bool Stair::load_texture() {
-	if (!stair_tex.loadFromFile("Texture\\GG_05_Stair.png"))
-		return false;
-	return true;
+	return stair_tex.loadFromFile("Texture\\GG_05_Stair.png");
 }
 
 Shop::Shop() {
@@ -94,9 +88,7 @@ Shop::Shop(int x, int y) : Shop() {
 }
 
 bool Shop::load_texture() {
-	if (!shop_tex.loadFromFile("Texture\\GG_06_Shop.jpg"))
-		return false;
-	return true;
+	return shop_tex.loadFromFile("Texture\\GG_06_Shop.jpg");
 }
 
 Room::Room() {
@@ -110,7 +102,7 @@ Room::Room() {
 }
 
 void Room::set_pos_and_size(int x, int y, int sx, int sy) {
-	if (sx != -1 and sy != -1) {
+	if (sx != -1 && sy != -1) {
 		rm_draw.setSize(sf::Vector2f(sx, sy));
 		rm_draw.setTextureRect(sf::IntRect(0, 0, rm_draw.getSize().x, rm_draw.getSize().y));
 	}
@@ -134,48 +126,50 @@ void Room::set_door(int x, int y, int purpose) {
 }
 
 int Room::get_rm(char z) {
-	if (z == 'x')
+	switch (z) {
+	case 'x':
 		return rm_draw.getPosition().x;
-	else if (z == 'y')
+	case 'y':
 		return rm_draw.getPosition().y;
-	else if (z == 'w')
+	case 'w':
 		return rm_draw.getSize().x;
-	else if (z == 'h')
+	case 'h':
 		return rm_draw.getSize().y;
-	else if (z == '1')
+	case '1':
 		return rm_draw.getPosition().x + rm_draw.getSize().x;
-	else if (z == '2')
+	case '2':
 		return rm_draw.getPosition().y + rm_draw.getSize().y;
-	else if (z == '3')
+	case '3':
 		return rm_draw.getPosition().y + rm_draw.getSize().x + rm_draw.getSize().y;
+	}
 }
 
 int Room::get_door(char z) {
-	if (z == 'x')
+	switch (z) {
+	case 'x':
 		return dr_draw.getPosition().x;
-	else if (z == 'y')
+	case 'y':
 		return dr_draw.getPosition().y;
-	else if (z == 'w')
+	case 'w':
 		return dr_draw.getSize().x;
-	else if (z == 'h')
+	case 'h':
 		return dr_draw.getSize().y;
-	else if (z == 'r')
+	case 'r':
 		return door_rotation;
-	else if (z == '0')
+	case '0':
 		return doors[0];
-	else if (z == '1')
+	case '1':
 		return doors[1];
-	else if (z == '2')
+	case '2':
 		return doors[2];
-	else if (z == '3')
+	case '3':
 		return doors[3];
+	}
 }
 
 bool Room::in_room(int x, int y, int x2, int y2) {
-	if (x >= rm_draw.getPosition().x and y >= rm_draw.getPosition().y and
-		x2 <= rm_draw.getPosition().x + rm_draw.getSize().x and y2 <= rm_draw.getPosition().y + rm_draw.getSize().y)
-		return true;
-	return false;
+	return (x >= rm_draw.getPosition().x && y >= rm_draw.getPosition().y &&
+		x2 <= rm_draw.getPosition().x + rm_draw.getSize().x && y2 <= rm_draw.getPosition().y + rm_draw.getSize().y);
 }
 
 bool Room::door_exist() { return door; }
@@ -184,19 +178,14 @@ bool Room::touch_door(int x, int y, int x2, int y2) {
 	// if door does not exist, return false.
 	if (!door)
 		return false;
-
-	if (door_rotation % 2 == 0) {
-		if (y == dr_draw.getPosition().y or y2 == dr_draw.getPosition().y)
-			if (x >= dr_draw.getPosition().x and x2 <= dr_draw.getPosition().x + 120)
-				return true;
-		return false;
-	}
-	else {
-		if (x == dr_draw.getPosition().x or x2 == dr_draw.getPosition().x)
-			if (y >= dr_draw.getPosition().y and y2 <= dr_draw.getPosition().y + 120)
-				return true;
-		return false;
-	}
+	// if the door is horizontal
+	else if (door_rotation % 2 == 0)
+		return ((y == dr_draw.getPosition().y || y2 == dr_draw.getPosition().y) &&
+			(x >= dr_draw.getPosition().x && x2 <= dr_draw.getPosition().x + 120));
+	// if the door is vertical
+	else
+		return ((x == dr_draw.getPosition().x || x2 == dr_draw.getPosition().x) &&
+			(y >= dr_draw.getPosition().y && y2 <= dr_draw.getPosition().y + 120));
 }
 
 bool Room::get_doors(unsigned int i) { return doors[i]; }
@@ -220,7 +209,7 @@ Floor::Floor() {
 		int sx{ (rand() % 6 + 4) * 120 }, sy{ (rand() % 6 + 4) * 120 },
 			x{ (rand() % 26 + 36) * 120 }, y{ (rand() % 26 + 36) * 120 };
 
-		while (!(x + sx <= 8640 and y + sy <= 8640 and x >= 4320 and y >= 4320))
+		while (!(x + sx <= 8640 && y + sy <= 8640 && x >= 4320 && y >= 4320))
 			x = (rand() % 26 + 36) * 120, y = (rand() % 26 + 36) * 120,
 			sx = (rand() % 6 + 4) * 120, sy = (rand() % 6 + 4) * 120;
 
@@ -235,8 +224,8 @@ Floor::Floor() {
 		int rand_dr{ rand() % 4 }, rand_rm{ rand() % (static_cast<int>(rooms.size()) - 1) };
 
 		// make sure room has doors available. Otherwise, switch room.
-		while (rooms[rand_rm].get_doors(0) == 1 and rooms[rand_rm].get_doors(1) == 1 and
-			rooms[rand_rm].get_doors(2) == 1 and rooms[rand_rm].get_doors(3) == 1)
+		while (rooms[rand_rm].get_doors(0) == 1 && rooms[rand_rm].get_doors(1) == 1 and
+			rooms[rand_rm].get_doors(2) == 1 && rooms[rand_rm].get_doors(3) == 1)
 			rand_rm = rand() % (rooms.size() - 1);
 
 		// make sure new room's door has the old room's door available. Otherwise, switch door.
@@ -251,7 +240,7 @@ Floor::Floor() {
 		}
 		rooms[i].set_doors(rand_dr, 1);
 
-		// set new room's position and size.
+		// set new room's position && size.
 		int break_loop_index{ static_cast<int>(rooms.size()) - 1 }, break_loop_counter{ 0 }, remove{ 0 }, k{ 0 };
 		bool conflict_room{ false };
 
@@ -265,10 +254,9 @@ Floor::Floor() {
 				set_rm_pos_size(rand_dr, y, sy, x, sx, rooms[rand_rm].get_rm('y'), rooms[rand_rm].get_rm('h'), rooms[rand_rm].get_rm('x'), rooms[rand_rm].get_rm('w'), conflict_room, k);
 
 			for (unsigned int j{ 0 }; j < rooms.size() - 1; j++) {
-				if (x >= rooms[j].get_rm('1') or x + sx <= rooms[j].get_rm('x') or
-					y >= rooms[j].get_rm('2') or y + sy <= rooms[j].get_rm('y')) {
+				if (x >= rooms[j].get_rm('1') || x + sx <= rooms[j].get_rm('x') or
+					y >= rooms[j].get_rm('2') || y + sy <= rooms[j].get_rm('y'))
 					break_loop_counter += 1;
-				}
 				else
 					conflict_room = true;
 			}
@@ -300,10 +288,7 @@ Floor::Floor() {
 			set_door_pos_1(rand_dr_x, x, 0); break;
 		}
 
-		// set door's x or y
-		if (rand_dr % 2 == 0)
-			set_door_pos_2(rand_dr_x, x, sx, rooms[rand_rm].get_rm('x'), rooms[rand_rm].get_rm('w'));
-		else
+		(rand_dr % 2 == 0) ? set_door_pos_2(rand_dr_x, x, sx, rooms[rand_rm].get_rm('x'), rooms[rand_rm].get_rm('w')) :
 			set_door_pos_2(rand_dr_y, y, sy, rooms[rand_rm].get_rm('y'), rooms[rand_rm].get_rm('h'));
 
 		rooms[i].set_door(rand_dr_x, rand_dr_y, rand_dr);
@@ -318,10 +303,10 @@ void Floor::set_rm_pos_size(int rand_door, int& rand_coord, int& rand_size, int&
 	int& rand_size_2, int rand_room_coord, int rand_room_size, int rand_room_coord_2, int rand_room_size_2, bool& conflict_room, int& k) {
 	(k < 3) ? k += 1 : k = 0;
 
-	if (rand_door == 0 or rand_door == 3)
+	if (rand_door == 0 || rand_door == 3)
 		while (rand_coord_2 != rand_room_coord_2 + rand_room_size_2)
 			rand_coord_2 = rand_room_coord_2 + rand_room_size_2, rand_size_2 = (rand() % 6 + 4 - k) * 120;
-	else if (rand_door == 1 or rand_door == 2) {
+	else if (rand_door == 1 || rand_door == 2) {
 		while (rand_coord_2 + rand_size_2 != rand_room_coord_2) {
 			int temp_2 = rand_room_coord_2 / 120;
 			int temp_3 = rand() % 12 + (temp_2 - 12);
@@ -331,10 +316,10 @@ void Floor::set_rm_pos_size(int rand_door, int& rand_coord, int& rand_size, int&
 		}
 	}
 
-	while ((!(rand_coord + rand_size < rand_room_coord + rand_room_size and rand_room_coord < rand_coord and rand_coord + rand_size - 120 >= rand_room_coord) and
-		!(rand_coord + rand_size > rand_room_coord + rand_room_size and rand_coord > rand_room_coord and rand_coord + 120 <= rand_room_coord + rand_room_size) and
-		!(rand_coord >= rand_room_coord and rand_coord + rand_size <= rand_room_coord + rand_room_size) and
-		!(rand_coord <= rand_room_coord and rand_coord + rand_size >= rand_room_coord + rand_room_size)) or conflict_room) {
+	while ((!(rand_coord + rand_size < rand_room_coord + rand_room_size && rand_room_coord < rand_coord && rand_coord + rand_size - 120 >= rand_room_coord) and
+		!(rand_coord + rand_size > rand_room_coord + rand_room_size && rand_coord > rand_room_coord && rand_coord + 120 <= rand_room_coord + rand_room_size) and
+		!(rand_coord >= rand_room_coord && rand_coord + rand_size <= rand_room_coord + rand_room_size) &&
+		!(rand_coord <= rand_room_coord && rand_coord + rand_size >= rand_room_coord + rand_room_size)) || conflict_room) {
 
 		rand_coord = (rand() % (rand_room_size / 120) + (rand_room_coord / 120)) * 120, rand_size = (rand() % 6 + 4 - k) * 120;
 		conflict_room = false;
@@ -345,7 +330,7 @@ void Floor::set_rm_pos_size(int rand_door, int& rand_coord, int& rand_size, int&
 void Floor::set_door_pos_1(int& rand_door_coord, int rand_coord, int rand_size) { rand_door_coord = rand_coord + rand_size; }
 
 void Floor::set_door_pos_2(int& rand_door_coord, int rand_coord, int rand_size, int rand_room_coord, int rand_room_size) {
-	if (rand_coord + rand_size < rand_room_coord + rand_room_size and rand_coord < rand_room_coord and rand_coord + rand_size > rand_room_coord and rand_room_coord + 120 <= rand_coord + rand_size) {
+	if (rand_coord + rand_size < rand_room_coord + rand_room_size && rand_coord < rand_room_coord && rand_coord + rand_size > rand_room_coord && rand_room_coord + 120 <= rand_coord + rand_size) {
 		int tem_1{ rand_coord + rand_size - rand_room_coord };
 
 		rand_door_coord = (rand() % (tem_1 / 120) + (rand_room_coord / 120)) * 120;
@@ -353,7 +338,7 @@ void Floor::set_door_pos_2(int& rand_door_coord, int rand_coord, int rand_size, 
 		if (rand_door_coord == rand_coord + rand_size)
 			rand_door_coord -= 120;
 	}
-	else if (rand_coord + rand_size > rand_room_coord + rand_room_size and rand_coord > rand_room_coord and rand_coord < rand_room_coord + rand_room_size and rand_coord + 120 <= rand_room_coord + rand_room_size) {
+	else if (rand_coord + rand_size > rand_room_coord + rand_room_size && rand_coord > rand_room_coord && rand_coord < rand_room_coord + rand_room_size && rand_coord + 120 <= rand_room_coord + rand_room_size) {
 		int tem_1{ rand_room_coord + rand_room_size - rand_coord };
 
 		rand_door_coord = (rand() % (tem_1 / 120) + (rand_coord / 120)) * 120;
@@ -361,21 +346,27 @@ void Floor::set_door_pos_2(int& rand_door_coord, int rand_coord, int rand_size, 
 		if (rand_door_coord == rand_room_coord + rand_room_size)
 			rand_door_coord -= 120;
 	}
-	else if (rand_coord >= rand_room_coord and rand_coord + rand_size <= rand_room_coord + rand_room_size)
+	else if (rand_coord >= rand_room_coord && rand_coord + rand_size <= rand_room_coord + rand_room_size)
 		rand_door_coord = (rand() % (rand_size / 120) + (rand_coord / 120)) * 120;
-	else if (rand_coord <= rand_room_coord and rand_coord + rand_size >= rand_room_coord + rand_room_size)
+	else if (rand_coord <= rand_room_coord && rand_coord + rand_size >= rand_room_coord + rand_room_size)
 		rand_door_coord = (rand() % (rand_room_size / 120) + (rand_room_coord / 120)) * 120;
 }
 
 void Floor::make_stair() {
 	int rand_room{ rand() % static_cast<int>(rooms.size()) };
 
-	int x{ ((rand() % (rooms[rand_room].get_rm('h') / 40)) + (rooms[rand_room].get_rm('x') / 40)) * 40 },
-		y{ ((rand() % (rooms[rand_room].get_rm('w') / 40)) + (rooms[rand_room].get_rm('y') / 40)) * 40 };
+	int rx = (rooms[rand_room].get_rm('x') / 40);
+	int ry = (rooms[rand_room].get_rm('y') / 40);
+	int rw = (rooms[rand_room].get_rm('w') / 40);
+	int rh = (rooms[rand_room].get_rm('h') / 40);
 
-	while (!rooms[rand_room].in_room(x, y, x + 40, y + 40))
-		x = ((rand() % (rooms[rand_room].get_rm('h') / 40)) + (rooms[rand_room].get_rm('x') / 40)) * 40,
-		y = ((rand() % (rooms[rand_room].get_rm('w') / 40)) + (rooms[rand_room].get_rm('y') / 40)) * 40;
+	int x{ ((rand() % rh) + rx) * 40 };
+	int y{ ((rand() % rw) + ry) * 40 };
+
+	while (!rooms[rand_room].in_room(x, y, x + 40, y + 40)) {
+		x = ((rand() % rh) + rx) * 40;
+		y = ((rand() % rw) + ry) * 40;
+	}
 
 	stair = Stair(x, y);
 }
@@ -385,12 +376,23 @@ void Floor::make_shop() {
 
 	int rand_room{ rand() % static_cast<int>(rooms.size()) };
 
-	int x = ((rand() % (rooms[rand_room].get_rm('w') / 40)) + (rooms[rand_room].get_rm('x') / 40)) * 40,
-	y = ((rand() % (rooms[rand_room].get_rm('h') / 40)) + (rooms[rand_room].get_rm('y') / 40)) * 40;
+	int rx = (rooms[rand_room].get_rm('x') / 40);
+	int ry = (rooms[rand_room].get_rm('y') / 40);
+	int rw = (rooms[rand_room].get_rm('w') / 40);
+	int rh = (rooms[rand_room].get_rm('h') / 40);
 
-	while ((stair.rect.getPosition().x == x and stair.rect.getPosition().y == y) or !rooms[rand_room].in_room(x, y, x + 40, y + 40))
-		x = ((rand() % (rooms[rand_room].get_rm('w') / 40)) + (rooms[rand_room].get_rm('x') / 40)) * 40,
-		y = ((rand() % (rooms[rand_room].get_rm('h') / 40)) + (rooms[rand_room].get_rm('y') / 40)) * 40;
+	int x = ((rand() % rw) + rx) * 40;
+	int y = ((rand() % rh) + ry) * 40;
+
+	float sx = stair.rect.getPosition().x;
+	float sy = stair.rect.getPosition().y;
+
+	bool notInRoom = !rooms[rand_room].in_room(x, y, x + 40, y + 40);
+
+	while ((sx == x && sy == y) || notInRoom) {
+		x = ((rand() % rw) + rx) * 40;
+		y = ((rand() % rh) + ry) * 40;
+	}
 
 	shop = Shop(x, y);
 	fl_shop = true;
@@ -454,7 +456,7 @@ void Floor::make_collectible(unsigned int floor) {
 			for (Collectible col : collectibles) {
 				int tmp_x{ col.get_pos('x') }, tmp_y{ col.get_pos('y') };
 
-				while (temp_x == tmp_x and temp_y == tmp_y or temp_x == -1 or temp_y == -1)
+				while (temp_x == tmp_x && temp_y == tmp_y || temp_x == -1 || temp_y == -1)
 					temp_x = ((rand() % (rooms[rand_room].get_rm('w') / 40)) + (rooms[rand_room].get_rm('x') / 40)) * 40,
 					temp_y = ((rand() % (rooms[rand_room].get_rm('h') / 40)) + (rooms[rand_room].get_rm('y') / 40)) * 40;
 				counter += 1;
@@ -483,7 +485,7 @@ void Floor::make_gold(unsigned int floor) {
 			for (unsigned int j{ 0 }; j < golds.size(); j++) {
 				int tmp_x{ golds[j].get_pos('x') }, tmp_y{ golds[j].get_pos('y') };
 
-				while ((temp_x == tmp_x and temp_y == tmp_y) or temp_x == -1 or temp_y == -1) 
+				while ((temp_x == tmp_x && temp_y == tmp_y) || temp_x == -1 || temp_y == -1) 
 					temp_x = ((rand() % (rooms[rand_room].get_rm('w') / 40)) + (rooms[rand_room].get_rm('x') / 40)) * 40,
 					temp_y = ((rand() % (rooms[rand_room].get_rm('h') / 40)) + (rooms[rand_room].get_rm('y') / 40)) * 40;
 				counter += 1;

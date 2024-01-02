@@ -43,12 +43,7 @@ Enemy::Enemy(int hp, int floor, unsigned int t_id, int x, int y) : id(t_id) {
 }
 
 void Enemy::set_stat_h(int hp, int atk, int def, int res, int range, int exp) {
-	stats[0] = hp;
-	stats[1] = atk;
-	stats[2] = def;
-	stats[3] = res;
-	stats[4] = range;
-	stats[5] = exp;
+	stats = {hp, atk, def, res, range, exp};
 }
 
 int Enemy::get_pos(char z) { return z == 'x' ? rect.getPosition().x : rect.getPosition().y; }
@@ -72,8 +67,4 @@ void Enemy::draw(sf::RenderWindow& window) { window.draw(rect); }
 
 void Enemy::set_stat(unsigned int i, int j) { stats[i] = j; }
 
-bool Enemy::load_texture() {
-	if (!en_tex.loadFromFile("Texture\\GG_03_Enemies.png"))
-		return false;
-	return true;
-}
+bool Enemy::load_texture() { return en_tex.loadFromFile("Texture\\GG_03_Enemies.png"); }

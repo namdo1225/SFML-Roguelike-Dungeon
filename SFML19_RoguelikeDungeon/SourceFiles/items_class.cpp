@@ -57,7 +57,7 @@ unsigned int Item::get_buy_gd() { return buy_gd; }
 
 unsigned int Item::get_type() { return type; }
 
-Item* Item::create_itm(unsigned int id, sf::Font& font){
+Item* Item::create_itm(unsigned int id, sf::Font& font) {
 	switch (id) {
 	case 1:
 		return new Health_Potion(font);
@@ -87,12 +87,17 @@ bool Item::get_hp_mp_other() { return hp_mp_other; }
 void Item::use(Player &player) {}
 
 void Item::draw(sf::RenderWindow& window, char type) {
-	if (type == 't')
+	switch (type) {
+	case 't':
 		window.draw(icon);
-	else if (type == 'd')
+		break;
+	case 'd':
 		window.draw(description);
-	else
+		break;
+	default:
 		window.draw(txt);
+		break;
+	}	
 }
 
 Place_Holder::Place_Holder() {

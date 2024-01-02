@@ -40,7 +40,7 @@ Interface::Interface() {
 
 	reset_game();
 	
-	if (create_audio() == false or create_texture() == false)
+	if (!create_audio() || !create_texture())
 		return;
 }
 
@@ -69,9 +69,9 @@ Interface& Interface::get() {
 	return singleton;
 }
 
-// handle actual events
+// major functionalities
 void Interface::next_level() {
-	if (player.get_pos('x') != floor.get_stair_pos('x') or player.get_pos('y') != floor.get_stair_pos('y'))
+	if (player.get_pos('x') != floor.get_stair_pos('x') || player.get_pos('y') != floor.get_stair_pos('y'))
 		return;
 	sounds[1].play();
 	player.set_floor(player.get_floor() + 1);
@@ -173,7 +173,7 @@ void Interface::draw_interface() {
 
 	if (exit_menu) draw_exit_screen();
 	else if (title) draw_title_screen();
-	else if (name_screen and !exit_menu) {
+	else if (name_screen && !exit_menu) {
 		draw_name_screen();
 		if (player.get_name() != "")
 			name_screen = false;
@@ -191,14 +191,11 @@ void Interface::draw_interface() {
 }
 void Interface::handle_event(sf::Event& event) {
 	while (window.pollEvent(event)) {
-
-
 		pl_move_obstacle();
 		sf::Vector2i pos = sf::Mouse::getPosition(window);
 		int x{ pos.x }, y{ pos.y };
 
-
-		if (event.type == sf::Event::Closed or sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+		if (event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
 			exit_menu = true;
 		else if (event.type == sf::Event::MouseButtonPressed)
 			if (event.mouseButton.button == sf::Mouse::Left) {
@@ -213,37 +210,35 @@ void Interface::handle_event(sf::Event& event) {
 				handle_map_prompt(x, y);
 			}
 
-		if (main_screen and !exit_menu) {
-			if (!player.is_stuck(0) and sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+		if (main_screen && !exit_menu) {
+			if (!player.is_stuck(0) && sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
 				handle_player_action('u', 0);
-			else if (!player.is_stuck(1) and sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+			else if (!player.is_stuck(1) && sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
 				handle_player_action('r', 0);
-			else if (!player.is_stuck(2) and sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+			else if (!player.is_stuck(2) && sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
 				handle_player_action('d', 0);
-			else if (!player.is_stuck(3) and sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+			else if (!player.is_stuck(3) && sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 				handle_player_action('l', 0);
 
 			if (event.mouseButton.button == sf::Mouse::Left) {
-				if (x >= 400 and x <= 440 and y >= 360 - ((pl_weapon->get_range() - 1) * 40) and y <= 400)
+				if (x >= 400 && x <= 440 && y >= 360 - ((pl_weapon->get_range() - 1) * 40) && y <= 400)
 					handle_player_action('u', 1);
-				else if (x >= 440 and x <= 480 + ((pl_weapon->get_range() - 1) * 40) and y >= 400 and y <= 440)
+				else if (x >= 440 && x <= 480 + ((pl_weapon->get_range() - 1) * 40) && y >= 400 && y <= 440)
 					handle_player_action('r', 1);
-				else if (x >= 400 and x <= 440 and y >= 440 and y <= 480 + ((pl_weapon->get_range() - 1) * 40))
+				else if (x >= 400 && x <= 440 && y >= 440 && y <= 480 + ((pl_weapon->get_range() - 1) * 40))
 					handle_player_action('d', 1);
-				else if (x >= 360 - ((pl_weapon->get_range() - 1) * 40) and x <= 400 and y >= 400 and y <= 440)
+				else if (x >= 360 - ((pl_weapon->get_range() - 1) * 40) && x <= 400 && y >= 400 && y <= 440)
 					handle_player_action('l', 1);
 			}
-			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
 				ene_overall();
-			}
 			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
 				next_level();
 				handle_shop();
 			}
 		}
 
-
-		if (!exit_menu and name_screen)
+		if (!exit_menu && name_screen)
 			name_creation(event);
 	}
 }
@@ -341,8 +336,8 @@ void Interface::load() {
 		sf::Event event;
 
 		while (window.pollEvent(event)) {
-			if (event.type == sf::Event::MouseButtonPressed and event.mouseButton.button == sf::Mouse::Left) {
-				if (x > 1120 and x < 1170 and y > 10 and y < 60) {
+			if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
+				if (x > 1120 && x < 1170 && y > 10 && y < 60) {
 					ld_savename_str = "Player";
 					ld_savename_txt.setString("Player");
 					return;
@@ -366,8 +361,8 @@ void Interface::load() {
 				else if (event.text.unicode < 128) {
 					char letter{ static_cast<char>(event.text.unicode) };
 
-					if (letter == '\\' or letter == ' ' or letter == '=' or letter == '$' or letter == '*' or
-						letter == '|' or letter == '~' or letter == '.' or letter == '"' or letter == '\'')
+					if (letter == '\\' || letter == ' ' || letter == '=' || letter == '$' || letter == '*' or
+						letter == '|' || letter == '~' || letter == '.' || letter == '"' || letter == '\'')
 						continue;
 
 					ld_savename_str += static_cast<char>(event.text.unicode);
@@ -425,7 +420,7 @@ void Interface::read_save(std::string file_name) {
 	file >> num;
 	player.set_point(num);
 
-	// player current exp and level up exp
+	// player current exp && level up exp
 	int num2;
 	file >> num >> num2;
 	std::istringstream f(str);
@@ -461,7 +456,7 @@ void Interface::read_save(std::string file_name) {
 		file >> num;
 	}
 
-	// weapon and armor slot
+	// weapon && armor slot
 	file >> num;
 	itm_equip_weapon(items[num]);
 	file >> num;
@@ -540,7 +535,7 @@ void Interface::read_save(std::string file_name) {
 	main_log.clear();
 	file.close();
 
-	ld_savename_str = "Plyaer";
+	ld_savename_str = "Player";
 	ld_savename_txt.setString("Player");
 }
 
@@ -555,7 +550,7 @@ void Interface::pl_random_pos() {
 void Interface::pl_move_obstacle() {
 	int x{ player.get_pos('x') }, y{ player.get_pos('y') }, x2{ x + 40 }, y2{ y + 40 };
 
-	// Check which room player is in and determines if they're touching a wall.
+	// Check which room player is in && determines if they're touching a wall.
 	for (Room rm : floor.rooms)
 		if (rm.in_room(x, y, x2, y2)) {
 			(y == rm.get_rm('y')) ? player.set_stuck(0, 1) : player.set_stuck(0, 0);
@@ -565,7 +560,7 @@ void Interface::pl_move_obstacle() {
 			break;
 		}
 
-	// Check rooms that have doors and whether player is touching a door. It then allows player the ability to move through it.
+	// Check rooms that have doors && whether player is touching a door. It then allows player the ability to move through it.
 	for (unsigned int i{ 0 }; i < floor.rooms.size(); i++)
 		if (floor.rooms[i].touch_door(x, y, x2, y2)) {
 			player.set_stuck(floor.rooms[i].get_door('r') % 2, 0);
@@ -576,13 +571,13 @@ void Interface::pl_move_obstacle() {
 	for (Enemy en : enemies) {
 		int enx{ en.get_pos('x') }, eny{ en.get_pos('y') }, enx2{ enx + 40 }, eny2{ eny + 40 };
 
-		if (y - 40 == eny and y2 - 40 == eny2 and x == enx and x2 == enx2)
+		if (y - 40 == eny && y2 - 40 == eny2 && x == enx && x2 == enx2)
 			player.set_stuck(0, 1);
-		if (x + 40 == enx and x2 + 40 == enx2 and y == eny and y2 == eny2)
+		if (x + 40 == enx && x2 + 40 == enx2 && y == eny && y2 == eny2)
 			player.set_stuck(1, 1);
-		if (y + 40 == eny and y2 + 40 == eny2 and x == enx and x2 == enx2)
+		if (y + 40 == eny && y2 + 40 == eny2 && x == enx && x2 == enx2)
 			player.set_stuck(2, 1);
-		if (x - 40 == enx and x2 - 40 == enx2 and y == eny and y2 == eny2)
+		if (x - 40 == enx && x2 - 40 == enx2 && y == eny && y2 == eny2)
 			player.set_stuck(3, 1);
 	}
 }
@@ -595,34 +590,34 @@ void Interface::pl_atk() {
 	int x{ player.get_pos('x') }, y{ player.get_pos('y') }, x2{ x + 40 }, y2{ y + 40 };
 	unsigned int pl_room_pos{ 255 }, en_room_pos{ 255 }, v{ 255 };
 
-	// Check which room player is in and save that room index.
+	// Check which room player is in && save that room index.
 	for (unsigned int i{ 0 }; i < floor.rooms.size(); i++)
 		if (floor.rooms[i].in_room(x, y, x2, y2))
 			pl_room_pos = i;
 
 	// Check whether the mouse is clicked on an enemy. If not, return.
 	for (unsigned int i{ 0 }; i < enemies.size(); i++)
-		if (mouse.x >= enemies[i].get_pos('x') and mouse.x <= enemies[i].get_pos('x') + 40 and 
-			mouse.y >= enemies[i].get_pos('y') and mouse.y <= enemies[i].get_pos('y') + 40)
+		if (mouse.x >= enemies[i].get_pos('x') && mouse.x <= enemies[i].get_pos('x') + 40 && 
+			mouse.y >= enemies[i].get_pos('y') && mouse.y <= enemies[i].get_pos('y') + 40)
 			v = i;
 	if (v == 255)
 		return;
 
-	// Check what room the selected enemy is in and save that room index.
+	// Check what room the selected enemy is in && save that room index.
 	int enx{ enemies[v].get_pos('x') }, eny{ enemies[v].get_pos('y') }, enx2{ enx + 40 }, eny2{ eny + 40 };
 	for (unsigned int i{ 0 }; i < floor.rooms.size(); i++)
 		if (floor.rooms[i].in_room(enx, eny, enx2, eny2))
 			en_room_pos = i;
 
-	// Check whether the player and the enemy are in different room. If so, get either the player or enemy's room that has a door.
+	// Check whether the player && the enemy are in different room. If so, get either the player or enemy's room that has a door.
 	 unsigned int door_i = (floor.rooms[en_room_pos].door_exist()) ? en_room_pos : pl_room_pos;
 
 	// If they are both in different room, check if they are adjacent to each other, separated only by a door. If not, return.
 	 if (pl_room_pos != en_room_pos) {
-		 if (floor.rooms[en_room_pos].door_exist() and floor.rooms[en_room_pos].touch_door(x, y, x2, y2) and
+		 if (floor.rooms[en_room_pos].door_exist() && floor.rooms[en_room_pos].touch_door(x, y, x2, y2) and
 			 floor.rooms[en_room_pos].touch_door(enx, eny, enx2, eny2)) {
 		 }
-		 else if (floor.rooms[pl_room_pos].door_exist() and floor.rooms[pl_room_pos].touch_door(x, y, x2, y2) and
+		 else if (floor.rooms[pl_room_pos].door_exist() && floor.rooms[pl_room_pos].touch_door(x, y, x2, y2) and
 			 floor.rooms[pl_room_pos].touch_door(enx, eny, enx2, eny2)) {
 		 }
 		 else
@@ -671,7 +666,7 @@ void Interface::pl_game_over() {
 
 // handle enemy events
 void Interface::ene_add() {
-	if (enemies.size() != 0 or enemy_respawn == 0)
+	if (enemies.size() != 0 || enemy_respawn == 0)
 		return;
 
 	enemy_respawn -= 1;
@@ -694,7 +689,7 @@ void Interface::ene_add() {
 
 			for (unsigned int i{ 0 }; i < enemies.size(); i++) {
 				int tmp_x{ enemies[i].get_pos('x') }, tmp_y{ enemies[i].get_pos('y') };
-				while ((temp_x == tmp_x and temp_y == tmp_y) or temp_x == -1 or temp_y == -1)
+				while ((temp_x == tmp_x && temp_y == tmp_y) || temp_x == -1 || temp_y == -1)
 					temp_x = ((rand() % (floor.rooms[rand_room].get_rm('w') / 40)) + (floor.rooms[rand_room].get_rm('x') / 40)) * 40,
 					temp_y = ((rand() % (floor.rooms[rand_room].get_rm('h') / 40)) + (floor.rooms[rand_room].get_rm('y') / 40)) * 40;
 				counter += 1;
@@ -718,13 +713,13 @@ void Interface::ene_action(unsigned int v) {
 	chase_player_rand{rand() % 3};
 
 	// If so, attack.
-	if ((x >= en_x - (enemies[v].get_stat(4) * 40) and x_2 <= en_x and y == en_y) or
-		(x_2 <= en_x2 + (enemies[v].get_stat(4) * 40) and x >= en_x2 and y == en_y) or
-		(y_2 <= en_y and y >= en_y - (enemies[v].get_stat(4) * 40) and x == en_x) or
-		(y_2 <= en_y2 + (enemies[v].get_stat(4) * 40) and y >= en_y2 and x == en_x))
+	if ((x >= en_x - (enemies[v].get_stat(4) * 40) && x_2 <= en_x && y == en_y) or
+		(x_2 <= en_x2 + (enemies[v].get_stat(4) * 40) && x >= en_x2 && y == en_y) or
+		(y_2 <= en_y && y >= en_y - (enemies[v].get_stat(4) * 40) && x == en_x) or
+		(y_2 <= en_y2 + (enemies[v].get_stat(4) * 40) && y >= en_y2 && x == en_x))
 		ene_atk(v);
 	// If not in range but detected, move closer.
-	else if (x >= en_x - 240 and y_2 <= en_y2 + 240 and chase_player_rand <= 1)
+	else if (x >= en_x - 240 && y_2 <= en_y2 + 240 && chase_player_rand <= 1)
 		ene_mov_close(v);
 	// Otherwise, random movement or don't move at all.
 	else
@@ -746,9 +741,9 @@ void Interface::ene_atk(unsigned int v) {
 
 	// If they are both in different room, check if they are adjacent to each other, separated only by a door. If not, return.
 	if (pl_room_pos != en_room_pos) {
-		if (floor.rooms[en_room_pos].door_exist() and floor.rooms[en_room_pos].touch_door(x, y, x2, y2) and
+		if (floor.rooms[en_room_pos].door_exist() && floor.rooms[en_room_pos].touch_door(x, y, x2, y2) and
 			floor.rooms[en_room_pos].touch_door(enx, eny, enx2, eny2)) {}
-		else if (floor.rooms[pl_room_pos].door_exist() and floor.rooms[pl_room_pos].touch_door(x, y, x2, y2) and
+		else if (floor.rooms[pl_room_pos].door_exist() && floor.rooms[pl_room_pos].touch_door(x, y, x2, y2) and
 			floor.rooms[pl_room_pos].touch_door(enx, eny, enx2, eny2)) {}
 		else
 			return;
@@ -770,44 +765,44 @@ void Interface::ene_mov_close(unsigned int v) {
 			cur = i;
 
 	// 0 = enemy can move, 1 = enemy touch wall, can't move, 2 = enemy touch door, can move
-	if (x2 < enx and ene_mov_close_2(v, -40, 0)) {
+	if (x2 < enx && ene_mov_close_2(v, -40, 0)) {
 		if (enx == floor.rooms[cur].get_rm('x')) {
 			return_now = 1;
 			for (unsigned int i{ 0 }; i < floor.rooms.size(); i++)
-				if (floor.rooms[i].touch_door(enx, eny, enx2, eny2) and floor.rooms[i].get_door('r') % 2 == 1)
+				if (floor.rooms[i].touch_door(enx, eny, enx2, eny2) && floor.rooms[i].get_door('r') % 2 == 1)
 					return_now = 2;
 		}
 
 		if (return_now != 1)
 			enemies[v].set_pos(enx - 40, eny);
 	}
-	else if (y2 < eny and ene_mov_close_2(v, 0, -40)) {
+	else if (y2 < eny && ene_mov_close_2(v, 0, -40)) {
 		if (eny == floor.rooms[cur].get_rm('y')) {
 			return_now = 1;
 			for (unsigned int i{ 0 }; i < floor.rooms.size(); i++)
-				if (floor.rooms[i].touch_door(enx, eny, enx2, eny2) and floor.rooms[i].get_door('r') % 2 == 0)
+				if (floor.rooms[i].touch_door(enx, eny, enx2, eny2) && floor.rooms[i].get_door('r') % 2 == 0)
 					return_now = 2;
 		}
 
 		if (return_now != 1)
 			enemies[v].set_pos(enx, eny - 40);
 	}
-	else if (x > enx2 and ene_mov_close_2(v, 40, 0)) {
+	else if (x > enx2 && ene_mov_close_2(v, 40, 0)) {
 		if (enx2 == floor.rooms[cur].get_rm('1')) {
 			return_now = 1;
 			for (unsigned int i{ 0 }; i < floor.rooms.size(); i++)
-				if (floor.rooms[i].touch_door(enx, eny, enx2, eny2) and floor.rooms[i].get_door('r') % 2 == 1)
+				if (floor.rooms[i].touch_door(enx, eny, enx2, eny2) && floor.rooms[i].get_door('r') % 2 == 1)
 					return_now = 2;
 		}
 
 		if (return_now != 1)
 			enemies[v].set_pos(enx + 40, eny);
 	}
-	else if (y > eny2 and ene_mov_close_2(v, 0, 40)) {
+	else if (y > eny2 && ene_mov_close_2(v, 0, 40)) {
 		if (eny2 == floor.rooms[cur].get_rm('2')) {
 			return_now = 1;
 			for (unsigned int i{ 0 }; i < floor.rooms.size(); i++)
-				if (floor.rooms[i].touch_door(enx, eny, enx2, eny2) and floor.rooms[i].get_door('r') % 2 == 0)
+				if (floor.rooms[i].touch_door(enx, eny, enx2, eny2) && floor.rooms[i].get_door('r') % 2 == 0)
 					return_now = 2;
 		}
 
@@ -816,7 +811,7 @@ void Interface::ene_mov_close(unsigned int v) {
 	}
 }
 bool Interface::ene_mov_close_2(unsigned int v, int offx, int offy) {
-	// check for obstruction with other enemies and player
+	// check for obstruction with other enemies && player
 	int x{ enemies[v].get_pos('x') }, y{ enemies[v].get_pos('y') };
 
 	for (unsigned int i{ 0 }; i < enemies.size(); i++) {
@@ -825,13 +820,13 @@ bool Interface::ene_mov_close_2(unsigned int v, int offx, int offy) {
 
 		int enx{ enemies[i].get_pos('x') }, eny{ enemies[i].get_pos('y') };
 
-		if (x + offx == enx and y + offy == eny)
+		if (x + offx == enx && y + offy == eny)
 			return false;
 	}
 
 	int plx{ player.get_pos('x') }, ply{ player.get_pos('y') };
 
-	if (x + offx == plx and y + offy == ply)
+	if (x + offx == plx && y + offy == ply)
 		return false;
 	return true;
 }
@@ -847,44 +842,44 @@ void Interface::ene_rand_move(unsigned int v) {
 
 	// 0 = enemy can move, 1 = enemy touch wall, can't move, 2 = enemy touch door, can move
 	// 0 = left, 1 = up, 2 = right, 3 = down
-	if (rand_dir == 0 and ene_mov_close_2(v, -40, 0)) {
+	if (rand_dir == 0 && ene_mov_close_2(v, -40, 0)) {
 		if (enx == floor.rooms[cur].get_rm('x')) {
 			return_now = 1;
 			for (unsigned int i{ 0 }; i < floor.rooms.size(); i++)
-				if (floor.rooms[i].touch_door(enx, eny, enx2, eny2) and floor.rooms[i].get_door('r') % 2 == 1)
+				if (floor.rooms[i].touch_door(enx, eny, enx2, eny2) && floor.rooms[i].get_door('r') % 2 == 1)
 					return_now = 2;
 		}
 
 		if (return_now != 1)
 			enemies[v].set_pos(enx - 40, eny);
 	}
-	else if (rand_dir == 1 and ene_mov_close_2(v, 0, -40)) {
+	else if (rand_dir == 1 && ene_mov_close_2(v, 0, -40)) {
 		if (eny == floor.rooms[cur].get_rm('y')) {
 			return_now = 1;
 			for (unsigned int i{ 0 }; i < floor.rooms.size(); i++)
-				if (floor.rooms[i].touch_door(enx, eny, enx2, eny2) and floor.rooms[i].get_door('r') % 2 == 0)
+				if (floor.rooms[i].touch_door(enx, eny, enx2, eny2) && floor.rooms[i].get_door('r') % 2 == 0)
 					return_now = 2;
 		}
 
 		if (return_now != 1)
 			enemies[v].set_pos(enx, eny - 40);
 	}
-	else if (rand_dir == 2 and ene_mov_close_2(v, 40, 0)) {
+	else if (rand_dir == 2 && ene_mov_close_2(v, 40, 0)) {
 		if (enx2 == floor.rooms[cur].get_rm('1')) {
 			return_now = 1;
 			for (unsigned int i{ 0 }; i < floor.rooms.size(); i++)
-				if (floor.rooms[i].touch_door(enx, eny, enx2, eny2) and floor.rooms[i].get_door('r') % 2 == 1)
+				if (floor.rooms[i].touch_door(enx, eny, enx2, eny2) && floor.rooms[i].get_door('r') % 2 == 1)
 					return_now = 2;
 		}
 
 		if (return_now != 1)
 			enemies[v].set_pos(enx + 40, eny);
 	}
-	else if (rand_dir == 3 and ene_mov_close_2(v, 0, 40)) {
+	else if (rand_dir == 3 && ene_mov_close_2(v, 0, 40)) {
 		if (eny2 == floor.rooms[cur].get_rm('2')) {
 			return_now = 1;
 			for (unsigned int i{ 0 }; i < floor.rooms.size(); i++)
-				if (floor.rooms[i].touch_door(enx, eny, enx2, eny2) and floor.rooms[i].get_door('r') % 2 == 0)
+				if (floor.rooms[i].touch_door(enx, eny, enx2, eny2) && floor.rooms[i].get_door('r') % 2 == 0)
 					return_now = 2;
 		}
 
@@ -938,7 +933,7 @@ void Interface::itm_add_item(Item* item) {
 		x = 200 + ((i % 6) * 80), y = 240 + ((i / 6) * 80);
 
 		for (unsigned int j{ 0 }; j < items.size() - 1; j++)
-			if (items[j]->get_pos('x') == x and items[j]->get_pos('y') == y) {
+			if (items[j]->get_pos('x') == x && items[j]->get_pos('y') == y) {
 				spot_taken = true;
 				break;
 			}
@@ -959,16 +954,16 @@ void Interface::itm_reoganize_inv() {
 		x = 200 + ((i % 6) * 80), y = 240 + ((i / 6) * 80);
 
 		for (unsigned int j{ 0 }; j < items.size(); j++) {
-			if (items[j] == pl_weapon or items[j] == pl_armor)
+			if (items[j] == pl_weapon || items[j] == pl_armor)
 				continue;
-			if (items[j]->get_pos('x') == x and items[j]->get_pos('y') == y) {
+			if (items[j]->get_pos('x') == x && items[j]->get_pos('y') == y) {
 				spot_taken = true;
 				break;
 			}
 			z = j;
 		}
 
-		if (!spot_taken and z != -1)
+		if (!spot_taken && z != -1)
 			items[z]->set_pos(x, y);
 	}
 }
@@ -987,7 +982,7 @@ void Interface::itm_select_shortcut(char place) {
 		inv_select = select_itm;
 		inv_select_rect.setPosition(817, 305);
 	}
-	else if (place == 'r' or place == 'l') {
+	else if (place == 'r' || place == 'l') {
 		if (items.size() == 2)
 			return;
 
@@ -1032,7 +1027,7 @@ void Interface::sp_add_spell(Spell* spell) {
 		x = 200 + ((i % 6) * 80), y = 240 + ((i / 6) * 80);
 
 		for (unsigned int j{ 0 }; j < spells.size() - 1; j++) {
-			if (spells[j]->get_pos('x') == x and spells[j]->get_pos('y') == y) {
+			if (spells[j]->get_pos('x') == x && spells[j]->get_pos('y') == y) {
 				spot_taken = true;
 				break;
 			}
@@ -1052,7 +1047,7 @@ void Interface::sp_reorganize() {
 		x = 200 + ((i % 6) * 80), y = 240 + ((i / 6) * 80);
 
 		for (unsigned int j{ 0 }; j < spells.size(); j++) {
-			if (spells[j]->get_pos('x') == x and spells[j]->get_pos('y') == y) {
+			if (spells[j]->get_pos('x') == x && spells[j]->get_pos('y') == y) {
 				spot_taken = true;
 				break;
 			}
@@ -1154,7 +1149,7 @@ void Interface::create_title_ui() {
 			temp.setString("RL: Dungeon");
 		}
 		else if (i == 1) {
-			std::string str1 = "Developed with the help of\ninternet forums and SFML Graphics,\nzlib/png license.";
+			std::string str1 = "Developed with the help of\ninternet forums && SFML Graphics,\nzlib/png license.";
 			std::string str2 = "\n\nOpen Sans font from fontsource.org\n\nInstructions: use the arrow keys to ";
 			std::string str3 = "\nmove the players. Tap on the level \nup button to upgrade your stats.";
 			std::string str4 = "\n\nSound effects created on \nsfxr.me/, MIT License.";
@@ -1180,7 +1175,7 @@ void Interface::create_title_ui() {
 	}
 }
 void Interface::create_name_ui() {
-	new_game_prompt = sf::Text("Enter your name (up to 20 characters) and press 'Enter' after you are finished.", font, 24);
+	new_game_prompt = sf::Text("Enter your name (up to 20 characters) && press 'Enter' after you are finished.", font, 24);
 	new_game_prompt.setPosition(170, 150);
 	new_game_prompt.setStyle(sf::Text::Bold);
 
@@ -1537,8 +1532,8 @@ void Interface::create_ext_ui() {
 	extra_menu_help_txt.setPosition(110, 110);
 	extra_menu_help_txt.setString("Arrow keys: Move player.\nW: Wait. Skip turn.\nQ: Go to the next floor "
 		"if you are on the stair.\nEnter the shop if you are on it.\nESC: Bring up exit menu.\nClick on an "
-		"enemy to attack them.\nItem/Spell slot gives you quick access to your \nabilities."
-		"Click the center of slot to use the item.");
+		"enemy to attack them.\nThe Item/Spell slot gives you quick access to\nyour abilities. "
+		"Click on the center of slot to use\nthe item.");
 	extra_menu_help_txt.setFillColor(sf::Color(77, 160, 255));
 
 	extra_menu_help_rect.setSize(sf::Vector2f(600, 400));
@@ -1548,7 +1543,7 @@ void Interface::create_ext_ui() {
 	extra_menu_help_rect.setPosition(100, 100);
 }
 void Interface::create_inv_ui() {
-	inv_title.setString("Equipment and Inventory");
+	inv_title.setString("Equipment && Inventory");
 	inv_title.setCharacterSize(42);
 	inv_title.setFont(font);
 	inv_title.setStyle(sf::Text::Bold);
@@ -1788,8 +1783,8 @@ void Interface::draw_main_ui() {
 	if (scan_popup) {
 		sf::Vector2i pos = sf::Mouse::getPosition(window);
 		for (unsigned int i{ 0 }; i < enemies.size(); i++) {
-			if (pos.x >= enemies[i].get_pos('x') and pos.x <= enemies[i].get_pos('x') + 40 and 
-				pos.y >= enemies[i].get_pos('y') and pos.y <= enemies[i].get_pos('y') + 40) {
+			if (pos.x >= enemies[i].get_pos('x') && pos.x <= enemies[i].get_pos('x') + 40 && 
+				pos.y >= enemies[i].get_pos('y') && pos.y <= enemies[i].get_pos('y') + 40) {
 				main_stat_popup_rect.setPosition(enemies[i].get_pos('x') - 50, enemies[i].get_pos('y') - 50);
 				main_stat_popup_txt.setPosition(enemies[i].get_pos('x') - 45, enemies[i].get_pos('y') - 45);
 
@@ -1930,9 +1925,9 @@ void Interface::name_creation(sf::Event& event) {
 		else if (event.text.unicode < 128) {
 			char letter{ static_cast<char>(event.text.unicode) };
 
-			if (name_ph_1.size() > 20 or letter == '\\' or letter == ' ' or letter == '=' or 
-				letter == '$' or letter == '*' or letter == '|' or letter == '~' or letter == '.' or 
-				letter == '"' or letter == '\'')
+			if (name_ph_1.size() > 20 || letter == '\\' || letter == ' ' || letter == '=' || 
+				letter == '$' || letter == '*' || letter == '|' || letter == '~' || letter == '.' || 
+				letter == '"' || letter == '\'')
 				return;
 
 			name_ph_1 += static_cast<char>(event.text.unicode);
@@ -1942,22 +1937,22 @@ void Interface::name_creation(sf::Event& event) {
 }
 void Interface::handle_exit_prompt(int x, int y) {
 	if (exit_menu) {
-		if (x > 480 and x < 680 and y > 340 and y < 380)
+		if (x > 480 && x < 680 && y > 340 && y < 380)
 			exit_menu = false;
-		else if (x > 480 and x < 680 and y > 420 and y < 460) {
+		else if (x > 480 && x < 680 && y > 420 && y < 460) {
 			exit_menu = false, title = true;
 			reset_game();
 		}
-		else if (x > 480 and x < 680 and y > 500 and y < 540)
+		else if (x > 480 && x < 680 && y > 500 && y < 540)
 			window.close();
 	}
 }
 void Interface::handle_stat_pick_prompt(int x, int y) {
-	if (!exit_menu and stat_screen)
+	if (!exit_menu && stat_screen)
 		for (unsigned int i{ 0 }; i < 6; i++) {
-			if (y > 230 + (i * 57) and y < 270 + (i * 57)) {
-				if (x > 480 and x < 560 and player.get_stat(i) != 0) {
-					if (i == 0 and player.get_stat(0) == 5) continue;
+			if (y > 230 + (i * 57) && y < 270 + (i * 57)) {
+				if (x > 480 && x < 560 && player.get_stat(i) != 0) {
+					if (i == 0 && player.get_stat(0) == 5) continue;
 					if (i <= 1) player.set_stat(6 + i, player.get_stat(6 + i) - 1);
 
 					player.set_stat(i, player.get_stat(i) - 1);
@@ -1966,7 +1961,7 @@ void Interface::handle_stat_pick_prompt(int x, int y) {
 					stats_left_draw[1].setString(std::to_string(player.get_pts()));
 				}
 
-				else if (x > 620 and x < 700 and player.get_pts() != 0) {
+				else if (x > 620 && x < 700 && player.get_pts() != 0) {
 					if (i <= 1) player.set_stat(6 + i, player.get_stat(6 + i) + 1);
 
 					player.set_stat(i, player.get_stat(i) + 1);
@@ -1975,7 +1970,7 @@ void Interface::handle_stat_pick_prompt(int x, int y) {
 					stats_left_draw[1].setString(std::to_string(player.get_pts()));
 				}
 			}
-			else if (x > 520 and x < 710 and y > 580 and y < 645) {
+			else if (x > 520 && x < 710 && y > 580 && y < 645) {
 				stat_screen = false, main_screen = true;
 				player.set_point(0);
 				stats_left_draw[1].setString("0");
@@ -1983,7 +1978,7 @@ void Interface::handle_stat_pick_prompt(int x, int y) {
 		}
 }
 void Interface::handle_lvl_prompt(int x, int y) {
-	if (!exit_menu and lvl_screen) {
+	if (!exit_menu && lvl_screen) {
 		if (!level_up_reset) {
 			player.copy_stat(level_up_backup_stats);
 			level_up_backup_left = player.get_pts();
@@ -1991,22 +1986,22 @@ void Interface::handle_lvl_prompt(int x, int y) {
 		}
 
 		for (unsigned int i{ 0 }; i < 6; i++) {
-			if (y > 230 + (i * 57) and y < 270 + (i * 57)) {
-				if (x > 620 and x < 700 and player.get_pts() != 0) {
+			if (y > 230 + (i * 57) && y < 270 + (i * 57)) {
+				if (x > 620 && x < 700 && player.get_pts() != 0) {
 					player.set_stat(i, player.get_stat(i) + 1);
 					stats_draw[i].setString(std::to_string(player.get_stat(i)));
 					player.set_point(player.get_pts() - 1);
 					stats_left_draw[1].setString(std::to_string(player.get_pts()));
 				}
 			}
-			else if (x > 520 and x < 710 and y > 580 and y < 645) {
+			else if (x > 520 && x < 710 && y > 580 && y < 645) {
 				lvl_screen = false, level_up_reset = false; main_screen = true;
 				player.set_point(0);
 				stats_left_draw[1].setString("0");
 			}
 		}
 
-		if (x > 1120 and x < 1170 and y > 10 and y < 60) {
+		if (x > 1120 && x < 1170 && y > 10 && y < 60) {
 			player.copy_stat(level_up_backup_stats);
 			player.set_point(level_up_backup_left);
 			stats_left_draw[1].setString(std::to_string(player.get_pts()));
@@ -2015,22 +2010,22 @@ void Interface::handle_lvl_prompt(int x, int y) {
 	}
 }
 void Interface::handle_title_prompt(int x, int y) {
-	if (!exit_menu and title) {
-		if (x > 350 and x < 460 and y > 475 and y < 535)
+	if (!exit_menu && title) {
+		if (x > 350 && x < 460 && y > 475 && y < 535)
 			window.close();
-		else if (x > 350 and x < 460 and y > 325 and y < 385)
+		else if (x > 350 && x < 460 && y > 325 && y < 385)
 			title = false, name_screen = true;
-		else if (x > 350 and x < 460 and y > 400 and y < 465)
+		else if (x > 350 && x < 460 && y > 400 && y < 465)
 			load();
 	}
 }
 void Interface::handle_main_prompt(int x, int y) {
-	if (main_screen and !ext_screen) {
-		if (x > 970 and x < 1170 and y > 100 and y < 200)
+	if (main_screen && !ext_screen) {
+		if (x > 970 && x < 1170 && y > 100 && y < 200)
 			lvl_screen = true, main_screen = false;
-		else if (x > 1150 and x < 1200 and y > 750 and y < 800)
+		else if (x > 1150 && x < 1200 && y > 750 && y < 800)
 			ext_screen = true, main_screen = false;
-		else if (x > 830 and x < 878 and y > 310 and y < 358 and inv_select->get_id() != 0) {
+		else if (x > 830 && x < 878 && y > 310 && y < 358 && inv_select->get_id() != 0) {
 			std::vector<Item*>::iterator itr = std::find(items.begin(), items.end(), inv_select);
 			items.erase(itr);
 			inv_select = new Place_Holder(), select_itm = new Place_Holder();
@@ -2039,60 +2034,60 @@ void Interface::handle_main_prompt(int x, int y) {
 			ene_overall();
 			itm_select_shortcut('n');
 		}
-		else if (x > 830 and x < 878 and y > 310 and y < 358 and inv_select->get_id() == 0)
+		else if (x > 830 && x < 878 && y > 310 && y < 358 && inv_select->get_id() == 0)
 			itm_select_shortcut('s');
-		else if (x > 750 and x < 829 and y > 250 and y < 450 and items.size() > 1)
+		else if (x > 750 && x < 829 && y > 250 && y < 450 && items.size() > 1)
 			itm_select_shortcut('l');
-		else if (x > 879 and x < 960 and y > 250 and y < 450 and items.size() > 1)
+		else if (x > 879 && x < 960 && y > 250 && y < 450 && items.size() > 1)
 			itm_select_shortcut('r');
-		else if (x > 1050 and x < 1098 and y > 310 and y < 358 and spell_select->get_id() != 0) {
+		else if (x > 1050 && x < 1098 && y > 310 && y < 358 && spell_select->get_id() != 0) {
 			(spell_select->get_use() != 4) ? spell_select->use(floor, player, enemies) : pl_sp_atk(spell_select);
 
 			spell_select = new PH_Spell(), spell_desc = new PH_Spell();
 			spell_select->set_pos(-100, -100), inv_select_rect.setPosition(-100, -100);
 			ene_overall();
 		}
-		else if (x > 1050 and x < 1098 and y > 310 and y < 358 and spell_select->get_id() == 0)
+		else if (x > 1050 && x < 1098 && y > 310 && y < 358 && spell_select->get_id() == 0)
 			sp_select_shortcut('s');
-		else if (x > 970 and x < 1049 and y > 250 and y < 450 and spells.size() > 1)
+		else if (x > 970 && x < 1049 && y > 250 && y < 450 && spells.size() > 1)
 			sp_select_shortcut('l');
-		else if (x > 1099 and x < 1187 and y > 250 and y < 450 and spells.size() > 1)
+		else if (x > 1099 && x < 1187 && y > 250 && y < 450 && spells.size() > 1)
 			sp_select_shortcut('r');
 	}
 }
 void Interface::handle_ext_prompt(int x, int y) {
-	if (!exit_menu and ext_screen) {
-		if (x > 1000 and x < 1200 and y > 200 and y < 300)
+	if (!exit_menu && ext_screen) {
+		if (x > 1000 && x < 1200 && y > 200 && y < 300)
 			map_menu = true, main_screen = false;
-		else if (x > 1000 and x < 1200 and y > 300 and y < 400)
+		else if (x > 1000 && x < 1200 && y > 300 && y < 400)
 			load();
-		else if (x > 1000 and x < 1200 and y > 400 and y < 500) {
+		else if (x > 1000 && x < 1200 && y > 400 && y < 500) {
 			scan_popup = !scan_popup;
 			scan_popup ? extra_menu_txt[2].setString("Scan -\nEnabled") : extra_menu_txt[2].setString("Scan -\nDisabled");
 		}
-		else if (x > 1000 and x < 1200 and y > 500 and y < 600) {
+		else if (x > 1000 && x < 1200 && y > 500 && y < 600) {
 			ext_screen = false, main_screen = false, inv_screen = true, inv_select_rect.setPosition(-100, -100);
 			inv_select = new Place_Holder(), inv_draw_desc = new Place_Holder(); select_itm = new Place_Holder();
 		}
-		else if (x > 1000 and x < 1200 and y > 600 and y < 700)
+		else if (x > 1000 && x < 1200 && y > 600 && y < 700)
 			ext_screen = false, main_screen = false, sp_screen = true, inv_select_rect.setPosition(-100, -100);
-		else if (x > 800 and x < 1000 and y > 700 and y < 800)
+		else if (x > 800 && x < 1000 && y > 700 && y < 800)
 			save();
-		else if (x > 0 and x < 200 and y > 700 and y < 800)
+		else if (x > 0 && x < 200 && y > 700 && y < 800)
 			help_ui = !help_ui;
-		else if (!(x > 1000 and x < 1200 and y > 700 and y < 800))
+		else if (!(x > 1000 && x < 1200 && y > 700 && y < 800))
 			ext_screen = false, help_ui = false, main_screen = true;
 	}
 }
 void Interface::handle_inv_prompt(int x, int y) {
-	if (!exit_menu and inv_screen) {
-		if (x > 1120 and x < 1170 and y > 10 and y < 60) {
+	if (!exit_menu && inv_screen) {
+		if (x > 1120 && x < 1170 && y > 10 && y < 60) {
 			inv_screen = false, main_screen = true;
 			inv_select = new Place_Holder(), inv_draw_desc = new Place_Holder(); select_itm = new Place_Holder();
 			inv_select_rect.setPosition(-100, -100);
 		}
 
-		else if (inv_select->get_type() == 0 and x > 520 and x < 700 and y > 660 and y < 740) {
+		else if (inv_select->get_type() == 0 && x > 520 && x < 700 && y > 660 && y < 740) {
 			if (!inv_select->get_hp_mp_other())
 				inv_select->use(player);
 
@@ -2107,32 +2102,32 @@ void Interface::handle_inv_prompt(int x, int y) {
 		for (unsigned int i{ 0 }; i < items.size(); i++) {
 			int i1x = items[i]->get_pos('x'), i1y = items[i]->get_pos('y');
 
-			if (x > i1x and x < i1x + 60 and y > i1y and y < i1y + 60) {
+			if (x > i1x && x < i1x + 60 && y > i1y && y < i1y + 60) {
 				int i2x = inv_select->get_pos('x'), i2y = inv_select->get_pos('y');
 
-				if (inv_select->get_type() != 3 and x > i2x and x < i2x + 60 and y > i2y and y < i2y + 60) {
+				if (inv_select->get_type() != 3 && x > i2x && x < i2x + 60 && y > i2y && y < i2y + 60) {
 					inv_select = new Place_Holder(), inv_draw_desc = new Place_Holder();
 					inv_select->set_pos(-100, -100), inv_select_rect.setPosition(-100, -100);
 					return;
 				}
-				else if ((inv_select == pl_weapon and items[i]->get_type() == 1 and x > i1x and x < i1x + 60 and y > i1y and y < i1y + 60) or
-					(inv_select->get_type() == 1 and x > 200 and x < 260 and y > 140 and y < 200))  {
+				else if ((inv_select == pl_weapon && items[i]->get_type() == 1 && x > i1x && x < i1x + 60 && y > i1y && y < i1y + 60) or
+					(inv_select->get_type() == 1 && x > 200 && x < 260 && y > 140 && y < 200))  {
 					inv_select == pl_weapon ? itm_equip_weapon(items[i]) : itm_equip_weapon(inv_select);
 
 					inv_select = new Place_Holder(), inv_draw_desc = new Place_Holder();
 					inv_select_rect.setPosition(-100, -100);
 					return;
 				}
-				else if ((inv_select == pl_armor and items[i]->get_type() == 2 and x > i1x and x < i1x + 60 and y > i1y and y < i1y + 60) or
-					(inv_select->get_type() == 2 and x > 600 and x < 660 and y > 140 and y < 200)) {
+				else if ((inv_select == pl_armor && items[i]->get_type() == 2 && x > i1x && x < i1x + 60 && y > i1y && y < i1y + 60) or
+					(inv_select->get_type() == 2 && x > 600 && x < 660 && y > 140 && y < 200)) {
 					inv_select == pl_armor ? itm_equip_armor(items[i]) : itm_equip_armor(inv_select);
 
 					inv_select = new Place_Holder(), inv_draw_desc = new Place_Holder();
 					inv_select_rect.setPosition(-100, -100);
 					return;
 				}
-				else if (inv_select->get_type() != 3 and inv_select != pl_weapon and inv_select != pl_armor and 
-					!(x > 200 and x < 260 and y > 140 and y < 200) and !(x > 600 and x < 660 and y > 140 and y < 200)) {
+				else if (inv_select->get_type() != 3 && inv_select != pl_weapon && inv_select != pl_armor && 
+					!(x > 200 && x < 260 && y > 140 && y < 200) && !(x > 600 && x < 660 && y > 140 && y < 200)) {
 					inv_select->set_pos(items[i]->get_pos('x'), items[i]->get_pos('y')); 
 					items[i]->set_pos(i2x, i2y);
 					inv_select = new Place_Holder(), inv_draw_desc = new Place_Holder();
@@ -2151,14 +2146,14 @@ void Interface::handle_inv_prompt(int x, int y) {
 	}
 }
 void Interface::handle_spell_prompt(int x, int y) {
-	if (!exit_menu and sp_screen) {
-		if (x > 1120 and x < 1170 and y > 10 and y < 60) {
+	if (!exit_menu && sp_screen) {
+		if (x > 1120 && x < 1170 && y > 10 && y < 60) {
 			sp_screen = false, main_screen = true;
 			spell_select = new PH_Spell(), spell_desc = new PH_Spell();
 			inv_select_rect.setPosition(-100, -100);
 		}
 
-		if (spell_select->get_id() != 0 and x > 520 and x < 700 and y > 660 and y < 740) {
+		if (spell_select->get_id() != 0 && x > 520 && x < 700 && y > 660 && y < 740) {
 
 			(spell_select->get_use() != 4) ? spell_select->use(floor, player, enemies) : pl_sp_atk(spell_select);
 
@@ -2170,16 +2165,16 @@ void Interface::handle_spell_prompt(int x, int y) {
 		for (unsigned int i{ 0 }; i < spells.size(); i++) {
 			int sx = spells[i]->get_pos('x'), sy = spells[i]->get_pos('y');
 
-			if (spell_select->get_id() != 0 and x > 520 and x < 700 and y > 660 and y < 740) {
+			if (spell_select->get_id() != 0 && x > 520 && x < 700 && y > 660 && y < 740) {
 				sounds[4].play();
 				spell_select = new PH_Spell(), spell_desc = new PH_Spell();
 				spell_select->set_pos(-100, -100), inv_select_rect.setPosition(-100, -100);
 			}
 
-			if (x > sx and x < sx + 60 and y > sy and y < sy + 60) {
+			if (x > sx && x < sx + 60 && y > sy && y < sy + 60) {
 				int sx2 = spell_select->get_pos('x'), sy2 = spell_select->get_pos('y');
 
-				if (spell_select->get_id() != 0 and x > sx2 and x < sx2 + 60 and y > sy2 and y < sy2 + 60) {
+				if (spell_select->get_id() != 0 && x > sx2 && x < sx2 + 60 && y > sy2 && y < sy2 + 60) {
 					spell_select = new PH_Spell(), spell_desc = new PH_Spell();
 					spell_select->set_pos(-100, -100), inv_select_rect.setPosition(-100, -100);
 					return;
@@ -2224,7 +2219,7 @@ void Interface::handle_player_action(char input, unsigned int mode) {
 		}
 	}
 	else if (mode == 1)
-		if (input == 'u' or input == 'r' or input == 'd' or input == 'l') {
+		if (input == 'u' || input == 'r' || input == 'd' || input == 'l') {
 			pl_atk();
 			ene_dead();
 			ene_overall();
@@ -2259,7 +2254,7 @@ void Interface::handle_move_pick_itm() {
 	int pl_x{ player.get_pos('x') }, pl_y{ player.get_pos('y') };
 	
 	for (int i{ static_cast<int>(floor.collectibles.size()) - 1 }; i > -1; i--) {
-		if (pl_x == floor.collectibles[i].get_pos('x') and pl_y == floor.collectibles[i].get_pos('y')) {
+		if (pl_x == floor.collectibles[i].get_pos('x') && pl_y == floor.collectibles[i].get_pos('y')) {
 			sounds[0].play();
 			itm_add_item(Item::create_itm(floor.collectibles[i].get_id(), font));
 			floor.collectibles.erase(floor.collectibles.begin() + i);
@@ -2271,7 +2266,7 @@ void Interface::handle_move_pick_gld() {
 	int plx{ player.get_pos('x') }, ply{ player.get_pos('y') };
 
 	for (int i{ static_cast<int>(floor.golds.size()) - 1 }; i > -1; i--) {
-		if (plx == floor.golds[i].get_pos('x') and ply == floor.golds[i].get_pos('y')) {
+		if (plx == floor.golds[i].get_pos('x') && ply == floor.golds[i].get_pos('y')) {
 			sounds[0].play();
 			player.set_gold(player.get_gold() + floor.golds[i].get_amount());
 			main_gold_txt.setString("Gold: " + std::to_string(player.get_gold()));
@@ -2283,8 +2278,8 @@ void Interface::handle_move_pick_gld() {
 	}
 }
 void Interface::handle_map_prompt(int x, int y) {
-	if (!exit_menu and map_menu)
-		if (x > 1120 and x < 1170 and y > 10 and y < 60)
+	if (!exit_menu && map_menu)
+		if (x > 1120 && x < 1170 && y > 10 && y < 60)
 			map_menu = false, main_screen = true;
 }
 void Interface::handle_sp_atk(std::array<int, 4> sp_inf) {
@@ -2302,14 +2297,14 @@ void Interface::handle_sp_atk(std::array<int, 4> sp_inf) {
 		sf::Event event;
 
 		while (window.pollEvent(event)) {
-			if (event.type == sf::Event::MouseButtonPressed and event.mouseButton.button == sf::Mouse::Left) {
-				if (x > 1120 and x < 1170 and y > 10 and y < 60)
+			if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
+				if (x > 1120 && x < 1170 && y > 10 && y < 60)
 					return;
 
-				if (x >= 400 - (sp_inf[1] * 40) and x <= 440 + (sp_inf[1] * 40) and y >= 400 - (sp_inf[1] * 40) and y <= 440 + (sp_inf[1] * 40))
+				if (x >= 400 - (sp_inf[1] * 40) && x <= 440 + (sp_inf[1] * 40) && y >= 400 - (sp_inf[1] * 40) && y <= 440 + (sp_inf[1] * 40))
 					for (unsigned int i{ 0 }; i < enemies.size(); i++) {
-						if (x >= enemies[i].get_pos('x') and x <= enemies[i].get_pos('x') + 40 and
-							y >= enemies[i].get_pos('y') and y <= enemies[i].get_pos('y') + 40) {
+						if (x >= enemies[i].get_pos('x') && x <= enemies[i].get_pos('x') + 40 and
+							y >= enemies[i].get_pos('y') && y <= enemies[i].get_pos('y') + 40) {
 							player.use_mp(sp_inf[3]);
 							enemies[i].set_hp(sp_inf[2], sp_inf[0] + player.get_stat(sp_inf[2] + 4));
 							return;
@@ -2323,7 +2318,7 @@ void Interface::handle_sp_atk(std::array<int, 4> sp_inf) {
 
 // handle shop events
 void Interface::handle_shop() {
-	if (floor.get_shop_pos('x') != player.get_pos('x') or floor.get_shop_pos('y') != player.get_pos('y'))
+	if (floor.get_shop_pos('x') != player.get_pos('x') || floor.get_shop_pos('y') != player.get_pos('y'))
 		return;
 
 	sounds[3].play();
@@ -2333,15 +2328,15 @@ void Interface::handle_shop() {
 		sf::Event event;
 
 		while (window.pollEvent(event)) {
-			if (event.type == sf::Event::MouseButtonPressed and event.mouseButton.button == sf::Mouse::Left) {
-				if (x > 1120 and x < 1170 and y > 10 and y < 60) {
+			if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
+				if (x > 1120 && x < 1170 && y > 10 && y < 60) {
 					main_gold_txt.setString("Gold: " + std::to_string(player.get_gold()));
 					return;
 				}
 
-				if (x > 350 and x < 500 and y > 350 and y < 400)
+				if (x > 350 && x < 500 && y > 350 && y < 400)
 					handle_sh_buy_and_sell(true);
-				else if (x > 750 and x < 900 and y > 350 and y < 400)
+				else if (x > 750 && x < 900 && y > 350 && y < 400)
 					handle_sh_buy_and_sell(false);
 			}
 
@@ -2375,13 +2370,13 @@ void Interface::handle_sh_buy_and_sell(bool buy_or_sell) {
 		sf::Event event;
 
 		while (window.pollEvent(event)) {
-			if (event.type == sf::Event::MouseButtonPressed and event.mouseButton.button == sf::Mouse::Left) {
-				if (x > 1120 and x < 1170 and y > 10 and y < 60)
+			if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
+				if (x > 1120 && x < 1170 && y > 10 && y < 60)
 					return;
 
-				if (x > 350 and x < 500 and y > 350 and y < 400)
+				if (x > 350 && x < 500 && y > 350 && y < 400)
 					(buy_or_sell) ? handle_sh_wp_buy() : handle_sh_wp_sell();
-				else if (x > 750 and x < 900 and y > 350 and y < 400)
+				else if (x > 750 && x < 900 && y > 350 && y < 400)
 					(buy_or_sell) ? handle_sh_sp_buy() : handle_sh_sp_sell();
 			}
 		}
@@ -2394,13 +2389,13 @@ void Interface::handle_sh_wp_buy() {
 		sf::Event event;
 
 		while (window.pollEvent(event)) {
-			if (event.type == sf::Event::MouseButtonPressed and event.mouseButton.button == sf::Mouse::Left) {
-				if (x > 1120 and x < 1170 and y > 10 and y < 60) {
+			if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
+				if (x > 1120 && x < 1170 && y > 10 && y < 60) {
 					inv_select = new Place_Holder(), inv_draw_desc = new Place_Holder();
 					inv_select->set_pos(-100, -100), inv_select_rect.setPosition(-100, -100);
 					return;
 				}
-				else if (inv_select->get_id() != 0 and x > 520 and x < 700 and y > 660 and y < 740) {
+				else if (inv_select->get_id() != 0 && x > 520 && x < 700 && y > 660 && y < 740) {
 					if (player.use_gold(inv_select->get_buy_gd())) {
 						Item* it = new Item(*inv_select);
 						itm_add_item(it);
@@ -2413,10 +2408,10 @@ void Interface::handle_sh_wp_buy() {
 				for (unsigned int i{ 0 }; i < 6; i++) {
 					int sx = sh_buy_it[i]->get_pos('x'), sy = sh_buy_it[i]->get_pos('y');
 
-					if (x > sx and x < sx + 60 and y > sy and y < sy + 60) {
+					if (x > sx && x < sx + 60 && y > sy && y < sy + 60) {
 						int sx2 = inv_select->get_pos('x'), sy2 = inv_select->get_pos('y');
 
-						if (inv_select->get_id() != 0 and x > sx2 and x < sx2 + 60 and y > sy2 and y < sy2 + 60) {
+						if (inv_select->get_id() != 0 && x > sx2 && x < sx2 + 60 && y > sy2 && y < sy2 + 60) {
 							inv_select = new Place_Holder(), inv_draw_desc = new Place_Holder();
 							inv_select->set_pos(-100, -100), inv_select_rect.setPosition(-100, -100);
 						}
@@ -2463,13 +2458,13 @@ void Interface::handle_sh_wp_sell() {
 		sf::Event event;
 
 		while (window.pollEvent(event)) {
-			if (event.type == sf::Event::MouseButtonPressed and event.mouseButton.button == sf::Mouse::Left) {
-				if (x > 1120 and x < 1170 and y > 10 and y < 60) {
+			if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
+				if (x > 1120 && x < 1170 && y > 10 && y < 60) {
 					inv_select = new Place_Holder(), inv_draw_desc = new Place_Holder();
 					inv_select->set_pos(-100, -100), inv_select_rect.setPosition(-100, -100);
 					return;
 				}
-				else if (inv_select->get_id() != 0 and x > 520 and x < 700 and y > 660 and y < 740) {
+				else if (inv_select->get_id() != 0 && x > 520 && x < 700 && y > 660 && y < 740) {
 					player.set_gold(player.get_gold() + inv_select->get_sell_gd());
 
 					std::vector<Item*>::iterator itr = std::find(items.begin(), items.end(), inv_select);
@@ -2482,13 +2477,13 @@ void Interface::handle_sh_wp_sell() {
 				for (unsigned int i{ 0 }; i < items.size(); i++) {
 					int sx = items[i]->get_pos('x'), sy = items[i]->get_pos('y');
 
-					if (items[i] == pl_weapon or items[i] == pl_armor)
+					if (items[i] == pl_weapon || items[i] == pl_armor)
 						continue;
 
-					if (x > sx and x < sx + 60 and y > sy and y < sy + 60) {
+					if (x > sx && x < sx + 60 && y > sy && y < sy + 60) {
 						int sx2 = inv_select->get_pos('x'), sy2 = inv_select->get_pos('y');
 
-						if (inv_select->get_id() != 0 and x > sx2 and x < sx2 + 60 and y > sy2 and y < sy2 + 60) {
+						if (inv_select->get_id() != 0 && x > sx2 && x < sx2 + 60 && y > sy2 && y < sy2 + 60) {
 							inv_select = new Place_Holder(), inv_draw_desc = new Place_Holder();
 							inv_select->set_pos(-100, -100), inv_select_rect.setPosition(-100, -100);
 						}
@@ -2512,7 +2507,7 @@ void Interface::handle_sh_wp_sell() {
 			window.draw(rect);
 
 		for (Item* itm : items)
-			if (itm != pl_weapon and itm != pl_armor)
+			if (itm != pl_weapon && itm != pl_armor)
 				itm->draw(window, 't');
 
 		window.draw(inv_equipment_slot_rect[2]);
@@ -2536,13 +2531,13 @@ void Interface::handle_sh_sp_buy() {
 		sf::Event event;
 
 		while (window.pollEvent(event)) {
-			if (event.type == sf::Event::MouseButtonPressed and event.mouseButton.button == sf::Mouse::Left) {
-				if (x > 1120 and x < 1170 and y > 10 and y < 60) {
+			if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
+				if (x > 1120 && x < 1170 && y > 10 && y < 60) {
 					spell_select = new PH_Spell(), spell_desc = new PH_Spell();
 					spell_select->set_pos(-100, -100), inv_select_rect.setPosition(-100, -100);
 					return;
 				}
-				else if (spell_select->get_id() != 0 and x > 520 and x < 700 and y > 660 and y < 740) {
+				else if (spell_select->get_id() != 0 && x > 520 && x < 700 && y > 660 && y < 740) {
 					
 					bool add_spell{ true };
 					for (unsigned int i{ 0 }; i < spells.size(); i++)
@@ -2564,10 +2559,10 @@ void Interface::handle_sh_sp_buy() {
 				for (unsigned int i{ 0 }; i < 3; i++) {
 					int sx = sh_buy_sp[i]->get_pos('x'), sy = sh_buy_sp[i]->get_pos('y');
 
-					if (x > sx and x < sx + 60 and y > sy and y < sy + 60) {
+					if (x > sx && x < sx + 60 && y > sy && y < sy + 60) {
 						int sx2 = spell_select->get_pos('x'), sy2 = spell_select->get_pos('y');
 
-						if (spell_select->get_id() != 0 and x > sx2 and x < sx2 + 60 and y > sy2 and y < sy2 + 60) {
+						if (spell_select->get_id() != 0 && x > sx2 && x < sx2 + 60 && y > sy2 && y < sy2 + 60) {
 							spell_select = new PH_Spell(), spell_desc = new PH_Spell();
 							spell_select->set_pos(-100, -100), inv_select_rect.setPosition(-100, -100);
 						}
@@ -2613,13 +2608,13 @@ void Interface::handle_sh_sp_sell() {
 		sf::Event event;
 
 		while (window.pollEvent(event)) {
-			if (event.type == sf::Event::MouseButtonPressed and event.mouseButton.button == sf::Mouse::Left) {
-				if (x > 1120 and x < 1170 and y > 10 and y < 60) {
+			if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
+				if (x > 1120 && x < 1170 && y > 10 && y < 60) {
 					spell_select = new PH_Spell(), spell_desc = new PH_Spell();
 					spell_select->set_pos(-100, -100), inv_select_rect.setPosition(-100, -100);
 					return;
 				}
-				else if (spell_select->get_id() != 0 and x > 520 and x < 700 and y > 660 and y < 740) {
+				else if (spell_select->get_id() != 0 && x > 520 && x < 700 && y > 660 && y < 740) {
 					player.set_gold(player.get_gold() + spell_select->get_sell_gd());
 
 					std::vector<Spell*>::iterator itr = std::find(spells.begin(), spells.end(), spell_select);
@@ -2632,10 +2627,10 @@ void Interface::handle_sh_sp_sell() {
 				for (unsigned int i{ 0 }; i < spells.size(); i++) {
 					int sx = spells[i]->get_pos('x'), sy = spells[i]->get_pos('y');
 
-					if (x > sx and x < sx + 60 and y > sy and y < sy + 60) {
+					if (x > sx && x < sx + 60 && y > sy && y < sy + 60) {
 						int sx2 = spell_select->get_pos('x'), sy2 = spell_select->get_pos('y');
 
-						if (spell_select->get_id() != 0 and x > sx2 and x < sx2 + 60 and y > sy2 and y < sy2 + 60) {
+						if (spell_select->get_id() != 0 && x > sx2 && x < sx2 + 60 && y > sy2 && y < sy2 + 60) {
 							spell_select = new PH_Spell(), spell_desc = new PH_Spell();
 							spell_select->set_pos(-100, -100), inv_select_rect.setPosition(-100, -100);
 						}

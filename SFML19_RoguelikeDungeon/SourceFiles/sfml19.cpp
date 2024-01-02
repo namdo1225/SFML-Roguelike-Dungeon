@@ -8,7 +8,6 @@
 #include "interface_class.h"
 
 int main() {
-
     std::srand(static_cast<unsigned int>(std::time(nullptr) * std::time(nullptr) / 2 + 3 * 5));
     srand(time(NULL));
 
