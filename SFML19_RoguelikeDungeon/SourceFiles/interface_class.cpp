@@ -1153,7 +1153,7 @@ void Interface::create_title_ui() {
 			std::string str2 = "\n\nOpen Sans font from fontsource.org\n\nInstructions: use the arrow keys to ";
 			std::string str3 = "\nmove the players. Tap on the level \nup button to upgrade your stats.";
 			std::string str4 = "\n\nSound effects created on \nsfxr.me/, MIT License.";
-			std::string str5 = "\n\nTerrible song created on \nbeepbox.co/, MIT License.";
+			std::string str5 = "\n\nSongs created on \nbeepbox.co/, MIT License.";
 			std::string str6 = "\n\nYes, I did create the bad sprites.";
 			std::string str7 = "\n\nVersion: 2.0, with graphics";
 
