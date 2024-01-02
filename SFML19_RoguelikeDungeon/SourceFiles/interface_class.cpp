@@ -115,9 +115,12 @@ void Interface::reset_game() {
 	itm_add_item(new Iron_Sword(font));
 	itm_add_item(new Iron_Armor(font));
 	itm_add_item(new Health_Potion(font));
+	itm_add_item(new Mana_Potion(font));
 	
 	spells.clear();
 	sp_add_spell(new Fire(font));
+	sp_add_spell(new Heal(font));
+
 
 	itm_equip_weapon(items[0]);
 	itm_equip_armor(items[1]);
@@ -248,10 +251,11 @@ void Interface::save() {
 	std::ofstream file_out{ player.get_name() + ".sav" };
 
 	if (!file_out) {
-		log_add("Save not successfull.");
+		log_add("Save not successful.");
 		return;
 	}
 
+	// Saves player stats
 	file_out << player.get_name() << '\n';
 	file_out << player.get_floor() << '\n';
 	file_out << player.get_lvl() << '\n';
@@ -267,6 +271,7 @@ void Interface::save() {
 	file_out << player.get_stat(5) << '\n';
 	file_out << "-1\n";
 
+	// Saves player's items
 	for (Item* itm : items)
 		file_out << itm->get_id() << '\n';
 	file_out << "-1\n";
@@ -278,10 +283,12 @@ void Interface::save() {
 			file_out << i << '\n';
 	file_out << "-1\n";
 
+	// Saves spells
 	for (Spell* sp : spells)
 		file_out << sp->get_id() << '\n';
 	file_out << "-1\n";
 
+	// Saves floor, rooms, and doors
 	for (unsigned int i{ 0 }; i < floor.rooms.size(); i++) {
 		file_out << "R " << floor.rooms[i].get_rm('x') << ' ' 
 			<< floor.rooms[i].get_rm('y') << ' '
@@ -302,8 +309,10 @@ void Interface::save() {
 	}
 	file_out << "-1\n";
 
+	// Saves stair
 	file_out << floor.get_stair_pos('x') << ' ' << floor.get_stair_pos('y') << "\n-1\n";
 
+	// Saves shop
 	if (floor.shop_exist()) {
 		file_out << '1' << "\n";
 		file_out << floor.get_shop_pos('x') << ' ' << floor.get_shop_pos('y') << "\n-1\n";
@@ -311,15 +320,17 @@ void Interface::save() {
 	else
 		file_out << '0' << "\n-1\n";
 
+	// Saves enemies
 	for (Enemy en : enemies)
 		file_out << en.get_id() << ' ' << en.get_stat(0) << ' ' << en.get_pos('x') << ' ' << en.get_pos('y') << '\n';
 	file_out << "-1\n";
 
+	// Saves items on floot
 	for (Collectible col : floor.collectibles)
 		file_out << col.get_id() << ' ' << col.get_pos('x') << ' ' << col.get_pos('y') << '\n';
 	file_out << "-1\n";
 
-
+	// Saves golds on floot
 	for (Gold_Collectible gold : floor.golds)
 		file_out << gold.get_amount() << ' ' << gold.get_pos('x') << ' ' << gold.get_pos('y') << '\n';
 	file_out << "-1";
@@ -420,7 +431,7 @@ void Interface::read_save(std::string file_name) {
 	file >> num;
 	player.set_point(num);
 
-	// player current exp && level up exp
+	// player current exp and level up exp
 	int num2;
 	file >> num >> num2;
 	std::istringstream f(str);
@@ -456,7 +467,7 @@ void Interface::read_save(std::string file_name) {
 		file >> num;
 	}
 
-	// weapon && armor slot
+	// weapon and armor slot
 	file >> num;
 	itm_equip_weapon(items[num]);
 	file >> num;
@@ -473,7 +484,7 @@ void Interface::read_save(std::string file_name) {
 
 	// load rooms
 	file >> str;
-	floor = Floor();
+	floor = Floor(true);
 	while (str != "-1") {
 		int ints[9]; int size = 4;
 		if (str == "D")
@@ -488,7 +499,7 @@ void Interface::read_save(std::string file_name) {
 			floor.load_door(ints[0], ints[1], ints[4], ints[5], ints[6], ints[7], ints[8]);
 		file >> str;
 	}
-
+	floor.make_map();
 	player.set_pos(400, 400);
 
 	// load stair
@@ -508,6 +519,7 @@ void Interface::read_save(std::string file_name) {
 	int num3, num4;
 	file >> num;
 	enemy_respawn = 0;
+	enemies.clear();
 	while (num != -1) {
 		file >> num2 >> num3 >> num4;
 		enemies.push_back(Enemy(num2, player.get_floor(), num, num3, num4));
@@ -590,7 +602,7 @@ void Interface::pl_atk() {
 	int x{ player.get_pos('x') }, y{ player.get_pos('y') }, x2{ x + 40 }, y2{ y + 40 };
 	unsigned int pl_room_pos{ 255 }, en_room_pos{ 255 }, v{ 255 };
 
-	// Check which room player is in && save that room index.
+	// Check which room player is in and save that room index.
 	for (unsigned int i{ 0 }; i < floor.rooms.size(); i++)
 		if (floor.rooms[i].in_room(x, y, x2, y2))
 			pl_room_pos = i;
@@ -603,13 +615,13 @@ void Interface::pl_atk() {
 	if (v == 255)
 		return;
 
-	// Check what room the selected enemy is in && save that room index.
+	// Check what room the selected enemy is in and save that room index.
 	int enx{ enemies[v].get_pos('x') }, eny{ enemies[v].get_pos('y') }, enx2{ enx + 40 }, eny2{ eny + 40 };
 	for (unsigned int i{ 0 }; i < floor.rooms.size(); i++)
 		if (floor.rooms[i].in_room(enx, eny, enx2, eny2))
 			en_room_pos = i;
 
-	// Check whether the player && the enemy are in different room. If so, get either the player or enemy's room that has a door.
+	// Check whether the player and the enemy are in different room. If so, get either the player or enemy's room that has a door.
 	 unsigned int door_i = (floor.rooms[en_room_pos].door_exist()) ? en_room_pos : pl_room_pos;
 
 	// If they are both in different room, check if they are adjacent to each other, separated only by a door. If not, return.
@@ -811,7 +823,7 @@ void Interface::ene_mov_close(unsigned int v) {
 	}
 }
 bool Interface::ene_mov_close_2(unsigned int v, int offx, int offy) {
-	// check for obstruction with other enemies && player
+	// check for obstruction with other enemies and player
 	int x{ enemies[v].get_pos('x') }, y{ enemies[v].get_pos('y') };
 
 	for (unsigned int i{ 0 }; i < enemies.size(); i++) {
@@ -1149,12 +1161,12 @@ void Interface::create_title_ui() {
 			temp.setString("RL: Dungeon");
 		}
 		else if (i == 1) {
-			std::string str1 = "Developed with the help of\ninternet forums && SFML Graphics,\nzlib/png license.";
+			std::string str1 = "Developed with the help of\ninternet forums and SFML Graphics,\nzlib/png license.";
 			std::string str2 = "\n\nOpen Sans font from fontsource.org\n\nInstructions: use the arrow keys to ";
 			std::string str3 = "\nmove the players. Tap on the level \nup button to upgrade your stats.";
 			std::string str4 = "\n\nSound effects created on \nsfxr.me/, MIT License.";
 			std::string str5 = "\n\nSongs created on \nbeepbox.co/, MIT License.";
-			std::string str6 = "\n\nYes, I did create the bad sprites.";
+			std::string str6 = "\n\nSprites created in Krita.";
 			std::string str7 = "\n\nVersion: 2.0, with graphics";
 
 			temp.setPosition(740, 20);
@@ -1175,7 +1187,7 @@ void Interface::create_title_ui() {
 	}
 }
 void Interface::create_name_ui() {
-	new_game_prompt = sf::Text("Enter your name (up to 20 characters) && press 'Enter' after you are finished.", font, 24);
+	new_game_prompt = sf::Text("Enter your name (up to 20 characters) and press 'Enter' after you are finished.", font, 24);
 	new_game_prompt.setPosition(170, 150);
 	new_game_prompt.setStyle(sf::Text::Bold);
 
@@ -1543,7 +1555,7 @@ void Interface::create_ext_ui() {
 	extra_menu_help_rect.setPosition(100, 100);
 }
 void Interface::create_inv_ui() {
-	inv_title.setString("Equipment && Inventory");
+	inv_title.setString("Equipment and Inventory");
 	inv_title.setCharacterSize(42);
 	inv_title.setFont(font);
 	inv_title.setStyle(sf::Text::Bold);

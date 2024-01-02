@@ -359,6 +359,8 @@ private:
 	Shop shop;
 	Stair stair;
 
+	void make_room_door();
+
 public:
 
 	std::vector<Room> rooms;
@@ -368,8 +370,11 @@ public:
 
 	/**
 	* Constructor for Floor.
+	* 
+	* Parameter:
+	*	load: a bool for whether the floor is being loaded from a save file.
 	*/
-	Floor();
+	Floor(bool load = false);
 
 	/**
 	* Helper method to set a room's position && size.

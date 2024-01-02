@@ -201,9 +201,17 @@ bool Room::load_texture() {
 	return true;
 }
 
-Floor::Floor() {
-	// maximum floor size: 2160x2160, one square: 40x40
+Floor::Floor(bool load) {
+	if (!load) {
+		make_room_door();
+		make_stair();
+		make_shop();
+		make_map();
+	}
+}
 
+void Floor::make_room_door() {
+	// maximum floor size: 2160x2160, one square: 40x40
 	int max_rm{ rand() % 10 + 2 };
 	for (unsigned int i{ 0 }; i < max_rm; i++) {
 		int sx{ (rand() % 6 + 4) * 120 }, sy{ (rand() % 6 + 4) * 120 },
@@ -293,10 +301,6 @@ Floor::Floor() {
 
 		rooms[i].set_door(rand_dr_x, rand_dr_y, rand_dr);
 	}
-
-	make_stair();
-	make_shop();
-	make_map();
 }
 
 void Floor::set_rm_pos_size(int rand_door, int& rand_coord, int& rand_size, int& rand_coord_2,
@@ -500,10 +504,11 @@ void Floor::make_gold(unsigned int floor) {
 }
 
 void Floor::make_map() {
+	rooms_map.clear();
+
 	Room first = rooms[0];
 	int offset_x = first.get_rm('x') / 8 - 550;
 	int offset_y = first.get_rm('y') / 8 - 350;
-
 
 	for (Room rm : rooms) {
 		rm.set_pos_and_size(rm.get_rm('x') / 8 - offset_x, rm.get_rm('y') / 8 - offset_y, rm.get_rm('w') / 8, rm.get_rm('h') / 8);

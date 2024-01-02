@@ -110,10 +110,8 @@ Health_Potion::Health_Potion(sf::Font& font) : Item(1, 0, true, false, 0, 5, 0, 
 }
 
 void Health_Potion::use(Player& player) {
-	if (player.get_stat(6) > player.get_stat(0) - 5)
-		player.set_stat(6, player.get_stat(0));
-	else
-		player.set_stat(6, player.get_stat(6) + 5);
+	unsigned int difference = player.get_stat(0) - player.get_stat(6);
+	player.set_stat(6, difference > 5 ? player.get_stat(6) + 5 : player.get_stat(0));
 }
 
 Iron_Sword::Iron_Sword(sf::Font &font) : Item(6, 1, true, true, 2, 3, 1, 40, 10, "IS", font) {
@@ -129,14 +127,12 @@ Magic_Armor::Magic_Armor(sf::Font& font) : Item(5, 2, true, true, 5, 2, 0, 50, 2
 }
 
 Mana_Potion::Mana_Potion(sf::Font& font) : Item(2, 0, true, false, 1, 5, 0, 15, 3, "MI", font) {
-	description.setString("Mana Potion\n\nA potion that restore a \nsmall amount of mana.\n\n+5 HP\n\nBUY: 15G\nSELL: 3G");
+	description.setString("Mana Potion\n\nA potion that restore a \nsmall amount of mana.\n\n+5 MP\n\nBUY: 15G\nSELL: 3G");
 }
 
 void Mana_Potion::use(Player& player) {
-	if (player.get_stat(7) > player.get_stat(1) - 5)
-		player.set_stat(7, player.get_stat(1));
-	else
-		player.set_stat(7, player.get_stat(7) + 5);
+	unsigned int difference = player.get_stat(1) - player.get_stat(7);
+	player.set_stat(7, difference > 5 ? player.get_stat(7) + 5 : player.get_stat(1));
 }
 
 Wooden_Staff::Wooden_Staff(sf::Font& font) : Item(3, 1, true, true, 3, 2, 2, 50, 20, "WS", font) {
