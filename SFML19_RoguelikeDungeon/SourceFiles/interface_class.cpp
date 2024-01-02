@@ -1426,7 +1426,7 @@ void Interface::create_main_ui() {
 	main_gold_txt.setOutlineThickness(3.f);
 	main_gold_txt.setOutlineColor(sf::Color::Black);
 
-	main_stat_popup_rect.setSize(sf::Vector2f(100, 100));
+	main_stat_popup_rect.setSize(sf::Vector2f(100, 150));
 	main_stat_popup_rect.setFillColor(sf::Color::Black);
 	main_stat_popup_rect.setOutlineThickness(2.f);
 	main_stat_popup_rect.setOutlineColor(sf::Color::White);
