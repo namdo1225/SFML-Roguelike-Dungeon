@@ -359,6 +359,9 @@ private:
 	Shop shop;
 	Stair stair;
 
+	/**
+	* Constructs rooms and doors for a new floor.
+	*/
 	void make_room_door();
 
 public:
