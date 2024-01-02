@@ -214,14 +214,16 @@ void Interface::handle_event(sf::Event& event) {
 			}
 
 		if (main_screen && !exit_menu) {
-			if (!player.is_stuck(0) && sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-				handle_player_action('u', 0);
-			else if (!player.is_stuck(1) && sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-				handle_player_action('r', 0);
-			else if (!player.is_stuck(2) && sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-				handle_player_action('d', 0);
-			else if (!player.is_stuck(3) && sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-				handle_player_action('l', 0);
+			if (event.type == sf::Event::KeyPressed) {
+				if (!player.is_stuck(0) && event.key.code == sf::Keyboard::Up)
+					handle_player_action('u', 0);
+				else if (!player.is_stuck(1) && event.key.code ==  sf::Keyboard::Right)
+					handle_player_action('r', 0);
+				else if (!player.is_stuck(2) && event.key.code == sf::Keyboard::Down)
+					handle_player_action('d', 0);
+				else if (!player.is_stuck(3) && event.key.code == sf::Keyboard::Left)
+					handle_player_action('l', 0);
+			}
 
 			if (event.mouseButton.button == sf::Mouse::Left) {
 				if (x >= 400 && x <= 440 && y >= 360 - ((pl_weapon->get_range() - 1) * 40) && y <= 400)
@@ -233,9 +235,9 @@ void Interface::handle_event(sf::Event& event) {
 				else if (x >= 360 - ((pl_weapon->get_range() - 1) * 40) && x <= 400 && y >= 400 && y <= 440)
 					handle_player_action('l', 1);
 			}
-			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+			else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::W)
 				ene_overall();
-			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
+			else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Q) {
 				next_level();
 				handle_shop();
 			}
@@ -1157,8 +1159,8 @@ void Interface::create_title_ui() {
 		}
 		else if (i == 0) {
 			temp.setCharacterSize(96);
-			temp.setPosition(125.f, 200.f);
-			temp.setString("RL: Dungeon");
+			temp.setPosition(170.f, 40.f);
+			temp.setString("Roguelike\nDungeon");
 		}
 		else if (i == 1) {
 			std::string str1 = "Developed with the help of\ninternet forums and SFML Graphics,\nzlib/png license.";

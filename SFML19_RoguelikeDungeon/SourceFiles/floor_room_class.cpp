@@ -7,11 +7,12 @@
 
 #include "floor_room_class.h"
 
-sf::Texture Room::room_tex;
 sf::Texture Stair::stair_tex;
 sf::Texture Shop::shop_tex;
 sf::Texture Gold_Collectible::gold_tex;
 sf::Texture Collectible::col_tex;
+const unsigned int Room::num_textures;
+std::array<sf::Texture, Room::num_textures> Room::room_texs = { sf::Texture(), sf::Texture(), sf::Texture(), sf::Texture() };
 
 Collectible::Collectible() {
 	rect.setSize(sf::Vector2f(40, 40));
@@ -98,7 +99,10 @@ Room::Room() {
 	sf::Color rgb(rand() % 50 + 100, rand() % 75, rand() % 75);
 
 	rm_draw.setOutlineColor(rgb);
-	rm_draw.setTexture(&room_tex, false);
+
+	int texture_num = rand() % num_textures;
+	rm_draw.setTexture(&room_texs[texture_num], false);
+
 }
 
 void Room::set_pos_and_size(int x, int y, int sx, int sy) {
@@ -195,9 +199,27 @@ void Room::set_doors(unsigned int i, bool j) { doors[i] = j; }
 void Room::draw(sf::RenderWindow& window, char d) { (d == 'r') ? window.draw(rm_draw) : window.draw(dr_draw); }
 
 bool Room::load_texture() {
-	if (!room_tex.loadFromFile("Texture\\GG_00_StonePath.jpg"))
-		return false;
-	room_tex.setRepeated(true);
+	for (int i = 0; i < num_textures; i++) {
+		room_texs[i].setRepeated(true);
+		bool loaded = true;
+		switch (i) {
+		case 0:
+			loaded = room_texs[i].loadFromFile("Texture\\GG_00_StonePath.jpg");
+			break;
+		case 1:
+			loaded = room_texs[i].loadFromFile("Texture\\GG_07_WoodPath.jpg");
+			break;
+		case 2:
+			loaded = room_texs[i].loadFromFile("Texture\\GG_08_GrassPath.jpg");
+			break;
+		default:
+			loaded = room_texs[i].loadFromFile("Texture\\GG_09_LavaPath.jpg");
+			break;
+		}
+
+		if (!loaded)
+			return false;
+	}
 	return true;
 }
 

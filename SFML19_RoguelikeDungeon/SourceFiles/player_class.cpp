@@ -78,7 +78,7 @@ unsigned int Player::get_floor() { return floor; }
 
 void Player::set_name(std::string t_name) { name.setString(t_name); }
 
-void Player::set_floor(unsigned int fl_num) { floor = fl_num; }
+void Player::set_floor(unsigned int fl_num) { floor = (fl_num % INT_MAX) == 0 ? 1 : fl_num; }
 
 void Player::set_level(unsigned int t_lvl) { level = t_lvl; }
 

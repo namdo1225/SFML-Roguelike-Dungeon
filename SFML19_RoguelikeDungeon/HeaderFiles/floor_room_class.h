@@ -212,7 +212,8 @@ public:
 class Room {
 private:
 
-	static sf::Texture room_tex;
+	static const unsigned int num_textures = 4;
+	static std::array<sf::Texture, num_textures> room_texs;
 
 	// 0, 2 = horizontal. 1, 3 = vertical
 	unsigned int door_rotation;
