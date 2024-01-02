@@ -10,7 +10,7 @@
 
 # Instructions to use
 1. Click “Start” to start the game.
-!(Start the game picture)[https://namdo1225.github.io/images/projects_media/20230526_sfml19/00_title.png]
+![Start the game picture](https://namdo1225.github.io/images/projects_media/20230526_sfml19/00_title.png)
 2. Enter a name and hit “Enter”. Note that there are some restricted characters for the name.
 3. Select your stats and click “Continue”.
 4. You can now play the game!
