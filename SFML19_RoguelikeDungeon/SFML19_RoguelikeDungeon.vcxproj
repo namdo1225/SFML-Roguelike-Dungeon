@@ -133,24 +133,36 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="SourceFiles\collectible_class.cpp" />
     <ClCompile Include="SourceFiles\enemies_class.cpp" />
-    <ClCompile Include="SourceFiles\floor_room_class.cpp" />
+    <ClCompile Include="SourceFiles\floor_class.cpp" />
+    <ClCompile Include="SourceFiles\gold_collectible_class.cpp" />
     <ClCompile Include="SourceFiles\interactibles_class.cpp" />
     <ClCompile Include="SourceFiles\interface_class.cpp" />
     <ClCompile Include="SourceFiles\items_class.cpp" />
+    <ClCompile Include="SourceFiles\map_class.cpp" />
     <ClCompile Include="SourceFiles\player_class.cpp" />
+    <ClCompile Include="SourceFiles\room_class.cpp" />
     <ClCompile Include="SourceFiles\sfml19.cpp" />
+    <ClCompile Include="SourceFiles\shop_class.cpp" />
     <ClCompile Include="SourceFiles\spell_class.cpp" />
+    <ClCompile Include="SourceFiles\stair_class.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="HeaderFiles\collectible_class.h" />
     <ClInclude Include="HeaderFiles\enemies_class.h" />
-    <ClInclude Include="HeaderFiles\floor_room_class.h" />
+    <ClInclude Include="HeaderFiles\floor_class.h" />
+    <ClInclude Include="HeaderFiles\gold_collectible_class.h" />
     <ClInclude Include="HeaderFiles\include.h" />
     <ClInclude Include="HeaderFiles\interactibles_class.h" />
     <ClInclude Include="HeaderFiles\interface_class.h" />
     <ClInclude Include="HeaderFiles\items_class.h" />
+    <ClInclude Include="HeaderFiles\map_class.h" />
     <ClInclude Include="HeaderFiles\player_class.h" />
+    <ClInclude Include="HeaderFiles\room_class.h" />
+    <ClInclude Include="HeaderFiles\shop_class.h" />
     <ClInclude Include="HeaderFiles\spell_class.h" />
+    <ClInclude Include="HeaderFiles\stair_class.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

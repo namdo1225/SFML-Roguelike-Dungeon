@@ -18,7 +18,7 @@
     <ClCompile Include="SourceFiles\enemies_class.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SourceFiles\floor_room_class.cpp">
+    <ClCompile Include="SourceFiles\floor_class.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SourceFiles\interactibles_class.cpp">
@@ -39,12 +39,30 @@
     <ClCompile Include="SourceFiles\spell_class.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SourceFiles\stair_class.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceFiles\shop_class.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceFiles\collectible_class.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceFiles\gold_collectible_class.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceFiles\room_class.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceFiles\map_class.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="HeaderFiles\enemies_class.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="HeaderFiles\floor_room_class.h">
+    <ClInclude Include="HeaderFiles\floor_class.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="HeaderFiles\include.h">
@@ -63,6 +81,24 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="HeaderFiles\spell_class.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HeaderFiles\stair_class.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HeaderFiles\shop_class.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HeaderFiles\collectible_class.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HeaderFiles\gold_collectible_class.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HeaderFiles\room_class.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HeaderFiles\map_class.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

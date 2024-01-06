@@ -1,234 +1,18 @@
 /**
 *
-* File: floor_room_class.cpp
-* Description: Contain implementations for Floor and Room classes.
+* File: floor_class.cpp
+* Description: Contain implementations for Floor class.
 *
 */
 
-#include "floor_room_class.h"
-
-sf::Texture Stair::stair_tex;
-sf::Texture Shop::shop_tex;
-sf::Texture Gold_Collectible::gold_tex;
-sf::Texture Collectible::col_tex;
-const unsigned int Room::num_textures;
-std::array<sf::Texture, Room::num_textures> Room::room_texs = { sf::Texture(), sf::Texture(), sf::Texture(), sf::Texture() };
-
-Collectible::Collectible() {
-	rect.setSize(sf::Vector2f(40, 40));
-	rect.setFillColor(sf::Color::Yellow);
-	rect.setTextureRect(sf::IntRect(0, 0, 40, 40));
-	rect.setTexture(&col_tex);
-}
-
-Collectible::Collectible(int x, int y, unsigned int t_id) : Collectible() {
-	id = t_id;
-	rect.setPosition(x, y);
-}
-
-int Collectible::get_pos(char z) { return z == 'x' ? rect.getPosition().x : rect.getPosition().y; }
-
-unsigned int Collectible::get_id() { return id; }
-
-void Collectible::set_pos(int x, int y) { rect.setPosition(x, y); }
-
-void Collectible::draw(sf::RenderWindow& window) { window.draw(rect); }
-
-bool Collectible::load_texture() {
-	return col_tex.loadFromFile("Texture\\GG_04_Items.png");
-}
-
-Gold_Collectible::Gold_Collectible() {
-	rect.setSize(sf::Vector2f(40, 40));
-	rect.setFillColor(sf::Color::Yellow);
-	rect.setTextureRect(sf::IntRect(0, 0, 40, 40));
-	rect.setTexture(&gold_tex);
-}
-
-Gold_Collectible::Gold_Collectible(unsigned int floor, unsigned int t_amount, int x, int y) : Gold_Collectible() {
-	amount = (floor != 0) ? rand() % (5 * floor) + (floor * 0.25) + 1 : t_amount;
-	rect.setPosition(x, y);
-}
-
-unsigned int Gold_Collectible::get_amount() { return amount; }
-
-void Gold_Collectible::set_pos(int x, int y) { rect.setPosition(x, y); }
-
-int Gold_Collectible::get_pos(char z) { return (z == 'x') ? rect.getPosition().x : rect.getPosition().y; }
-
-void Gold_Collectible::draw(sf::RenderWindow& window) { window.draw(rect); }
-
-bool Gold_Collectible::load_texture() {
-	return gold_tex.loadFromFile("Texture\\GG_01_Gold.png");
-}
-
-Stair::Stair() {
-	rect.setSize(sf::Vector2f(40, 40));
-	rect.setFillColor(sf::Color::Yellow);
-	rect.setTextureRect(sf::IntRect(0, 0, 40, 40));
-	rect.setTexture(&stair_tex);
-}
-
-Stair::Stair(int x, int y) : Stair() {
-	rect.setPosition(x, y);
-}
-
-bool Stair::load_texture() {
-	return stair_tex.loadFromFile("Texture\\GG_05_Stair.png");
-}
-
-Shop::Shop() {
-	rect.setSize(sf::Vector2f(40, 40));
-	rect.setFillColor(sf::Color::White);
-	rect.setTextureRect(sf::IntRect(0, 0, 40, 40));
-	rect.setTexture(&shop_tex);
-}
-
-Shop::Shop(int x, int y) : Shop() {
-	rect.setPosition(x, y);
-}
-
-bool Shop::load_texture() {
-	return shop_tex.loadFromFile("Texture\\GG_06_Shop.jpg");
-}
-
-Room::Room() {
-	rm_draw.setFillColor(sf::Color::White);
-	rm_draw.setOutlineThickness(3.f);
-
-	sf::Color rgb(rand() % 50 + 100, rand() % 75, rand() % 75);
-
-	rm_draw.setOutlineColor(rgb);
-
-	int texture_num = rand() % num_textures;
-	rm_draw.setTexture(&room_texs[texture_num], false);
-
-}
-
-void Room::set_pos_and_size(int x, int y, int sx, int sy) {
-	if (sx != -1 && sy != -1) {
-		rm_draw.setSize(sf::Vector2f(sx, sy));
-		rm_draw.setTextureRect(sf::IntRect(0, 0, rm_draw.getSize().x, rm_draw.getSize().y));
-	}
-	rm_draw.setPosition(x, y);
-}
-
-void Room::set_door(int x, int y, int purpose) {
-	if (purpose > -1) {
-		door_rotation = purpose;
-		door = true;
-		(purpose % 2 == 1) ? dr_draw.setSize(sf::Vector2f(0, 120)) : dr_draw.setSize(sf::Vector2f(120, 0));
-
-		dr_draw.setFillColor(sf::Color::Black);
-		dr_draw.setOutlineColor(sf::Color::White);
-		dr_draw.setOutlineThickness(1.5f);
-	} else if (purpose == -2)
-		dr_draw.setSize(sf::Vector2f(x, y));
-
-	if (purpose >= -1)
-		dr_draw.setPosition(x, y);
-}
-
-int Room::get_rm(char z) {
-	switch (z) {
-	case 'x':
-		return rm_draw.getPosition().x;
-	case 'y':
-		return rm_draw.getPosition().y;
-	case 'w':
-		return rm_draw.getSize().x;
-	case 'h':
-		return rm_draw.getSize().y;
-	case '1':
-		return rm_draw.getPosition().x + rm_draw.getSize().x;
-	case '2':
-		return rm_draw.getPosition().y + rm_draw.getSize().y;
-	case '3':
-		return rm_draw.getPosition().y + rm_draw.getSize().x + rm_draw.getSize().y;
-	}
-}
-
-int Room::get_door(char z) {
-	switch (z) {
-	case 'x':
-		return dr_draw.getPosition().x;
-	case 'y':
-		return dr_draw.getPosition().y;
-	case 'w':
-		return dr_draw.getSize().x;
-	case 'h':
-		return dr_draw.getSize().y;
-	case 'r':
-		return door_rotation;
-	case '0':
-		return doors[0];
-	case '1':
-		return doors[1];
-	case '2':
-		return doors[2];
-	case '3':
-		return doors[3];
-	}
-}
-
-bool Room::in_room(int x, int y, int x2, int y2) {
-	return (x >= rm_draw.getPosition().x && y >= rm_draw.getPosition().y &&
-		x2 <= rm_draw.getPosition().x + rm_draw.getSize().x && y2 <= rm_draw.getPosition().y + rm_draw.getSize().y);
-}
-
-bool Room::door_exist() { return door; }
-
-bool Room::touch_door(int x, int y, int x2, int y2) {
-	// if door does not exist, return false.
-	if (!door)
-		return false;
-	// if the door is horizontal
-	else if (door_rotation % 2 == 0)
-		return ((y == dr_draw.getPosition().y || y2 == dr_draw.getPosition().y) &&
-			(x >= dr_draw.getPosition().x && x2 <= dr_draw.getPosition().x + 120));
-	// if the door is vertical
-	else
-		return ((x == dr_draw.getPosition().x || x2 == dr_draw.getPosition().x) &&
-			(y >= dr_draw.getPosition().y && y2 <= dr_draw.getPosition().y + 120));
-}
-
-bool Room::get_doors(unsigned int i) { return doors[i]; }
-
-void Room::set_doors(unsigned int i, bool j) { doors[i] = j; }
-
-void Room::draw(sf::RenderWindow& window, char d) { (d == 'r') ? window.draw(rm_draw) : window.draw(dr_draw); }
-
-bool Room::load_texture() {
-	for (int i = 0; i < num_textures; i++) {
-		room_texs[i].setRepeated(true);
-		bool loaded = true;
-		switch (i) {
-		case 0:
-			loaded = room_texs[i].loadFromFile("Texture\\GG_00_StonePath.jpg");
-			break;
-		case 1:
-			loaded = room_texs[i].loadFromFile("Texture\\GG_07_WoodPath.jpg");
-			break;
-		case 2:
-			loaded = room_texs[i].loadFromFile("Texture\\GG_08_GrassPath.jpg");
-			break;
-		default:
-			loaded = room_texs[i].loadFromFile("Texture\\GG_09_LavaPath.jpg");
-			break;
-		}
-
-		if (!loaded)
-			return false;
-	}
-	return true;
-}
+#include "floor_class.h"
 
 Floor::Floor(bool load) {
 	if (!load) {
 		make_room_door();
 		make_stair();
 		make_shop();
-		make_map();
+		map = Map(rooms);
 	}
 }
 
@@ -410,8 +194,8 @@ void Floor::make_shop() {
 	int x = ((rand() % rw) + rx) * 40;
 	int y = ((rand() % rh) + ry) * 40;
 
-	float sx = stair.rect.getPosition().x;
-	float sy = stair.rect.getPosition().y;
+	float sx = stair.getPosition().x;
+	float sy = stair.getPosition().y;
 
 	bool notInRoom = !rooms[rand_room].in_room(x, y, x + 40, y + 40);
 
@@ -424,9 +208,9 @@ void Floor::make_shop() {
 	fl_shop = true;
 }
 
-int Floor::get_shop_pos(char z) { return z == 'x' ? shop.rect.getPosition().x : shop.rect.getPosition().y; }
+int Floor::get_shop_pos(char z) { return z == 'x' ? shop.getPosition().x : shop.getPosition().y; }
 
-int Floor::get_stair_pos(char z) { return z == 'x' ? stair.rect.getPosition().x : stair.rect.getPosition().y; }
+int Floor::get_stair_pos(char z) { return z == 'x' ? stair.getPosition().x : stair.getPosition().y; }
 
 bool Floor::shop_exist() { return fl_shop; }
 
@@ -437,10 +221,10 @@ void Floor::draw(sf::RenderWindow& window) {
 	for (Room rm : rooms)
 		rm.draw(window, 'd');
 
-	window.draw(stair.rect);
+	window.draw(stair);
 
 	if (fl_shop)
-		window.draw(shop.rect);
+		window.draw(shop);
 
 	for (Gold_Collectible gold : golds)
 		gold.draw(window);
@@ -449,9 +233,9 @@ void Floor::draw(sf::RenderWindow& window) {
 		col.draw(window);
 }
 
-void Floor::set_shop_pos(int x, int y) { shop.rect.setPosition(x, y); }
+void Floor::set_shop_pos(int x, int y) { shop.setPosition(x, y); }
 
-void Floor::set_stair_pos(int x, int y) { stair.rect.setPosition(x, y); }
+void Floor::set_stair_pos(int x, int y) { stair.setPosition(x, y); }
 
 void Floor::load_room(int x, int y, int sx, int sy) { rooms.push_back(Room()); rooms.back().set_pos_and_size(x, y, sx, sy); }
 
@@ -526,27 +310,5 @@ void Floor::make_gold(unsigned int floor) {
 }
 
 void Floor::make_map() {
-	rooms_map.clear();
-
-	Room first = rooms[0];
-	int offset_x = first.get_rm('x') / 8 - 550;
-	int offset_y = first.get_rm('y') / 8 - 350;
-
-	for (Room rm : rooms) {
-		rm.set_pos_and_size(rm.get_rm('x') / 8 - offset_x, rm.get_rm('y') / 8 - offset_y, rm.get_rm('w') / 8, rm.get_rm('h') / 8);
-
-		if (rm.door_exist())
-			rm.set_door(rm.get_door('x') / 8 - offset_x, rm.get_door('y') / 8 - offset_y, -1),
-			rm.set_door((rm.get_door('r') % 2 == 0) ? 15 : 0, (rm.get_door('r') % 2 == 0) ? 0 : 15, -2);
-
-		rooms_map.push_back(rm);
-	}
-}
-
-void Floor::draw_map(sf::RenderWindow& window) {
-	for (Room rm : rooms_map)
-		rm.draw(window, 'r');
-
-	for (Room rm : rooms_map)
-		rm.draw(window, 'd');
+	map = Map(rooms);
 }

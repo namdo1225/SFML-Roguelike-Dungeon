@@ -1003,10 +1003,7 @@ void Interface::itm_select_shortcut(char place) {
 		int stop{ cur_it_shortcut };
 
 		while (!end_loop) {
-			cur_sp_shortcut = (place == 'l') ? cur_sp_shortcut - 1 : cur_sp_shortcut + 1;
-
-			if (cur_it_shortcut >= items.size())
-				cur_it_shortcut = 0;
+			cur_it_shortcut = ((place == 'l') ? cur_it_shortcut - 1 : cur_it_shortcut + 1) % items.size();
 
 			if (items[cur_it_shortcut]->get_type() == 0) {
 				select_itm = items[cur_it_shortcut];
@@ -1093,9 +1090,7 @@ void Interface::sp_select_shortcut(char place) {
 		int stop{ cur_sp_shortcut };
 
 		while (!end_loop) {
-			cur_sp_shortcut = (place == 'l') ? cur_sp_shortcut - 1 : cur_sp_shortcut + 1;
-			if (cur_sp_shortcut < 0)
-				cur_sp_shortcut = spells.size() - 1;
+			cur_sp_shortcut = ((place == 'l') ? cur_sp_shortcut - 1 : cur_sp_shortcut + 1) % spells.size();
 
 			if (spells[cur_sp_shortcut]->get_id() != 0) {
 				select_sp = spells[cur_sp_shortcut];
@@ -1717,6 +1712,8 @@ bool Interface::create_audio() {
 	return true;
 }
 bool Interface::create_texture() {
+	Map::setup(font);
+
 	if (!Room::load_texture()) return false;
 
 	if (!Gold_Collectible::load_texture()) return false;
@@ -1917,7 +1914,7 @@ void Interface::draw_sp_ui() {
 }
 void Interface::draw_map_ui() {
 	window.draw(background);
-	floor.draw_map(window);
+	floor.map.draw(window);
 	window.draw(level_up_exit_rect);
 	window.draw(level_up_exit_txt);
 }
@@ -2072,7 +2069,7 @@ void Interface::handle_main_prompt(int x, int y) {
 void Interface::handle_ext_prompt(int x, int y) {
 	if (!exit_menu && ext_screen) {
 		if (x > 1000 && x < 1200 && y > 200 && y < 300)
-			map_menu = true, main_screen = false;
+			map_menu = true, main_screen = ext_screen = false;
 		else if (x > 1000 && x < 1200 && y > 300 && y < 400)
 			load();
 		else if (x > 1000 && x < 1200 && y > 400 && y < 500) {
@@ -2084,13 +2081,13 @@ void Interface::handle_ext_prompt(int x, int y) {
 			inv_select = new Place_Holder(), inv_draw_desc = new Place_Holder(); select_itm = new Place_Holder();
 		}
 		else if (x > 1000 && x < 1200 && y > 600 && y < 700)
-			ext_screen = false, main_screen = false, sp_screen = true, inv_select_rect.setPosition(-100, -100);
+			ext_screen = main_screen = false, sp_screen = true, inv_select_rect.setPosition(-100, -100);
 		else if (x > 800 && x < 1000 && y > 700 && y < 800)
 			save();
 		else if (x > 0 && x < 200 && y > 700 && y < 800)
 			help_ui = !help_ui;
 		else if (!(x > 1000 && x < 1200 && y > 700 && y < 800))
-			ext_screen = false, help_ui = false, main_screen = true;
+			ext_screen = help_ui = false, main_screen = true;
 	}
 }
 void Interface::handle_inv_prompt(int x, int y) {
@@ -2292,9 +2289,12 @@ void Interface::handle_move_pick_gld() {
 	}
 }
 void Interface::handle_map_prompt(int x, int y) {
-	if (!exit_menu && map_menu)
+	if (!exit_menu && map_menu) {
 		if (x > 1120 && x < 1170 && y > 10 && y < 60)
-			map_menu = false, main_screen = true;
+			map_menu = main_screen = false, ext_screen = true;
+		else
+			floor.map.handleEvent(x, y);
+	}
 }
 void Interface::handle_sp_atk(std::array<int, 4> sp_inf) {
 	inv_select_rect.setPosition(-100, -100);
