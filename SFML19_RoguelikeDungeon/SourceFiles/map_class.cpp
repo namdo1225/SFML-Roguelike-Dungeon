@@ -81,6 +81,11 @@ void Map::setup(sf::Font& font) {
 }
 
 void Map::move(char direction) {
+	for (unsigned int i = 0; i < map.size(); i++)
+		if (map[i].get_rm('x') < -100000 || map[i].get_rm('y') < -100000 ||
+			map[i].get_rm('x') + map[i].get_rm('w') > 100000 || map[i].get_rm('y') + map[i].get_rm('h') > 100000)
+			return;
+
 	int moveV = 0;
 	int moveH = 0;
 
