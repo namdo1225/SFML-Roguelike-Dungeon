@@ -12,7 +12,7 @@
 #include "..\SFML-2.5.1/include/SFML/Graphics.hpp"
 #include "player_class.h"
 #include "enemies_class.h"
-#include "floor_room_class.h"
+#include "floor_class.h"
 
 class Spell {
 protected:
