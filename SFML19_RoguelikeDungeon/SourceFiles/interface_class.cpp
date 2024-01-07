@@ -84,6 +84,8 @@ void Interface::next_level() {
 	ene_add();
 	floor.make_collectible(player.get_floor());
 	floor.make_gold(player.get_floor());
+	floor.make_interactible(player.get_floor());
+
 	center_floor();
 	enemy_respawn = 5;
 	floor_copied = false;
