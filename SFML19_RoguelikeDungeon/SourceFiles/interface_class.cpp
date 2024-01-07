@@ -109,6 +109,7 @@ void Interface::reset_game() {
 	enemy_respawn = rand() % 5 + 1;
 	floor.make_collectible(player.get_floor());
 	floor.make_gold(player.get_floor());
+	floor.make_interactible(player.get_floor());
 	center_floor();
 
 	items.clear();
@@ -154,6 +155,9 @@ void Interface::center_floor() {
 
 	for (Gold_Collectible& gold : floor.golds)
 		gold.set_pos(gold.get_pos('x') + off_x, gold.get_pos('y') + off_y);
+
+	for (Interactible& interactible : floor.interactibles)
+		interactible.set_pos(interactible.get_pos('x') + off_x, interactible.get_pos('y') + off_y);
 
 	floor.set_stair_pos(floor.get_stair_pos('x') + off_x, floor.get_stair_pos('y') + off_y);
 	floor.set_shop_pos(floor.get_shop_pos('x') + off_x, floor.get_shop_pos('y') + off_y);
@@ -661,6 +665,7 @@ void Interface::refresh_exp() {
 
 	main_level_text[1].setString(std::to_string(player.get_lvl()));
 	main_level_text[2].setString(std::to_string(player.get_cur_exp()) + " / " + std::to_string(player.get_lvl_up()));
+	log_add("You leveled up!");
 }
 void Interface::pl_sp_atk(Spell* spell) {
 	std::array<int, 4> sp_inf = spell->atk(player);
@@ -687,8 +692,6 @@ void Interface::ene_add() {
 	int rand_enemy_num{ rand() % 7 + 1 + static_cast<int>((player.get_floor() * 0.1)) };
 
 	for (unsigned int z{ 0 }; z < rand_enemy_num; z++) {
-		//Enemy ene = Enemy(font, textures[3]);
-
 		// Check which room player is not in.
 		int rand_room{ rand() % static_cast<int>(floor.rooms.size()) };
 		while (floor.rooms[rand_room].in_room(player.get_pos('x'), player.get_pos('y'),
@@ -1113,7 +1116,7 @@ void Interface::sp_select_shortcut(char place) {
 
 // handle text log event
 void Interface::log_add(std::string string) {
-	if (main_log.size() == 8) {
+	if (main_log.size() == 9) {
 		main_log.erase(main_log.begin());
 		for (unsigned int i = 0; i < main_log.size(); i++) {
 			main_log[i].setPosition(755, main_log[i].getPosition().y - 30);
@@ -1728,6 +1731,8 @@ bool Interface::create_texture() {
 
 	if (!Shop::load_texture()) return false;
 
+	if (!Interactible::load_texture()) return false;
+
 	return true;
 }
 
@@ -2224,18 +2229,19 @@ void Interface::handle_player_action(char input, unsigned int mode) {
 
 		if (handle) {
 			handle_move_everything(offx, offy);
+			player.use_effect();
 			ene_overall();
 			handle_move_pick_itm();
 			handle_move_pick_gld();
+			handle_move_pick_interact();
 		}
 	}
-	else if (mode == 1)
-		if (input == 'u' || input == 'r' || input == 'd' || input == 'l') {
-			pl_atk();
-			ene_dead();
-			ene_overall();
-			ene_add();
-		}
+	else if (mode == 1 && (input == 'u' || input == 'r' || input == 'd' || input == 'l')) {
+		pl_atk();
+		ene_dead();
+		ene_overall();
+		ene_add();
+	}
 }
 void Interface::handle_move_everything(int offx, int offy) {
 	for (unsigned int i{ 0 }; i < floor.rooms.size(); i++) {
@@ -2256,6 +2262,8 @@ void Interface::handle_move_everything(int offx, int offy) {
 		col.set_pos(col.get_pos('x') + offx, col.get_pos('y') + offy);
 	for (Gold_Collectible& gold : floor.golds)
 		gold.set_pos(gold.get_pos('x') + offx, gold.get_pos('y') + offy);
+	for (Interactible& interactible : floor.interactibles)
+		interactible.set_pos(interactible.get_pos('x') + offx, interactible.get_pos('y') + offy);
 
 	floor.set_shop_pos(floor.get_shop_pos('x') + offx, floor.get_shop_pos('y') + offy);
 }
@@ -2269,6 +2277,7 @@ void Interface::handle_move_pick_itm() {
 			sounds[0].play();
 			itm_add_item(Item::create_itm(floor.collectibles[i].get_id(), font));
 			floor.collectibles.erase(floor.collectibles.begin() + i);
+			log_add("You picked up an item.");
 			return;
 		}
 	}
@@ -2279,13 +2288,69 @@ void Interface::handle_move_pick_gld() {
 	for (int i{ static_cast<int>(floor.golds.size()) - 1 }; i > -1; i--) {
 		if (plx == floor.golds[i].get_pos('x') && ply == floor.golds[i].get_pos('y')) {
 			sounds[0].play();
-			player.set_gold(player.get_gold() + floor.golds[i].get_amount());
+			int floor_gold = floor.golds[i].get_amount();
+			player.set_gold(player.get_gold() + floor_gold);
+			log_add("You collected " + std::to_string(floor_gold) + " golds.");
 			main_gold_txt.setString("Gold: " + std::to_string(player.get_gold()));
 			floor.golds.erase(floor.golds.begin() + i);
 			return;
 
 		}
+	}
+}
+void Interface::handle_move_pick_interact() {
+	int plx{ player.get_pos('x') }, ply{ player.get_pos('y') };
 
+	for (int i{ static_cast<int>(floor.interactibles.size()) - 1 }; i > -1; i--) {
+		if (plx == floor.interactibles[i].get_pos('x') && ply == floor.interactibles[i].get_pos('y')) {
+			sounds[0].play();
+
+			int effect = rand() % 100;
+			if (effect < 10) {
+				ene_add();
+				log_add("More enemies are spawned.");
+			}
+			else if (effect >= 10 && effect < 20) {
+				player.set_gold(player.get_gold() * .75);
+				main_gold_txt.setString("Gold: " + std::to_string(player.get_gold()));
+				log_add("Your golds decreased by 25%.");
+			}
+			else if (effect >= 20 && effect < 30) {
+				player.set_stat(6, player.get_stat(6) * 1.5 > player.get_stat(0) ? player.get_stat(0) : player.get_stat(6) * 1.5);
+				log_add("Your HP increased by 50%.");
+			}
+			else if (effect >= 30 && effect < 40) {
+				player.set_stat(7, player.get_stat(7) * 1.5 > player.get_stat(1) ? player.get_stat(1) : player.get_stat(7) * 1.5);
+				log_add("Your MP increased by 50%.");
+			}
+			else if (effect >= 40 && effect < 50) {
+				ene_overall();
+				ene_overall();
+				log_add("You lost 2 turns.");
+			}
+			else if (effect >= 50 && effect < 60) {
+				ene_overall();
+				ene_overall();
+				log_add("You will recover 1 health.");
+			}
+			else if (effect >= 60 && effect < 70) {
+				player.set_effect(6, 1, 5);
+				log_add("You will recover 1 HP for 5 turns.");
+			}
+			else if (effect >= 70 && effect < 80) {
+				player.set_effect(2, -1, 7);
+				log_add("You will lose 1 STR for 7 turns.");
+			}
+			else if (effect >= 80 && effect < 90 || true) {
+				player.set_effect(5, 2, 4);
+				log_add("You will gain 2 RES for 4 turns.");
+			}
+			else
+				log_add("Nothing happened.");
+
+			floor.interactibles.erase(floor.interactibles.begin() + i);
+			return;
+		}
 	}
 }
 void Interface::handle_map_prompt(int x, int y) {

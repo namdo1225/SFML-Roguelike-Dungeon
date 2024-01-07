@@ -231,6 +231,9 @@ void Floor::draw(sf::RenderWindow& window) {
 
 	for (Collectible col : collectibles)
 		col.draw(window);
+
+	for (Interactible interactible : interactibles)
+		interactible.draw(window);
 }
 
 void Floor::set_shop_pos(int x, int y) { shop.setPosition(x, y); }
@@ -254,6 +257,10 @@ void Floor::load_collectible(int x, int y, unsigned int id) { collectibles.push_
 void Floor::load_gold(int x, int y, unsigned int amount) { golds.push_back(Gold_Collectible(0, amount, x, y)); }
 
 void Floor::load_shop(int x, int y) { shop = Shop(x, y); }
+
+void Floor::load_interactible(int x, int y) {
+
+}
 
 void Floor::make_collectible(unsigned int floor) {
 	int rand_items{ rand() % 6 + static_cast<int>(floor * 0.25) };
@@ -304,6 +311,31 @@ void Floor::make_gold(unsigned int floor) {
 			if (golds.size() == counter) {
 				break_loop = false;
 				golds.push_back(Gold_Collectible(floor, 0, temp_x, temp_y));
+			}
+		}
+	}
+}
+
+void Floor::make_interactible(unsigned int floor) {
+	int rand_interact{ rand() % 10 + static_cast<int>(floor * 0.50) };
+
+	for (unsigned int i{ 0 }; i < rand_interact; i++) {
+		int temp_x{ -1 }, temp_y{ -1 }, rand_room{ rand() % static_cast<int>(rooms.size()) }, counter{ 0 };
+
+		bool break_loop{ true };
+		while (break_loop) {
+			for (unsigned int j{ 0 }; j < interactibles.size(); j++) {
+				int tmp_x{ interactibles[j].get_pos('x') }, tmp_y{ interactibles[j].get_pos('y') };
+
+				while ((temp_x == tmp_x && temp_y == tmp_y) || temp_x == -1 || temp_y == -1)
+					temp_x = ((rand() % (rooms[rand_room].get_rm('w') / 40)) + (rooms[rand_room].get_rm('x') / 40)) * 40,
+					temp_y = ((rand() % (rooms[rand_room].get_rm('h') / 40)) + (rooms[rand_room].get_rm('y') / 40)) * 40;
+				counter += 1;
+			}
+
+			if (interactibles.size() == counter) {
+				break_loop = false;
+				interactibles.push_back(Interactible(temp_x, temp_y));
 			}
 		}
 	}

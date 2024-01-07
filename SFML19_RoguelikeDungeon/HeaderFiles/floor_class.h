@@ -16,6 +16,7 @@
 #include "gold_collectible_class.h"
 #include "room_class.h"
 #include "map_class.h"
+#include "interactibles_class.h"
 
 class Floor {
 private:
@@ -34,6 +35,7 @@ public:
 	std::vector<Room> rooms;
 	std::vector<Collectible> collectibles;
 	std::vector<Gold_Collectible> golds;
+	std::vector<Interactible> interactibles;
 
 	/**
 	* Constructor for Floor.
@@ -214,6 +216,15 @@ public:
 	void load_shop(int x, int y);
 
 	/**
+	* Load/Create interactible for the current floor from existing data.
+	*
+	* Parameter:
+	*	x: an int for the interactible's x position.
+	*	y: an int for the interactible's y position.
+	*/
+	void load_interactible(int x, int y);
+
+	/**
 	* Make item collectibles for the current floor.
 	*
 	* Parameter:
@@ -228,6 +239,14 @@ public:
 	*	floor: an unsigned int for the current floor number.
 	*/
 	void make_gold(unsigned int floor);
+
+	/**
+	* Make interactibles for the current floor.
+	*
+	* Parameter:
+	*	floor: an unsigned int for the current floor number.
+	*/
+	void make_interactible(unsigned int floor);
 
 	/**
 	* Make the map for the current floor.

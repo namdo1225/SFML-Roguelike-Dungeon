@@ -606,14 +606,19 @@ public:
 	void handle_move_everything(int offx, int offy);
 
 	/**
-	* Handles event (clicking) for picking up item.
+	* Handles event for picking up item.
 	*/
 	void handle_move_pick_itm();
 
 	/**
-	* Handles event (clicking) for picking up gold.
+	* Handles event for picking up gold.
 	*/
 	void handle_move_pick_gld();
+
+	/**
+	* Handles event for touching an interactible.
+	*/
+	void handle_move_pick_interact();
 
 	/**
 	* Handles event (clicking) for the map screen.

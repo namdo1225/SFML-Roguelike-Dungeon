@@ -134,6 +134,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="SourceFiles\collectible_class.cpp" />
+    <ClCompile Include="SourceFiles\effect.cpp" />
     <ClCompile Include="SourceFiles\enemies_class.cpp" />
     <ClCompile Include="SourceFiles\floor_class.cpp" />
     <ClCompile Include="SourceFiles\gold_collectible_class.cpp" />
@@ -150,6 +151,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="HeaderFiles\collectible_class.h" />
+    <ClInclude Include="HeaderFiles\effect.h" />
     <ClInclude Include="HeaderFiles\enemies_class.h" />
     <ClInclude Include="HeaderFiles\floor_class.h" />
     <ClInclude Include="HeaderFiles\gold_collectible_class.h" />

@@ -57,6 +57,9 @@
     <ClCompile Include="SourceFiles\map_class.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SourceFiles\effect.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="HeaderFiles\enemies_class.h">
@@ -99,6 +102,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="HeaderFiles\map_class.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HeaderFiles\effect.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

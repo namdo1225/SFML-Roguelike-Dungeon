@@ -10,12 +10,11 @@
 
 #include "..\SFML-2.5.1/include/SFML/Graphics.hpp"
 #include <array>
+#include "effect.h"
 
 class Player {
 private:
-
-	// in triplets (index 0 = stat changed, 1 = by how much, 2 = how long it lasts)
-	std::vector<int> effects;
+	std::vector<Effect> effects;
 
 	sf::Text name;
 	sf::RectangleShape sprite;
@@ -311,6 +310,11 @@ public:
 	*	stats: an std::array<unsigned int, 6> object to copy the stats to.
 	*/
 	void copy_stat(std::array<unsigned int, 6>& stats);
+
+	/**
+	* Handles effects on player.
+	*/
+	void use_effect();
 
 	/**
 	* Method to load texture.

@@ -26,9 +26,7 @@ Player::Player() {
 Player::Player(sf::Font& font) : Player() { name.setFont(font); }
 
 void Player::set_effect(unsigned int stat, int quantity, unsigned int longevity) {
-	effects.push_back(stat);
-	effects.push_back(quantity);
-	effects.push_back(longevity);
+	effects.push_back(Effect(stat, quantity, longevity));
 }
 
 int Player::attack_pl(bool atk_type, int uncalculated_quantity) {
@@ -115,6 +113,31 @@ void Player::set_stuck(unsigned int i, bool j) { stuck[i] = j; }
 void Player::draw(sf::RenderWindow& window, char draw) { (draw == 's') ? window.draw(sprite) : window.draw(name); }
 
 void Player::copy_stat(std::array<unsigned int, 6>& stats) { stats = stat; }
+
+void Player::use_effect() {
+	for (int i = effects.size() - 1; i >= 0; i--) {
+		unsigned int type = effects[i].stat_changed;
+		int difference = effects[i].stat_difference;
+		int cur_stat = get_stat(type);
+
+		if (effects[i].change_turns == 0) {
+			if (type > 1 && type < 6 && effects[i].effect_applied)
+				set_stat(type, cur_stat - difference);
+			effects.pop_back();
+			continue;
+		}
+
+		if (type > 5 && cur_stat + difference <= get_stat(type % 6))
+			set_stat(type, cur_stat + difference);
+		else if (type > 1 && type < 6 && effects[i].change_turns == effects[i].original_turns
+			&& cur_stat + difference > 0 && cur_stat + difference < INT_MAX) {
+			set_stat(type, cur_stat + difference);
+			effects[i].effect_applied = true;
+		}
+
+		effects[i].change_turns--;
+	}
+}
 
 bool Player::load_texture() {
 	return pl_tex.loadFromFile("Texture\\GG_02_Player.png");
