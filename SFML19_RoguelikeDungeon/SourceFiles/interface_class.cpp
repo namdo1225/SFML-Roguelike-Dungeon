@@ -331,14 +331,28 @@ void Interface::save() {
 		file_out << en.get_id() << ' ' << en.get_stat(0) << ' ' << en.get_pos('x') << ' ' << en.get_pos('y') << '\n';
 	file_out << "-1\n";
 
-	// Saves items on floot
+	// Saves items on floor
 	for (Collectible col : floor.collectibles)
 		file_out << col.get_id() << ' ' << col.get_pos('x') << ' ' << col.get_pos('y') << '\n';
 	file_out << "-1\n";
 
-	// Saves golds on floot
+	// Saves golds on floor
 	for (Gold_Collectible gold : floor.golds)
 		file_out << gold.get_amount() << ' ' << gold.get_pos('x') << ' ' << gold.get_pos('y') << '\n';
+	file_out << "-1\n";
+
+	// Saves interactibles on floor
+	for (Interactible interactible : floor.interactibles)
+		file_out << interactible.get_pos('x') << ' ' << interactible.get_pos('y') << '\n';
+	file_out << "-1\n";
+
+	// Saves player effects
+	for (const Effect& effect : player.get_effects()) {
+		file_out << effect.stat_changed << ' '
+			<< effect.stat_difference << ' '
+			<< effect.change_turns << ' '
+			<< effect.original_turns << '\n';
+	}
 	file_out << "-1";
 
 	log_add("Saved successfully.");
@@ -548,6 +562,23 @@ void Interface::read_save(std::string file_name) {
 		file >> num;
 	}
 
+	// load interactibles
+	file >> num;
+	while (num != -1) {
+		file >> num2;
+		floor.load_interactible(num, num2);
+		file >> num;
+	}
+
+	// load player effects
+	player.reset_effect();
+	file >> num;
+	while (num != -1) {
+		file >> num2 >> num3 >> num4;
+		player.set_effect(num, num2, num4, num3);
+		file >> num;
+	}
+
 	stat_screen = title = false;
 	main_screen = true;
 	main_log.clear();
@@ -555,6 +586,8 @@ void Interface::read_save(std::string file_name) {
 
 	ld_savename_str = "Player";
 	ld_savename_txt.setString("Player");
+	log_add("The maze changed its appearance...");
+	log_add("Save loaded.");
 }
 
 // handle player events
@@ -2341,7 +2374,7 @@ void Interface::handle_move_pick_interact() {
 				player.set_effect(2, -1, 7);
 				log_add("You will lose 1 STR for 7 turns.");
 			}
-			else if (effect >= 80 && effect < 90 || true) {
+			else if (effect >= 80 && effect < 90) {
 				player.set_effect(5, 2, 4);
 				log_add("You will gain 2 RES for 4 turns.");
 			}

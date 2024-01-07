@@ -38,3 +38,8 @@ R [x] [y] [sizex] [sizey]
 [Amount of gold] [x] [y]
 -1
 [Interactible x] [y]
+[Interactible x] [y]
+-1
+[Player effect stat] [difference] [turns] [original turns]
+[Player effect stat] [difference] [turns] [original turns]
+-1

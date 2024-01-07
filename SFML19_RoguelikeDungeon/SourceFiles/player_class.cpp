@@ -25,8 +25,11 @@ Player::Player() {
 
 Player::Player(sf::Font& font) : Player() { name.setFont(font); }
 
-void Player::set_effect(unsigned int stat, int quantity, unsigned int longevity) {
-	effects.push_back(Effect(stat, quantity, longevity));
+void Player::set_effect(unsigned int stat, int quantity, unsigned int longevity, unsigned int current) {
+	if (current == 0)
+		effects.push_back(Effect(stat, quantity, longevity));
+	else
+		effects.push_back(Effect(stat, quantity, longevity, current));
 }
 
 int Player::attack_pl(bool atk_type, int uncalculated_quantity) {
@@ -120,7 +123,7 @@ void Player::use_effect() {
 		int difference = effects[i].stat_difference;
 		int cur_stat = get_stat(type);
 
-		if (effects[i].change_turns == 0) {
+		if (effects[i].change_turns < 1) {
 			if (type > 1 && type < 6 && effects[i].effect_applied)
 				set_stat(type, cur_stat - difference);
 			effects.pop_back();
@@ -137,6 +140,23 @@ void Player::use_effect() {
 
 		effects[i].change_turns--;
 	}
+}
+
+void Player::reset_effect() {
+	for (int i = effects.size() - 1; i >= 0; i--) {
+		unsigned int type = effects[i].stat_changed;
+		int difference = effects[i].stat_difference;
+		int cur_stat = get_stat(type);
+
+		if (type > 1 && type < 6 && effects[i].effect_applied)
+			set_stat(type, cur_stat - difference);
+	}
+
+	effects.clear();
+}
+
+std::vector<Effect> Player::get_effects() {
+	return effects;
 }
 
 bool Player::load_texture() {

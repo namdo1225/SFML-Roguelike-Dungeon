@@ -15,7 +15,15 @@ struct Effect {
 	unsigned original_turns;
 	bool effect_applied = false;
 
+	/**
+	* Constructor for Effect where original turns = change turns.
+	*/
 	Effect(unsigned int, int, unsigned int);
+
+	/**
+	* Constructor for Effect where original turns != change turns.
+	*/
+	Effect(unsigned int, int, unsigned int, unsigned int);
 };
 
 #endif

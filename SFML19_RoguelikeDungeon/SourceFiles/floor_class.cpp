@@ -258,9 +258,7 @@ void Floor::load_gold(int x, int y, unsigned int amount) { golds.push_back(Gold_
 
 void Floor::load_shop(int x, int y) { shop = Shop(x, y); }
 
-void Floor::load_interactible(int x, int y) {
-
-}
+void Floor::load_interactible(int x, int y) { interactibles.push_back(Interactible(x, y)); }
 
 void Floor::make_collectible(unsigned int floor) {
 	int rand_items{ rand() % 6 + static_cast<int>(floor * 0.25) };

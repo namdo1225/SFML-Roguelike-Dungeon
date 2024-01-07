@@ -160,8 +160,9 @@ public:
 	*	stat: an unsigned int for which stat to affect.
 	*	quantity: an int for how much to affect that stat.
 	*	longevity: an unsigned int for how many turns the effect will apply for.
+	*	current: an unsigned int for how many turns the effect has left (useful for loading from saves).
 	*/
-	void set_effect(unsigned stat, int quantity, unsigned int longevity);
+	void set_effect(unsigned stat, int quantity, unsigned int longevity, unsigned int current = 0);
 
 	/**
 	* Setter for player's name.
@@ -315,6 +316,19 @@ public:
 	* Handles effects on player.
 	*/
 	void use_effect();
+
+	/**
+	* Resets effects on player.
+	*/
+	void reset_effect();
+
+	/**
+	* Returns effects.
+	* 
+	* Return:
+	*	A vector of Effects.
+	*/
+	std::vector<Effect> get_effects();
 
 	/**
 	* Method to load texture.
