@@ -420,12 +420,10 @@ void Interface::load() {
 }
 void Interface::read_save(std::string file_name) {
 	std::ifstream file;
-	file.exceptions(std::ifstream::badbit);
 
-	try {
-		file.open(file_name.c_str());
-	}
-	catch (const std::ifstream::failure& e) {
+	file.exceptions(std::ifstream::badbit);
+	file.open(file_name.c_str());
+	if (!file) {
 		title = true;
 		return;
 	}
