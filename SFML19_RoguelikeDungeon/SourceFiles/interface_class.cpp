@@ -1202,7 +1202,7 @@ void Interface::create_title_ui() {
 			std::string str4 = "\n\nSound effects created on \nsfxr.me/, MIT License.";
 			std::string str5 = "\n\nSongs created on \nbeepbox.co/, MIT License.";
 			std::string str6 = "\n\nSprites created in Krita.";
-			std::string str7 = "\n\nVersion: 2.0, with graphics";
+			std::string str7 = "\n\nVersion: 3.0, with interactibles now.";
 
 			temp.setPosition(740, 20);
 			temp.setString(str1 + str2 + str3 + str4 + str5 + str6 + str7);
