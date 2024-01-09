@@ -12,12 +12,11 @@
 #include <array>
 #include "effect.h"
 
-class Player {
+class Player : sf::RectangleShape {
 private:
 	std::vector<Effect> effects;
 
 	sf::Text name;
-	sf::RectangleShape sprite;
 
 	// value: false = free, true = stuck, can't move
 	// index: 0 = up, 1 = left, 2 = down, 3 = right

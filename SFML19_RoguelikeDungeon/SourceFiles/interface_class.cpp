@@ -1194,16 +1194,17 @@ void Interface::create_title_ui() {
 			temp.setString("Roguelike\nDungeon");
 		}
 		else if (i == 1) {
-			std::string str1 = "Developed with the help of\ninternet forums and SFML Graphics,\nzlib/png license.";
-			std::string str2 = "\n\nOpen Sans font from fontsource.org\n\nInstructions: use the arrow keys to ";
-			std::string str3 = "\nmove the players. Tap on the level \nup button to upgrade your stats.";
-			std::string str4 = "\n\nSound effects created on \nsfxr.me/, MIT License.";
-			std::string str5 = "\n\nSongs created on \nbeepbox.co/, MIT License.";
-			std::string str6 = "\n\nSprites created in Krita.";
-			std::string str7 = "\n\nVersion: 3.0, with interactibles now.";
+			const char title_info[] =
+				"Developed with the help of\ninternet forums and SFML Graphics,\nzlib/png license."
+				"\n\nOpen Sans font, fontsource.org\n\nInstructions: use the arrow keys to "
+				"\nmove the players. Tap on the level \nup button to upgrade your stats."
+				"\n\nSound effects created on \nsfxr.me/, MIT License."
+				"\n\nSongs created on \nbeepbox.co/, MIT License."
+				"\n\nSprites created in Krita."
+				"\n\nVersion: 3.0, with interactibles now.";
 
 			temp.setPosition(740, 20);
-			temp.setString(str1 + str2 + str3 + str4 + str5 + str6 + str7);
+			temp.setString(title_info);
 			temp.setCharacterSize(24);
 
 			rect.setSize(sf::Vector2f(450, 780));
@@ -1218,6 +1219,14 @@ void Interface::create_title_ui() {
 
 		title_texts.push_back(temp);
 	}
+
+	sf::Text sound_text;
+	sound_text.setCharacterSize(48);
+	sound_text.setPosition(10.f, 740.f);
+	sound_text.setFont(font);
+	sound_text.setStyle(sf::Text::Bold);
+	sound_text.setString("Music: ON");
+	title_texts.push_back(sound_text);
 }
 void Interface::create_name_ui() {
 	new_game_prompt = sf::Text("Enter your name (up to 20 characters) and press 'Enter' after you are finished.", font, 24);
@@ -1777,7 +1786,8 @@ void Interface::draw_exit_screen() {
 	}
 }
 void Interface::draw_title_screen() {
-	for (unsigned i{ 0 }; i < 5; i++) {
+	unsigned int size = title_texts.size();
+	for (unsigned int i{ 0 }; i < size; i++) {
 		if (i < 4)
 			window.draw(title_rectangle[i]);
 		window.draw(title_texts[i]);
@@ -2066,6 +2076,11 @@ void Interface::handle_title_prompt(int x, int y) {
 			title = false, name_screen = true;
 		else if (x > 350 && x < 460 && y > 400 && y < 465)
 			load();
+		else if (x > 10 && x < 260 && y > 740 && y < 790) {
+			music_volume = music_volume ? 0 : 100;
+			music.setVolume(music_volume);
+			title_texts[title_texts.size() - 1].setString(music_volume ? "Music: ON" : "Music: OFF");
+		}
 	}
 }
 void Interface::handle_main_prompt(int x, int y) {

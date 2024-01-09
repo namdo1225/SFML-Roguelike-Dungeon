@@ -17,10 +17,10 @@ Player::Player() {
 	name.setOutlineThickness(3.f);
 	name.setOutlineColor(sf::Color::Black);
 
-	sprite.setSize(sf::Vector2f(40, 40));
-	sprite.setFillColor(sf::Color::White);
-	sprite.setTextureRect(sf::IntRect(0, 0, 40, 40));
-	sprite.setTexture(&pl_tex);
+	setSize(sf::Vector2f(40, 40));
+	setFillColor(sf::Color::White);
+	setTextureRect(sf::IntRect(0, 0, 40, 40));
+	setTexture(&pl_tex);
 }
 
 Player::Player(sf::Font& font) : Player() { name.setFont(font); }
@@ -52,7 +52,7 @@ void Player::use_mp(int quantity) { cur_hp_mp[1] -= quantity; }
 
 unsigned int Player::get_stat(unsigned int t_stat) { return (t_stat < 6) ? stat[t_stat] : cur_hp_mp[t_stat - 6]; }
 
-int Player::get_pos(char z) { return (z == 'x') ? sprite.getPosition().x : sprite.getPosition().y; }
+int Player::get_pos(char z) { return (z == 'x') ? getPosition().x : getPosition().y; }
 
 bool Player::use_gold(int quantity) {
 	if (quantity > gold)
@@ -109,11 +109,11 @@ void Player::reset() {
 
 bool Player::is_stuck(unsigned int i) { return stuck[i]; }
 
-void Player::set_pos(int x, int y) { sprite.setPosition(x, y); }
+void Player::set_pos(int x, int y) { setPosition(x, y); }
 
 void Player::set_stuck(unsigned int i, bool j) { stuck[i] = j; }
 
-void Player::draw(sf::RenderWindow& window, char draw) { (draw == 's') ? window.draw(sprite) : window.draw(name); }
+void Player::draw(sf::RenderWindow& window, char draw) { (draw == 's') ? window.draw(*this) : window.draw(name); }
 
 void Player::copy_stat(std::array<unsigned int, 6>& stats) { stats = stat; }
 

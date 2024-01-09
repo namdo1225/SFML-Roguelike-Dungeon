@@ -153,6 +153,7 @@ private:
 	std::array<sf::SoundBuffer, 30> buffers;
 	std::array<sf::Sound, 30> sounds;
 	sf::Music music;
+	unsigned int music_volume = 100;
 
 	/**
 	* Prevent instance from being copied.
