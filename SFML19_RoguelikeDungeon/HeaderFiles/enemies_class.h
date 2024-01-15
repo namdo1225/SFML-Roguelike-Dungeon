@@ -11,40 +11,14 @@
 #include "..\SFML-2.5.1/include/SFML/Graphics.hpp"
 #include <array>
 
-class Enemy {
-private:
-	// 1: zombie, 2: skeleton, 3: mage, 4: bandit
-	unsigned int id;
-
-	// attack basically represent both str/mag.
-	// 0: hp, 1: atk, 2: def, 3: res, 4: range, 5: exp
-	std::array<int, 6> stats = {1, 1, 1, 1, 1, 1};
-
-	// choose whether it is a physical or magical attack. True = physical, false = magical.
-	bool type{ true };
-
-	sf::RectangleShape rect;
-
-	static sf::Texture en_tex;
-
-	/**
-	* A helper function to set the stat of the enemy.
-	* 
-	* Parameter:
-	*	hp: an int for the enemy's hp.
-	* 	atk: an int for the enemy's atk.
-	* 	def: an int for the enemy's def.
-	* 	res: an int for the enemy's res.
-	* 	range: an int for the enemy's range.
-	* 	exp: an int for the enemy's exp.
-	*/
-	void set_stat_h(int hp, int atk, int def, int res, int range, int exp);
-
+class Enemy : sf::RectangleShape {
 public:
+
+	static const unsigned int num_textures = 4;
 
 	/**
 	* Constructor for Enemy.
-	* 
+	*
 	* Parameter:
 	*	hp: an int for the enemy's hp.
 	*	floor: an int for the player's current floor.
@@ -59,7 +33,7 @@ public:
 	*
 	* Parameter:
 	*	z: 'x' or 'y' char. Get enemy's x or y position.
-	* 
+	*
 	* Return:
 	*	an int of enemy's x or y position.
 	*/
@@ -85,7 +59,7 @@ public:
 	*	y: an int for enemy's y position.
 	*/
 	void set_pos(int x, int y);
-	
+
 	/**
 	* Setter for enemy's stat
 	*
@@ -137,6 +111,32 @@ public:
 	*	a bool. true if texture successfully loads.
 	*/
 	static bool load_texture();
+private:
+	// 1: zombie, 2: skeleton, 3: mage, 4: bandit
+	unsigned int id;
+
+	static std::array<sf::Texture, num_textures> texs;
+
+	// attack basically represent both str/mag.
+	// 0: hp, 1: atk, 2: def, 3: res, 4: range, 5: exp
+	std::array<int, 6> stats = {1, 1, 1, 1, 1, 1};
+
+	// choose whether it is a physical or magical attack. True = physical, false = magical.
+	bool type{ true };
+
+	/**
+	* A helper function to set the stat of the enemy.
+	* 
+	* Parameter:
+	*	hp: an int for the enemy's hp.
+	* 	atk: an int for the enemy's atk.
+	* 	def: an int for the enemy's def.
+	* 	res: an int for the enemy's res.
+	* 	range: an int for the enemy's range.
+	* 	exp: an int for the enemy's exp.
+	*/
+	void set_stat_h(int hp, int atk, int def, int res, int range, int exp);
+
 };
 
 #endif

@@ -748,7 +748,7 @@ void Interface::ene_add() {
 			if (enemies.size() == counter)
 				break;
 		}
-		int rand_enemy{ rand() % 4 };
+		int rand_enemy{ rand() % Enemy::num_textures };
 		enemies.push_back(Enemy(-1, player.get_floor(), rand_enemy, temp_x, temp_y));
 	}
 }

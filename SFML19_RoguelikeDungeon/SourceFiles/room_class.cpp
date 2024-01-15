@@ -123,16 +123,16 @@ bool Room::load_texture() {
 		bool loaded = true;
 		switch (i) {
 		case 0:
-			loaded = room_texs[i].loadFromFile("Texture\\GG_00_StonePath.jpg");
+			loaded = room_texs[i].loadFromFile("Texture\\Paths\\00_Stone.jpg");
 			break;
 		case 1:
-			loaded = room_texs[i].loadFromFile("Texture\\GG_07_WoodPath.jpg");
+			loaded = room_texs[i].loadFromFile("Texture\\Paths\\01_Wood.jpg");
 			break;
 		case 2:
-			loaded = room_texs[i].loadFromFile("Texture\\GG_08_GrassPath.jpg");
+			loaded = room_texs[i].loadFromFile("Texture\\Paths\\02_Grass.jpg");
 			break;
 		default:
-			loaded = room_texs[i].loadFromFile("Texture\\GG_09_LavaPath.jpg");
+			loaded = room_texs[i].loadFromFile("Texture\\Paths\\03_Lava.jpg");
 			break;
 		}
 
