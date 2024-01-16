@@ -73,6 +73,10 @@ Interface& Interface::get() {
 void Interface::next_level() {
 	if (player.get_pos('x') != floor.get_stair_pos('x') || player.get_pos('y') != floor.get_stair_pos('y'))
 		return;
+
+	viewUI.reset(sf::FloatRect(0, 0, 1200, 800));
+	viewWorld.reset(sf::FloatRect(0, 0, 1200, 800));
+
 	sounds[1].play();
 	player.set_floor(player.get_floor() + 1);
 
@@ -91,6 +95,9 @@ void Interface::next_level() {
 	floor_copied = false;
 }
 void Interface::reset_game() {
+	viewUI.reset(sf::FloatRect(0, 0, 1200, 800));
+	viewWorld.reset(sf::FloatRect(0, 0, 1200, 800));
+
 	title = stat_screen = true;
 	exit_menu = name_screen = lvl_screen = main_screen = ext_screen = 
 		inv_screen = sp_screen = floor_copied = false;
@@ -712,6 +719,7 @@ void Interface::pl_game_over() {
 	if (player.is_dead()) {
 		exit_menu = false;
 		title = true;
+		window.setView(viewUI);
 		reset_game();
 	}
 }
@@ -1780,6 +1788,7 @@ bool Interface::create_texture() {
 
 // handle draw to window
 void Interface::draw_exit_screen() {
+	window.setView(viewUI);
 	for (unsigned i{ 0 }; i < 4; i++) {
 		window.draw(exit_rectangles[i]);
 		window.draw(exit_texts[i]);
@@ -1799,6 +1808,7 @@ void Interface::draw_name_screen() {
 	window.draw(name_line);
 }
 void Interface::draw_main_ui() {
+	window.setView(viewWorld);
 	floor.draw(window);
 
 	player.draw(window, 's');
@@ -1806,6 +1816,7 @@ void Interface::draw_main_ui() {
 	for (Enemy en : enemies)
 		en.draw(window);
 
+	window.setView(viewUI);
 	for (sf::RectangleShape rect : main_border_vector)
 		window.draw(rect);
 
@@ -2256,27 +2267,25 @@ void Interface::handle_spell_prompt(int x, int y) {
 void Interface::handle_player_action(char input, unsigned int mode) {
 	// mode: 0 = move, 1 = attack
 
-	bool handle{ false };
-	if (mode == 0) { 
-		int offx{ 0 }, offy{ 0 }, index{ 0 };
+	if (!mode) {
+		bool handle = (input == 'u' || input == 'r' || input == 'd' || input == 'l');
+		int offx{ 0 }, offy{ 0 };
 
-		switch (input) {
-		case 117:
-			index = 1, offy = 40, handle = true;
-			break;
-		case 114:
-			offx = -40, handle = true;
-			break;
-		case 100:
-			index = 1, offy = -40, handle = true;
-			break;
-		case 108:
-			offx = 40, handle = true;
-			break;
-		}
+		if (input == 'u')
+			offy = -40;
+		else if (input == 'd')
+			offy = 40;
+
+		if (input == 'l')
+			offx = -40;
+		else if (input == 'r')
+			offx = 40;
+
+		player.set_pos(player.get_pos('x') + offx, player.get_pos('y') + offy);
+		viewWorld.move(offx, offy);
+		window.setView(viewWorld);
 
 		if (handle) {
-			handle_move_everything(offx, offy);
 			player.use_effect();
 			ene_overall();
 			handle_move_pick_itm();
@@ -2290,30 +2299,6 @@ void Interface::handle_player_action(char input, unsigned int mode) {
 		ene_overall();
 		ene_add();
 	}
-}
-void Interface::handle_move_everything(int offx, int offy) {
-	for (unsigned int i{ 0 }; i < floor.rooms.size(); i++) {
-		floor.rooms[i].set_pos_and_size(floor.rooms[i].get_rm('x') + offx, floor.rooms[i].get_rm('y') + offy,
-			floor.rooms[i].get_rm('w'), floor.rooms[i].get_rm('h'));
-
-		if (floor.rooms[i].door_exist())
-			floor.rooms[i].set_door(floor.rooms[i].get_door('x') + offx,
-				floor.rooms[i].get_door('y') + offy, -1);
-	}
-
-	for (Enemy& en : enemies)
-		en.set_pos(en.get_pos('x') + offx, en.get_pos('y') + offy);
-
-	floor.set_stair_pos(floor.get_stair_pos('x') + offx, floor.get_stair_pos('y') + offy);
-
-	for (Collectible& col : floor.collectibles)
-		col.set_pos(col.get_pos('x') + offx, col.get_pos('y') + offy);
-	for (Gold_Collectible& gold : floor.golds)
-		gold.set_pos(gold.get_pos('x') + offx, gold.get_pos('y') + offy);
-	for (Interactible& interactible : floor.interactibles)
-		interactible.set_pos(interactible.get_pos('x') + offx, interactible.get_pos('y') + offy);
-
-	floor.set_shop_pos(floor.get_shop_pos('x') + offx, floor.get_shop_pos('y') + offy);
 }
 void Interface::handle_move_pick_itm() {
 	if (items.size() == player.get_max_itm())

@@ -33,6 +33,8 @@ private:
 
 	sf::Font font;
 	sf::RenderWindow window;
+	sf::View viewUI{ sf::FloatRect(0, 0, 1200, 800) };
+	sf::View viewWorld { sf::FloatRect(0, 0, 1200, 800) };
 
 	int off_x{ 0 }, off_y{ 0 };
 
@@ -596,15 +598,6 @@ public:
 	*	mode: an unsigned int for the mode. 0 = move. 1 = attack.
 	*/
 	void handle_player_action(char input, unsigned int mode);
-
-	/**
-	* Move everything according to player's movement.
-	* 
-	* Parameter:
-	*	offx: an int how much to offset x of everyhing by.
-	*	offy: an int how much to offset y of everyhing by.
-	*/
-	void handle_move_everything(int offx, int offy);
 
 	/**
 	* Handles event for picking up item.
