@@ -1,6 +1,6 @@
 /**
 * 
-* File: interface_class.h
+* File: interface.h
 * Description: This class controls the entire game essentially, creating the interface
 * and connect all other classes together. This class uses the Singleton pattern.
 *
@@ -16,7 +16,6 @@
 
 class Interface {
 protected:
-
 	/**
 	* Constructor for Interface.
 	*/
@@ -30,7 +29,6 @@ protected:
 	static Interface* singleton;
 
 private:
-
 	sf::Font font;
 	sf::RenderWindow window;
 	sf::View viewUI{ sf::FloatRect(0, 0, 1200, 800) };
@@ -152,10 +150,7 @@ private:
 	sf::RectangleShape background;
 
 	// sounds
-	std::array<sf::SoundBuffer, 30> buffers;
-	std::array<sf::Sound, 30> sounds;
-	sf::Music music;
-	unsigned int music_volume = 100;
+	Audio_Manager aud;
 
 	/**
 	* Prevent instance from being copied.
@@ -441,22 +436,6 @@ public:
 	* Set up objects needed to draw the load screen on the game window.
 	*/
 	void create_ld_ui();
-
-	/**
-	* Set up objects needed to play audio in the game.
-	* 
-	* Return:
-	*	a bool. true if audio objects are successfully created. false if not.
-	*/
-	bool create_audio();
-
-	/**
-	* Set up objects needed to use textures in the game.
-	*
-	* Return:
-	*	a bool. true if audio objects are successfully created. false if not.
-	*/
-	bool create_texture();
 
 	// handle draw to window
 	/**

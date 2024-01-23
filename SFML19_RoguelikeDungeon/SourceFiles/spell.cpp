@@ -1,11 +1,11 @@
 /**
 *
-* File: spell_class.cpp
+* File: spell.cpp
 * Description: Contains implementations of Spell class and its sub-classes.
 *
 */
 
-#include "spell_class.h"
+#include "spell.h"
 
 Spell::Spell() {
 	icon.setFillColor(sf::Color::White);

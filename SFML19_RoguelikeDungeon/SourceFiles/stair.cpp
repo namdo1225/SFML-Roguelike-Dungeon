@@ -1,25 +1,20 @@
 /**
 *
-* File: stair_class.cpp
+* File: stair.cpp
 * Description: Contain implementations for the Stair class.
 *
 */
 
-#include "stair_class.h"
-
-sf::Texture Stair::stair_tex;
+#include "stair.h"
+#include "texture_manager.h"
 
 Stair::Stair() {
 	setSize(sf::Vector2f(40, 40));
 	setFillColor(sf::Color::Yellow);
 	setTextureRect(sf::IntRect(0, 0, 40, 40));
-	setTexture(&stair_tex);
+	setTexture(&Texture_Manager::stair);
 }
 
 Stair::Stair(int x, int y) : Stair() {
 	setPosition(x, y);
-}
-
-bool Stair::load_texture() {
-	return stair_tex.loadFromFile("Texture\\GG_05_Stair.png");
 }

@@ -1,14 +1,12 @@
 /**
 *
-* File: room_class.cpp
+* File: room.cpp
 * Description: Contain implementations for the Room class.
 *
 */
 
-#include "room_class.h"
-
-const unsigned int Room::num_textures;
-std::array<sf::Texture, Room::num_textures> Room::room_texs = { sf::Texture(), sf::Texture(), sf::Texture(), sf::Texture() };
+#include "room.h"
+#include "texture_manager.h"
 
 Room::Room() {
 	rm_draw.setFillColor(sf::Color::White);
@@ -18,8 +16,8 @@ Room::Room() {
 
 	rm_draw.setOutlineColor(rgb);
 
-	int texture_num = rand() % num_textures;
-	rm_draw.setTexture(&room_texs[texture_num], false);
+	int texture_num = rand() % Texture_Manager::num_rooms;
+	rm_draw.setTexture(&Texture_Manager::tex_rooms[texture_num], false);
 
 }
 
@@ -116,28 +114,3 @@ bool Room::get_doors(unsigned int i) { return doors[i]; }
 void Room::set_doors(unsigned int i, bool j) { doors[i] = j; }
 
 void Room::draw(sf::RenderWindow& window, char d) { (d == 'r') ? window.draw(rm_draw) : window.draw(dr_draw); }
-
-bool Room::load_texture() {
-	for (int i = 0; i < num_textures; i++) {
-		room_texs[i].setRepeated(true);
-		bool loaded = true;
-		switch (i) {
-		case 0:
-			loaded = room_texs[i].loadFromFile("Texture\\Paths\\00_Stone.jpg");
-			break;
-		case 1:
-			loaded = room_texs[i].loadFromFile("Texture\\Paths\\01_Wood.jpg");
-			break;
-		case 2:
-			loaded = room_texs[i].loadFromFile("Texture\\Paths\\02_Grass.jpg");
-			break;
-		default:
-			loaded = room_texs[i].loadFromFile("Texture\\Paths\\03_Lava.jpg");
-			break;
-		}
-
-		if (!loaded)
-			return false;
-	}
-	return true;
-}

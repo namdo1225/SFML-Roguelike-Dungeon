@@ -1,14 +1,12 @@
 /**
 *
-* File: enemies_class.cpp
+* File: enemies.cpp
 * Description: Contains implementations of Enemy class.
 *
 */
 
-#include "enemies_class.h"
-
-const unsigned int Enemy::num_textures;
-std::array<sf::Texture, Enemy::num_textures> Enemy::texs = { sf::Texture(), sf::Texture(), sf::Texture(), sf::Texture() };
+#include "enemies.h"
+#include "texture_manager.h"
 
 Enemy::Enemy(int hp, int floor, unsigned int t_id, int x, int y) : id(t_id) {
 	setSize(sf::Vector2f(40, 40));
@@ -36,7 +34,7 @@ Enemy::Enemy(int hp, int floor, unsigned int t_id, int x, int y) : id(t_id) {
 		break;
 	}
 
-	setTexture(&texs[t_id], false);
+	setTexture(&Texture_Manager::tex_enemies[t_id], false);
 
 	// It means that the enemies aren't being added from a save file; use default hp.
 	if (hp != -1)
@@ -67,31 +65,3 @@ bool Enemy::get_type() { return type; }
 void Enemy::draw(sf::RenderWindow& window) { window.draw(*this); }
 
 void Enemy::set_stat(unsigned int i, int j) { stats[i] = j; }
-
-bool Enemy::load_texture() {
-	for (int i = 0; i < num_textures; i++) {
-		bool loaded = true;
-		switch (i) {
-		case 0:
-			// Zombie
-			loaded = texs[i].loadFromFile("Texture\\Enemies\\00_Zombie.png");
-			break;
-		case 1:
-			// Skeleton
-			loaded = texs[i].loadFromFile("Texture\\Enemies\\01_Skeleton.png");
-			break;
-		case 2:
-			// Mage
-			loaded = texs[i].loadFromFile("Texture\\Enemies\\02_Mage.png");
-			break;
-		default:
-			// Bandit
-			loaded = texs[i].loadFromFile("Texture\\Enemies\\03_Bandit.png");
-			break;
-		}
-
-		if (!loaded)
-			return false;
-	}
-	return true;
-}

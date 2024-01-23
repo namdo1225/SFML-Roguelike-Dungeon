@@ -8,11 +8,13 @@
 #ifndef INCLUDE_H
 #define INCLUDE_H
 
-#include "player_class.h"
-#include "enemies_class.h"
-#include "floor_class.h"
-#include "items_class.h"
-#include "spell_class.h"
-#include "map_class.h"
+#include "texture_manager.h"
+#include "audio_manager.h"
+#include "player.h"
+#include "enemies.h"
+#include "floor.h"
+#include "items.h"
+#include "spell.h"
+#include "map.h"
 
 #endif

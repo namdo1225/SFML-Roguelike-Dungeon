@@ -1,6 +1,6 @@
 /**
 *
-* File: stair_class.h
+* File: stair.h
 * Description: Contain the declaration of the Stair class, which represents a stair which player could
 * use to get to the next floor.
 *
@@ -13,9 +13,6 @@
 
 class Stair : public sf::RectangleShape {
 public:
-
-	static sf::Texture stair_tex;
-
 	/**
 	* Constructor for Stair.
 	*/
@@ -29,14 +26,6 @@ public:
 	* 	y: an int for the stair's x position.
 	*/
 	Stair(int x, int y);
-
-	/**
-	* Method to load texture.
-	*
-	* Return:
-	*	a bool. true if texture successfully loads.
-	*/
-	static bool load_texture();
 };
 
 #endif

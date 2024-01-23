@@ -1,13 +1,12 @@
 /**
 * 
-* File: player_class.cpp
+* File: player.cpp
 * Description: This file contains the implementation for the Player class.
 *
 */
 
-#include "player_class.h"
-
-sf::Texture Player::pl_tex;
+#include "player.h"
+#include "texture_manager.h"
 
 Player::Player() {
 	name.setFillColor(sf::Color::Cyan);
@@ -20,7 +19,7 @@ Player::Player() {
 	setSize(sf::Vector2f(40, 40));
 	setFillColor(sf::Color::White);
 	setTextureRect(sf::IntRect(0, 0, 40, 40));
-	setTexture(&pl_tex);
+	setTexture(&Texture_Manager::player);
 }
 
 Player::Player(sf::Font& font) : Player() { name.setFont(font); }
@@ -157,8 +156,4 @@ void Player::reset_effect() {
 
 std::vector<Effect> Player::get_effects() {
 	return effects;
-}
-
-bool Player::load_texture() {
-	return pl_tex.loadFromFile("Texture\\GG_02_Player.png");
 }

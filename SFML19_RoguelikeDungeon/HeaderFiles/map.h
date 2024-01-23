@@ -1,6 +1,6 @@
 /**
 *
-* File: map_class.h
+* File: map.h
 * Description: Contain the declaration of the Map class, which represents a map which player could
 * use to view the current floor's layout.
 *
@@ -10,7 +10,7 @@
 #define MAP_H
 
 #include "..\SFML-2.5.1/include/SFML/Graphics.hpp"
-#include "room_class.h"
+#include "room.h"
 #include <array>
 
 class Map {
@@ -66,7 +66,7 @@ public:
 	*	x: an int for mouse's x coordinate input.
 	*	y: an int for mouse's x coordinate input.
 	*/
-	void handleEvent(int x, int y);
+	void handle_event(int x, int y);
 };
 
 #endif

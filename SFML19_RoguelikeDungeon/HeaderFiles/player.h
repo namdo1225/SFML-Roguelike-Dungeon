@@ -1,6 +1,6 @@
 /**
 * 
-* File: player_class.h
+* File: player.h
 * Description: This class abstracts Player information. It contains information like player's hp && mp.
 *
 */
@@ -29,8 +29,6 @@ private:
 
 	// MAX_HP, MAX_MP, STR, MAG, DEF, RES
 	std::array<unsigned int, 6> stat = { 10, 5, 0, 0, 0, 0 };
-
-	static sf::Texture pl_tex;
 
 public:
 
@@ -328,14 +326,6 @@ public:
 	*	A vector of Effects.
 	*/
 	std::vector<Effect> get_effects();
-
-	/**
-	* Method to load texture.
-	*
-	* Return:
-	*	a bool. true if texture successfully loads.
-	*/
-	static bool load_texture();
 };
 
 #endif

@@ -1,6 +1,6 @@
 /**
 *
-* File: spell_class.h
+* File: spell.h
 * Description: This class abstracts a spell which player can utilize to provide special effects in the game world.
 * Also contains child classes from the Spell class to contain  individual spells.
 *
@@ -10,9 +10,9 @@
 #define SPELL_H
 
 #include "..\SFML-2.5.1/include/SFML/Graphics.hpp"
-#include "player_class.h"
-#include "enemies_class.h"
-#include "floor_class.h"
+#include "player.h"
+#include "enemies.h"
+#include "floor.h"
 
 class Spell {
 protected:

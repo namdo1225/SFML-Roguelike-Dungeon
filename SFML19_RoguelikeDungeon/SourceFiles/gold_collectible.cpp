@@ -1,19 +1,18 @@
 /**
 *
-* File: gold_collectible_class.cpp
+* File: gold_collectible.cpp
 * Description: Contain implementations for the Gold_Collectible class.
 *
 */
 
-#include "gold_collectible_class.h"
-
-sf::Texture Gold_Collectible::tex;
+#include "gold_collectible.h"
+#include "texture_manager.h"
 
 Gold_Collectible::Gold_Collectible() {
 	setSize(sf::Vector2f(40, 40));
 	setFillColor(sf::Color::Yellow);
 	setTextureRect(sf::IntRect(0, 0, 40, 40));
-	setTexture(&tex);
+	setTexture(&Texture_Manager::gold);
 }
 
 Gold_Collectible::Gold_Collectible(unsigned int floor, unsigned int t_amount, int x, int y) : Gold_Collectible() {
@@ -28,7 +27,3 @@ void Gold_Collectible::set_pos(int x, int y) { setPosition(x, y); }
 int Gold_Collectible::get_pos(char z) { return (z == 'x') ? getPosition().x : getPosition().y; }
 
 void Gold_Collectible::draw(sf::RenderWindow& window) { window.draw(*this); }
-
-bool Gold_Collectible::load_texture() {
-	return tex.loadFromFile("Texture\\GG_01_Gold.png");
-}

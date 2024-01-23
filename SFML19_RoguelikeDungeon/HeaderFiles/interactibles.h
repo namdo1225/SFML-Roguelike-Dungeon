@@ -1,6 +1,6 @@
 /**
 *
-* File: interactibles_class.h
+* File: interactibles.h
 * Description: This class abstracts an interactible, an object that can be interacted with in the
 * overworld of the game.
 *
@@ -10,13 +10,11 @@
 #define INTERACTIBLE_H
 
 #include "..\SFML-2.5.1/include/SFML/Graphics.hpp"
-#include "player_class.h"
+#include "player.h"
 
 class Interactible : sf::RectangleShape {
 private:
 	unsigned int amount{ 0 };
-
-	static sf::Texture tex;
 
 public:
 
@@ -62,14 +60,6 @@ public:
 	*	window: a sf::RenderWindow object where the interactible will be drawn on.
 	*/
 	void draw(sf::RenderWindow& window);
-
-	/**
-	* Method to load texture.
-	*
-	* Return:
-	*	a bool. true if texture successfully loads.
-	*/
-	static bool load_texture();
 };
 
 

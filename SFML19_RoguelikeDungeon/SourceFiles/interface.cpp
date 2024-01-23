@@ -1,11 +1,11 @@
 /**
 *
-* File: interface_class.cpp
+* File: interface.cpp
 * Description: Contains the implementation of the Interface class.
 *
 */
 
-#include "interface_class.h"
+#include "interface.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -18,6 +18,9 @@ Interface::Interface() {
 
 	window.create(sf::VideoMode(1200, 800), "RE: Dungeon", sf::Style::Titlebar | sf::Style::Close);
 	window.setKeyRepeatEnabled(false);
+
+	if (!Texture_Manager::load() || !Audio_Manager::load())
+		return;
 
 	background.setPosition(-10, -10);
 	background.setSize(sf::Vector2f(1210, 810));
@@ -35,13 +38,10 @@ Interface::Interface() {
 	create_sp_ui();
 	create_shop_ui();
 	create_ld_ui();
-
+	Map::setup(font);
 	player = Player(font);
 
 	reset_game();
-	
-	if (!create_audio() || !create_texture())
-		return;
 }
 
 Interface::~Interface() {
@@ -77,7 +77,7 @@ void Interface::next_level() {
 	viewUI.reset(sf::FloatRect(0, 0, 1200, 800));
 	viewWorld.reset(sf::FloatRect(0, 0, 1200, 800));
 
-	sounds[1].play();
+	Audio_Manager::play_sfx(1);
 	player.set_floor(player.get_floor() + 1);
 
 	main_current_floor_txt.setString("Floor: " + std::to_string(player.get_floor()));
@@ -685,7 +685,7 @@ void Interface::pl_atk() {
 	log_add("You did "
 		+ std::to_string(enemies[v].set_hp(pl_weapon->get_stat(), player.get_stat(pl_weapon->get_stat()) + pl_weapon->get_quantity()))
 		+ " damage to the enemy.");
-	sounds[2].play();
+	Audio_Manager::play_sfx(2);
 }
 void Interface::refresh_exp() {
 	main_level_text[1].setString(std::to_string(player.get_lvl()));
@@ -756,7 +756,7 @@ void Interface::ene_add() {
 			if (enemies.size() == counter)
 				break;
 		}
-		int rand_enemy{ rand() % Enemy::num_textures };
+		int rand_enemy{ rand() % Texture_Manager::num_enemies };
 		enemies.push_back(Enemy(-1, player.get_floor(), rand_enemy, temp_x, temp_y));
 	}
 }
@@ -808,7 +808,7 @@ void Interface::ene_atk(unsigned int v) {
 	}
 	int damage = player.attack_pl(enemies[v].get_type(), pl_armor->get_quantity() + enemies[v].get_stat(1));
 	log_add("The enemy did " + std::to_string(damage) + " damage to you.");
-	sounds[2].play();
+	Audio_Manager::play_sfx(2);
 }
 void Interface::ene_mov_close(unsigned int v) {
 	int x{ player.get_pos('x') }, y{ player.get_pos('y') }, x2{ x + 40 }, y2{ y + 40 };
@@ -1738,53 +1738,6 @@ void Interface::create_ld_ui() {
 	ld_savename_txt.setFont(font);
 	ld_savename_txt.setStyle(sf::Text::Bold);
 }
-bool Interface::create_audio() {
-	if (!music.openFromFile("Sound\\05_music.wav"))
-		return false;
-	music.play();
-
-	if (!buffers[0].loadFromFile("Sound\\00_item_collected.wav"))
-		return false;
-	sounds[0].setBuffer(buffers[0]);
-
-	if (!buffers[1].loadFromFile("Sound\\01_stair.wav"))
-		return false;
-	sounds[1].setBuffer(buffers[1]);
-
-	if (!buffers[2].loadFromFile("Sound\\02_attack.wav"))
-		return false;
-	sounds[2].setBuffer(buffers[2]);
-
-	if (!buffers[3].loadFromFile("Sound\\03_shop_open.wav"))
-		return false;
-	sounds[3].setBuffer(buffers[3]);
-
-	if (!buffers[4].loadFromFile("Sound\\04_item_select.wav"))
-		return false;
-	sounds[4].setBuffer(buffers[4]);
-	return true;
-}
-bool Interface::create_texture() {
-	Map::setup(font);
-
-	if (!Room::load_texture()) return false;
-
-	if (!Gold_Collectible::load_texture()) return false;
-
-	if (!Player::load_texture()) return false;
-
-	if (!Enemy::load_texture()) return false;
-
-	if (!Collectible::load_texture()) return false;
-
-	if (!Stair::load_texture()) return false;
-
-	if (!Shop::load_texture()) return false;
-
-	if (!Interactible::load_texture()) return false;
-
-	return true;
-}
 
 // handle draw to window
 void Interface::draw_exit_screen() {
@@ -2088,9 +2041,8 @@ void Interface::handle_title_prompt(int x, int y) {
 		else if (x > 350 && x < 460 && y > 400 && y < 465)
 			load();
 		else if (x > 10 && x < 260 && y > 740 && y < 790) {
-			music_volume = music_volume ? 0 : 100;
-			music.setVolume(music_volume);
-			title_texts[title_texts.size() - 1].setString(music_volume ? "Music: ON" : "Music: OFF");
+			Audio_Manager::set_music_volume(Audio_Manager::get_music_volume() ? 0 : 100);
+			title_texts[title_texts.size() - 1].setString(Audio_Manager::get_music_volume() ? "Music: ON" : "Music: OFF");
 		}
 	}
 }
@@ -2210,7 +2162,7 @@ void Interface::handle_inv_prompt(int x, int y) {
 					return;
 				}
 				else if (inv_select->get_type() == 3) {
-					sounds[4].play();
+					Audio_Manager::play_sfx(4);
 					inv_draw_desc = items[i];
 					inv_select = items[i];
 					inv_select_rect.setPosition(i1x - 5, i1y - 5);
@@ -2241,7 +2193,7 @@ void Interface::handle_spell_prompt(int x, int y) {
 			int sx = spells[i]->get_pos('x'), sy = spells[i]->get_pos('y');
 
 			if (spell_select->get_id() != 0 && x > 520 && x < 700 && y > 660 && y < 740) {
-				sounds[4].play();
+				Audio_Manager::play_sfx(4);
 				spell_select = new PH_Spell(), spell_desc = new PH_Spell();
 				spell_select->set_pos(-100, -100), inv_select_rect.setPosition(-100, -100);
 			}
@@ -2307,7 +2259,7 @@ void Interface::handle_move_pick_itm() {
 	
 	for (int i{ static_cast<int>(floor.collectibles.size()) - 1 }; i > -1; i--) {
 		if (pl_x == floor.collectibles[i].get_pos('x') && pl_y == floor.collectibles[i].get_pos('y')) {
-			sounds[0].play();
+			Audio_Manager::play_sfx(0);
 			itm_add_item(Item::create_itm(floor.collectibles[i].get_id(), font));
 			floor.collectibles.erase(floor.collectibles.begin() + i);
 			log_add("You picked up an item.");
@@ -2320,7 +2272,7 @@ void Interface::handle_move_pick_gld() {
 
 	for (int i{ static_cast<int>(floor.golds.size()) - 1 }; i > -1; i--) {
 		if (plx == floor.golds[i].get_pos('x') && ply == floor.golds[i].get_pos('y')) {
-			sounds[0].play();
+			Audio_Manager::play_sfx(0);
 			int floor_gold = floor.golds[i].get_amount();
 			player.set_gold(player.get_gold() + floor_gold);
 			log_add("You collected " + std::to_string(floor_gold) + " golds.");
@@ -2336,7 +2288,7 @@ void Interface::handle_move_pick_interact() {
 
 	for (int i{ static_cast<int>(floor.interactibles.size()) - 1 }; i > -1; i--) {
 		if (plx == floor.interactibles[i].get_pos('x') && ply == floor.interactibles[i].get_pos('y')) {
-			sounds[0].play();
+			Audio_Manager::play_sfx(0);
 
 			int effect = rand() % 100;
 			if (effect < 10) {
@@ -2391,7 +2343,7 @@ void Interface::handle_map_prompt(int x, int y) {
 		if (x > 1120 && x < 1170 && y > 10 && y < 60)
 			map_menu = main_screen = false, ext_screen = true;
 		else
-			floor.map.handleEvent(x, y);
+			floor.map.handle_event(x, y);
 	}
 }
 void Interface::handle_sp_atk(std::array<int, 4> sp_inf) {
@@ -2433,7 +2385,7 @@ void Interface::handle_shop() {
 	if (floor.get_shop_pos('x') != player.get_pos('x') || floor.get_shop_pos('y') != player.get_pos('y'))
 		return;
 
-	sounds[3].play();
+	Audio_Manager::play_sfx(3);
 	while (true) {
 		sf::Vector2i pos = sf::Mouse::getPosition(window);
 		int x{ pos.x }, y{ pos.y };

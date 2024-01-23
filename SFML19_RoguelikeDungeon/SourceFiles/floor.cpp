@@ -1,11 +1,11 @@
 /**
 *
-* File: floor_class.cpp
+* File: floor.cpp
 * Description: Contain implementations for Floor class.
 *
 */
 
-#include "floor_class.h"
+#include "floor.h"
 
 Floor::Floor(bool load) {
 	if (!load) {

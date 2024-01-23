@@ -1,6 +1,6 @@
 /**
 *
-* File: item_class.h
+* File: item.h
 * Description: This class abstracts an item which player can use to provide special effects in the game world.
 * Also contains child classes from the Spell class to contain individual items.
 *
@@ -10,7 +10,7 @@
 #define ITEM_H
 
 #include "..\SFML-2.5.1/include/SFML/Graphics.hpp"
-#include "player_class.h"
+#include "player.h"
 
 class Item {
 protected:

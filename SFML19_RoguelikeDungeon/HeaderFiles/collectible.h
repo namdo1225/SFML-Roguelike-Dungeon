@@ -1,6 +1,6 @@
 /**
 *
-* File: collectible_class.h
+* File: collectible.h
 * Description: Contain the declaration of the Collectible class, which represents a collectible which player could
 * collect into their inventory.
 *
@@ -14,7 +14,6 @@
 class Collectible : sf::RectangleShape {
 private:
 	unsigned int id{ 0 };
-	static sf::Texture col_tex;
 
 public:
 	/**
@@ -67,14 +66,6 @@ public:
 	*	window: a sf::RenderWindow object where the item will be drawn on.
 	*/
 	void draw(sf::RenderWindow& window);
-
-	/**
-	* Method to load texture.
-	*
-	* Return:
-	*	a bool. true if texture successfully loads.
-	*/
-	static bool load_texture();
 };
 
 

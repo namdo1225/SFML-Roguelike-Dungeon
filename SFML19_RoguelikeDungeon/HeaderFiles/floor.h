@@ -1,6 +1,6 @@
 /**
 *
-* File: floor_class.c
+* File: floor.c
 * Description: Contain Floor class, which represents a dungeon floor.
 *
 */
@@ -9,14 +9,14 @@
 #define FLOOR_H
 
 #include "..\SFML-2.5.1/include/SFML/Graphics.hpp"
-#include "items_class.h"
-#include "stair_class.h"
-#include "shop_class.h"
-#include "collectible_class.h"
-#include "gold_collectible_class.h"
-#include "room_class.h"
-#include "map_class.h"
-#include "interactibles_class.h"
+#include "items.h"
+#include "stair.h"
+#include "shop.h"
+#include "collectible.h"
+#include "gold_collectible.h"
+#include "room.h"
+#include "map.h"
+#include "interactibles.h"
 
 class Floor {
 private:

@@ -1,11 +1,11 @@
 /**
 *
-* File: item_class.cpp
+* File: item.cpp
 * Description: Contains implementations of Item class and its sub-classes.
 *
 */
 
-#include "items_class.h"
+#include "items.h"
 
 Item::Item() {
 	icon.setPosition(-100, -100);

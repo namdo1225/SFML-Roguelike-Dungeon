@@ -1,6 +1,6 @@
 /**
 *
-* File: gold_collectible_class.h
+* File: gold_collectible.h
 * Description: Contain the declaration of the Gold_Collectible class, which represents a gold piece which player could
 * gather.
 *
@@ -14,8 +14,6 @@
 class Gold_Collectible : sf::RectangleShape {
 private:
 	unsigned int amount{ 0 };
-
-	static sf::Texture tex;
 
 public:
 
@@ -70,14 +68,6 @@ public:
 	*	window: a sf::RenderWindow object where the gold will be drawn on.
 	*/
 	void draw(sf::RenderWindow& window);
-
-	/**
-	* Method to load texture.
-	*
-	* Return:
-	*	a bool. true if texture successfully loads.
-	*/
-	static bool load_texture();
 };
 
 #endif

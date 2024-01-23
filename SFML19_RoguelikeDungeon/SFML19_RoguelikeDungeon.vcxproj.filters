@@ -15,97 +15,123 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="SourceFiles\enemies_class.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SourceFiles\floor_class.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SourceFiles\interactibles_class.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SourceFiles\interface_class.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SourceFiles\items_class.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SourceFiles\player_class.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="SourceFiles\sfml19.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SourceFiles\spell_class.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SourceFiles\stair_class.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SourceFiles\shop_class.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SourceFiles\collectible_class.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SourceFiles\gold_collectible_class.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SourceFiles\room_class.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SourceFiles\map_class.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SourceFiles\effect.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SourceFiles\audio_manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceFiles\collectible.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceFiles\enemies.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceFiles\floor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceFiles\gold_collectible.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceFiles\interactibles.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceFiles\interface.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceFiles\items.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceFiles\map.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceFiles\player.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceFiles\room.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceFiles\shop.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceFiles\spell.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceFiles\stair.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceFiles\texture_manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceFiles\Screen\screen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HeaderFiles\Screen\screen.h">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="HeaderFiles\enemies_class.h">
+    <ClInclude Include="HeaderFiles\effect.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="HeaderFiles\floor_class.h">
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HeaderFiles\collectible.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HeaderFiles\enemies.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HeaderFiles\floor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HeaderFiles\gold_collectible.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="HeaderFiles\include.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="HeaderFiles\interactibles_class.h">
+    <ClInclude Include="HeaderFiles\interactibles.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="HeaderFiles\interface_class.h">
+    <ClInclude Include="HeaderFiles\interface.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="HeaderFiles\items_class.h">
+    <ClInclude Include="HeaderFiles\items.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="HeaderFiles\player_class.h">
+    <ClInclude Include="HeaderFiles\map.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="HeaderFiles\spell_class.h">
+    <ClInclude Include="HeaderFiles\player.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="HeaderFiles\stair_class.h">
+    <ClInclude Include="HeaderFiles\room.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="HeaderFiles\shop_class.h">
+    <ClInclude Include="HeaderFiles\shop.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="HeaderFiles\collectible_class.h">
+    <ClInclude Include="HeaderFiles\spell.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="HeaderFiles\gold_collectible_class.h">
+    <ClInclude Include="HeaderFiles\stair.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="HeaderFiles\room_class.h">
+    <ClInclude Include="HeaderFiles\audio_manager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="HeaderFiles\map_class.h">
+    <ClInclude Include="HeaderFiles\texture_manager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="HeaderFiles\effect.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="SFML19_RoguelikeDungeon.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

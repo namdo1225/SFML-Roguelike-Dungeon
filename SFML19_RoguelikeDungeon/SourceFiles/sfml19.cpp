@@ -5,7 +5,7 @@
 *
 */
 
-#include "interface_class.h"
+#include "interface.h"
 
 int main() {
     std::srand(static_cast<unsigned int>(std::time(nullptr) * std::time(nullptr) / 2 + 3 * 5));

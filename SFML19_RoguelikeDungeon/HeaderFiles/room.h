@@ -1,6 +1,6 @@
 /**
 *
-* File: room_class.h
+* File: room.h
 * Description: Contain the declaration of the Room class, which represents a room which player could
 * be in.
 *
@@ -14,10 +14,6 @@
 
 class Room {
 private:
-
-	static const unsigned int num_textures = 4;
-	static std::array<sf::Texture, num_textures> room_texs;
-
 	// 0, 2 = horizontal. 1, 3 = vertical
 	unsigned int door_rotation;
 
@@ -146,14 +142,6 @@ public:
 	*	d: a char. 'r' to draw room. 'd' to draw door.
 	*/
 	void draw(sf::RenderWindow& window, char d);
-
-	/**
-	* Method to load texture.
-	*
-	* Return:
-	*	a bool. true if texture successfully loads.
-	*/
-	static bool load_texture();
 };
 
 

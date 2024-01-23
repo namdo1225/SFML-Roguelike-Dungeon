@@ -1,11 +1,11 @@
 ﻿/**
 *
-* File: map_class.cpp
+* File: map.cpp
 * Description: Contain implementations for the Stair class.
 *
 */
 
-#include "map_class.h"
+#include "map.h"
 
 std::array<sf::Text, 4> Map::directions = { sf::Text(), sf::Text(), sf::Text(), sf::Text() };
 std::array<sf::Text, 2> Map::zooms = { sf::Text(), sf::Text() };
@@ -142,7 +142,7 @@ void Map::zoom(char zoom) {
 	}
 }
 
-void Map::handleEvent(int x, int y) {
+void Map::handle_event(int x, int y) {
 	if (x > 1050 && x < 1100 && y > 500 && y < 550)
 		this->move('u');
 	else if (x > 1050 && x < 1100 && y > 600 && y < 650)
