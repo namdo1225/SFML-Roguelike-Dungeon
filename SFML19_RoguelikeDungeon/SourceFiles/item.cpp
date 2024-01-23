@@ -5,7 +5,7 @@
 *
 */
 
-#include "items.h"
+#include "item.h"
 
 Item::Item() {
 	icon.setPosition(-100, -100);

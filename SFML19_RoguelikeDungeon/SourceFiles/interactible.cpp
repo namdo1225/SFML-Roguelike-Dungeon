@@ -1,11 +1,11 @@
 /**
 *
-* File: interactibles.cpp
+* File: interactible.cpp
 * Description: Contains the implementation for the Interactible class.
 *
 */
 
-#include "interactibles.h"
+#include "interactible.h"
 #include "texture_manager.h"
 
 Interactible::Interactible() {

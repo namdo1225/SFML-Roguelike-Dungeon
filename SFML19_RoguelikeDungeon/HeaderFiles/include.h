@@ -11,9 +11,9 @@
 #include "texture_manager.h"
 #include "audio_manager.h"
 #include "player.h"
-#include "enemies.h"
+#include "enemy.h"
 #include "floor.h"
-#include "items.h"
+#include "item.h"
 #include "spell.h"
 #include "map.h"
 

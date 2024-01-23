@@ -1,11 +1,11 @@
 /**
 *
-* File: enemies.cpp
+* File: enemy.cpp
 * Description: Contains implementations of Enemy class.
 *
 */
 
-#include "enemies.h"
+#include "enemy.h"
 #include "texture_manager.h"
 
 Enemy::Enemy(int hp, int floor, unsigned int t_id, int x, int y) : id(t_id) {

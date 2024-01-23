@@ -1,6 +1,6 @@
 /**
 * 
-* File: enemies.h
+* File: enemy.h
 * Description: This class abstracts an enemy which can attack/kill the player.
 * 
 */

@@ -1,6 +1,6 @@
 /**
 *
-* File: interactibles.h
+* File: interactible.h
 * Description: This class abstracts an interactible, an object that can be interacted with in the
 * overworld of the game.
 *
