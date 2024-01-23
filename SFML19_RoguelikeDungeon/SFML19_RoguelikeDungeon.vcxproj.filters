@@ -27,7 +27,7 @@
     <ClCompile Include="SourceFiles\collectible.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SourceFiles\enemies.cpp">
+    <ClCompile Include="SourceFiles\enemy.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SourceFiles\floor.cpp">
@@ -36,13 +36,13 @@
     <ClCompile Include="SourceFiles\gold_collectible.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SourceFiles\interactibles.cpp">
+    <ClCompile Include="SourceFiles\interactible.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SourceFiles\interface.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SourceFiles\items.cpp">
+    <ClCompile Include="SourceFiles\item.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SourceFiles\map.cpp">
@@ -83,7 +83,7 @@
     <ClInclude Include="HeaderFiles\collectible.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="HeaderFiles\enemies.h">
+    <ClInclude Include="HeaderFiles\enemy.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="HeaderFiles\floor.h">
@@ -95,13 +95,13 @@
     <ClInclude Include="HeaderFiles\include.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="HeaderFiles\interactibles.h">
+    <ClInclude Include="HeaderFiles\interactible.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="HeaderFiles\interface.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="HeaderFiles\items.h">
+    <ClInclude Include="HeaderFiles\item.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="HeaderFiles\map.h">

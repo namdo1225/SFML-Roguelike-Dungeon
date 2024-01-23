@@ -9,14 +9,14 @@
 #define FLOOR_H
 
 #include "..\SFML-2.5.1/include/SFML/Graphics.hpp"
-#include "items.h"
+#include "item.h"
 #include "stair.h"
 #include "shop.h"
 #include "collectible.h"
 #include "gold_collectible.h"
 #include "room.h"
 #include "map.h"
-#include "interactibles.h"
+#include "interactible.h"
 
 class Floor {
 private:

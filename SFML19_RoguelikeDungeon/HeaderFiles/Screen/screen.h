@@ -10,15 +10,17 @@
 #include "..\SFML-2.5.1/include/SFML/Graphics.hpp"
 #include <array>
 
+enum Display { Title, Exit, Name, Stat, Level, Game, Menu, Inventory, Spell, Map, Scan, Help };
+
 class Screen {
 private:
 	std::vector<sf::Text> texts;
 	std::vector<sf::RectangleShape> rects;
+	static Display display;
 
 public:
 	static const unsigned int screens = 12;
 	static std::array<bool, screens> visibilities;
-	static std::shared_ptr<Screen> active;
 
 	/**
 	* Constructor for Screen.

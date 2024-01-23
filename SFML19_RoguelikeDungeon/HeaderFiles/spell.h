@@ -11,7 +11,7 @@
 
 #include "..\SFML-2.5.1/include/SFML/Graphics.hpp"
 #include "player.h"
-#include "enemies.h"
+#include "enemy.h"
 #include "floor.h"
 
 class Spell {
