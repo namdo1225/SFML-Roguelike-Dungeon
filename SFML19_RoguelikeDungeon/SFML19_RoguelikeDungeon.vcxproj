@@ -121,7 +121,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>SFML_STATIC;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)HeaderFiles;$(ProjectDir)SFML-2.5.1\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)HeaderFiles;$(ProjectDir)SFML-2.5.1\include;$(ProjectDir)nlohmann</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -167,11 +168,17 @@
     <ClInclude Include="HeaderFiles\map.h" />
     <ClInclude Include="HeaderFiles\player.h" />
     <ClInclude Include="HeaderFiles\room.h" />
+    <ClInclude Include="HeaderFiles\Screen\exit_screen.h" />
+    <ClInclude Include="HeaderFiles\Shape\full_rectangle.h" />
+    <ClInclude Include="HeaderFiles\Shape\full_text.h" />
     <ClInclude Include="HeaderFiles\shop.h" />
     <ClInclude Include="HeaderFiles\spell.h" />
     <ClInclude Include="HeaderFiles\stair.h" />
     <ClInclude Include="HeaderFiles\texture_manager.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="SourceFiles\Screen\exit_screen.cpp" />
+    <ClInclude Include="SourceFiles\Shape\full_rectangle.cpp" />
+    <ClInclude Include="SourceFiles\Shape\full_text.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SFML19_RoguelikeDungeon.rc" />

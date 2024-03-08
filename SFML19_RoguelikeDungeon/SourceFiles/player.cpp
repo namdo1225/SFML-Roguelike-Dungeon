@@ -27,8 +27,11 @@ Player::Player(sf::Font& font) : Player() { name.setFont(font); }
 void Player::set_effect(unsigned int stat, int quantity, unsigned int longevity, unsigned int current) {
 	if (current == 0)
 		effects.push_back(Effect(stat, quantity, longevity));
-	else
+	else {
 		effects.push_back(Effect(stat, quantity, longevity, current));
+		if (current != longevity)
+			effects[effects.size() - 1].effect_applied = true;
+	}
 }
 
 int Player::attack_pl(bool atk_type, int uncalculated_quantity) {
@@ -136,7 +139,6 @@ void Player::use_effect() {
 			set_stat(type, cur_stat + difference);
 			effects[i].effect_applied = true;
 		}
-
 		effects[i].change_turns--;
 	}
 }
