@@ -8,8 +8,10 @@
 #ifndef EFFECT_H
 #define EFFECT_H
 
+#include "stat.h"
+
 struct Effect {
-	unsigned int stat_changed;
+	Stat stat_changed;
 	int stat_difference;
 	unsigned change_turns;
 	unsigned original_turns;
@@ -18,12 +20,12 @@ struct Effect {
 	/**
 	* Constructor for Effect where original turns = change turns.
 	*/
-	Effect(unsigned int, int, unsigned int);
+	Effect(Stat, int, unsigned int);
 
 	/**
 	* Constructor for Effect where original turns != change turns.
 	*/
-	Effect(unsigned int, int, unsigned int, unsigned int);
+	Effect(Stat, int, unsigned int, unsigned int);
 };
 
 #endif

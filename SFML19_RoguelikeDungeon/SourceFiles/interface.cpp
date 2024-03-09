@@ -288,20 +288,20 @@ void Interface::save() {
         j["stat"] = {
             {"hp",
                 {
-                    {"current", player.get_stat(6)},
-                    {"max", player.get_stat(0)}
+                    {"current", player.get_stat(Hp)},
+                    {"max", player.get_stat(Max_Hp)}
                 }
             },
             {"mp",
                 {
-                    {"current", player.get_stat(7)},
-                    {"max", player.get_stat(1)}
+                    {"current", player.get_stat(Mp)},
+                    {"max", player.get_stat(Max_Mp)}
                 }
             },
-            {"str", player.get_stat(2)},
-            {"mgk", player.get_stat(3)},
-            {"def", player.get_stat(4)},
-            {"res", player.get_stat(5)},
+            {"str", player.get_stat(Str)},
+            {"mgk", player.get_stat(Mgk)},
+            {"def", player.get_stat(Def)},
+            {"res", player.get_stat(Res)},
         };
 
         if (!items.empty())
@@ -502,16 +502,16 @@ void Interface::read_save(std::string file_name) {
         player.set_lvl_up(j.at("exp").at("levelUp"));
         player.set_max_item(j.at("inventorySlots"));
 
-        player.set_stat(6, j.at("stat").at("hp").at("current"));
-        player.set_stat(0, j.at("stat").at("hp").at("max"));
+        player.set_stat(Hp, j.at("stat").at("hp").at("current"));
+        player.set_stat(Max_Hp, j.at("stat").at("hp").at("max"));
 
-        player.set_stat(7, j.at("stat").at("mp").at("current"));
-        player.set_stat(1, j.at("stat").at("mp").at("max"));
+        player.set_stat(Mp, j.at("stat").at("mp").at("current"));
+        player.set_stat(Max_Mp, j.at("stat").at("mp").at("max"));
 
-        player.set_stat(2, j.at("stat").at("str"));
-        player.set_stat(3, j.at("stat").at("mgk"));
-        player.set_stat(4, j.at("stat").at("def"));
-        player.set_stat(5, j.at("stat").at("res"));
+        player.set_stat(Str, j.at("stat").at("str"));
+        player.set_stat(Mgk, j.at("stat").at("mgk"));
+        player.set_stat(Def, j.at("stat").at("def"));
+        player.set_stat(Res, j.at("stat").at("res"));
 
         items.clear();
         for (auto& element : j.at("inventory")) {
@@ -693,7 +693,7 @@ void Interface::refresh_exp() {
 void Interface::pl_sp_atk(Spell* spell) {
     std::array<int, 4> sp_inf = spell->atk(player);
 
-    if (player.get_stat(7) < sp_inf[3])
+    if (player.get_stat(Mp) < sp_inf[3])
         return;
 
     handle_sp_atk(sp_inf);
@@ -1756,16 +1756,16 @@ void Interface::draw_main_ui() {
     for (sf::RectangleShape rect : main_border_vector)
         window.draw(rect);
 
-    for (unsigned int i{ 0 }; i < 6; i++) {
-        if (i < 5) {
+    for (Stat i{ Max_Hp }; i < Hp; i++) {
+        if (i < Res) {
             window.draw(main_text[i]);
         }
         window.draw(main_player_stats[i]);
 
         if (i == 0)
-            main_player_stats_num[i].setString(std::to_string(player.get_stat(6)) + " / " + std::to_string(player.get_stat(i)));
+            main_player_stats_num[i].setString(std::to_string(player.get_stat(Hp)) + " / " + std::to_string(player.get_stat(i)));
         else if (i == 1)
-            main_player_stats_num[i].setString(std::to_string(player.get_stat(7)) + " / " + std::to_string(player.get_stat(i)));
+            main_player_stats_num[i].setString(std::to_string(player.get_stat(Mp)) + " / " + std::to_string(player.get_stat(i)));
         else
             main_player_stats_num[i].setString(std::to_string(player.get_stat(i)));
         window.draw(main_player_stats_num[i]);
@@ -1825,7 +1825,7 @@ void Interface::draw_stat_selection() {
         if (i < 2)
             window.draw(stats_left_draw[i]);
         if (i < 6) {
-            stats_draw[i].setString(std::to_string(player.get_stat(i)));
+            stats_draw[i].setString(std::to_string(player.get_stat((Stat)i)));
             window.draw(stats_text_draw[i]);
             window.draw(stats_draw[i]);
         }
@@ -1839,7 +1839,7 @@ void Interface::draw_lvl_ui() {
     window.draw(stat_select_continue_rect);
     window.draw(stat_select_continue_txt);
 
-    for (unsigned int i{ 0 }; i < 6; i++) {
+    for (Stat i{ Max_Hp }; i < Hp; i++) {
         if (i < 2) window.draw(stats_left_draw[i]);
         stats_draw[i].setString(std::to_string(player.get_stat(i)));
         window.draw(stats_text_draw[i]);
@@ -1955,11 +1955,11 @@ void Interface::handle_exit_prompt(int x, int y) {
 }
 void Interface::handle_stat_pick_prompt(int x, int y) {
     if (!exit_menu && stat_screen)
-        for (unsigned int i{ 0 }; i < 6; i++) {
+        for (Stat i{ Max_Hp }; i < Hp; i++) {
             if (y > 230 + (i * 57) && y < 270 + (i * 57)) {
                 if (x > 480 && x < 560 && player.get_stat(i) != 0) {
-                    if (i == 0 && player.get_stat(0) == 5) continue;
-                    if (i <= 1) player.set_stat(6 + i, player.get_stat(6 + i) - 1);
+                    if (i == Max_Hp && player.get_stat(Max_Hp) == 5) continue;
+                    if (i <= Max_Mp) player.set_stat((Stat)(6 + i), player.get_stat((Stat)(6 + i)) - 1);
 
                     player.set_stat(i, player.get_stat(i) - 1);
                     stats_draw[i].setString(std::to_string(player.get_stat(i)));
@@ -1968,7 +1968,7 @@ void Interface::handle_stat_pick_prompt(int x, int y) {
                 }
 
                 else if (x > 620 && x < 700 && player.get_pts() != 0) {
-                    if (i <= 1) player.set_stat(6 + i, player.get_stat(6 + i) + 1);
+                    if (i <= 1) player.set_stat((Stat)(6 + i), player.get_stat((Stat)(6 + i)) + 1);
 
                     player.set_stat(i, player.get_stat(i) + 1);
                     stats_draw[i].setString(std::to_string(player.get_stat(i)));
@@ -1991,7 +1991,7 @@ void Interface::handle_lvl_prompt(int x, int y) {
             level_up_reset = true;
         }
 
-        for (unsigned int i{ 0 }; i < 6; i++) {
+        for (Stat i{ Max_Hp }; i < Hp; i++) {
             if (y > 230 + (i * 57) && y < 270 + (i * 57)) {
                 if (x > 620 && x < 700 && player.get_pts() != 0) {
                     player.set_stat(i, player.get_stat(i) + 1);
@@ -2284,11 +2284,11 @@ void Interface::handle_move_pick_interact() {
                 log_add("Your golds decreased by 25%.");
             }
             else if (effect >= 20 && effect < 30) {
-                player.set_stat(6, player.get_stat(6) * 1.5 > player.get_stat(0) ? player.get_stat(0) : player.get_stat(6) * 1.5);
+                player.set_stat(Hp, player.get_stat(Hp) * 1.5 > player.get_stat(Max_Hp) ? player.get_stat(Max_Hp) : player.get_stat(Hp) * 1.5);
                 log_add("Your HP increased by 50%.");
             }
             else if (effect >= 30 && effect < 40) {
-                player.set_stat(7, player.get_stat(7) * 1.5 > player.get_stat(1) ? player.get_stat(1) : player.get_stat(7) * 1.5);
+                player.set_stat(Mp, player.get_stat(Mp) * 1.5 > player.get_stat(Max_Mp) ? player.get_stat(Max_Mp) : player.get_stat(Mp) * 1.5);
                 log_add("Your MP increased by 50%.");
             }
             else if (effect >= 40 && effect < 50) {
@@ -2302,15 +2302,15 @@ void Interface::handle_move_pick_interact() {
                 log_add("You will recover 1 health.");
             }
             else if (effect >= 60 && effect < 70) {
-                player.set_effect(6, 1, 5);
+                player.set_effect(Hp, 1, 5);
                 log_add("You will recover 1 HP for 5 turns.");
             }
             else if (effect >= 70 && effect < 80) {
-                player.set_effect(2, -1, 7);
+                player.set_effect(Str, -1, 7);
                 log_add("You will lose 1 STR for 7 turns.");
             }
             else if (effect >= 80 && effect < 90) {
-                player.set_effect(5, 2, 4);
+                player.set_effect(Res, 2, 4);
                 log_add("You will gain 2 RES for 4 turns.");
             }
             else
@@ -2353,7 +2353,7 @@ void Interface::handle_sp_atk(std::array<int, 4> sp_inf) {
                         if (x >= enemies[i].get_pos('x') && x <= enemies[i].get_pos('x') + 40 and
                             y >= enemies[i].get_pos('y') && y <= enemies[i].get_pos('y') + 40) {
                             player.use_mp(sp_inf[3]);
-                            enemies[i].set_hp(sp_inf[2], sp_inf[0] + player.get_stat(sp_inf[2] + 4));
+                            enemies[i].set_hp(sp_inf[2], sp_inf[0] + player.get_stat((Stat)(sp_inf[2] + 4)));
                             return;
                         } else if (i == enemies.size() - 1)
                             return;

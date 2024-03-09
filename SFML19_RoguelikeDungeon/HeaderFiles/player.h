@@ -22,13 +22,10 @@ private:
 	// index: 0 = up, 1 = left, 2 = down, 3 = right
 	std::array<bool, 4> stuck{ false, false, false, false };
 
-	// CURRENT_HP, CURRENT_MP
-	std::array<int, 2> cur_hp_mp = { 10, 5 };
-
 	unsigned int points{ 10 }, level{ 1 }, cur_exp{ 0 }, lvl_up{ 10 }, floor{ 1 }, gold{ 0 }, max_item{ 10 };
 
-	// MAX_HP, MAX_MP, STR, MAG, DEF, RES
-	std::array<unsigned int, 6> stat = { 10, 5, 0, 0, 0, 0 };
+	// MAX_HP, MAX_MP, STR, MAG, DEF, RES, HP, MP
+	std::array<long, 8> stat = { 10, 5, 0, 0, 0, 0, 10, 5};
 
 public:
 
@@ -105,12 +102,12 @@ public:
 	* Getter for player's stat.
 	*
 	* Parameter:
-	*	t_stat: an unsigned int to index the stat type. 0-5 for the regular stat types. 6-7 for current hp/mp.
+	*	t_stat: a Stat enum to index the stat type. 0-5 for the regular stat types. 6-7 for current hp/mp.
 	* 
 	* Return:
 	*	an unsigned int for the value of stat type.
 	*/
-	unsigned int get_stat(unsigned int t_stat);
+	unsigned int get_stat(Stat t_stat);
 
 	/**
 	* Getter for player's position.
@@ -159,7 +156,7 @@ public:
 	*	longevity: an unsigned int for how many turns the effect will apply for.
 	*	current: an unsigned int for how many turns the effect has left (useful for loading from saves).
 	*/
-	void set_effect(unsigned stat, int quantity, unsigned int longevity, unsigned int current = 0);
+	void set_effect(Stat stat, int quantity, unsigned int longevity, unsigned int current = 0);
 
 	/**
 	* Setter for player's name.
@@ -229,10 +226,10 @@ public:
 	* Setter for player's stat.
 	*
 	* Parameter:
-	*	t_stat: an unsigned int to pick the stat type.
+	*	t_stat: a Stat enum to pick the stat type.
 	*	num: an unsigned int for the new value for the stat type.
 	*/
-	void set_stat(unsigned int t_stat, unsigned int num);
+	void set_stat(Stat t_stat, unsigned int num);
 
 	/**
 	* Setter for player's position.
@@ -307,7 +304,7 @@ public:
 	* Parameter:
 	*	stats: an std::array<unsigned int, 6> object to copy the stats to.
 	*/
-	void copy_stat(std::array<unsigned int, 6>& stats);
+	void copy_stat(std::array<long, 8>& stats);
 
 	/**
 	* Handles effects on player.

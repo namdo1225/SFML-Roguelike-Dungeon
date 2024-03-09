@@ -84,7 +84,7 @@ private:
 	sf::RectangleShape level_up_rect;
 	sf::Text level_up_exit_txt;
 	sf::RectangleShape level_up_exit_rect;
-	std::array<unsigned int, 6> level_up_backup_stats;
+	std::array<long, 8> level_up_backup_stats;
 	unsigned int level_up_backup_left;
 
 	// extra_menu_ui:

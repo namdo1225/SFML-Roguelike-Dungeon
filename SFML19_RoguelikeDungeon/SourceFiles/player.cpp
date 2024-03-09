@@ -24,7 +24,7 @@ Player::Player() {
 
 Player::Player(sf::Font& font) : Player() { name.setFont(font); }
 
-void Player::set_effect(unsigned int stat, int quantity, unsigned int longevity, unsigned int current) {
+void Player::set_effect(Stat stat, int quantity, unsigned int longevity, unsigned int current) {
 	if (current == 0)
 		effects.push_back(Effect(stat, quantity, longevity));
 	else {
@@ -45,14 +45,14 @@ int Player::attack_pl(bool atk_type, int uncalculated_quantity) {
 	if (stat[type] < uncalculated_quantity)
 		quantity = uncalculated_quantity - stat[type];
 
-	cur_hp_mp[0] -= quantity;
+	stat[Hp] -= quantity;
 
 	return quantity;
 }
 
-void Player::use_mp(int quantity) { cur_hp_mp[1] -= quantity; }
+void Player::use_mp(int quantity) { stat[Mp] -= quantity; }
 
-unsigned int Player::get_stat(unsigned int t_stat) { return (t_stat < 6) ? stat[t_stat] : cur_hp_mp[t_stat - 6]; }
+unsigned int Player::get_stat(Stat t_stat) { return stat[t_stat]; }
 
 int Player::get_pos(char z) { return (z == 'x') ? getPosition().x : getPosition().y; }
 
@@ -95,18 +95,17 @@ void Player::set_lvl_up(unsigned int lvl_exp) { lvl_up = lvl_exp; }
 
 void Player::set_max_item(unsigned int slots) { max_item = slots; }
 
-void Player::set_stat(unsigned int t_stat, unsigned int num) { (t_stat < 6) ? stat[t_stat] = num : cur_hp_mp[t_stat - 6] = num; }
+void Player::set_stat(Stat t_stat, unsigned int num) { stat[t_stat] = num; }
 
-bool Player::is_dead() { return (cur_hp_mp[0] <= 0); }
+bool Player::is_dead() { return (stat[Hp] <= 0); }
 
 void Player::reset() {
-	stat = { 10, 5, 0, 0, 0, 0 };
+	stat = { 10, 5, 0, 0, 0, 0, 10, 5 };
 	name.setString("");
 	points = 10;
 	level = floor = 1;
 	cur_exp = gold = 0;
 	lvl_up = 10;
-	cur_hp_mp = { 10, 5 };
 }
 
 bool Player::is_stuck(unsigned int i) { return stuck[i]; }
@@ -117,11 +116,11 @@ void Player::set_stuck(unsigned int i, bool j) { stuck[i] = j; }
 
 void Player::draw(sf::RenderWindow& window, char draw) { (draw == 's') ? window.draw(*this) : window.draw(name); }
 
-void Player::copy_stat(std::array<unsigned int, 6>& stats) { stats = stat; }
+void Player::copy_stat(std::array<long, 8>& stats) { stats = stat; }
 
 void Player::use_effect() {
 	for (int i = effects.size() - 1; i >= 0; i--) {
-		unsigned int type = effects[i].stat_changed;
+		Stat type = effects[i].stat_changed;
 		int difference = effects[i].stat_difference;
 		int cur_stat = get_stat(type);
 
@@ -132,7 +131,7 @@ void Player::use_effect() {
 			continue;
 		}
 
-		if (type > 5 && cur_stat + difference <= get_stat(type % 6))
+		if (type > 5 && cur_stat + difference <= get_stat(type))
 			set_stat(type, cur_stat + difference);
 		else if (type > 1 && type < 6 && effects[i].change_turns == effects[i].original_turns
 			&& cur_stat + difference > 0 && cur_stat + difference < INT_MAX) {
@@ -145,7 +144,7 @@ void Player::use_effect() {
 
 void Player::reset_effect() {
 	for (int i = effects.size() - 1; i >= 0; i--) {
-		unsigned int type = effects[i].stat_changed;
+		Stat type = effects[i].stat_changed;
 		int difference = effects[i].stat_difference;
 		int cur_stat = get_stat(type);
 

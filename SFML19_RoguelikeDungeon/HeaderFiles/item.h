@@ -6,11 +6,12 @@
 *
 */
 
-#ifndef ITEM_H
-#define ITEM_H
-
 #include "..\SFML-2.5.1/include/SFML/Graphics.hpp"
 #include "player.h"
+#include "stat.h"
+
+#ifndef ITEM_H
+#define ITEM_H
 
 class Item {
 protected:
@@ -18,7 +19,8 @@ protected:
 
 	// type: 0 = non-equipable, 1 = weapon, 2 = armor, 3 = item does not exist
 	unsigned int type{ 3 };
-	unsigned int id{ 0 }, stat{ 0 }, range{ 0 }, sell_gd{ 0 }, buy_gd{ 0 };
+	unsigned int id, range, sell_gd, buy_gd = 0;
+	Stat stat{ Max_Hp };
 
 	// modify_or_act, true: modify player's stats or hp/mp, false: this is an item that doesn't modify stats
 	// hp_mp_other, true: modify player's stats, false: modify player's hp or mp
@@ -42,7 +44,7 @@ public:
 	* 	t_type: an int for the item's type.
 	* 	t_modify_act: a bool. true for item that modify a stat. false for item that can be used without modifying stat.
 	* 	t_hp_mp_other: a bool. false for modifying hp/mp. true for other stat.
-	* 	t_stat_type: an int for the type of stat modified.
+	* 	t_stat_type: a Stat enum for the type of stat modified.
 	* 	t_modified_num: an int for the number that the item is supposed to have. 
 	*					Ex: if it's a health potion, the number is the amount the potion heals.
 	* 	t_range: an int for the item's range.
@@ -52,7 +54,7 @@ public:
 	* 	font: a sf::Font object that holds the font data for the item's texts.
 	*/
 	Item(int t_id, int t_type, bool t_modify_act,
-		bool t_hp_mp_other, int t_stat_type, int t_modified_num,
+		bool t_hp_mp_other, Stat t_stat_type, int t_modified_num,
 		int t_range, int t_buy, int t_sell, const char abbre[3],
 		sf::Font& font);
 
@@ -150,9 +152,9 @@ public:
 	* Getter for item's stat type.
 	*
 	* Return:
-	*	An int for item's stat type.
+	*	A Stat enum for item's stat type.
 	*/
-	unsigned int get_stat();
+	Stat get_stat();
 
 	/**
 	* Getter for item's quantity.

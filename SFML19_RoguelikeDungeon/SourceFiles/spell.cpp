@@ -81,17 +81,17 @@ Heal::Heal(sf::Font& font) : Spell(font, "HE", 1, 50, 20, 3) {
 }
 
 void Heal::use(Floor& floor, Player& player, std::vector<Enemy>& enemies) {
-	if (player.get_stat(6) == player.get_stat(0))
+	if (player.get_stat(Hp) == player.get_stat(Max_Hp))
 		return;
 
-	player.set_stat(7, player.get_stat(7) - 3);
+	player.set_stat(Mp, player.get_stat(Mp) - 3);
 
-	if (player.get_stat(6) + 5 + player.get_stat(3) > player.get_stat(0)) {
-		player.set_stat(6, player.get_stat(6) + player.get_stat(0));
+	if (player.get_stat(Hp) + 5 + player.get_stat(Mgk) > player.get_stat(Max_Hp)) {
+		player.set_stat(Hp, player.get_stat(Hp) + player.get_stat(Max_Hp));
 		return;
 	}
 
-	player.set_stat(6, player.get_stat(6) + 5 + player.get_stat(3));
+	player.set_stat(Hp, player.get_stat(Hp) + 5 + player.get_stat(Mgk));
 }
 
 Damage_All::Damage_All(sf::Font& font) : Spell(font, "DA", 2, 100, 40, 1) {
@@ -99,13 +99,13 @@ Damage_All::Damage_All(sf::Font& font) : Spell(font, "DA", 2, 100, 40, 1) {
 }
 
 void Damage_All::use(Floor& floor, Player& player, std::vector<Enemy>& enemies) {
-	if (player.get_stat(7) < 4)
+	if (player.get_stat(Mp) < 4)
 		return;
 
-	player.set_stat(7, player.get_stat(7) - 8);
+	player.set_stat(Mp, player.get_stat(Mp) - 8);
 
 	for (unsigned int i = 0; i < enemies.size(); i++)
-		enemies[i].set_stat(0, enemies[i].get_stat(0) - 4 + player.get_stat(3) * 0.25);
+		enemies[i].set_stat(0, enemies[i].get_stat(0) - 4 + player.get_stat(Mgk) * 0.25);
 }
 
 Fire::Fire(sf::Font& font) : Spell(font, "FI", 3, 10, 4, 4) {
@@ -114,6 +114,6 @@ Fire::Fire(sf::Font& font) : Spell(font, "FI", 3, 10, 4, 4) {
 }
 
 std::array<int, 4> Fire::atk(Player& player) {
-	std::array<int, 4> return_arr = {4 + player.get_stat(3) * 0.5, range, 3, 4};
+	std::array<int, 4> return_arr = {4 + player.get_stat(Mgk) * 0.5, range, 3, 4};
 	return return_arr;
 }

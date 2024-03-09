@@ -24,7 +24,7 @@ Item::Item() {
 }
 
 Item::Item(int t_id, int t_type, bool t_modify_act,
-	bool t_hp_mp_other, int t_stat_type, int t_quantity,
+	bool t_hp_mp_other, Stat t_stat_type, int t_quantity,
 	int t_range, int t_buy, int t_sell, const char abbre[3],
 	sf::Font& font) : Item() {
 	id = t_id;
@@ -78,7 +78,7 @@ std::string Item::get_letter() { return icon.getString(); }
 
 unsigned int Item::get_range() { return range; }
 
-unsigned int Item::get_stat() { return stat; }
+Stat Item::get_stat() { return stat; }
 
 int Item::get_quantity() { return quantity; }
 
@@ -105,36 +105,36 @@ Place_Holder::Place_Holder() {
 	type = 3;
 }
 
-Health_Potion::Health_Potion(sf::Font& font) : Item(1, 0, true, false, 0, 5, 0, 15, 3, "HI", font) {
+Health_Potion::Health_Potion(sf::Font& font) : Item(1, 0, true, false, Max_Hp, 5, 0, 15, 3, "HI", font) {
 	description.setString("Health Potion\n\nA potion that restore a \nsmall amount of health.\n\n+5 HP\n\nBUY: 15G\nSELL: 3G");
 }
 
 void Health_Potion::use(Player& player) {
-	unsigned int difference = player.get_stat(0) - player.get_stat(6);
-	player.set_stat(6, difference > 5 ? player.get_stat(6) + 5 : player.get_stat(0));
+	unsigned int difference = player.get_stat(Max_Hp) - player.get_stat(Hp);
+	player.set_stat(Hp, difference > 5 ? player.get_stat(Hp) + 5 : player.get_stat(Max_Hp));
 }
 
-Iron_Sword::Iron_Sword(sf::Font &font) : Item(6, 1, true, true, 2, 3, 1, 40, 10, "IS", font) {
+Iron_Sword::Iron_Sword(sf::Font &font) : Item(6, 1, true, true, Str, 3, 1, 40, 10, "IS", font) {
 	description.setString("Iron Sword\n\nA common sword.\n\n+3 STR\n\nBUY: 40G\nSELL: 10G");
 }
 
-Iron_Armor::Iron_Armor(sf::Font& font) : Item(4, 2, true, true, 4, 3, 0, 40, 10, "IA", font) {
+Iron_Armor::Iron_Armor(sf::Font& font) : Item(4, 2, true, true, Def, 3, 0, 40, 10, "IA", font) {
 	description.setString("Iron Armor\n\nA common armor.\n\n+3 DEF\n\nBUY: 40G\nSELL: 10G");
 }
 
-Magic_Armor::Magic_Armor(sf::Font& font) : Item(5, 2, true, true, 5, 2, 0, 50, 20, "MA", font) {
+Magic_Armor::Magic_Armor(sf::Font& font) : Item(5, 2, true, true, Res, 2, 0, 50, 20, "MA", font) {
 	description.setString("Magic Armor\n\nA common magic armor.\n\n+2 RES\n\nBUY: 50G\nSELL: 20G");
 }
 
-Mana_Potion::Mana_Potion(sf::Font& font) : Item(2, 0, true, false, 1, 5, 0, 15, 3, "MI", font) {
+Mana_Potion::Mana_Potion(sf::Font& font) : Item(2, 0, true, false, Max_Hp, 5, 0, 15, 3, "MI", font) {
 	description.setString("Mana Potion\n\nA potion that restore a \nsmall amount of mana.\n\n+5 MP\n\nBUY: 15G\nSELL: 3G");
 }
 
 void Mana_Potion::use(Player& player) {
-	unsigned int difference = player.get_stat(1) - player.get_stat(7);
-	player.set_stat(7, difference > 5 ? player.get_stat(7) + 5 : player.get_stat(1));
+	unsigned int difference = player.get_stat(Max_Mp) - player.get_stat(Mp);
+	player.set_stat(Mp, difference > 5 ? player.get_stat(Mp) + 5 : player.get_stat(Max_Mp));
 }
 
-Wooden_Staff::Wooden_Staff(sf::Font& font) : Item(3, 1, true, true, 3, 2, 2, 50, 20, "WS", font) {
+Wooden_Staff::Wooden_Staff(sf::Font& font) : Item(3, 1, true, true, Mgk, 2, 2, 50, 20, "WS", font) {
 	description.setString("Wooden Staff\n\nA common staff allowing the use\nof magical attacks.\n\n+2 MAG\n\nBUY: 50G\nSELL: 20G");
 }

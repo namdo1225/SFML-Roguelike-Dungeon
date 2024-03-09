@@ -146,6 +146,9 @@
     <ClInclude Include="SourceFiles\Shape\full_text.cpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="HeaderFiles\stat.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SFML19_RoguelikeDungeon.rc">

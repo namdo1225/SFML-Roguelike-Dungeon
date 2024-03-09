@@ -16,5 +16,6 @@
 #include "item.h"
 #include "spell.h"
 #include "map.h"
+#include "stat.h"
 
 #endif
