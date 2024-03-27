@@ -9,7 +9,6 @@
 #define STAT_H
 
 enum Stat { Max_Hp, Max_Mp, Str, Mgk, Def, Res, Hp, Mp };
-
 const unsigned int NUM_STATS = 8;
 
 inline Stat& operator++(Stat& state, int) {

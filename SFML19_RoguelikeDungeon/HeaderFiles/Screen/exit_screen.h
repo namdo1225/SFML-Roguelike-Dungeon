@@ -1,15 +1,23 @@
+/**
+*
+* File: exit_screen.h
+* Description: Contain the declaration of the Exit_Screen class, which represents the exit dialog scene.
+*/
+
 #ifndef EXIT_SCREEN_H
 #define EXIT_SCREEN_H
 
 #include "screen.h"
 
-class Exit_Screen : protected Screen {
+class Exit_Screen : public Screen {
 private:
 
 public:
-	Exit_Screen(sf::Font& font);
+	Exit_Screen();
 
-	void event_handler(int x, int y);
+	void click_event_handler();
+
+	void hover_event_handler();
 };
 
 #endif

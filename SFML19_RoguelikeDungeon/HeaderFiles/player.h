@@ -323,6 +323,8 @@ public:
 	*	A vector of Effects.
 	*/
 	std::vector<Effect> get_effects();
+
+	sf::FloatRect get_rect();
 };
 
 #endif

@@ -6,7 +6,8 @@
 */
 
 #include "player.h"
-#include "texture_manager.h"
+#include "Manager/texture_manager.h"
+#include "env.h"
 
 Player::Player() {
 	name.setFillColor(sf::Color::Cyan);
@@ -101,10 +102,11 @@ bool Player::is_dead() { return (stat[Hp] <= 0); }
 
 void Player::reset() {
 	stat = { 10, 5, 0, 0, 0, 0, 10, 5 };
-	name.setString("");
+	name.setString("Player");
 	points = 10;
 	level = floor = 1;
-	cur_exp = gold = 0;
+	cur_exp = 0;
+	gold = START_WITH_MONEY ? 1000 : 0;
 	lvl_up = 10;
 }
 
@@ -157,4 +159,8 @@ void Player::reset_effect() {
 
 std::vector<Effect> Player::get_effects() {
 	return effects;
+}
+
+sf::FloatRect Player::get_rect() {
+	return getGlobalBounds();
 }
