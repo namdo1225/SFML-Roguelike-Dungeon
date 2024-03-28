@@ -46,8 +46,10 @@ Title_Screen::Title_Screen() : Screen(7, 6) {
 void Title_Screen::click_event_handler() {
 	if (mouse_in_helper(true, 3))
 		window.close();
-	else if (mouse_in_helper(true, 0))
+	else if (mouse_in_helper(true, 0)) {
+		Game_Manager::reset_game();
 		switch_screen(TitleScreen, NameScreen, false);
+	}
 	else if (mouse_in_helper(true, 1))
 		switch_screen(TitleScreen, LoadScreen, true);
 	else if (mouse_in_helper(true, 2))

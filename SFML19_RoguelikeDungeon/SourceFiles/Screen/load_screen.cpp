@@ -26,8 +26,11 @@ void Load_Screen::click_event_handler() {
 		name_txt.setString("Player");
 	}
 	else if (mouse_in_button(ConfirmButton)) {
-		if (Game_Manager::read_save(name_txt.getString().toAnsiString().c_str()))
-			switch_screen(LoadScreen, GameScreen, false, true);
+		switch_screen(LoadScreen,
+			Game_Manager::read_save(name_txt.getString().toAnsiString().c_str())
+			? GameScreen
+			: TitleScreen,
+			false, true);
 		name_txt.setString("Player");
 	}
 	else if (mouse_in_button(ClearButton)) {

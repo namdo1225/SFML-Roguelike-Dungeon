@@ -33,7 +33,6 @@ void Exit_Screen::click_event_handler() {
 		switch_screen(ExitScreen, TitleScreen, false, true);
 		for (unsigned int i = NameScreen; i < num_screens; i++)
 			visibilities[i] = false;
-		Game_Manager::reset_game();
 	}
 	else if (mouse_in_helper(true, 4))
 		window.close();
