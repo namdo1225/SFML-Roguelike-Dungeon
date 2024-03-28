@@ -17,7 +17,7 @@
 
 class Special : public Tool {
 public:
-	const static unsigned int SPECIALS = 2;
+	const static unsigned int SPECIALS = 6;
 
 	/**
 	* A virtual method to be implemented by child class. This method is
@@ -32,9 +32,12 @@ public:
 	* 	id: an unsigned int for the spell's id.
 	* 	buy: an unsigned int for the spell's buy gold.
 	* 	sell: an unsigned int for the spell's sell gold.
+	*	abbre: a const char[3] for the items' name abbreviation.
+	*	desc: a const char* for the item's description.
+	*	name: a const char* for item's name.
 	*/
 	Special(unsigned int id, unsigned int buy, unsigned int sell,
-		const char abbre[3], const char* desc);
+		const char abbre[3], const char* desc, const char* name);
 
 	static std::shared_ptr<Special> create_special(unsigned int id);
 };
@@ -56,6 +59,34 @@ public:
 class Floor_Perk : public Special {
 public:
 	Floor_Perk();
+
+	virtual void use();
+};
+
+class Strength_Perk : public Special {
+public:
+	Strength_Perk();
+
+	virtual void use();
+};
+
+class Magic_Perk : public Special {
+public:
+	Magic_Perk();
+
+	virtual void use();
+};
+
+class Defense_Perk : public Special {
+public:
+	Defense_Perk();
+
+	virtual void use();
+};
+
+class Resistance_Perk : public Special {
+public:
+	Resistance_Perk();
 
 	virtual void use();
 };

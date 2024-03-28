@@ -1,3 +1,10 @@
+/**
+*
+* File: game_manager.cpp
+* Description: Contains the implementation of the Game_Manager class.
+*
+*/
+
 #include "Manager/game_manager.h"
 #include "Manager/audio_manager.h"
 #include <format>
@@ -122,9 +129,9 @@ void Game_Manager::ene_action() {
     ene_dead();
     for (unsigned int i{ 0 }; i < enemies.size(); i++) {
         // Decide whether player is in range
-        int x{ player.get_pos('x') }, y{ player.get_pos('y') }, x_2{ x + 40 }, y_2{ y + 40 },
-            en_x{ enemies[i].get_pos('x') }, en_y{ enemies[i].get_pos('y') }, en_x2{ en_x + 40 }, en_y2{ en_y + 40 },
-            chase_player_rand{ rand() % 3 };
+        float x{ player.getPosition().x }, y{ player.getPosition().y }, x_2{ x + 40 }, y_2{ y + 40 },
+            en_x{ enemies[i].getPosition().x }, en_y{ enemies[i].getPosition().y }, en_x2{ en_x + 40 }, en_y2{ en_y + 40 };
+        int chase_player_rand{ rand() % 3 };
 
         // If so, attack.
         int range = enemies[i].get_stat(4);
@@ -174,8 +181,8 @@ void Game_Manager::sp_select_shortcut(char place) {
 }
 
 void Game_Manager::ene_atk(unsigned int v) {
-    int x{ player.get_pos('x') }, y{ player.get_pos('y') }, x2{ x + 40 }, y2{ y + 40 };
-    int enx{ enemies[v].get_pos('x') }, eny{ enemies[v].get_pos('y') }, enx2{ enx + 40 }, eny2{ eny + 40 };
+    float x{ player.getPosition().x }, y{ player.getPosition().y }, x2{ x + 40 }, y2{ y + 40 };
+    float enx{ enemies[v].getPosition().x }, eny{ enemies[v].getPosition().y }, enx2{ enx + 40 }, eny2{ eny + 40 };
     unsigned int pl_room_pos{ 255 }, en_room_pos{ 255 };
     Room* pl_room = NULL;
     Room* en_room = NULL;
@@ -194,14 +201,19 @@ void Game_Manager::ene_atk(unsigned int v) {
     )
         return;
 
-    int damage = player.attack_pl(enemies[v].get_type(), pl_armor->get_quantity() + enemies[v].get_stat(1));
-    log_add(std::format("The enemy did {} damage to you.", damage).c_str());
+    unsigned int enemy_type = enemies[v].get_type();
+    int quantity = pl_armor->get_quantity();
+    Stat armor_stat = pl_armor->get_stat();
+    int armor = (enemy_type && armor_stat == Def) || (!enemy_type && armor_stat == Mgk) ? quantity : 0;
+    int damage = player.attack_pl(enemy_type, enemies[v].get_stat(1) - armor);
+
+    log_add(std::format("{} did {} damage to you.", enemies[v].get_name(), damage).c_str());
     Audio_Manager::play_sfx(2);
 }
 
 void Game_Manager::ene_mov_close(unsigned int v) {
-    int x{ player.get_pos('x') }, y{ player.get_pos('y') }, x2{ x + 40 }, y2{ y + 40 };
-    int enx{ enemies[v].get_pos('x') }, eny{ enemies[v].get_pos('y') }, enx2{ enx + 40 }, eny2{ eny + 40 };
+    float x{ player.getPosition().x }, y{ player.getPosition().y }, x2{ x + 40 }, y2{ y + 40 };
+    float enx{ enemies[v].getPosition().x }, eny{ enemies[v].getPosition().y }, enx2{ enx + 40 }, eny2{ eny + 40 };
     unsigned int cur{ 255 }, return_now{ 0 };
 
     // Find which room the enemy is in.
@@ -219,7 +231,7 @@ void Game_Manager::ene_mov_close(unsigned int v) {
         }
 
         if (return_now != 1)
-            enemies[v].set_pos(enx - 40, eny);
+            enemies[v].setPosition(enx - 40, eny);
     }
     else if (y2 < eny && ene_mov_close_2(v, 0, -40)) {
         if (eny == floor.rooms[cur].get_rm('y')) {
@@ -230,7 +242,7 @@ void Game_Manager::ene_mov_close(unsigned int v) {
         }
 
         if (return_now != 1)
-            enemies[v].set_pos(enx, eny - 40);
+            enemies[v].setPosition(enx, eny - 40);
     }
     else if (x > enx2 && ene_mov_close_2(v, 40, 0)) {
         if (enx2 == floor.rooms[cur].get_rm('1')) {
@@ -241,7 +253,7 @@ void Game_Manager::ene_mov_close(unsigned int v) {
         }
 
         if (return_now != 1)
-            enemies[v].set_pos(enx + 40, eny);
+            enemies[v].setPosition(enx + 40, eny);
     }
     else if (y > eny2 && ene_mov_close_2(v, 0, 40)) {
         if (eny2 == floor.rooms[cur].get_rm('2')) {
@@ -252,25 +264,25 @@ void Game_Manager::ene_mov_close(unsigned int v) {
         }
 
         if (return_now != 1)
-            enemies[v].set_pos(enx, eny + 40);
+            enemies[v].setPosition(enx, eny + 40);
     }
 }
 
 bool Game_Manager::ene_mov_close_2(unsigned int v, int offx, int offy) {
     // check for obstruction with other enemies and player
-    int x{ enemies[v].get_pos('x') }, y{ enemies[v].get_pos('y') };
+    float x{ enemies[v].getPosition().x }, y{ enemies[v].getPosition().y };
 
     for (unsigned int i{ 0 }; i < enemies.size(); i++) {
         if (v == i)
             continue;
 
-        int enx{ enemies[i].get_pos('x') }, eny{ enemies[i].get_pos('y') };
+        float enx{ enemies[i].getPosition().x }, eny{ enemies[i].getPosition().y };
 
         if (x + offx == enx && y + offy == eny)
             return false;
     }
 
-    int plx{ player.get_pos('x') }, ply{ player.get_pos('y') };
+    float plx{ player.getPosition().x }, ply{ player.getPosition().y };
 
     if (x + offx == plx && y + offy == ply)
         return false;
@@ -278,7 +290,7 @@ bool Game_Manager::ene_mov_close_2(unsigned int v, int offx, int offy) {
 }
 
 void Game_Manager::ene_rand_move(unsigned int v) {
-    int enx{ enemies[v].get_pos('x') }, eny{ enemies[v].get_pos('y') }, enx2{ enx + 40 }, eny2{ eny + 40 };
+    float enx{ enemies[v].getPosition().x }, eny{ enemies[v].getPosition().y }, enx2{ enx + 40 }, eny2{ eny + 40 };
     unsigned int cur{ 255 }, return_now{ 0 };
 
     for (unsigned int i{ 0 }; i < floor.rooms.size(); i++)
@@ -298,7 +310,7 @@ void Game_Manager::ene_rand_move(unsigned int v) {
         }
 
         if (return_now != 1)
-            enemies[v].set_pos(enx - 40, eny);
+            enemies[v].setPosition(enx - 40, eny);
     }
     else if (rand_dir == 1 && ene_mov_close_2(v, 0, -40)) {
         if (eny == floor.rooms[cur].get_rm('y')) {
@@ -309,7 +321,7 @@ void Game_Manager::ene_rand_move(unsigned int v) {
         }
 
         if (return_now != 1)
-            enemies[v].set_pos(enx, eny - 40);
+            enemies[v].setPosition(enx, eny - 40);
     }
     else if (rand_dir == 2 && ene_mov_close_2(v, 40, 0)) {
         if (enx2 == floor.rooms[cur].get_rm('1')) {
@@ -320,7 +332,7 @@ void Game_Manager::ene_rand_move(unsigned int v) {
         }
 
         if (return_now != 1)
-            enemies[v].set_pos(enx + 40, eny);
+            enemies[v].setPosition(enx + 40, eny);
     }
     else if (rand_dir == 3 && ene_mov_close_2(v, 0, 40)) {
         if (eny2 == floor.rooms[cur].get_rm('2')) {
@@ -331,7 +343,7 @@ void Game_Manager::ene_rand_move(unsigned int v) {
         }
 
         if (return_now != 1)
-            enemies[v].set_pos(enx, eny + 40);
+            enemies[v].setPosition(enx, eny + 40);
     }
 }
 
@@ -340,7 +352,7 @@ void Game_Manager::pl_sp_atk(unsigned int en_i, std::array<int, 4> sp_inf) {
     int quantity = enemies[en_i].set_hp(sp_inf[2], sp_inf[0]);
     spell_desc = spell_select = placeholder_spell;
     ene_action();
-    log_add(std::format("Your spell did {} to the enemy.", sp_inf[0]).c_str());
+    log_add(std::format("Your spell did {} to {}.", sp_inf[0], enemies[en_i].get_name()).c_str());
 }
 
 void Game_Manager::handle_player_action(char input, unsigned int mode) {
@@ -360,7 +372,7 @@ void Game_Manager::handle_player_action(char input, unsigned int mode) {
         else if (input == 'r')
             offx = 40;
 
-        player.set_pos(player.get_pos('x') + offx, player.get_pos('y') + offy);
+        player.setPosition(player.getPosition().x + offx, player.getPosition().y + offy);
         viewWorld.move(offx, offy);
 
         if (handle) {
@@ -404,10 +416,10 @@ void Game_Manager::next_level(bool bypass) {
 void Game_Manager::handle_move_pick_itm() {
     if (items.size() == player.get_max_itm())
         return;
-    int pl_x{ player.get_pos('x') }, pl_y{ player.get_pos('y') };
+    float pl_x{ player.getPosition().x }, pl_y{ player.getPosition().y };
 
     for (int i{ static_cast<int>(floor.collectibles.size()) - 1 }; i > -1; i--) {
-        if (pl_x == floor.collectibles[i].get_pos('x') && pl_y == floor.collectibles[i].get_pos('y')) {
+        if (pl_x == floor.collectibles[i].getPosition().x && pl_y == floor.collectibles[i].getPosition().y) {
             Audio_Manager::play_sfx(0);
             add_item(Item::create_itm(floor.collectibles[i].get_id()));
             floor.collectibles.erase(floor.collectibles.begin() + i);
@@ -418,10 +430,10 @@ void Game_Manager::handle_move_pick_itm() {
 }
 
 void Game_Manager::handle_move_pick_gld() {
-    int plx{ player.get_pos('x') }, ply{ player.get_pos('y') };
+    float plx{ player.getPosition().x }, ply{ player.getPosition().y };
 
     for (int i{ static_cast<int>(floor.golds.size()) - 1 }; i > -1; i--) {
-        if (plx == floor.golds[i].get_pos('x') && ply == floor.golds[i].get_pos('y')) {
+        if (plx == floor.golds[i].getPosition().x && ply == floor.golds[i].getPosition().y) {
             Audio_Manager::play_sfx(0);
             int floor_gold = floor.golds[i].get_amount();
             player.set_gold(player.get_gold() + floor_gold);
@@ -433,37 +445,61 @@ void Game_Manager::handle_move_pick_gld() {
 }
 
 void Game_Manager::handle_move_pick_interact() {
-    int plx{ player.get_pos('x') }, ply{ player.get_pos('y') };
+    float plx{ player.getPosition().x }, ply{ player.getPosition().y };
 
     for (int i{ static_cast<int>(floor.interactibles.size()) - 1 }; i > -1; i--) {
-        if (plx == floor.interactibles[i].get_pos('x') && ply == floor.interactibles[i].get_pos('y')) {
+        if (plx == floor.interactibles[i].getPosition().x && ply == floor.interactibles[i].getPosition().y) {
             Audio_Manager::play_sfx(0);
 
             int effect = rand() % 100;
-            if (effect < 10) {
+            if (effect < 5) {
                 ene_add();
                 log_add("More enemies are spawned.");
             }
-            else if (effect >= 10 && effect < 20) {
-                player.set_gold(player.get_gold() * .75);
-                log_add("Your golds decreased by 25%.");
+            else if (effect >= 5 && effect < 10) {
+                player.set_gold(player.get_gold() * .90);
+                log_add("Your golds decreased by 10%.");
             }
-            else if (effect >= 20 && effect < 30) {
+            else if (effect >= 10 && effect < 15) {
+                player.set_gold(player.get_gold() + 25);
+                log_add("You found 25 golds!");
+            }
+            else if (effect >= 15 && effect < 20) {
                 player.set_stat(Hp, player.get_stat(Hp) * 1.5 > player.get_stat(Max_Hp) ? player.get_stat(Max_Hp) : player.get_stat(Hp) * 1.5);
                 log_add("Your HP increased by 50%.");
             }
-            else if (effect >= 30 && effect < 40) {
+            else if (effect >= 20 && effect < 25) {
+                player.set_effect(Def, 3, 3);
+                log_add("You will gain 3 DEF for 3 turns.");
+            }
+            else if (effect >= 25 && effect < 30) {
+                player.set_effect(Mgk, -2, 5);
+                log_add("You will lose 2 MGK for 5 turns.");
+            }
+            else if (effect >= 30 && effect < 35) {
                 player.set_stat(Mp, player.get_stat(Mp) * 1.5 > player.get_stat(Max_Mp) ? player.get_stat(Max_Mp) : player.get_stat(Mp) * 1.5);
                 log_add("Your MP increased by 50%.");
             }
-            else if (effect >= 40 && effect < 50) {
+            else if (effect >= 35 && effect < 40) {
+                next_level();
+                log_add("You moved to the next floor.");
+            }
+            else if (effect >= 40 && effect < 45) {
                 ene_action();
                 ene_action();
                 log_add("You lost 2 turns.");
             }
-            else if (effect >= 50 && effect < 60) {
+            else if (effect >= 45 && effect < 50) {
+                player.set_stat(Mp, player.get_stat(Mp) < 8 ? 0 : player.get_stat(Mp) - 8);
+                log_add("You lose 8 MP.");
+            }
+            else if (effect >= 50 && effect < 55) {
                 player.set_effect(Hp, 10, 1);
                 log_add("You will recover 10 HP.");
+            }
+            else if (effect >= 55 && effect < 60) {
+                player.set_effect(Res, -5, 2);
+                log_add("You will lose 5 RES for 2 turns.");
             }
             else if (effect >= 60 && effect < 70) {
                 player.set_effect(Hp, 1, 5);
@@ -490,7 +526,7 @@ void Game_Manager::pl_atk() {
     if (enemies.size() == 0)
         return;
 
-    int plx{ player.get_pos('x') }, ply{ player.get_pos('y') }, plx2{ plx + 40 }, ply2{ ply + 40 };
+    float plx{ player.getPosition().x }, ply{ player.getPosition().y }, plx2{ plx + 40 }, ply2{ ply + 40 };
     Room* pl_room = NULL;
     Room* en_room = NULL;
     Enemy* en = NULL;
@@ -507,7 +543,7 @@ void Game_Manager::pl_atk() {
     if (en == NULL) return;
 
     // Check what room the selected enemy is in and save that room index.
-    int enx{ en->get_pos('x') }, eny{ en->get_pos('y') }, enx2{ enx + 40 }, eny2{ eny + 40 };
+    float enx{ en->getPosition().x }, eny{ en->getPosition().y }, enx2{enx + 40}, eny2{eny + 40};
     for (unsigned int i{ 0 }; i < floor.rooms.size(); i++)
         if (floor.rooms[i].in_room(enx, eny, enx2, eny2))
             en_room = &floor.rooms[i];
@@ -518,9 +554,11 @@ void Game_Manager::pl_atk() {
         !(pl_room->door_exist() && pl_room->touch_door(plx, ply, plx2, ply2) && pl_room->touch_door(enx, eny, enx2, eny2)))
             return;
 
-    log_add(std::format("You did {} damage to the enemy.",
-        en->set_hp(pl_weapon->get_stat(), player.get_stat(pl_weapon->get_stat()) + pl_weapon->get_quantity())
-    ).c_str());
+    log_add(std::format("You did {} damage to {}.",
+        en->set_hp(pl_weapon->get_stat(),
+        player.get_stat(pl_weapon->get_stat()) + pl_weapon->get_quantity()),
+        en->get_name())
+    .c_str());
     Audio_Manager::play_sfx(2);
 }
 
@@ -559,7 +597,7 @@ void Game_Manager::pl_random_pos() {
     int temp_x = ((rand() % (room.get_rm('w') / 40)) + (room.get_rm('x') / 40)) * 40,
         temp_y = ((rand() % (room.get_rm('h') / 40)) + (room.get_rm('y') / 40)) * 40;
 
-    player.set_pos(temp_x, temp_y);
+    player.setPosition(temp_x, temp_y);
 }
 
 void Game_Manager::ene_add() {
@@ -575,8 +613,8 @@ void Game_Manager::ene_add() {
     for (unsigned int z{ 0 }; z < rand_enemy_num; z++) {
         // Check which room player is not in.
         int rand_room{ rand() % static_cast<int>(floor.rooms.size()) };
-        while (floor.rooms[rand_room].in_room(player.get_pos('x'), player.get_pos('y'),
-            player.get_pos('x') + 40, player.get_pos('y') + 40))
+        while (floor.rooms[rand_room].in_room(player.getPosition().x, player.getPosition().y,
+            player.getPosition().x + 40, player.getPosition().y + 40))
             rand_room = rand() % floor.rooms.size();
         Room& room = floor.rooms[rand_room];
 
@@ -587,7 +625,7 @@ void Game_Manager::ene_add() {
                 temp_y = ((rand() % (room.get_rm('h') / 40)) + (room.get_rm('y') / 40)) * 40;
 
             for (unsigned int i{ 0 }; i < enemies.size(); i++) {
-                int tmp_x{ enemies[i].get_pos('x') }, tmp_y{ enemies[i].get_pos('y') };
+                float tmp_x{ enemies[i].getPosition().x }, tmp_y{ enemies[i].getPosition().y };
                 while ((temp_x == tmp_x && temp_y == tmp_y) || temp_x == -1 || temp_y == -1)
                     temp_x = ((rand() % (room.get_rm('w') / 40)) + (room.get_rm('x') / 40)) * 40,
                     temp_y = ((rand() % (room.get_rm('h') / 40)) + (room.get_rm('y') / 40)) * 40;
@@ -603,7 +641,7 @@ void Game_Manager::ene_add() {
 }
 
 void Game_Manager::center_floor() {
-    viewWorld.setCenter(player.get_pos('x') + 200, player.get_pos('y'));
+    viewWorld.setCenter(player.getPosition().x + 200, player.getPosition().y);
 }
 
 void Game_Manager::add_item(std::shared_ptr<Item> item) {
@@ -722,9 +760,9 @@ bool Game_Manager::game_over() {
 }
 
 void Game_Manager::pl_move_obstacle() {
-    int x{ player.get_pos('x') }, y{ player.get_pos('y') }, x2{ x + 40 }, y2{ y + 40 };
+    float x{ player.getPosition().x }, y{ player.getPosition().y }, x2{ x + 40 }, y2{ y + 40 };
 
-    // Check which room player is in && determines if they're touching a wall.
+    // Check which room player is in & determines if they're touching a wall.
     for (Room rm : floor.rooms)
         if (rm.in_room(x, y, x2, y2)) {
             (y == rm.get_rm('y')) ? player.set_stuck(0, 1) : player.set_stuck(0, 0);
@@ -734,7 +772,7 @@ void Game_Manager::pl_move_obstacle() {
             break;
         }
 
-    // Check rooms that have doors && whether player is touching a door. It then allows player the ability to move through it.
+    // Check rooms that have doors & whether player is touching a door. It then allows player the ability to move through it.
     for (unsigned int i{ 0 }; i < floor.rooms.size(); i++)
         if (floor.rooms[i].touch_door(x, y, x2, y2)) {
             player.set_stuck(floor.rooms[i].get_door('r') % 2, 0);
@@ -743,7 +781,7 @@ void Game_Manager::pl_move_obstacle() {
 
     // Check whether enemies are adjacent to the player or not. Block player from moving from the tile the enemy is on.
     for (Enemy en : enemies) {
-        int enx{ en.get_pos('x') }, eny{ en.get_pos('y') }, enx2{ enx + 40 }, eny2{ eny + 40 };
+        float enx{ en.getPosition().x }, eny{ en.getPosition().y }, enx2{ enx + 40 }, eny2{ eny + 40 };
 
         if (y - 40 == eny && y2 - 40 == eny2 && x == enx && x2 == enx2)
             player.set_stuck(0, 1);
@@ -766,8 +804,8 @@ void Game_Manager::save() {
         j["statPoints"] = player.get_pts();
 
         j["player"] = {
-            {"x", player.get_pos('x')},
-            {"y", player.get_pos('y')},
+            {"x", player.getPosition().x},
+            {"y", player.getPosition().y},
         };
 
         j["exp"] = {
@@ -846,8 +884,8 @@ void Game_Manager::save() {
             j["enemies"][i] = {
                 {"id", en.get_id()},
                 {"health", en.get_stat(0)},
-                {"x", en.get_pos('x')},
-                {"y", en.get_pos('y')},
+                {"x", en.getPosition().x},
+                {"y", en.getPosition().y},
             };
         }
 
@@ -856,8 +894,8 @@ void Game_Manager::save() {
             unsigned int i = j["items"].size() - 1;
             j["items"][i] = {
                 {"id", col.get_id()},
-                {"x", col.get_pos('x')},
-                {"y", col.get_pos('y')},
+                {"x", col.getPosition().x},
+                {"y", col.getPosition().y},
             };
         }
 
@@ -866,17 +904,17 @@ void Game_Manager::save() {
             unsigned int i = j["golds"].size() - 1;
             j["golds"][i] = {
                 {"amount", gold.get_amount()},
-                {"x", gold.get_pos('x')},
-                {"y", gold.get_pos('y')},
+                {"x", gold.getPosition().x},
+                {"y", gold.getPosition().y},
             };
         }
 
-        for (Interactible interactible : floor.interactibles) {
+        for (Interactible interact : floor.interactibles) {
             j["interactibles"].push_back(json::object());
             unsigned int i = j["interactibles"].size() - 1;
             j["interactibles"][i] = {
-                {"x", interactible.get_pos('x')},
-                {"y", interactible.get_pos('y')},
+                {"x", interact.getPosition().x},
+                {"y", interact.getPosition().y},
             };
         }
 
@@ -925,7 +963,7 @@ bool Game_Manager::read_save(const char* name) {
 
         player.set_floor(j.at("floorNumber"));
 
-        player.set_pos(j.at("player").at("x"), j.at("player").at("y"));
+        player.setPosition(j.at("player").at("x"), j.at("player").at("y"));
 
         player.set_level(j.at("level"));
         player.set_gold(j.at("gold"));
@@ -1074,10 +1112,13 @@ void Game_Manager::item_use() {
     ene_action();
 }
 
-void Game_Manager::spell_use() {
+bool Game_Manager::spell_use() {
     if (spell_select->get_use() != 4) {
-        spell_select->use();
+        bool success = spell_select->use();
         spell_select = spell_desc = placeholder_spell;
         ene_action();
+        return success;
     }
+
+    return false;
 }

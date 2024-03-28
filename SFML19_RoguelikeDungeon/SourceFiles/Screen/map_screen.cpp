@@ -75,7 +75,7 @@ void Map_Screen::mouse_event_handler() {
 void Map_Screen::draw() {
 	window.draw(background);
 	window.setView(viewMap);
-	Game_Manager::floor.map.draw(window);
+	Game_Manager::floor.map.draw();
 	window.setView(viewUI);
 	Screen::draw();
 }

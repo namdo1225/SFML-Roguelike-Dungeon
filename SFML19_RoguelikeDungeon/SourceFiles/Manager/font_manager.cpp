@@ -1,5 +1,13 @@
+/**
+*
+* File: font_manager.cpp
+* Description: Contains the implementation of the Font_Manager class.
+*
+*/
+
 #include "Manager/font_manager.h"
 #include <iostream>
+
 sf::Font Font_Manager::buffers[Font_Manager::fonts] = { sf::Font() };
 bool Font_Manager::assets_loaded = false;
 const unsigned int Font_Manager::fonts;

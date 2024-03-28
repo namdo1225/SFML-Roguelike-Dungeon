@@ -11,7 +11,7 @@
 bool Shop_Screen::buy = true;
 Stock Shop_Screen::stock = ItemStock;
 
-Shop_Screen::Shop_Screen() : Screen(8, 8, true, false, false) {
+Shop_Screen::Shop_Screen() : Screen(9, 8, true, false, false) {
 	update = true;
 
 	setup_helper(true, 0, NULL, 100.f,  80.f,  80.f, 50.f);
@@ -33,13 +33,13 @@ Shop_Screen::Shop_Screen() : Screen(8, 8, true, false, false) {
 
 	setup_helper(false, 6,  "0 / 32 spells", 460.f, 150.f, 24.f, NULL);
 	setup_helper(false, 7,   "0 / 32 items", 460.f, 190.f, 24.f, NULL);
-	setup_helper(false, 8, "", 110.f, 750.f, 24.f, NULL);
+	setup_helper(false, 8, "", 50.f, 720.f, 24.f, NULL);
 }
 
 void Shop_Screen::click_event_handler() {
 	if (mouse_in_button(ExitButton)) {
-		Game_Manager::inv_select = Game_Manager::inv_draw_desc = Game_Manager::placeholder_item;
-		Game_Manager::spell_select = Game_Manager::spell_desc = Game_Manager::placeholder_spell;
+		reset_select();
+		texts[8].setString("");
 		switch_screen(ShopScreen, GameScreen, false, true);
 	}
 	// buy button
@@ -161,10 +161,12 @@ void Shop_Screen::item_shop(bool buy) {
 		if (buy && Game_Manager::player.use_gold(Game_Manager::inv_select->get_buy_gd())) {
 			Game_Manager::add_item(Item::create_itm(inv_select));
 			Game_Manager::reorganize_inv();
+			texts[8].setString(std::format("Bought item {} for {}G.", Game_Manager::inv_select->get_name(), Game_Manager::inv_select->get_buy_gd()));
 		}
 		else if (!buy) {
 			Game_Manager::player.set_gold(Game_Manager::player.get_gold() + Game_Manager::inv_select->get_sell_gd());
 			Game_Manager::delete_selected_itm();
+			texts[8].setString(std::format("Sold item {} for {}G.", Game_Manager::inv_select->get_name(), Game_Manager::inv_select->get_sell_gd()));
 		}
 		Game_Manager::inv_select = Game_Manager::inv_draw_desc = Game_Manager::placeholder_item;
 	}
@@ -201,10 +203,12 @@ void Shop_Screen::spell_shop(bool buy) {
 		if (buy && Game_Manager::player.use_gold(Game_Manager::spell_select->get_buy_gd())) {
 			Game_Manager::add_spell(Spell::create_spell(sp_select));
 			Game_Manager::reorganize_spell();
+			texts[8].setString(std::format("Bought spell {} for {}G.", Game_Manager::spell_select->get_name(), Game_Manager::spell_select->get_buy_gd()));
 		}
 		else if (!buy) {
 			Game_Manager::player.set_gold(Game_Manager::player.get_gold() + Game_Manager::spell_select->get_sell_gd());
 			Game_Manager::deleted_selected_sp();
+			texts[8].setString(std::format("Sold spell {} for {}G.", Game_Manager::spell_select->get_name(), Game_Manager::spell_select->get_sell_gd()));
 		}
 		Game_Manager::spell_select = Game_Manager::spell_desc = Game_Manager::placeholder_spell;
 	}
@@ -244,10 +248,7 @@ void Shop_Screen::special_shop(bool buy)
 	if (sp_select && mouse_in_button(ConfirmButton)) {
 		if (buy && Game_Manager::player.use_gold(Game_Manager::special_select->get_buy_gd())) {
 			Game_Manager::special_select->use();
-		}
-		else if (!buy) {
-			Game_Manager::player.set_gold(Game_Manager::player.get_gold() + Game_Manager::spell_select->get_sell_gd());
-			Game_Manager::deleted_selected_sp();
+			texts[8].setString(std::format("Bought {} for {}G.", Game_Manager::special_select->get_name(), Game_Manager::special_select->get_buy_gd()));
 		}
 		Game_Manager::special_select = Game_Manager::special_desc = Game_Manager::placeholder_special;
 	}
@@ -283,8 +284,8 @@ void Shop_Screen::reset_select() {
 }
 
 void Shop_Screen::update_draw() {
-	texts[6].setString(std::format("{} / 32 spells",
-		Game_Manager::spells.size()));
+	texts[6].setString(std::format("{} / {} spells",
+		Game_Manager::spells.size(), Game_Manager::MAX_INV_SPELL_SLOTS));
 	texts[7].setString(std::format("{} / {} items",
 		Game_Manager::items.size(), Game_Manager::player.get_max_itm()));
 

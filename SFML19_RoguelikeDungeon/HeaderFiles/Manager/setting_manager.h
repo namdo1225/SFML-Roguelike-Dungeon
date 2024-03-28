@@ -32,6 +32,12 @@ public:
 	*/
 	static bool load();
 
+	/**
+	* Method to save settings to settings.json.
+	*
+	* Parameter:
+	*	create: true if a new setting file needs to be created.
+	*/
 	static bool save(bool create = false);
 
 };

@@ -12,11 +12,11 @@
 #include <array>
 #include "effect.h"
 
-class Player : sf::RectangleShape {
+class Player : public sf::RectangleShape {
 private:
 	std::vector<Effect> effects;
 
-	sf::Text name;
+	std::string name = "Player";
 
 	// value: false = free, true = stuck, can't move
 	// index: 0 = up, 1 = left, 2 = down, 3 = right
@@ -33,14 +33,6 @@ public:
 	* Constructor for Player.
 	*/
 	Player();
-
-	/**
-	* Constructor for Player.
-	* 
-	* Parameter:
-	*	font: an sf::Font object to hold font data for player's name.
-	*/
-	Player(sf::Font& font);
 
 	/**
 	* Getter for player's level.
@@ -162,9 +154,9 @@ public:
 	* Setter for player's name.
 	*
 	* Parameter:
-	*	t_name: std::string for player's new name.
+	*	name: std::string for player's new name.
 	*/
-	void set_name(std::string t_name);
+	void set_name(std::string name);
 
 	/**
 	* Setter for player's current floor.
@@ -290,15 +282,6 @@ public:
 	void reset();
 
 	/**
-	* Draw player's name or sprite.
-	*
-	* Parameter:
-	*	window: an sf::RenderWindow object to draw the player on.
-	*	draw: a char to choose whether to draw name or sprite.
-	*/
-	void draw(sf::RenderWindow& window, char draw);
-
-	/**
 	* Copy player's stat for general usage.
 	*
 	* Parameter:
@@ -324,6 +307,12 @@ public:
 	*/
 	std::vector<Effect> get_effects();
 
+	/**
+	* Gets player's rectangle.
+	*
+	* Return:
+	*	A sf::FloatRect for the player's rectangle.
+	*/
 	sf::FloatRect get_rect();
 };
 

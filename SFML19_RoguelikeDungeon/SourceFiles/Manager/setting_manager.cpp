@@ -1,3 +1,10 @@
+/**
+*
+* File: settings_manager.cpp
+* Description: Contains the implementation of the Setting_Manager class.
+*
+*/
+
 #include "Manager/setting_manager.h"
 #include <json.hpp>
 #include <fstream>

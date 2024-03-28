@@ -1,6 +1,6 @@
 /**
 *
-* File: floor.c
+* File: floor.h
 * Description: Contain Floor class, which represents a dungeon floor.
 *
 */
@@ -146,11 +146,8 @@ public:
 
 	/**
 	* Draw the golds, collectibles, rooms, && doors on the game's window.
-	*
-	* Parameter:
-	*	window: a sf::RenderWindow object where the map will be drawn on.
 	*/
-	void draw(sf::RenderWindow& window);
+	void draw();
 
 	/**
 	* Load/Create room for the current floor from existing data.
@@ -253,8 +250,26 @@ public:
 	*/
 	void make_map();
 
+	/**
+	* Checks if the stair intersect with a rectangle.
+	* 
+	* Parameter:
+	*	rect: a sf::FloatRect for the rectangle.
+	* 
+	* Return:
+	*	true if an intersection exists.
+	*/
 	bool stair_intersect(const sf::FloatRect& rect);
 
+	/**
+	* Checks if the shop intersect with a rectangle.
+	* 
+	* Parameter:
+	*	rect: a sf::FloatRect for the rectangle.
+	* 
+	* Return:
+	*	true if an intersection exists.
+	*/
 	bool shop_intersect(const sf::FloatRect& rect);
 };
 

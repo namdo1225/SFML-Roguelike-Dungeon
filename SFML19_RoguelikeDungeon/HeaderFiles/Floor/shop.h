@@ -9,9 +9,9 @@
 #ifndef SHOP_H
 #define SHOP_H
 
-#include "..\SFML-2.5.1/include/SFML/Graphics.hpp"
+#include "Floor/floor_object.h"
 
-class Shop : public sf::RectangleShape {
+class Shop : public Floor_Object {
 public:
 	/**
 	* Constructor for Shop.
@@ -22,10 +22,10 @@ public:
 	* Constructor for Shop.
 	*
 	* Parameter:
-	*	x: an int for the shop's x position.
-	* 	y: an int for the shop's x position.
+	*	x: a float for the shop's x position.
+	* 	y: a float for the shop's x position.
 	*/
-	Shop(int x, int y);
+	Shop(float x, float y);
 };
 
 #endif

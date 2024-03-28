@@ -134,6 +134,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="SourceFiles\Floor\floor_object.cpp" />
     <ClCompile Include="SourceFiles\Manager\font_manager.cpp" />
     <ClCompile Include="SourceFiles\Manager\audio_manager.cpp" />
     <ClCompile Include="SourceFiles\Floor\collectible.cpp" />
@@ -144,6 +145,7 @@
     <ClCompile Include="SourceFiles\Floor\interactible.cpp" />
     <ClCompile Include="SourceFiles\interface.cpp" />
     <ClCompile Include="SourceFiles\Screen\spell_attack_screen.cpp" />
+    <ClCompile Include="SourceFiles\Screen\status_screen.cpp" />
     <ClCompile Include="SourceFiles\Tool\item.cpp" />
     <ClCompile Include="SourceFiles\Floor\map.cpp" />
     <ClCompile Include="SourceFiles\Manager\game_manager.cpp" />
@@ -179,6 +181,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="HeaderFiles\env.h" />
+    <ClInclude Include="HeaderFiles\Floor\floor_object.h" />
     <ClInclude Include="HeaderFiles\Manager\audio_manager.h" />
     <ClInclude Include="HeaderFiles\Floor\collectible.h" />
     <ClInclude Include="HeaderFiles\effect.h" />
@@ -190,6 +193,7 @@
     <ClInclude Include="HeaderFiles\Floor\interactible.h" />
     <ClInclude Include="HeaderFiles\interface.h" />
     <ClInclude Include="HeaderFiles\Screen\spell_attack_screen.h" />
+    <ClInclude Include="HeaderFiles\Screen\status_screen.h" />
     <ClInclude Include="HeaderFiles\Tool\item.h" />
     <ClInclude Include="HeaderFiles\Floor\map.h" />
     <ClInclude Include="HeaderFiles\Manager\game_manager.h" />

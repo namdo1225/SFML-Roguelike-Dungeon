@@ -1,3 +1,10 @@
+/**
+*
+* File: tool.cpp
+* Description: Contains the implementation of the Tool class.
+*
+*/
+
 #include "Tool/tool.h"
 #include "Manager/font_manager.h"
 #include "Manager/game_manager.h"
@@ -12,12 +19,12 @@ Tool::Tool() {
 
 	icon.setFillColor(sf::Color::White);
 	icon.setStyle(sf::Text::Bold);
-	icon.setCharacterSize(38);
+	icon.setCharacterSize(30);
 
 	txt.setOutlineColor(sf::Color::White);
 	txt.setFillColor(sf::Color::White);
 	txt.setPosition(825, 310);
-	txt.setCharacterSize(38);
+	txt.setCharacterSize(30);
 
 	icon.setFont(Font_Manager::get_selected());
 	txt.setFont(Font_Manager::get_selected());
@@ -86,4 +93,14 @@ unsigned int Tool::get_range() {
 
 unsigned int Tool::get_type() {
 	return type;
+}
+
+const char* Tool::get_name()
+{
+	return name;
+}
+
+int Tool::get_quantity()
+{
+	return quantity;
 }

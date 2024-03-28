@@ -33,10 +33,31 @@ public:
 	*/
 	static bool load();
 
+	/**
+	* Gets a font.
+	* 
+	* Parameter:
+	*	i: an unsigned int for the font number.
+	* 
+	* Return:
+	*	the sf::Font object.
+	*/
 	static sf::Font& get(unsigned int i);
 
+	/**
+	* Sets a font for the game.
+	* 
+	* Parameter:
+	*	i: an unsigned int for the font number.
+	*/
 	static void set(unsigned int i);
 
+	/**
+	* Gets the selected font.
+	*
+	* Return:
+	*	the sf::Font object.
+	*/
 	static sf::Font& get_selected();
 };
 

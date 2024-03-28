@@ -21,13 +21,13 @@ protected:
 	// use, 0: items targeting the floor, 1: enemies and players, 2: enemies, 3: players, 4: spell attack on map
 	unsigned int uses{ 0 }, mp{ 0 };
 
-	// represents the value of the spell like for example attack damage against enemy
-	unsigned int quantity{ 0 };
+	// Scaling for the stats for attack spells;
+	double percentage = 0.5;
 
 	// type member: 2 is a physical damage spell, 3 is a magical damage spell
 
 public:
-	const static unsigned int SPELLS = 3;
+	const static unsigned int SPELLS = 10;
 
 	/**
 	* Constructor for Spell.
@@ -42,17 +42,21 @@ public:
 	*	type: unsigned int for spell's type.
 	*	mp: unsigned int for spell's mp use.
 	*	desc: a const char* for the spell's description.
+	*	name: a const char* for item's name.
 	*/
 	Spell(const char abbre[3],
 		unsigned int id, unsigned int buy, unsigned int sell, unsigned int use,
 		unsigned int range, unsigned int type, unsigned int mp,
-		const char* desc);
+		const char* desc, const char* name);
 
 	/**
 	* A virtual method to be implemented by child class. This method is
 	* what a spell would do.
+	* 
+	* Return:
+	*	true if spell executed successfully. false if execution failed.
 	*/
-	virtual void use();
+	virtual bool use();
 
 	/**
 	* A virtual method to be implemented by child class. This method returns
@@ -92,21 +96,58 @@ class Heal : public Spell {
 public:
 	Heal();
 
-	void use();
+	virtual bool use();
 };
 
 class Damage_All : public Spell {
 public:
 	Damage_All();
 
-	void use();
+	virtual bool use();
 };
 
 class Fire : public Spell {
 public:
 	Fire();
+};
 
-	std::array<int, 4> atk();
+class Strength_Up : public Spell {
+public:
+	Strength_Up();
+
+	virtual bool use();
+};
+
+class Defense_Up : public Spell {
+public:
+	Defense_Up();
+
+	virtual bool use();
+};
+
+class Water : public Spell {
+public:
+	Water();
+};
+
+class Lightning : public Spell {
+public:
+	Lightning();
+};
+
+class Earth : public Spell {
+public:
+	Earth();
+};
+
+class Light : public Spell {
+public:
+	Light();
+};
+
+class Dark : public Spell {
+public:
+	Dark();
 };
 
 #endif

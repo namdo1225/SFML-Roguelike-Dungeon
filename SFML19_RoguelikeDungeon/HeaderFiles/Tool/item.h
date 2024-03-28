@@ -25,11 +25,8 @@ protected:
 	// hp_mp_other, true: modify player's stats, false: modify player's hp or mp
 	bool modify_or_act{}, hp_mp_other{};
 
-	// ex: for healing potion, it would be amounts healed. For str, it would be the amount it increases by.
-	int quantity{};
-
 public:
-	const static unsigned int ITEMS = 9;
+	const static unsigned int ITEMS = 10;
 
 	/**
 	* Constructor for Item.
@@ -47,10 +44,12 @@ public:
 	* 	sell: an int for the item's sell gold.
 	*	abbre: a const char[3] for the items' name abbreviation.
 	*	desc: a const char* for the item's description.
+	*	name: a const char* for item's name.
 	*/
 	Item(int id, int type, bool modify_act,
 		bool hp_mp_other, Stat stat, int quantity,
-		int range, int buy, int sell, const char abbre[3], const char* desc);
+		int range, int buy, int sell, const char abbre[3], const char* desc,
+		const char* name);
 
 	/**
 	* A virtual method to be implemented by child class. This method is
@@ -71,14 +70,6 @@ public:
 	*	A Stat enum for item's stat type.
 	*/
 	Stat get_stat();
-
-	/**
-	* Getter for item's quantity.
-	*
-	* Return:
-	*	An int for item's quantity.
-	*/
-	int get_quantity();
 
 	/**
 	* Getter for whether item modifies hp/mp or other stats.
@@ -117,7 +108,7 @@ class Health_Potion : public Item {
 public:
 	Health_Potion();
 
-	void use();
+	virtual void use();
 };
 
 class Magic_Armor : public Item {
@@ -129,7 +120,7 @@ class Mana_Potion : public Item {
 public:
 	Mana_Potion();
 
-	void use();
+	virtual void use();
 };
 
 class Wooden_Staff : public Item {
@@ -151,6 +142,13 @@ public:
 class Steel_Armor : public Item {
 public:
 	Steel_Armor();
+};
+
+class Rejuvenate_Potion : public Item {
+public:
+	Rejuvenate_Potion();
+
+	virtual void use();
 };
 
 #endif

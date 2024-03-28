@@ -1,7 +1,7 @@
 {
     "font": 0,
     "light": false,
-    "musicVolume": 0,
-    "sfxVolume": 25,
-    "theme": 0
+    "musicVolume": 100,
+    "sfxVolume": 100,
+    "theme": 1
 }

@@ -14,8 +14,27 @@
 
 class Full_Rectangle : public sf::RectangleShape, public Full_Shape {
 public:
+
+	/*
+	* Constructor for Full_Rectangle.
+	*/
 	Full_Rectangle();
 
+	/*
+	* Constructor for Full_Rectangle.
+	* 
+	* Parameter:
+	*	x: rectangle's x position.
+	*	y: rectangle's y position.
+	*	w: rectangle's width.
+	*	h: rectangle's height.
+	*	theme: the theme number.
+	*	hoverable: true if shape is hoverable.
+	*	is_light: true if light mode.
+	*	override_theme: true if theme is no longer in effect.
+	*	outline: rectangle's outline color.
+	*	fill: rectangle's fill color.
+	*/
 	Full_Rectangle(float x, float y, float w, float h,
 		unsigned int theme = 0, bool hoverable = true, bool is_light = false, bool override_theme = false,
 		sf::Color fill = sf::Color::Transparent, sf::Color outline = sf::Color::Transparent);
@@ -28,6 +47,15 @@ public:
 
 	void setOutlineColor(const sf::Color& color);
 
+	/*
+	* Sets shape's physical descriptions.
+	*
+	* Parameter:
+	*	x: rectangle's x position.
+	*	y: rectangle's y position.
+	*	w: rectangle's width.
+	*	h: rectangle's height.
+	*/
 	void setPhysical(float x, float y, float w, float h);
 
 private:

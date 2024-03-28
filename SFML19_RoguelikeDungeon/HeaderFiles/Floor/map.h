@@ -33,7 +33,7 @@ public:
 	* Parameter:
 	*	window: a sf::RenderWindow object where the map will be drawn on.
 	*/
-	void draw(sf::RenderWindow& window);
+	void draw();
 };
 
 #endif

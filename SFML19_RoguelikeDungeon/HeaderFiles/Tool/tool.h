@@ -16,12 +16,17 @@
 class Tool {
 protected:
 	const static char* STAT_STRINGS[];
+	const char* name;
 
 	Full_Text txt, icon, desc;
 	Full_Rectangle invisible_rect = Full_Rectangle(-100.f, -100.f, 60.f, 60.f, 0, false, false, true, sf::Color::Transparent,
 		sf::Color::Transparent);
 
 	unsigned int id = 0, range = 0, sell_gd = 0, buy_gd = 0, type = 0;
+
+	// represents the value of the tool like for example: spell attack damage against enemy.
+	// For healing potion, it would be amounts healed.
+	int quantity{ 0 };
 
 	/**
 	* Constructor for Tool.
@@ -112,6 +117,22 @@ public:
 	*	An int for tool's type.
 	*/
 	unsigned int get_type();
+
+	/**
+	* Getter for tool's name.
+	*
+	* Return:
+	*	A const char* for tool's name.
+	*/
+	const char* get_name();
+
+	/**
+	* Getter for tool's quantity.
+	*
+	* Return:
+	*	An int for tool's quantity.
+	*/
+	int get_quantity();
 };
 
 #endif

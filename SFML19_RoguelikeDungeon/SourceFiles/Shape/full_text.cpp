@@ -9,7 +9,7 @@
 #include "Manager/font_manager.h"
 
 const sf::Color Full_Text::light[Full_Shape::themes] = { sf::Color(87, 87, 87), sf::Color(100, 100, 100) };
-const sf::Color Full_Text::dark[Full_Shape::themes] = { sf::Color::White, sf::Color(175, 175, 175) };
+const sf::Color Full_Text::dark[Full_Shape::themes] = { sf::Color(230, 230, 230), sf::Color(175, 175, 175)};
 
 const sf::Color Full_Text::light_hover[Full_Shape::themes] = { sf::Color::Black, sf::Color(200, 117, 117) };
 const sf::Color Full_Text::dark_hover[Full_Shape::themes] = { sf::Color(50, 50, 50), sf::Color::White};

@@ -8,7 +8,7 @@
 #include "Manager/game_manager.h"
 #include <format>
 
-Inventory_Screen::Inventory_Screen() : Screen(4, 2, true, false) {
+Inventory_Screen::Inventory_Screen() : Screen(5, 2, true, false) {
 	update = true;
 	setup_helper(true, 0, NULL, 200.f, 140.f, 60.f, 60.f);
 	setup_helper(true, 1, NULL, 600.f, 140.f, 60.f, 60.f);
@@ -17,15 +17,19 @@ Inventory_Screen::Inventory_Screen() : Screen(4, 2, true, false) {
 	setup_helper(false, 1,       "Armor", 600.f, 100.f, NULL, NULL);
 	setup_helper(false, 2,   "Inventory", 360.f,  20.f, 36.f, NULL);
 	setup_helper(false, 3, "0 / 0 items", 360.f, 150.f, 24.f, NULL);
+	setup_helper(false, 4, "", 50.f, 720.f, 24.f, NULL);
 }
 
 void Inventory_Screen::click_event_handler() {
 	if (mouse_in_button(ExitButton)) {
 		Game_Manager::inv_select = Game_Manager::inv_draw_desc = Game_Manager::placeholder_item;
 		switch_screen(InventoryScreen, GameScreen, false, true);
+		texts[4].setString("");
 	}
-	else if (mouse_in_button(UseButton) && Game_Manager::inv_select->get_type() == 0)
+	else if (mouse_in_button(UseButton) && Game_Manager::inv_select->get_type() == 0) {
+		texts[4].setString(std::format("You used a {}.", Game_Manager::inv_select->get_name()));
 		Game_Manager::item_use();
+	}
 	else if (mouse_in_button(DiscardButton) &&
 		Game_Manager::inv_select->get_id() != 0 &&
 		Game_Manager::inv_select != Game_Manager::pl_weapon &&

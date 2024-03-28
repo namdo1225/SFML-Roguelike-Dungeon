@@ -26,10 +26,10 @@ Map::Map(std::vector<Room> &rooms) {
 	}
 }
 
-void Map::draw(sf::RenderWindow& window) {
+void Map::draw() {
 	for (Room rm : map)
-		rm.draw(window, 'r');
+		rm.draw('r');
 
 	for (Room rm : map)
-		rm.draw(window, 'd');
+		rm.draw('d');
 }

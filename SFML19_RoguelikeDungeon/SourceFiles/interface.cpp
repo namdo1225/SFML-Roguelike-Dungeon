@@ -27,6 +27,7 @@
 #include "Screen/log_screen.h"
 #include "Screen/shop_screen.h"
 #include "Screen/spell_attack_screen.h"
+#include "Screen/status_screen.h"
 
 #include "Manager/setting_manager.h"
 #include "Manager/font_manager.h"
@@ -58,9 +59,10 @@ Interface::Interface() {
     Screen::screens[LogScreen] = std::make_unique<Log_Screen>();
     Screen::screens[ShopScreen] = std::make_unique<Shop_Screen>();
     Screen::screens[SpellAttackScreen] = std::make_unique<Spell_Attack_Screen>();
+    Screen::screens[StatusScreen] = std::make_unique<Status_Screen>();
 
     Screen::change_settings();
-    Game_Manager::player = Player(Font_Manager::get_selected());
+    Game_Manager::player = Player();
     Game_Manager::reset_game();
 }
 
@@ -122,41 +124,5 @@ void Interface::handle_event() {
 
         if (event.type == sf::Event::KeyPressed)
             Screen::screens[Screen::display]->key_event_handler();
-    }
-}
-
-// handle player events
-void Interface::pl_sp_atk(Spell* spell) {
-    std::array<int, 4> sp_inf = spell->atk();
-
-    if (Game_Manager::player.get_stat(Mp) < sp_inf[3])
-        return;
-
-    handle_sp_atk(sp_inf);
-}
-
-// handle button prompt
-void Interface::handle_sp_atk(std::array<int, 4> sp_inf) {
-    window.display();
-
-    while (true) {
-        sf::Vector2i pos = sf::Mouse::getPosition(window);
-        int x{ pos.x }, y{ pos.y };
-        sf::Event event;
-
-        while (window.pollEvent(event)) {
-            if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
-                if (x >= 400 - (sp_inf[1] * 40) && x <= 440 + (sp_inf[1] * 40) && y >= 400 - (sp_inf[1] * 40) && y <= 440 + (sp_inf[1] * 40))
-                    for (unsigned int i{ 0 }; i < Game_Manager::enemies.size(); i++) {
-                        if (x >= Game_Manager::enemies[i].get_pos('x') && x <= Game_Manager::enemies[i].get_pos('x') + 40 and
-                            y >= Game_Manager::enemies[i].get_pos('y') && y <= Game_Manager::enemies[i].get_pos('y') + 40) {
-                            Game_Manager::player.use_mp(sp_inf[3]);
-                            Game_Manager::enemies[i].set_hp(sp_inf[2], sp_inf[0] + Game_Manager::player.get_stat((Stat)(sp_inf[2] + 4)));
-                            return;
-                        } else if (i == Game_Manager::enemies.size() - 1)
-                            return;
-                    }
-            }
-        }
     }
 }

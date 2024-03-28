@@ -9,20 +9,28 @@
 #include <format>
 #include "Manager/game_manager.h"
 
-Spell_Screen::Spell_Screen() : Screen(2, 0, true, false) {
+Spell_Screen::Spell_Screen() : Screen(3, 0, true, false) {
 	update = true;
 	setup_helper(false, 0, "Spells", 360.f, 20.f, 36.f, NULL);
 	setup_helper(false, 1, "0 / 32 spells", 340.f, 150.f, 24.f, NULL);
+    setup_helper(false, 2, "", 50.f, 720.f, 24.f, NULL);
 }
 
 void Spell_Screen::click_event_handler() {
     if (mouse_in_button(ExitButton)) {
         Game_Manager::spell_select = Game_Manager::spell_desc = Game_Manager::placeholder_spell;
+        texts[2].setString("");
         switch_screen(SpellScreen, GameScreen, false, true);
     }
     else if (mouse_in_button(UseButton) && Game_Manager::spell_select->get_id()) {
-        if (Game_Manager::spell_select->get_use() != 4)
-            Game_Manager::spell_use();
+        if (Game_Manager::spell_select->get_use() != 4) {
+            const char* spell_name = Game_Manager::spell_select->get_name();
+            bool success = Game_Manager::spell_use();
+            if (success)
+                texts[2].setString(std::format("You used {}.", spell_name));
+            else
+                texts[2].setString(std::format("You failed to cast {}.", spell_name));
+        }
         else {
             switch_screen(SpellScreen, GameScreen, false, true);
             show_dialog(GameScreen, SpellAttackScreen);
@@ -96,8 +104,8 @@ void Spell_Screen::draw() {
 }
 
 void Spell_Screen::update_draw() {
-	texts[1].setString(std::format("{} / 32 spells",
-		Game_Manager::spells.size()));
+	texts[1].setString(std::format("{} / {} spells",
+		Game_Manager::spells.size(), Game_Manager::MAX_INV_SPELL_SLOTS));
 
     inv_sp_gold_amount_txt.setString(std::to_string(Game_Manager::player.get_gold()));
 }

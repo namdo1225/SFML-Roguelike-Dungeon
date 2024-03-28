@@ -8,7 +8,7 @@
 #include "Screen/menu_screen.h"
 #include "Manager/game_manager.h"
 
-Menu_Screen::Menu_Screen() : Screen(8, 8, false, false) {
+Menu_Screen::Menu_Screen() : Screen(9, 9, false, false) {
 	setup_helper(true, 0, NULL,  100.f, 100.f, 630.f, 550.f);
 	setup_helper(true, 1, NULL, 1000.f, 310.f, 197.f, 99.f);
 	setup_helper(true, 2, NULL, 1000.f, 410.f, 197.f, 99.f);
@@ -17,6 +17,7 @@ Menu_Screen::Menu_Screen() : Screen(8, 8, false, false) {
 	setup_helper(true, 5, NULL, 1000.f, 700.f, 197.f, 99.f);
 	setup_helper(true, 6, NULL,  800.f, 700.f, 197.f, 99.f);
 	setup_helper(true, 7, NULL,  600.f, 700.f, 197.f, 99.f);
+	setup_helper(true, 8, NULL,  400.f, 700.f, 197.f, 99.f);
 
 	setup_helper(false, 0,
 		"Arrow keys: Move player."
@@ -39,6 +40,7 @@ Menu_Screen::Menu_Screen() : Screen(8, 8, false, false) {
 	setup_helper(false, 5,       "Save", 1010.f, 710.f, NULL, NULL);
 	setup_helper(false, 6,       "Load",  810.f, 710.f, NULL, NULL);
 	setup_helper(false, 7,   "Settings",  610.f, 710.f, NULL, NULL);
+	setup_helper(false, 8,     "Status", 410.f, 710.f, NULL, NULL);
 }
 
 void Menu_Screen::click_event_handler() {
@@ -60,12 +62,14 @@ void Menu_Screen::click_event_handler() {
 		switch_screen(MenuScreen, LoadScreen, true);
 	else if (mouse_in_helper(true, 7))
 		switch_screen(MenuScreen, SettingScreen, true);
+	else if (mouse_in_helper(true, 8))
+		switch_screen(MenuScreen, StatusScreen, false, true);
 	else
 		return_to_prev_screen(MenuScreen);
 }
 
 void Menu_Screen::hover_event_handler() {
-	for (unsigned int i = 1; i < 8; i++)
+	for (unsigned int i = 1; i < 9; i++)
 		if (hover_textbox(i, i))
 			break;
 }

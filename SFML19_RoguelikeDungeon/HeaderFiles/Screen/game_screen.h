@@ -21,7 +21,7 @@ private:
 	Full_Rectangle grids[50];
 	Full_Rectangle ranges[4];
 
-	Full_Rectangle scan_rect = Full_Rectangle(10.f, 530.f, 100.f, 150.f);
+	Full_Rectangle scan_rect = Full_Rectangle(10.f, 530.f, 100.f, 160.f);
 	Full_Text scan_txt = Full_Text(20.f, 540.f, 18.f, "");
 
 	void change_opacity();

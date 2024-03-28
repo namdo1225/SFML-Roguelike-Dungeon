@@ -9,9 +9,9 @@
 #ifndef STAIR_H
 #define STAIR_H
 
-#include "..\SFML-2.5.1/include/SFML/Graphics.hpp"
+#include "Floor/floor_object.h"
 
-class Stair : public sf::RectangleShape {
+class Stair : public Floor_Object {
 public:
 	/**
 	* Constructor for Stair.
@@ -22,8 +22,8 @@ public:
 	* Constructor for Stair.
 	*
 	* Parameter:
-	*	x: an int for the stair's x position.
-	* 	y: an int for the stair's x position.
+	*	x: a float for the stair's x position.
+	* 	y: a float for the stair's x position.
 	*/
 	Stair(int x, int y);
 };

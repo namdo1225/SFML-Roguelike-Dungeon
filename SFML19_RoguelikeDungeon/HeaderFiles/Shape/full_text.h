@@ -14,8 +14,27 @@
 
 class Full_Text : public sf::Text, public Full_Shape {
 public:
+
+	/*
+	* Constructor for Full_Text.
+	*/
 	Full_Text();
 
+	/*
+	* Constructor for Full_Text.
+	*
+	* Parameter:
+	*	x: text's x position.
+	*	y: text's y position.
+	*	size: text's font size.
+	*	text: text's string.
+	*	theme: the theme number.
+	*	hoverable: true if shape is hoverable.
+	*	is_light: true if light mode.
+	*	override_theme: true if theme is no longer in effect.
+	*	outline: text's outline color.
+	*	fill: text's fill color.
+	*/
 	Full_Text(float x, float y, float size, const char* text,
 		unsigned int theme = 0, bool hoverable = true, bool is_light = false, bool override_theme = false, 
 		sf::Color fill = sf::Color::Transparent, sf::Color outline = sf::Color::Transparent);
@@ -28,6 +47,16 @@ public:
 
 	void setOutlineColor(const sf::Color& color);
 
+	/*
+	* Sets text's physical descriptions.
+	*
+	* Parameter:
+	*	x: text's x position.
+	*	y: text's y position.
+	*	text: text's string.
+	*	size: text's font size.
+	*	outline: text's outline size.
+	*/
 	void setPhysical(float x, float y, const char* text, float size, float outline);
 
 private:

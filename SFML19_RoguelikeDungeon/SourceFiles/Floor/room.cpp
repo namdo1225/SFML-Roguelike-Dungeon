@@ -7,6 +7,7 @@
 
 #include "Floor/room.h"
 #include "Manager/texture_manager.h"
+#include "Manager/sf_manager.h"
 
 Room::Room() {
 	setFillColor(sf::Color::White);
@@ -31,7 +32,7 @@ void Room::set_pos_and_size(int x, int y, int sx, int sy) {
 
 void Room::set_door(int x, int y, int purpose) {
 	if (purpose > -1) {
-		door_rotation = purpose;
+		door_rotation = (Door)purpose;
 		door = true;
 		(purpose % 2 == 1) ? dr_draw.setSize(sf::Vector2f(0, 120)) : dr_draw.setSize(sf::Vector2f(120, 0));
 
@@ -83,14 +84,14 @@ int Room::get_door(char z) {
 		return dr_draw.getSize().y;
 	case 'r':
 		return door_rotation;
-	case '0':
-		return doors[0];
-	case '1':
-		return doors[1];
-	case '2':
-		return doors[2];
-	case '3':
-		return doors[3];
+	case Top:
+		return doors[Top];
+	case Right:
+		return doors[Right];
+	case Bottom:
+		return doors[Bottom];
+	case Left:
+		return doors[Left];
 	}
 }
 
@@ -119,7 +120,7 @@ bool Room::get_doors(unsigned int i) { return doors[i]; }
 
 void Room::set_doors(unsigned int i, bool j) { doors[i] = j; }
 
-void Room::draw(sf::RenderWindow& window, char d) { (d == 'r') ? window.draw(*this) : window.draw(dr_draw); }
+void Room::draw(char d) { (d == 'r') ? SF_Manager::window.draw(*this) : SF_Manager::window.draw(dr_draw); }
 
 bool Room::intersects(const sf::FloatRect& rect) {
 	return getGlobalBounds().intersects(rect);

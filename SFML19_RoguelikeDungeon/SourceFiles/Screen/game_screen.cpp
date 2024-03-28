@@ -147,9 +147,16 @@ void Game_Screen::click_event_handler() {
 		Game_Manager::itm_select_shortcut('r');
 	// use spell in shortcut
 	else if (mouse_in_helper(true, 8) && Game_Manager::spell_select->get_id()) {
-		Game_Manager::spell_select->get_use() != 4
-			? Game_Manager::spell_use()
-			: show_dialog(GameScreen, SpellAttackScreen);
+		if (Game_Manager::spell_select->get_use() != 4) {
+			const char* spell_name = Game_Manager::spell_select->get_name();
+			bool success = Game_Manager::spell_use();
+			if (success)
+				Game_Manager::log_add(std::format("You used {}.", spell_name).c_str());
+			else
+				Game_Manager::log_add(std::format("You failed to cast {}.", spell_name).c_str());
+		}
+		else
+			show_dialog(GameScreen, SpellAttackScreen);
 	}
 	// select new spell
 	else if (mouse_in_helper(true, 8) && !Game_Manager::spell_select->get_id())
@@ -208,12 +215,12 @@ void Game_Screen::hover_event_handler() {
 			if (enemy.contains(world_x, world_y)) {
 				enemy_found = true;
 				scan_txt.setString(std::format(
-					"HP: {}"
+					"{}\nHP: {}"
 					"\nATK: {}"
 					"\nDEF: {}"
 					"\nRES: {}"
-					"\nRAG: {}"
-					, enemy.get_stat(0), enemy.get_stat(1), enemy.get_stat(2), enemy.get_stat(3), enemy.get_stat(4)));
+					"\nRAG: {}",
+					enemy.get_name(), enemy.get_stat(0), enemy.get_stat(1), enemy.get_stat(2), enemy.get_stat(3), enemy.get_stat(4)));
 				break;
 			}
 		}
@@ -226,10 +233,10 @@ void Game_Screen::draw() {
 	window.draw(background);
 	window.setView(viewWorld);
 
-	Game_Manager::floor.draw(window);
-	Game_Manager::player.draw(window, 's');
+	Game_Manager::floor.draw();
+	window.draw(Game_Manager::player);
 	for (Enemy en : Game_Manager::enemies)
-		en.draw(window);
+		window.draw(en);
 
 	window.setView(viewUI);
 

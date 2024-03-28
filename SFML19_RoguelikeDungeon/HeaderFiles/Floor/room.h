@@ -9,21 +9,25 @@
 #ifndef ROOM_H
 #define ROOM_H
 
-#include "..\SFML-2.5.1/include/SFML/Graphics.hpp"
+#include "Floor/floor_object.h"
 #include <array>
+#include "Shape/full_rectangle.h"
 
-class Room : private sf::RectangleShape {
+enum Door {Top, Right, Bottom, Left};
+
+class Room : private Floor_Object {
 private:
 	// 0, 2 = horizontal. 1, 3 = vertical
-	unsigned int door_rotation;
+	Door door_rotation;
 
 	bool door{ false };
 
 	// false = no door (slot available), true = door.
 	// 0 = north, horizontal, 2 = south, horizontal. 1 = west, vertical, 3 = east, vertical.
-	std::array<bool, 4> doors{ false, false, false, false };
+	bool doors[4] = { false, false, false, false };
 
-	sf::RectangleShape dr_draw;
+	Full_Rectangle dr_draw = Full_Rectangle(-100.f, -100.f, 0.f, 0.f, 0, false, false, true,
+		sf::Color::Transparent, sf::Color::White);
 
 public:
 
@@ -138,10 +142,9 @@ public:
 	* Draw the room on the game's window.
 	*
 	* Parameter:
-	*	window: a sf::RenderWindow object where the room will be drawn on.
 	*	d: a char. 'r' to draw room. 'd' to draw door.
 	*/
-	void draw(sf::RenderWindow& window, char d);
+	void draw(char d);
 
 	bool intersects(const sf::FloatRect& rect);
 };

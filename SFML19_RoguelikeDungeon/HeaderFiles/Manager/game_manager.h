@@ -251,15 +251,30 @@ public:
 	*/
 	static void reorganize_spell();
 
+	/*
+	* Delete selected item.
+	*/
 	static void delete_selected_itm();
 
+	/*
+	* Delete selected spell.
+	*/
 	static void deleted_selected_sp();
 
+	/*
+	* Reorganize spells.
+	*/
 	static void sp_reorganize();
 
+	/*
+	* Use an item.
+	*/
 	static void item_use();
 
-	static void spell_use();
+	/*
+	* Use a spell.
+	*/
+	static bool spell_use();
 };
 
 

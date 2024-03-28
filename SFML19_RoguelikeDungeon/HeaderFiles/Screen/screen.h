@@ -15,8 +15,8 @@
 #include "Manager/sf_manager.h"
 
 enum Display { TitleScreen, NameScreen, StatScreen, LevelScreen,
-	GameScreen, MenuScreen, InventoryScreen, SpellScreen, MapScreen, ShopScreen, ScanScreen, HelpScreen,
-	LoadScreen, SpellAttackScreen, LogScreen, SettingScreen, ExitScreen
+	GameScreen, MenuScreen, InventoryScreen, SpellScreen, MapScreen, ShopScreen,
+	LoadScreen, SpellAttackScreen, LogScreen, StatusScreen, SettingScreen, ExitScreen
 };
 
 enum ReusableButton { ExitButton, ConfirmButton, StatFulLButton, StatIncreaseButton, UseButton, DiscardButton,
@@ -36,8 +36,6 @@ protected:
 	static Full_Rectangle background;
 
 	// Stat selection common UI:
-	const static char* FULL_STATS[];
-
 	static Full_Text stat_full_txts[NUM_NON_CUR_STATS];
 	static Full_Text stat_curr_txts[NUM_NON_CUR_STATS];
 	static Full_Text stat_curr_arrows[NUM_NON_CUR_STATS * 2];
@@ -101,7 +99,7 @@ public:
 	static Display display;
 	static std::vector<Display> prev_displays;
 
-	const static unsigned int num_screens = 17;
+	const static unsigned int num_screens = 16;
 	static bool visibilities[num_screens];
 	static std::unique_ptr<Screen> screens[num_screens];
 

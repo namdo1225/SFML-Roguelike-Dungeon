@@ -8,10 +8,35 @@
 #ifndef ENEMY_H
 #define ENEMY_H
 
-#include "..\SFML-2.5.1/include/SFML/Graphics.hpp"
 #include <array>
+#include "Floor/floor_object.h"
 
-class Enemy : sf::RectangleShape {
+class Enemy : public Floor_Object {
+private:
+	unsigned int id = 0;
+
+	// attack basically represent both str/mag.
+	// 0: hp, 1: atk, 2: def, 3: res, 4: range, 5: exp
+	int stats[6] = { 1, 1, 1, 1, 1, 1 };
+
+	// true = physical attack, false = magical.
+	bool type{ true };
+
+	std::string name = "";
+
+	/**
+	* A helper function to set the stat of the enemy.
+	*
+	* Parameter:
+	*	hp: an int for the enemy's hp.
+	* 	atk: an int for the enemy's atk.
+	* 	def: an int for the enemy's def.
+	* 	res: an int for the enemy's res.
+	* 	range: an int for the enemy's range.
+	* 	exp: an int for the enemy's exp.
+	*/
+	void set_stat_h(int hp, int atk, int def, int res, int range, int exp);
+
 public:
 	/**
 	* Constructor for Enemy.
@@ -19,22 +44,11 @@ public:
 	* Parameter:
 	*	hp: an int for the enemy's hp.
 	*	floor: an int for the player's current floor.
-	*	t_id: an int for enemy's id.
-	*	x: int for enemy's x position.
-	*	y: int for enemy's y position.
+	*	id: an int for enemy's id.
+	*	x: float for enemy's x position.
+	*	y: float for enemy's y position.
 	*/
-	Enemy(int hp, int floor, unsigned int t_id, int x, int y);
-
-	/**
-	* Getter for enemy's position.
-	*
-	* Parameter:
-	*	z: 'x' or 'y' char. Get enemy's x or y position.
-	*
-	* Return:
-	*	an int of enemy's x or y position.
-	*/
-	int get_pos(char z);
+	Enemy(int hp, int floor, unsigned int id, float x, float y);
 
 	/**
 	* Getter for enemy's position.
@@ -44,18 +58,10 @@ public:
 	*	amount: int. Player's attack amount.
 	*
 	* Return:
-	*	an int of enemy's new hp after being attacked by player. 2 for def/physical. 3 for res/magic.
+	*	an int of enemy's new hp after being attacked by player.
+	*	2 for def/physical. 3 for res/magic.
 	*/
 	int set_hp(int atk_type, int amount);
-
-	/**
-	* Setter for enemy's position.
-	*
-	* Parameter:
-	*	x: an int for enemy's x position.
-	*	y: an int for enemy's y position.
-	*/
-	void set_pos(int x, int y);
 
 	/**
 	* Setter for enemy's stat
@@ -94,38 +100,12 @@ public:
 	bool get_type();
 
 	/**
-	* Draw the enemy on the screen.
+	* Getter for enemy's name.
 	*
-	* Parameter:
-	*	window: a sf::RenderWindow object to draw the enemy on.
+	* Return:
+	*	a string for enemy's name.
 	*/
-	void draw(sf::RenderWindow& window);
-
-	bool contains(float x, float y);
-
-private:
-	// 1: zombie, 2: skeleton, 3: mage, 4: bandit
-	unsigned int id;
-
-	// attack basically represent both str/mag.
-	// 0: hp, 1: atk, 2: def, 3: res, 4: range, 5: exp
-	std::array<int, 6> stats = {1, 1, 1, 1, 1, 1};
-
-	// choose whether it is a physical or magical attack. True = physical, false = magical.
-	bool type{ true };
-
-	/**
-	* A helper function to set the stat of the enemy.
-	* 
-	* Parameter:
-	*	hp: an int for the enemy's hp.
-	* 	atk: an int for the enemy's atk.
-	* 	def: an int for the enemy's def.
-	* 	res: an int for the enemy's res.
-	* 	range: an int for the enemy's range.
-	* 	exp: an int for the enemy's exp.
-	*/
-	void set_stat_h(int hp, int atk, int def, int res, int range, int exp);
+	std::string get_name();
 };
 
 #endif

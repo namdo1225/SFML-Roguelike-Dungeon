@@ -10,20 +10,11 @@
 #include "env.h"
 
 Player::Player() {
-	name.setFillColor(sf::Color::Cyan);
-	name.setStyle(sf::Text::Bold);
-	name.setCharacterSize(12);
-	name.setPosition(805, 15);
-	name.setOutlineThickness(3.f);
-	name.setOutlineColor(sf::Color::Black);
-
 	setSize(sf::Vector2f(40, 40));
 	setFillColor(sf::Color::White);
 	setTextureRect(sf::IntRect(0, 0, 40, 40));
 	setTexture(&Texture_Manager::player);
 }
-
-Player::Player(sf::Font& font) : Player() { name.setFont(font); }
 
 void Player::set_effect(Stat stat, int quantity, unsigned int longevity, unsigned int current) {
 	if (current == 0)
@@ -37,15 +28,10 @@ void Player::set_effect(Stat stat, int quantity, unsigned int longevity, unsigne
 
 int Player::attack_pl(bool atk_type, int uncalculated_quantity) {
 	int quantity{ 1 };
-	unsigned int type{ 4 };
+	Stat type = atk_type ? Def : Res;
 
-	// check if attack type is magic
-	if (!atk_type)
-		type = 5;
-
-	if (stat[type] < uncalculated_quantity)
+	if (stat[type] < uncalculated_quantity && uncalculated_quantity > 0)
 		quantity = uncalculated_quantity - stat[type];
-
 	stat[Hp] -= quantity;
 
 	return quantity;
@@ -64,7 +50,7 @@ bool Player::use_gold(int quantity) {
 	return true;
 }
 
-std::string Player::get_name() { return name.getString(); }
+std::string Player::get_name() { return name; }
 
 unsigned int Player::get_lvl() { return level; }
 
@@ -80,7 +66,7 @@ unsigned int Player::get_max_itm() { return max_item; }
 
 unsigned int Player::get_floor() { return floor; }
 
-void Player::set_name(std::string t_name) { name.setString(t_name); }
+void Player::set_name(std::string name) { this->name = name; }
 
 void Player::set_floor(unsigned int fl_num) { floor = (fl_num % INT_MAX) == 0 ? 1 : fl_num; }
 
@@ -102,7 +88,7 @@ bool Player::is_dead() { return (stat[Hp] <= 0); }
 
 void Player::reset() {
 	stat = { 10, 5, 0, 0, 0, 0, 10, 5 };
-	name.setString("Player");
+	name = "Player";
 	points = 10;
 	level = floor = 1;
 	cur_exp = 0;
@@ -115,8 +101,6 @@ bool Player::is_stuck(unsigned int i) { return stuck[i]; }
 void Player::set_pos(int x, int y) { setPosition(x, y); }
 
 void Player::set_stuck(unsigned int i, bool j) { stuck[i] = j; }
-
-void Player::draw(sf::RenderWindow& window, char draw) { (draw == 's') ? window.draw(*this) : window.draw(name); }
 
 void Player::copy_stat(std::array<long, 8>& stats) { stats = stat; }
 

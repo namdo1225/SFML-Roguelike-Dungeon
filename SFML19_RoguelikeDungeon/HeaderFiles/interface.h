@@ -61,19 +61,6 @@ public:
 	* Has a loop to handle the events of the game.
 	*/
 	void handle_event();
-
-	/**
-	* Handles player attacking with a spell.
-	*/
-	void pl_sp_atk(Spell* spell);
-
-	/**
-	* Handles player making a spell attack
-	*
-	* Parameter:
-	*	sp_inf: an std::array<int, 4> with information spell.
-	*/
-	void handle_sp_atk(std::array<int, 4> sp_inf);
 };
 
 #endif

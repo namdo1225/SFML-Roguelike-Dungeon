@@ -13,7 +13,6 @@ false, false, false, false, false, false, false, false, false };
 std::unique_ptr<Screen> Screen::screens[num_screens];
 
 bool Screen::loaded = false;
-const char* Screen::FULL_STATS[] = { "Health", "Mana", "Strength", "Magic", "Defense", "Resistance" };
 
 Full_Text Screen::exit_txt = Full_Text(1130.f, 5.f, 48, "X");
 Full_Rectangle Screen::exit_rect = Full_Rectangle(1120, 10, 50, 50);

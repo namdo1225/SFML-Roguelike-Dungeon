@@ -8,6 +8,7 @@
 #include "Floor/floor.h"
 #include "Tool/item.h"
 #include "env.h"
+#include "Manager/sf_manager.h"
 
 Floor::Floor(bool load) {
 	if (!load) {
@@ -174,17 +175,19 @@ void Floor::make_stair() {
 
 	int x{ ((rand() % rh) + rx) * 40 };
 	int y{ ((rand() % rw) + ry) * 40 };
+	sf::FloatRect rect = sf::FloatRect(x, y, 40, 40);
 
-	while (!rooms[rand_room].in_room(x, y, x + 40, y + 40)) {
+	while (!rooms[rand_room].intersects(rect)) {
 		x = ((rand() % rh) + rx) * 40;
 		y = ((rand() % rw) + ry) * 40;
+		rect = sf::FloatRect(x, y, 40, 40);
 	}
 
 	stair = Stair(x, y);
 }
 
 void Floor::make_shop() {
-	if (!ALWAYS_SPAWN_STAIR && (rand() % 10) != 0) return;
+	if (!ALWAYS_SPAWN_SHOP && (rand() % 10) != 0) return;
 
 	int rand_room{ rand() % static_cast<int>(rooms.size()) };
 
@@ -195,13 +198,9 @@ void Floor::make_shop() {
 
 	int x = ((rand() % rw) + rx) * 40;
 	int y = ((rand() % rh) + ry) * 40;
+	sf::FloatRect rect = sf::FloatRect(x, y, 40, 40);
 
-	float sx = stair.getPosition().x;
-	float sy = stair.getPosition().y;
-
-	bool notInRoom = !rooms[rand_room].in_room(x, y, x + 40, y + 40);
-
-	while ((sx == x && sy == y) || notInRoom) {
+	while (stair.intersects(rect)) {
 		x = ((rand() % rw) + rx) * 40;
 		y = ((rand() % rh) + ry) * 40;
 	}
@@ -216,26 +215,26 @@ int Floor::get_stair_pos(char z) { return z == 'x' ? stair.getPosition().x : sta
 
 bool Floor::shop_exist() { return fl_shop; }
 
-void Floor::draw(sf::RenderWindow& window) {
+void Floor::draw() {
 	for (Room rm : rooms)
-		rm.draw(window, 'r');
+		rm.draw('r');
 
 	for (Room rm : rooms)
-		rm.draw(window, 'd');
+		rm.draw('d');
 
-	window.draw(stair);
+	SF_Manager::window.draw(stair);
 
 	if (fl_shop)
-		window.draw(shop);
+		SF_Manager::window.draw(shop);
 
 	for (Gold_Collectible gold : golds)
-		gold.draw(window);
+		SF_Manager::window.draw(gold);
 
 	for (Collectible col : collectibles)
-		col.draw(window);
+		SF_Manager::window.draw(col);
 
 	for (Interactible interactible : interactibles)
-		interactible.draw(window);
+		SF_Manager::window.draw(interactible);
 }
 
 void Floor::set_shop_pos(int x, int y) { shop.setPosition(x, y); }
@@ -271,7 +270,7 @@ void Floor::make_collectible(unsigned int floor) {
 		bool loop{ true };
 		while (loop) {
 			for (Collectible col : collectibles) {
-				int tmp_x{ col.get_pos('x') }, tmp_y{ col.get_pos('y') };
+				float tmp_x{ col.getPosition().x }, tmp_y{ col.getPosition().y };
 
 				while (temp_x == tmp_x && temp_y == tmp_y || temp_x == -1 || temp_y == -1)
 					temp_x = ((rand() % (rooms[rand_room].get_rm('w') / 40)) + (rooms[rand_room].get_rm('x') / 40)) * 40,
@@ -300,7 +299,7 @@ void Floor::make_gold(unsigned int floor) {
 		bool break_loop{ true };
 		while (break_loop) {
 			for (unsigned int j{ 0 }; j < golds.size(); j++) {
-				int tmp_x{ golds[j].get_pos('x') }, tmp_y{ golds[j].get_pos('y') };
+				float tmp_x{ golds[j].getPosition().x }, tmp_y{ golds[j].getPosition().y };
 
 				while ((temp_x == tmp_x && temp_y == tmp_y) || temp_x == -1 || temp_y == -1) 
 					temp_x = ((rand() % (rooms[rand_room].get_rm('w') / 40)) + (rooms[rand_room].get_rm('x') / 40)) * 40,
@@ -317,7 +316,7 @@ void Floor::make_gold(unsigned int floor) {
 }
 
 void Floor::make_interactible(unsigned int floor) {
-	int rand_interact{ rand() % 10 + static_cast<int>(floor * 0.50) };
+	int rand_interact{ rand() % 100 + static_cast<int>(floor * 0.50) };
 
 	for (unsigned int i{ 0 }; i < rand_interact; i++) {
 		int temp_x{ -1 }, temp_y{ -1 }, rand_room{ rand() % static_cast<int>(rooms.size()) }, counter{ 0 };
@@ -325,7 +324,7 @@ void Floor::make_interactible(unsigned int floor) {
 		bool break_loop{ true };
 		while (break_loop) {
 			for (unsigned int j{ 0 }; j < interactibles.size(); j++) {
-				int tmp_x{ interactibles[j].get_pos('x') }, tmp_y{ interactibles[j].get_pos('y') };
+				float tmp_x{ interactibles[j].getPosition().x }, tmp_y{ interactibles[j].getPosition().y };
 
 				while ((temp_x == tmp_x && temp_y == tmp_y) || temp_x == -1 || temp_y == -1)
 					temp_x = ((rand() % (rooms[rand_room].get_rm('w') / 40)) + (rooms[rand_room].get_rm('x') / 40)) * 40,
