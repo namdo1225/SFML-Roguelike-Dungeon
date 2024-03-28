@@ -43,7 +43,7 @@
 ![Found an item picture](https://namdo1225.github.io/images/projects_media/20230526_sfml19/09_item.png)
 ![Got an item picture](https://namdo1225.github.io/images/projects_media/20230526_sfml19/09_item_got.png)
 
-12. A coin (centered) and stair (left) are shown here. Walk over the coin to pick it up. Go to the stairs and hit “Q” to go up a floor.
+12. A coin and stair are shown here. Walk over the coin to pick it up. Go to the stairs and hit “Q” to go up a floor.
 ![Found a coin and the stair picture](https://namdo1225.github.io/images/projects_media/20230526_sfml19/10_stair_coin.png)
 ![Next floor picture](https://namdo1225.github.io/images/projects_media/20230526_sfml19/11_stair_next.png)
 
