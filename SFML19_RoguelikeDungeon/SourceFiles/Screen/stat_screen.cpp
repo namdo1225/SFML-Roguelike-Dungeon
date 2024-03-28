@@ -77,6 +77,16 @@ void Stat_Screen::draw() {
 		window.draw(text);
 }
 
+void Stat_Screen::update_draw() {
+	for (unsigned int i = Max_Hp; i < NUM_NON_CUR_STATS; i++) {
+		Stat st = (Stat)i;
+		unsigned int cur_stat = Game_Manager::player.get_stat(st);
+		stat_curr_txts[i].setString(std::to_string(cur_stat));
+	}
+	stat_left_pts.setString(std::to_string(Game_Manager::player.get_pts()));
+
+}
+
 void Stat_Screen::text_event_handler() {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {
 		switch_screen(StatScreen, GameScreen, false, true);

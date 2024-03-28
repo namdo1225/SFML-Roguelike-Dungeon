@@ -117,8 +117,16 @@ void Player::use_effect() {
 			continue;
 		}
 
-		if (type > Res && cur_stat + difference <= get_stat(type))
-			set_stat(type, cur_stat + difference);
+		if (type > Res) {
+			long new_quantity = cur_stat + difference;
+			long max = get_stat(type == Hp ? Max_Hp : Max_Mp);
+			if (new_quantity <= 0)
+				set_stat(type, 1);
+			else if (max <= new_quantity)
+				set_stat(type, max);
+			else
+				set_stat(type, new_quantity);
+		}
 		else if (type > Max_Mp && type < Hp && effects[i].change_turns == effects[i].original_turns
 			&& cur_stat + difference > 0 && cur_stat + difference < INT_MAX) {
 			set_stat(type, cur_stat + difference);

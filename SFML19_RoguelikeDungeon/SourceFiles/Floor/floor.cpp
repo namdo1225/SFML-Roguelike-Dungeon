@@ -175,12 +175,10 @@ void Floor::make_stair() {
 
 	int x{ ((rand() % rh) + rx) * 40 };
 	int y{ ((rand() % rw) + ry) * 40 };
-	sf::FloatRect rect = sf::FloatRect(x, y, 40, 40);
 
-	while (!rooms[rand_room].intersects(rect)) {
+	while (!rooms[rand_room].in_room(x, y, x + 40, y + 40)) {
 		x = ((rand() % rh) + rx) * 40;
 		y = ((rand() % rw) + ry) * 40;
-		rect = sf::FloatRect(x, y, 40, 40);
 	}
 
 	stair = Stair(x, y);
@@ -198,9 +196,12 @@ void Floor::make_shop() {
 
 	int x = ((rand() % rw) + rx) * 40;
 	int y = ((rand() % rh) + ry) * 40;
-	sf::FloatRect rect = sf::FloatRect(x, y, 40, 40);
+	float sx = stair.getPosition().x;
+	float sy = stair.getPosition().y;
 
-	while (stair.intersects(rect)) {
+	bool notInRoom = !rooms[rand_room].in_room(x, y, x + 40, y + 40);
+
+	while ((sx == x && sy == y) || notInRoom) {
 		x = ((rand() % rw) + rx) * 40;
 		y = ((rand() % rh) + ry) * 40;
 	}
@@ -316,13 +317,12 @@ void Floor::make_gold(unsigned int floor) {
 }
 
 void Floor::make_interactible(unsigned int floor) {
-	int rand_interact{ rand() % 100 + static_cast<int>(floor * 0.50) };
+	int rand_interact{ rand() % 50 + static_cast<int>(floor * 0.50) };
 
 	for (unsigned int i{ 0 }; i < rand_interact; i++) {
 		int temp_x{ -1 }, temp_y{ -1 }, rand_room{ rand() % static_cast<int>(rooms.size()) }, counter{ 0 };
 
-		bool break_loop{ true };
-		while (break_loop) {
+		while (true) {
 			for (unsigned int j{ 0 }; j < interactibles.size(); j++) {
 				float tmp_x{ interactibles[j].getPosition().x }, tmp_y{ interactibles[j].getPosition().y };
 
@@ -333,8 +333,8 @@ void Floor::make_interactible(unsigned int floor) {
 			}
 
 			if (interactibles.size() == counter) {
-				break_loop = false;
 				interactibles.push_back(Interactible(temp_x, temp_y));
+				break;
 			}
 		}
 	}

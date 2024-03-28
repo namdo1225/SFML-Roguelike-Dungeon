@@ -231,6 +231,9 @@
   <ItemGroup>
     <ResourceCompile Include="SFML19_RoguelikeDungeon.rc" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="todo.md" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

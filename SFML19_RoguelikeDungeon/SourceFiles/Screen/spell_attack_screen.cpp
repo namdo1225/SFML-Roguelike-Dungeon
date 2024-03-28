@@ -32,6 +32,7 @@ void Spell_Attack_Screen::click_event_handler() {
             if (Game_Manager::enemies[i].contains(world_x, world_y)) {
                 Game_Manager::pl_sp_atk(i, sp_inf);
 				reset_spell();
+				Game_Manager::handle_turn();
                 return;
             }
         }
