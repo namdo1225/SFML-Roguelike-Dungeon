@@ -92,9 +92,3 @@ void Stat_Screen::text_event_handler() {
 		switch_screen(StatScreen, GameScreen, false, true);
 	}
 }
-
-void Stat_Screen::update_draw() {
-	for (unsigned int i = 0; i < NUM_NON_CUR_STATS; i++)
-		stat_curr_txts[i].setString(std::to_string(Game_Manager::player.get_stat((Stat)i)));
-	stat_left_pts.setString(std::to_string(Game_Manager::player.get_pts()));
-}
