@@ -39,7 +39,7 @@ int Player::attack_pl(bool atk_type, int uncalculated_quantity) {
 
 void Player::use_mp(int quantity) { stat[Mp] -= quantity; }
 
-unsigned int Player::get_stat(Stat t_stat) { return stat[t_stat]; }
+long Player::get_stat(Stat stat) { return this->stat[stat]; }
 
 int Player::get_pos(char z) { return (z == 'x') ? getPosition().x : getPosition().y; }
 
@@ -108,18 +108,18 @@ void Player::use_effect() {
 	for (int i = effects.size() - 1; i >= 0; i--) {
 		Stat type = effects[i].stat_changed;
 		int difference = effects[i].stat_difference;
-		int cur_stat = get_stat(type);
+		long cur_stat = get_stat(type);
 
 		if (effects[i].change_turns < 1) {
-			if (type > 1 && type < 6 && effects[i].effect_applied)
+			if (type > Max_Mp && type < Hp && effects[i].effect_applied)
 				set_stat(type, cur_stat - difference);
-			effects.pop_back();
+			effects.erase(effects.begin() + i);
 			continue;
 		}
 
-		if (type > 5 && cur_stat + difference <= get_stat(type))
+		if (type > Res && cur_stat + difference <= get_stat(type))
 			set_stat(type, cur_stat + difference);
-		else if (type > 1 && type < 6 && effects[i].change_turns == effects[i].original_turns
+		else if (type > Max_Mp && type < Hp && effects[i].change_turns == effects[i].original_turns
 			&& cur_stat + difference > 0 && cur_stat + difference < INT_MAX) {
 			set_stat(type, cur_stat + difference);
 			effects[i].effect_applied = true;
@@ -129,15 +129,6 @@ void Player::use_effect() {
 }
 
 void Player::reset_effect() {
-	for (int i = effects.size() - 1; i >= 0; i--) {
-		Stat type = effects[i].stat_changed;
-		int difference = effects[i].stat_difference;
-		int cur_stat = get_stat(type);
-
-		if (type > 1 && type < 6 && effects[i].effect_applied)
-			set_stat(type, cur_stat - difference);
-	}
-
 	effects.clear();
 }
 

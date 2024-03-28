@@ -28,7 +28,7 @@ Spell::Spell(const char abbre[3],
 }
 
 bool Spell::use() {
-	unsigned int pl_mp = Game_Manager::player.get_stat(Mp);
+	long pl_mp = Game_Manager::player.get_stat(Mp);
 	if (pl_mp < mp)
 		return false;
 	Game_Manager::player.set_stat(Mp, pl_mp - mp);
@@ -77,10 +77,10 @@ Heal::Heal() : Spell("HE", 1, 50, 20, 3, 0, 0, 3,
 bool Heal::use() {
 	unsigned int hp = Game_Manager::player.get_stat(Hp);
 	unsigned int max_hp = Game_Manager::player.get_stat(Max_Hp);
-	unsigned int pl_mp = Game_Manager::player.get_stat(Mp);
+	long pl_mp = Game_Manager::player.get_stat(Mp);
 	unsigned int mgk = Game_Manager::player.get_stat(Mgk);
 
-	if (hp == max_hp)
+	if (hp == max_hp || pl_mp < mp)
 		return false;
 
 	unsigned int new_hp = hp + quantity + mgk * 0.5;

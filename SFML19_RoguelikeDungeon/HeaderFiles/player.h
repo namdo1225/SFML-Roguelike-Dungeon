@@ -94,12 +94,12 @@ public:
 	* Getter for player's stat.
 	*
 	* Parameter:
-	*	t_stat: a Stat enum to index the stat type. 0-5 for the regular stat types. 6-7 for current hp/mp.
+	*	stat: a Stat enum to index the stat type.
 	* 
 	* Return:
 	*	an unsigned int for the value of stat type.
 	*/
-	unsigned int get_stat(Stat t_stat);
+	long get_stat(Stat stat);
 
 	/**
 	* Getter for player's position.

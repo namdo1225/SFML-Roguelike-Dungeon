@@ -481,7 +481,7 @@ void Game_Manager::handle_move_pick_interact() {
                 log_add("Your MP increased by 50%.");
             }
             else if (effect >= 35 && effect < 40) {
-                next_level();
+                next_level(true);
                 log_add("You moved to the next floor.");
             }
             else if (effect >= 40 && effect < 45) {
@@ -685,7 +685,7 @@ void Game_Manager::reset_game() {
     center_floor();
 
     items.clear();
-    add_item(Item::create_itm(8));
+    add_item(Item::create_itm(6));
     add_item(Item::create_itm(4));
     add_item(Item::create_itm(1));
     add_item(Item::create_itm(2));
