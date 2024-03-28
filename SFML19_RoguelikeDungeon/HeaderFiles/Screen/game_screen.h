@@ -24,15 +24,22 @@ private:
 	Full_Rectangle scan_rect = Full_Rectangle(10.f, 530.f, 100.f, 160.f);
 	Full_Text scan_txt = Full_Text(20.f, 540.f, 18.f, "");
 
+	/*
+	* Change opacity of the UI.
+	*/
 	void change_opacity();
+
+	/*
+	* Change range display due to the player's weapon.
+	*/
 	void change_range();
 
 public:
 	Game_Screen();
 
-	void click_event_handler();
+	virtual void click_event_handler();
 
-	void hover_event_handler();
+	virtual void hover_event_handler();
 
 	virtual void draw();
 

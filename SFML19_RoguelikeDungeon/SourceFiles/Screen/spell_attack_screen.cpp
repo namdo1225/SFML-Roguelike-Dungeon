@@ -1,3 +1,9 @@
+/**
+*
+* File: spell_attack_screen.cpp
+* Description: Contain the implementation of the Spell_Attack_Screen class.
+*/
+
 #include "Screen/spell_attack_screen.h"
 #include "Manager/game_manager.h"
 #include <format>

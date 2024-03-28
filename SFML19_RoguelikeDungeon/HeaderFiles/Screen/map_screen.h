@@ -18,9 +18,9 @@ private:
 public:
 	Map_Screen();
 
-	void click_event_handler();
+	virtual void click_event_handler();
 
-	void hover_event_handler();
+	virtual void hover_event_handler();
 
 	virtual void mouse_event_handler();
 

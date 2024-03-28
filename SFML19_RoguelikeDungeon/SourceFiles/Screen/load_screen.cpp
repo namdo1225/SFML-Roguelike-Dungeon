@@ -1,3 +1,9 @@
+/**
+*
+* File: load_screen.cpp
+* Description: Contain the implementation of the Load_Screen class.
+*/
+
 #include "Screen/load_screen.h"
 #include "Manager/game_manager.h"
 

@@ -1,3 +1,9 @@
+/**
+*
+* File: map_screen.cpp
+* Description: Contain the implementation of the Map_Screen class.
+*/
+
 #include "Screen/map_screen.h"
 #include "Manager/game_manager.h"
 #include <iostream>

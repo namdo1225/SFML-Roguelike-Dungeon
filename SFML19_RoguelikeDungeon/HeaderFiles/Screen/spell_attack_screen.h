@@ -16,16 +16,22 @@ private:
 	std::array<int, 4> sp_inf = { {0, 0, 0, 0} };
 	Full_Rectangle ranges[4];
 
+	/*
+	* Change range display of spell.
+	*/
 	void change_range();
 
+	/*
+	* Reset spell select.
+	*/
 	void reset_spell();
 
 public:
 	Spell_Attack_Screen();
 
-	void click_event_handler();
+	virtual void click_event_handler();
 
-	void hover_event_handler();
+	virtual void hover_event_handler();
 
 	virtual void draw();
 };

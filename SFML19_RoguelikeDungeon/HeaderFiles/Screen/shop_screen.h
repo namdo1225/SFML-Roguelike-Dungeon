@@ -16,19 +16,41 @@ private:
 	static bool buy;
 	static Stock stock;
 
+	/*
+	* Handle item shop.
+	* 
+	* Parameter:
+	*	buy: true if buying. false if selling.
+	*/
 	void item_shop(bool buy);
 
+	/*
+	* Handle spell shop.
+	*
+	* Parameter:
+	*	buy: true if buying. false if selling.
+	*/
 	void spell_shop(bool buy);
 
+	/*
+	* Handle special shop.
+	*
+	* Parameter:
+	*	buy: true if buying. false if selling.
+	*/
 	void special_shop(bool buy);
 
+	/*
+	* Resets item, spell, and special select.
+	*/
 	void reset_select();
+
 public:
 	Shop_Screen();
 
-	void click_event_handler();
+	virtual void click_event_handler();
 
-	void hover_event_handler();
+	virtual void hover_event_handler();
 
 	virtual void draw();
 

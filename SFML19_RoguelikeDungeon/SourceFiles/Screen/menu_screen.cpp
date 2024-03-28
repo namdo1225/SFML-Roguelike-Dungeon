@@ -1,9 +1,8 @@
 /**
 *
-* File: game_screen.cpp
-* Description: Contain the implementation of the Game_Screen class.
+* File: menu_screen.cpp
+* Description: Contain the implementation of the Menu_Screen class.
 */
-
 
 #include "Screen/menu_screen.h"
 #include "Manager/game_manager.h"

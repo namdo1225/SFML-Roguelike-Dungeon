@@ -1,3 +1,10 @@
+/**
+*
+* File: screen.cpp
+* Description: Contain the implementation of the Screen class.
+*/
+
+
 #include "Screen/screen.h"
 #include "Manager/font_manager.h"
 #include "Manager/audio_manager.h"
