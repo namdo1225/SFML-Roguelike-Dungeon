@@ -23,6 +23,8 @@ public:
 	virtual void text_event_handler();
 
 	virtual void draw();
+
+	virtual void update_draw();
 };
 
 #endif
