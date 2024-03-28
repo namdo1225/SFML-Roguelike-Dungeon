@@ -1,0 +1,4 @@
+- Add ability to hold down keyboard.
+- Add villages.
+- Add clutters to the game for aesthetic.
+- Add more obstacles.
