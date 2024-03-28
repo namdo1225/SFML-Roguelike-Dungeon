@@ -7,6 +7,8 @@
 # LIBRARY AND OTHER ASSETS USED:
   - SFML, a C++ graphics library, zlib/png license, https://www.sfml-dev.org/
   - Open Sans font, https://fontsource.org/
+  - Other fonts, https://fonts.google.com/
+  - nlohmann's JSON parsing library, https://github.com/nlohmann/json
 
 # Instructions to use
 1. Click “Start” to start the game.
