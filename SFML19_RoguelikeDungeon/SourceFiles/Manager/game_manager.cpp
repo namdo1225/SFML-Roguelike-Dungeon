@@ -603,7 +603,7 @@ void Game_Manager::pl_random_pos() {
 void Game_Manager::ene_add() {
     if (enemies.size() != 0 || enemy_respawn == 0 || SKIP_SPAWN_ENEMY) {
         if (enemy_respawn == 0)
-            log_add("Enemies are dead. Find the stair.");
+            log_add("Enemies stopped spawning.");
         return;
     }
 
