@@ -121,7 +121,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>SFML_STATIC;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)HeaderFiles;$(ProjectDir)SFML-2.5.1\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)HeaderFiles;$(ProjectDir)SFML-2.5.1\include;$(ProjectDir)nlohmann</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -133,38 +134,102 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="SourceFiles\collectible_class.cpp" />
+    <ClCompile Include="SourceFiles\Floor\floor_object.cpp" />
+    <ClCompile Include="SourceFiles\Manager\font_manager.cpp" />
+    <ClCompile Include="SourceFiles\Manager\audio_manager.cpp" />
+    <ClCompile Include="SourceFiles\Floor\collectible.cpp" />
     <ClCompile Include="SourceFiles\effect.cpp" />
-    <ClCompile Include="SourceFiles\enemies_class.cpp" />
-    <ClCompile Include="SourceFiles\floor_class.cpp" />
-    <ClCompile Include="SourceFiles\gold_collectible_class.cpp" />
-    <ClCompile Include="SourceFiles\interactibles_class.cpp" />
-    <ClCompile Include="SourceFiles\interface_class.cpp" />
-    <ClCompile Include="SourceFiles\items_class.cpp" />
-    <ClCompile Include="SourceFiles\map_class.cpp" />
-    <ClCompile Include="SourceFiles\player_class.cpp" />
-    <ClCompile Include="SourceFiles\room_class.cpp" />
+    <ClCompile Include="SourceFiles\Floor\enemy.cpp" />
+    <ClCompile Include="SourceFiles\Floor\floor.cpp" />
+    <ClCompile Include="SourceFiles\Floor\gold_collectible.cpp" />
+    <ClCompile Include="SourceFiles\Floor\interactible.cpp" />
+    <ClCompile Include="SourceFiles\interface.cpp" />
+    <ClCompile Include="SourceFiles\Screen\spell_attack_screen.cpp" />
+    <ClCompile Include="SourceFiles\Screen\status_screen.cpp" />
+    <ClCompile Include="SourceFiles\Tool\item.cpp" />
+    <ClCompile Include="SourceFiles\Floor\map.cpp" />
+    <ClCompile Include="SourceFiles\Manager\game_manager.cpp" />
+    <ClCompile Include="SourceFiles\Manager\sf_manager.cpp" />
+    <ClCompile Include="SourceFiles\player.cpp" />
+    <ClCompile Include="SourceFiles\Floor\room.cpp" />
+    <ClCompile Include="SourceFiles\Screen\exit_screen.cpp" />
+    <ClCompile Include="SourceFiles\Screen\game_screen.cpp" />
+    <ClCompile Include="SourceFiles\Screen\inventory_screen.cpp" />
+    <ClCompile Include="SourceFiles\Screen\level_screen.cpp" />
+    <ClCompile Include="SourceFiles\Screen\load_screen.cpp" />
+    <ClCompile Include="SourceFiles\Screen\log_screen.cpp" />
+    <ClCompile Include="SourceFiles\Screen\map_screen.cpp" />
+    <ClCompile Include="SourceFiles\Screen\menu_screen.cpp" />
+    <ClCompile Include="SourceFiles\Screen\name_screen.cpp" />
+    <ClCompile Include="SourceFiles\Screen\screen.cpp" />
+    <ClCompile Include="SourceFiles\Screen\setting_screen.cpp" />
+    <ClCompile Include="SourceFiles\Screen\shop_screen.cpp" />
+    <ClCompile Include="SourceFiles\Screen\spell_screen.cpp" />
+    <ClCompile Include="SourceFiles\Screen\stat_screen.cpp" />
+    <ClCompile Include="SourceFiles\Screen\title_screen.cpp" />
+    <ClCompile Include="SourceFiles\Manager\setting_manager.cpp" />
     <ClCompile Include="SourceFiles\sfml19.cpp" />
-    <ClCompile Include="SourceFiles\shop_class.cpp" />
-    <ClCompile Include="SourceFiles\spell_class.cpp" />
-    <ClCompile Include="SourceFiles\stair_class.cpp" />
+    <ClCompile Include="SourceFiles\Shape\full_rectangle.cpp" />
+    <ClCompile Include="SourceFiles\Shape\full_shape.cpp" />
+    <ClCompile Include="SourceFiles\Shape\full_text.cpp" />
+    <ClCompile Include="SourceFiles\Floor\shop.cpp" />
+    <ClCompile Include="SourceFiles\Tool\special.cpp" />
+    <ClCompile Include="SourceFiles\Tool\spell.cpp" />
+    <ClCompile Include="SourceFiles\Floor\stair.cpp" />
+    <ClCompile Include="SourceFiles\Manager\texture_manager.cpp" />
+    <ClCompile Include="SourceFiles\Tool\tool.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="HeaderFiles\collectible_class.h" />
+    <ClInclude Include="HeaderFiles\env.h" />
+    <ClInclude Include="HeaderFiles\Floor\floor_object.h" />
+    <ClInclude Include="HeaderFiles\Manager\audio_manager.h" />
+    <ClInclude Include="HeaderFiles\Floor\collectible.h" />
     <ClInclude Include="HeaderFiles\effect.h" />
-    <ClInclude Include="HeaderFiles\enemies_class.h" />
-    <ClInclude Include="HeaderFiles\floor_class.h" />
-    <ClInclude Include="HeaderFiles\gold_collectible_class.h" />
+    <ClInclude Include="HeaderFiles\Floor\enemy.h" />
+    <ClInclude Include="HeaderFiles\Floor\floor.h" />
+    <ClInclude Include="HeaderFiles\Manager\font_manager.h" />
+    <ClInclude Include="HeaderFiles\Floor\gold_collectible.h" />
     <ClInclude Include="HeaderFiles\include.h" />
-    <ClInclude Include="HeaderFiles\interactibles_class.h" />
-    <ClInclude Include="HeaderFiles\interface_class.h" />
-    <ClInclude Include="HeaderFiles\items_class.h" />
-    <ClInclude Include="HeaderFiles\map_class.h" />
-    <ClInclude Include="HeaderFiles\player_class.h" />
-    <ClInclude Include="HeaderFiles\room_class.h" />
-    <ClInclude Include="HeaderFiles\shop_class.h" />
-    <ClInclude Include="HeaderFiles\spell_class.h" />
-    <ClInclude Include="HeaderFiles\stair_class.h" />
+    <ClInclude Include="HeaderFiles\Floor\interactible.h" />
+    <ClInclude Include="HeaderFiles\interface.h" />
+    <ClInclude Include="HeaderFiles\Screen\spell_attack_screen.h" />
+    <ClInclude Include="HeaderFiles\Screen\status_screen.h" />
+    <ClInclude Include="HeaderFiles\Tool\item.h" />
+    <ClInclude Include="HeaderFiles\Floor\map.h" />
+    <ClInclude Include="HeaderFiles\Manager\game_manager.h" />
+    <ClInclude Include="HeaderFiles\Manager\sf_manager.h" />
+    <ClInclude Include="HeaderFiles\player.h" />
+    <ClInclude Include="HeaderFiles\Floor\room.h" />
+    <ClInclude Include="HeaderFiles\Screen\exit_screen.h" />
+    <ClInclude Include="HeaderFiles\Screen\game_screen.h" />
+    <ClInclude Include="HeaderFiles\Screen\inventory_screen.h" />
+    <ClInclude Include="HeaderFiles\Screen\level_screen.h" />
+    <ClInclude Include="HeaderFiles\Screen\load_screen.h" />
+    <ClInclude Include="HeaderFiles\Screen\log_screen.h" />
+    <ClInclude Include="HeaderFiles\Screen\map_screen.h" />
+    <ClInclude Include="HeaderFiles\Screen\menu_screen.h" />
+    <ClInclude Include="HeaderFiles\Screen\name_screen.h" />
+    <ClInclude Include="HeaderFiles\Screen\screen.h" />
+    <ClInclude Include="HeaderFiles\Screen\setting_screen.h" />
+    <ClInclude Include="HeaderFiles\Screen\shop_screen.h" />
+    <ClInclude Include="HeaderFiles\Screen\spell_screen.h" />
+    <ClInclude Include="HeaderFiles\Screen\stat_screen.h" />
+    <ClInclude Include="HeaderFiles\Screen\title_screen.h" />
+    <ClInclude Include="HeaderFiles\Manager\setting_manager.h" />
+    <ClInclude Include="HeaderFiles\Shape\full_rectangle.h" />
+    <ClInclude Include="HeaderFiles\Shape\full_shape.h" />
+    <ClInclude Include="HeaderFiles\Shape\full_text.h" />
+    <ClInclude Include="HeaderFiles\Floor\shop.h" />
+    <ClInclude Include="HeaderFiles\Tool\special.h" />
+    <ClInclude Include="HeaderFiles\Tool\spell.h" />
+    <ClInclude Include="HeaderFiles\Floor\stair.h" />
+    <ClInclude Include="HeaderFiles\stat.h" />
+    <ClInclude Include="HeaderFiles\Manager\texture_manager.h" />
+    <ClInclude Include="HeaderFiles\Tool\tool.h" />
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="SFML19_RoguelikeDungeon.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

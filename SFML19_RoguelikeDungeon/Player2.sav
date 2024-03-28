@@ -1,0 +1,224 @@
+{
+    "armorSlot": 1,
+    "enemies": [
+        {
+            "health": 13,
+            "id": 3,
+            "x": 7640,
+            "y": 5400
+        }
+    ],
+    "enemiesRespawn": 2,
+    "exp": {
+        "current": 0,
+        "levelUp": 10
+    },
+    "floor": [
+        {
+            "sizeX": 1440,
+            "sizeY": 1440,
+            "x": 6360,
+            "y": 5640
+        },
+        {
+            "door": {
+                "door0": 1,
+                "door1": 0,
+                "door2": 1,
+                "door3": 1,
+                "rotation": 3,
+                "x": 7800,
+                "y": 6600
+            },
+            "sizeX": 840,
+            "sizeY": 480,
+            "x": 7800,
+            "y": 6240
+        },
+        {
+            "door": {
+                "door0": 1,
+                "door1": 0,
+                "door2": 0,
+                "door3": 0,
+                "rotation": 0,
+                "x": 8520,
+                "y": 6720
+            },
+            "sizeX": 840,
+            "sizeY": 720,
+            "x": 8400,
+            "y": 6720
+        },
+        {
+            "door": {
+                "door0": 1,
+                "door1": 1,
+                "door2": 1,
+                "door3": 1,
+                "rotation": 2,
+                "x": 7200,
+                "y": 5640
+            },
+            "sizeX": 360,
+            "sizeY": 1320,
+            "x": 7200,
+            "y": 4320
+        },
+        {
+            "door": {
+                "door0": 0,
+                "door1": 0,
+                "door2": 0,
+                "door3": 1,
+                "rotation": 3,
+                "x": 7560,
+                "y": 5280
+            },
+            "sizeX": 480,
+            "sizeY": 480,
+            "x": 7560,
+            "y": 5160
+        },
+        {
+            "door": {
+                "door0": 0,
+                "door1": 1,
+                "door2": 0,
+                "door3": 0,
+                "rotation": 1,
+                "x": 7200,
+                "y": 4680
+            },
+            "sizeX": 1200,
+            "sizeY": 720,
+            "x": 6000,
+            "y": 4320
+        },
+        {
+            "door": {
+                "door0": 0,
+                "door1": 0,
+                "door2": 1,
+                "door3": 0,
+                "rotation": 2,
+                "x": 7440,
+                "y": 4320
+            },
+            "sizeX": 480,
+            "sizeY": 720,
+            "x": 7320,
+            "y": 3600
+        },
+        {
+            "door": {
+                "door0": 0,
+                "door1": 0,
+                "door2": 1,
+                "door3": 0,
+                "rotation": 2,
+                "x": 8520,
+                "y": 6240
+            },
+            "sizeX": 720,
+            "sizeY": 1320,
+            "x": 8400,
+            "y": 4920
+        }
+    ],
+    "floorNumber": 1,
+    "gold": 0,
+    "golds": [
+        {
+            "amount": 5,
+            "x": -1,
+            "y": -1
+        },
+        {
+            "amount": 4,
+            "x": 6880,
+            "y": 4880
+        },
+        {
+            "amount": 1,
+            "x": 7520,
+            "y": 3760
+        }
+    ],
+    "interactibles": [
+        {
+            "x": -1,
+            "y": -1
+        },
+        {
+            "x": 7400,
+            "y": 6480
+        },
+        {
+            "x": 7680,
+            "y": 4160
+        },
+        {
+            "x": 9080,
+            "y": 5720
+        },
+        {
+            "x": 7440,
+            "y": 4800
+        }
+    ],
+    "inventory": [
+        8,
+        4,
+        1,
+        2
+    ],
+    "inventorySlots": 10,
+    "items": [
+        {
+            "id": 1,
+            "x": -1,
+            "y": -1
+        },
+        {
+            "id": 1,
+            "x": 6600,
+            "y": 6960
+        },
+        {
+            "id": 2,
+            "x": 9080,
+            "y": 6960
+        }
+    ],
+    "level": 1,
+    "name": "Player2",
+    "player": {
+        "x": 8880,
+        "y": 7240
+    },
+    "spell": [
+        3,
+        1
+    ],
+    "stair": {
+        "x": 6480,
+        "y": 4640
+    },
+    "stat": {
+        "def": 0,
+        "hp": {
+            "current": 10,
+            "max": 10
+        },
+        "mgk": 0,
+        "mp": {
+            "current": 5,
+            "max": 5
+        },
+        "res": 0,
+        "str": 0
+    },
+    "statPoints": 10,
+    "weaponSlot": 0
+}
