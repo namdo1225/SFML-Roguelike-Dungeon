@@ -21,6 +21,50 @@ private:
 	*/
 	Game_Manager();
 
+	/**
+	* Add enemies to the floor.
+	*/
+	static void ene_add();
+
+	/**
+	* Handles all enemies making an action.
+	*/
+	static void ene_action();
+
+	/**
+	* Handles an enemy attacking.
+	*
+	* Parameter:
+	*	v: an unsigned int for enemy index.
+	*/
+	static void ene_atk(unsigned int v);
+
+	/**
+	* Handles an enemy moving closer to the player.
+	*
+	* Parameter:
+	*	v: an unsigned int for enemy index.
+	*/
+	static void ene_mov_close(unsigned int v);
+
+	/**
+	* A helper function for enemy moving closer.
+	*
+	* Parameter:
+	*	v: an unsigned int for enemy index.
+	*	offset_x: an int for the x offset.
+	* 	offset_y: an int for the y offset.
+	*/
+	static bool ene_mov_close_2(unsigned int v, int offset_x, int offset_y);
+
+	/**
+	* Handles an enemy making a random move.
+	*
+	* Parameter:
+	*	v: an unsigned int for enemy index.
+	*/
+	static void ene_rand_move(unsigned int v);
+
 public:
 	static std::shared_ptr<Item> placeholder_item;
 	static std::shared_ptr<Spell> placeholder_spell;
@@ -59,6 +103,11 @@ public:
 	static void setup();
 
 	/**
+	* Handles enemy's death.
+	*/
+	static void ene_dead();
+
+	/**
 	* Organize player's inventory.
 	*/
 	static void reorganize_inv();
@@ -82,45 +131,6 @@ public:
 	*		inventory.
 	*/
 	static void sp_select_shortcut(char place);
-
-	/**
-	* Handles all enemies making an action.
-	*/
-	static void ene_action();
-
-	/**
-	* Handles an enemy attacking.
-	* 
-	* Parameter:
-	*	v: an unsigned int for enemy index.
-	*/
-	static void ene_atk(unsigned int v);
-
-	/**
-	* Handles an enemy moving closer to the player.
-	*
-	* Parameter:
-	*	v: an unsigned int for enemy index.
-	*/
-	static void ene_mov_close(unsigned int v);
-
-	/**
-	* A helper function for enemy moving closer.
-	*
-	* Parameter:
-	*	v: an unsigned int for enemy index.
-	*	offset_x: an int for the x offset.
-	* 	offset_y: an int for the y offset.
-	*/
-	static bool ene_mov_close_2(unsigned int v, int offset_x, int offset_y);
-
-	/**
-	* Handles an enemy making a random move.
-	*
-	* Parameter:
-	*	v: an unsigned int for enemy index.
-	*/
-	static void ene_rand_move(unsigned int v);
 
 	/**
 	* Handles player attacking with a spell.
@@ -162,11 +172,6 @@ public:
 	static void pl_atk();
 
 	/**
-	* Handles enemy's death.
-	*/
-	static void ene_dead();
-
-	/**
 	* Refreshes/updates player's exp, including leveling them up.
 	*/
 	static void refresh_exp();
@@ -175,11 +180,6 @@ public:
 	* Randomize player's position.
 	*/
 	static void pl_random_pos();
-
-	/**
-	* Add enemies to the floor.
-	*/
-	static void ene_add();
 
 	/**
 	* Center all overworld objects relative to the player.
@@ -275,6 +275,11 @@ public:
 	* Use a spell.
 	*/
 	static bool spell_use();
+
+	/*
+	* Handles a turn in the game world.
+	*/
+	static void handle_turn();
 };
 
 

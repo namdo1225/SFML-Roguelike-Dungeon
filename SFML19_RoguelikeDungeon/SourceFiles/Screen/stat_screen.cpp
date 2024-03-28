@@ -10,6 +10,7 @@
 #include "Manager/game_manager.h"
 
 Stat_Screen::Stat_Screen() : Screen(1, 0, true, true, true) {
+	update = true;
 	setup_helper(false, 0, "* HP can't be less than 5.", 750.f, 250.f , NULL, NULL);
 }
 
@@ -17,8 +18,10 @@ void Stat_Screen::click_event_handler() {
 	if (mouse_in_button(ConfirmButton)) {
 		switch_screen(StatScreen, GameScreen, false, true);
 	}
-	else if (mouse_in_button(ExitButton))
+	else if (mouse_in_button(ExitButton)) {
+		Game_Manager::player.reset();
 		switch_screen(StatScreen, NameScreen, false, true);
+	}
 
 	for (unsigned int i{ 0 }; i < NUM_NON_CUR_STATS * 2; i++) {
 		if (!stat_curr_arrows[i].getGlobalBounds().contains(sf::Vector2f(x, y)))
@@ -72,6 +75,16 @@ void Stat_Screen::draw() {
 		window.draw(text);
 	for (Full_Text& text : stat_curr_arrows)
 		window.draw(text);
+}
+
+void Stat_Screen::update_draw() {
+	for (unsigned int i = Max_Hp; i < NUM_NON_CUR_STATS; i++) {
+		Stat st = (Stat)i;
+		unsigned int cur_stat = Game_Manager::player.get_stat(st);
+		stat_curr_txts[i].setString(std::to_string(cur_stat));
+	}
+	stat_left_pts.setString(std::to_string(Game_Manager::player.get_pts()));
+
 }
 
 void Stat_Screen::text_event_handler() {

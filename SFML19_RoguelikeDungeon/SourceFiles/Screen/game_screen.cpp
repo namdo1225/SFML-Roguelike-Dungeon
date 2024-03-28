@@ -282,7 +282,7 @@ void Game_Screen::key_event_handler() {
 		window.setView(viewWorld);
 	}
 	else if (event.key.code == sf::Keyboard::W) {
-		Game_Manager::ene_action();
+		Game_Manager::handle_turn();
 		window.setView(viewWorld);
 	}
 	else if (event.key.code == sf::Keyboard::Q) {

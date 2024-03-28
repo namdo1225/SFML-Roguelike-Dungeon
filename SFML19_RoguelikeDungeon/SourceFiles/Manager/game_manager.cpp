@@ -376,8 +376,7 @@ void Game_Manager::handle_player_action(char input, unsigned int mode) {
         viewWorld.move(offx, offy);
 
         if (handle) {
-            player.use_effect();
-            ene_action();
+            handle_turn();
             handle_move_pick_itm();
             handle_move_pick_gld();
             handle_move_pick_interact();
@@ -385,8 +384,7 @@ void Game_Manager::handle_player_action(char input, unsigned int mode) {
     }
     else if (mode && handle) {
         pl_atk();
-        ene_action();
-        ene_add();
+        handle_turn();
     }
 }
 
@@ -416,24 +414,26 @@ void Game_Manager::next_level(bool bypass) {
 void Game_Manager::handle_move_pick_itm() {
     if (items.size() == player.get_max_itm())
         return;
-    float pl_x{ player.getPosition().x }, pl_y{ player.getPosition().y };
 
+    sf::FloatRect rect = player.get_rect();
     for (int i{ static_cast<int>(floor.collectibles.size()) - 1 }; i > -1; i--) {
-        if (pl_x == floor.collectibles[i].getPosition().x && pl_y == floor.collectibles[i].getPosition().y) {
+        if (floor.collectibles[i].intersects(rect)) {
             Audio_Manager::play_sfx(0);
-            add_item(Item::create_itm(floor.collectibles[i].get_id()));
+            std::shared_ptr item = Item::create_itm(floor.collectibles[i].get_id());
+            add_item(item);
             floor.collectibles.erase(floor.collectibles.begin() + i);
-            log_add("You picked up an item.");
+            log_add(std::format("You picked up: {}.", item->get_name()).c_str());
+            if (items.size() == player.get_max_itm())
+                log_add("You reached your items limit.");
             return;
         }
     }
 }
 
 void Game_Manager::handle_move_pick_gld() {
-    float plx{ player.getPosition().x }, ply{ player.getPosition().y };
-
+    sf::FloatRect rect = player.get_rect();
     for (int i{ static_cast<int>(floor.golds.size()) - 1 }; i > -1; i--) {
-        if (plx == floor.golds[i].getPosition().x && ply == floor.golds[i].getPosition().y) {
+        if (floor.golds[i].intersects(rect)) {
             Audio_Manager::play_sfx(0);
             int floor_gold = floor.golds[i].get_amount();
             player.set_gold(player.get_gold() + floor_gold);
@@ -445,13 +445,12 @@ void Game_Manager::handle_move_pick_gld() {
 }
 
 void Game_Manager::handle_move_pick_interact() {
-    float plx{ player.getPosition().x }, ply{ player.getPosition().y };
-
+    sf::FloatRect rect = player.get_rect();
     for (int i{ static_cast<int>(floor.interactibles.size()) - 1 }; i > -1; i--) {
-        if (plx == floor.interactibles[i].getPosition().x && ply == floor.interactibles[i].getPosition().y) {
+        if (floor.interactibles[i].intersects(rect)) {
             Audio_Manager::play_sfx(0);
 
-            int effect = rand() % 100;
+            int effect = INTERACTIBLE_CHANCE == 0 ? rand() % 100 : INTERACTIBLE_CHANCE;
             if (effect < 5) {
                 ene_add();
                 log_add("More enemies are spawned.");
@@ -485,8 +484,8 @@ void Game_Manager::handle_move_pick_interact() {
                 log_add("You moved to the next floor.");
             }
             else if (effect >= 40 && effect < 45) {
-                ene_action();
-                ene_action();
+                handle_turn();
+                handle_turn();
                 log_add("You lost 2 turns.");
             }
             else if (effect >= 45 && effect < 50) {
@@ -494,18 +493,26 @@ void Game_Manager::handle_move_pick_interact() {
                 log_add("You lose 8 MP.");
             }
             else if (effect >= 50 && effect < 55) {
-                player.set_effect(Hp, 10, 1);
-                log_add("You will recover 10 HP.");
+                player.set_effect(Hp, 1, 5);
+                log_add("You will recover 1 HP for 5 turns.");
             }
             else if (effect >= 55 && effect < 60) {
                 player.set_effect(Res, -5, 2);
                 log_add("You will lose 5 RES for 2 turns.");
             }
-            else if (effect >= 60 && effect < 70) {
-                player.set_effect(Hp, 1, 5);
-                log_add("You will recover 1 HP for 5 turns.");
+            else if (effect >= 60 && effect < 65) {
+                player.set_effect(Hp, -1, 10);
+                log_add("You will lose 1 HP for 10 turns.");
             }
-            else if (effect >= 70 && effect < 80) {
+            else if (effect >= 65 && effect < 70) {
+                player.set_effect(Mp, -2, 5);
+                log_add("You will lose 2 MP for 5 turns.");
+            }
+            else if (effect >= 70 && effect < 75) {
+                add_item(Item::create_itm(10));
+                log_add("You found a Rejuvenate Potion.");
+            }
+            else if (effect >= 75 && effect < 80) {
                 player.set_effect(Str, -1, 7);
                 log_add("You will lose 1 STR for 7 turns.");
             }
@@ -601,11 +608,8 @@ void Game_Manager::pl_random_pos() {
 }
 
 void Game_Manager::ene_add() {
-    if (enemies.size() != 0 || enemy_respawn == 0 || SKIP_SPAWN_ENEMY) {
-        if (enemy_respawn == 0)
-            log_add("Enemies are dead. Find the stair.");
+    if (enemies.size() != 0 || enemy_respawn == 0 || SKIP_SPAWN_ENEMY)
         return;
-    }
 
     enemy_respawn -= 1;
     int rand_enemy_num{ rand() % 7 + 1 + static_cast<int>((player.get_floor() * 0.1)) };
@@ -638,6 +642,9 @@ void Game_Manager::ene_add() {
         int rand_enemy{ rand() % Texture_Manager::num_enemies };
         enemies.push_back(Enemy(-1, player.get_floor(), rand_enemy, temp_x, temp_y));
     }
+
+    if (enemy_respawn == 0)
+        log_add("No more enemies will spawn.");
 }
 
 void Game_Manager::center_floor() {
@@ -645,8 +652,10 @@ void Game_Manager::center_floor() {
 }
 
 void Game_Manager::add_item(std::shared_ptr<Item> item) {
-    if (items.size() == player.get_max_itm())
+    if (items.size() == player.get_max_itm()) {
+        log_add("You reached your items limit.");
         return;
+    }
 
     items.push_back(item);
 
@@ -761,7 +770,6 @@ bool Game_Manager::game_over() {
 
 void Game_Manager::pl_move_obstacle() {
     float x{ player.getPosition().x }, y{ player.getPosition().y }, x2{ x + 40 }, y2{ y + 40 };
-
     // Check which room player is in & determines if they're touching a wall.
     for (Room rm : floor.rooms)
         if (rm.in_room(x, y, x2, y2)) {
@@ -1109,16 +1117,22 @@ void Game_Manager::item_use() {
         inv_select->use();
 
     delete_selected_itm();
-    ene_action();
+    handle_turn();
 }
 
 bool Game_Manager::spell_use() {
     if (spell_select->get_use() != 4) {
         bool success = spell_select->use();
         spell_select = spell_desc = placeholder_spell;
-        ene_action();
+        handle_turn();
         return success;
     }
 
     return false;
+}
+
+void Game_Manager::handle_turn() {
+    player.use_effect();
+    ene_action();
+    ene_add();
 }
