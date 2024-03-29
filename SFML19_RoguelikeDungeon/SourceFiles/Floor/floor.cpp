@@ -168,17 +168,17 @@ void Floor::set_door_pos_2(int& rand_door_coord, int rand_coord, int rand_size, 
 void Floor::make_stair() {
 	int rand_room{ rand() % static_cast<int>(rooms.size()) };
 
-	int rx = (rooms[rand_room].get_rm('x') / 40);
-	int ry = (rooms[rand_room].get_rm('y') / 40);
-	int rw = (rooms[rand_room].get_rm('w') / 40);
-	int rh = (rooms[rand_room].get_rm('h') / 40);
+	int rx = rooms[rand_room].get_rm('x');
+	int ry = rooms[rand_room].get_rm('y');
+	int rw = rooms[rand_room].get_rm('w') - 40;
+	int rh = rooms[rand_room].get_rm('h') - 40;
 
-	int x{ ((rand() % rh) + rx) * 40 };
-	int y{ ((rand() % rw) + ry) * 40 };
+	int x{ (rand() % rh) + rx };
+	int y{ (rand() % rw) + ry };
 
 	while (!rooms[rand_room].in_room(x, y, x + 40, y + 40)) {
-		x = ((rand() % rh) + rx) * 40;
-		y = ((rand() % rw) + ry) * 40;
+		x = (rand() % rh) + rx;
+		y = (rand() % rw) + ry;
 	}
 
 	stair = Stair(x, y);
@@ -189,21 +189,21 @@ void Floor::make_shop() {
 
 	int rand_room{ rand() % static_cast<int>(rooms.size()) };
 
-	int rx = (rooms[rand_room].get_rm('x') / 40);
-	int ry = (rooms[rand_room].get_rm('y') / 40);
-	int rw = (rooms[rand_room].get_rm('w') / 40);
-	int rh = (rooms[rand_room].get_rm('h') / 40);
+	int rx = rooms[rand_room].get_rm('x');
+	int ry = rooms[rand_room].get_rm('y');
+	int rw = rooms[rand_room].get_rm('w') - 40;
+	int rh = rooms[rand_room].get_rm('h') - 40;
 
-	int x = ((rand() % rw) + rx) * 40;
-	int y = ((rand() % rh) + ry) * 40;
+	int x = (rand() % rw) + rx;
+	int y = (rand() % rh) + ry;
 	float sx = stair.getPosition().x;
 	float sy = stair.getPosition().y;
 
 	bool notInRoom = !rooms[rand_room].in_room(x, y, x + 40, y + 40);
 
-	while ((sx == x && sy == y) || notInRoom) {
-		x = ((rand() % rw) + rx) * 40;
-		y = ((rand() % rh) + ry) * 40;
+	while (stair.intersects(shop.getGlobalBounds()) || notInRoom) {
+		x = (rand() % rw) + rx;
+		y = (rand() % rh) + ry;
 	}
 
 	shop = Shop(x, y);
@@ -274,8 +274,8 @@ void Floor::make_collectible(unsigned int floor) {
 				float tmp_x{ col.getPosition().x }, tmp_y{ col.getPosition().y };
 
 				while (temp_x == tmp_x && temp_y == tmp_y || temp_x == -1 || temp_y == -1)
-					temp_x = ((rand() % (rooms[rand_room].get_rm('w') / 40)) + (rooms[rand_room].get_rm('x') / 40)) * 40,
-					temp_y = ((rand() % (rooms[rand_room].get_rm('h') / 40)) + (rooms[rand_room].get_rm('y') / 40)) * 40;
+					temp_x = (rand() % (rooms[rand_room].get_rm('w') - 40)) + rooms[rand_room].get_rm('x'),
+					temp_y = (rand() % (rooms[rand_room].get_rm('h') - 40)) + rooms[rand_room].get_rm('y');
 				counter += 1;
 			}
 
@@ -292,7 +292,7 @@ void Floor::make_collectible(unsigned int floor) {
 }
 
 void Floor::make_gold(unsigned int floor) {
-	int rand_gold{ rand() % 6 + static_cast<int>(floor * 0.50) };
+	int rand_gold{ rand() % 10 + static_cast<int>(floor * 0.50) };
 
 	for (unsigned int i{ 0 }; i < rand_gold; i++) {
 		int temp_x{ -1 }, temp_y{ -1 }, rand_room{ rand() % static_cast<int>(rooms.size()) }, counter{ 0 };
@@ -303,8 +303,8 @@ void Floor::make_gold(unsigned int floor) {
 				float tmp_x{ golds[j].getPosition().x }, tmp_y{ golds[j].getPosition().y };
 
 				while ((temp_x == tmp_x && temp_y == tmp_y) || temp_x == -1 || temp_y == -1) 
-					temp_x = ((rand() % (rooms[rand_room].get_rm('w') / 40)) + (rooms[rand_room].get_rm('x') / 40)) * 40,
-					temp_y = ((rand() % (rooms[rand_room].get_rm('h') / 40)) + (rooms[rand_room].get_rm('y') / 40)) * 40;
+					temp_x = (rand() % (rooms[rand_room].get_rm('w') - 40)) + rooms[rand_room].get_rm('x'),
+					temp_y = (rand() % (rooms[rand_room].get_rm('h') - 40)) + rooms[rand_room].get_rm('y');
 				counter += 1;
 			}
 
@@ -327,8 +327,8 @@ void Floor::make_interactible(unsigned int floor) {
 				float tmp_x{ interactibles[j].getPosition().x }, tmp_y{ interactibles[j].getPosition().y };
 
 				while ((temp_x == tmp_x && temp_y == tmp_y) || temp_x == -1 || temp_y == -1)
-					temp_x = ((rand() % (rooms[rand_room].get_rm('w') / 40)) + (rooms[rand_room].get_rm('x') / 40)) * 40,
-					temp_y = ((rand() % (rooms[rand_room].get_rm('h') / 40)) + (rooms[rand_room].get_rm('y') / 40)) * 40;
+					temp_x = (rand() % (rooms[rand_room].get_rm('w') - 40)) + rooms[rand_room].get_rm('x'),
+					temp_y = (rand() % (rooms[rand_room].get_rm('h') - 40)) + rooms[rand_room].get_rm('y');
 				counter += 1;
 			}
 
