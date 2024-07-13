@@ -8,7 +8,7 @@
 #ifndef AUDIO_H
 #define AUDIO_H
 
-#include "..\SFML-2.5.1/include/SFML/Audio.hpp"
+#include "..\SFML-2.6.1/include/SFML/Audio.hpp"
 #include <array>
 
 class Audio_Manager {

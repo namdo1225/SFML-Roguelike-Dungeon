@@ -10,7 +10,7 @@
 #define FULL_RECT_H
 
 #include "Shape/full_shape.h"
-#include "..\SFML-2.5.1/include/SFML/Graphics.hpp"
+#include "..\SFML-2.6.1/include/SFML/Graphics.hpp"
 
 class Full_Rectangle : public sf::RectangleShape, public Full_Shape {
 public:

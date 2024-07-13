@@ -9,7 +9,7 @@
 #ifndef SPELL_H
 #define SPELL_H
 
-#include "..\SFML-2.5.1/include/SFML/Graphics.hpp"
+#include "..\SFML-2.6.1/include/SFML/Graphics.hpp"
 #include "player.h"
 #include "Floor/enemy.h"
 #include "Floor/floor.h"

@@ -7,7 +7,7 @@
 #ifndef SCREEN_H
 #define SCREEN_H
 
-#include "..\SFML-2.5.1/include/SFML/Graphics.hpp"
+#include "..\SFML-2.6.1/include/SFML/Graphics.hpp"
 #include <iostream>
 #include "Shape/full_text.h"
 #include "Shape/full_rectangle.h"

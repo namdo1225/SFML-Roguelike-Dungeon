@@ -8,7 +8,7 @@
 #ifndef TEXTURE_H
 #define TEXTURE_H
 
-#include "..\SFML-2.5.1/include/SFML/Graphics.hpp"
+#include "..\SFML-2.6.1/include/SFML/Graphics.hpp"
 #include <array>
 
 class Texture_Manager {

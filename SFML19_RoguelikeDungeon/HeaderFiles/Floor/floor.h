@@ -8,7 +8,7 @@
 #ifndef FLOOR_H
 #define FLOOR_H
 
-#include "..\SFML-2.5.1/include/SFML/Graphics.hpp"
+#include "..\SFML-2.6.1/include/SFML/Graphics.hpp"
 #include "Tool/item.h"
 #include "stair.h"
 #include "shop.h"
