@@ -9,7 +9,7 @@
 #ifndef SF_MANAGER_H
 #define SF_MANAGER_H
 
-#include "..\SFML-2.6.1/include/SFML/Graphics.hpp"
+#include <SFML/Graphics.hpp>
 #include "Shape/full_text.h"
 
 class SF_Manager {

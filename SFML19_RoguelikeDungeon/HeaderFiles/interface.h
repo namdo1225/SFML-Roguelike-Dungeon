@@ -9,8 +9,8 @@
 #ifndef INTERFACE_H
 #define INTERFACE_H
 
-#include "..\SFML-2.6.1/include/SFML/Graphics.hpp"
-#include "..\SFML-2.6.1/include/SFML/Audio.hpp"
+#include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <array>
 #include "include.h"
 #include "Screen/screen.h"

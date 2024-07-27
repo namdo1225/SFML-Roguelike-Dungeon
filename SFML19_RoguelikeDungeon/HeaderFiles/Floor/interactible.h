@@ -9,7 +9,7 @@
 #ifndef INTERACTIBLE_H
 #define INTERACTIBLE_H
 
-#include "..\SFML-2.6.1/include/SFML/Graphics.hpp"
+#include <SFML/Graphics.hpp>
 #include "player.h"
 #include "Floor/floor_object.h"
 

@@ -8,7 +8,7 @@
 #ifndef FONT_H
 #define FONT_H
 
-#include "..\SFML-2.6.1/include/SFML/Graphics.hpp"
+#include <SFML/Graphics.hpp>
 
 class Font_Manager {
 private:

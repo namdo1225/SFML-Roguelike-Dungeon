@@ -9,7 +9,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <json.hpp>
+#include <nlohmann/json.hpp>
 #include <format>
 
 #include "Screen/exit_screen.h"
@@ -64,6 +64,11 @@ Interface::Interface() {
     Screen::change_settings();
     Game_Manager::player = Player();
     Game_Manager::reset_game();
+
+    const sf::Time initialTime = sf::seconds(4.f);
+    // thor::StopWatch stopWatch;
+    //thor::CallbackTimer timer;
+    //timer.reset(initialTime);
 }
 
 Interface::~Interface() {}
@@ -79,6 +84,8 @@ void Interface::window_loop() {
     {
         handle_event();
         Game_Manager::ene_dead();
+
+
         window.clear();
         draw_interface();
         window.display();

@@ -8,7 +8,7 @@
 #ifndef SPECIAL_H
 #define SPECIAL_H
 
-#include "..\SFML-2.6.1/include/SFML/Graphics.hpp"
+#include <SFML/Graphics.hpp>
 #include "player.h"
 #include "Floor/enemy.h"
 #include "Floor/floor.h"

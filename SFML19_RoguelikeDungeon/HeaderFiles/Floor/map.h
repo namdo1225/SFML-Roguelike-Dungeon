@@ -9,7 +9,7 @@
 #ifndef MAP_H
 #define MAP_H
 
-#include "..\SFML-2.6.1/include/SFML/Graphics.hpp"
+#include <SFML/Graphics.hpp>
 #include "room.h"
 #include <array>
 

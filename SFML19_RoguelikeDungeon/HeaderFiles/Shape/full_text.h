@@ -9,7 +9,7 @@
 #ifndef FULL_TEXT_H
 #define FULL_TEXT_H
 
-#include "..\SFML-2.6.1/include/SFML/Graphics.hpp"
+#include <SFML/Graphics.hpp>
 #include "Shape/full_shape.h"
 
 class Full_Text : public sf::Text, public Full_Shape {

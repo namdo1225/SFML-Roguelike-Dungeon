@@ -9,7 +9,7 @@
 #ifndef FULL_SHAPE_H
 #define FULL_SHAPE_H
 
-#include "..\SFML-2.6.1/include/SFML/Graphics.hpp"
+#include <SFML/Graphics.hpp>
 
 class Full_Shape {
 protected:
