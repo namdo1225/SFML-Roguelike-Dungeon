@@ -17,6 +17,11 @@ unsigned int Setting_Manager::sfx_volume = 100;
 bool Setting_Manager::light = false;
 unsigned int Setting_Manager::font = 0;
 
+const unsigned int Setting_Manager::themes;
+
+Setting_Manager::Setting_Manager() {
+}
+
 bool Setting_Manager::load()
 {
     std::ifstream file;

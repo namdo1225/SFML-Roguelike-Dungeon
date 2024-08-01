@@ -6,19 +6,17 @@
 *
 */
 
+#include <SFML/Graphics.hpp>
+#include "Manager/setting_manager.h"
+
 #ifndef FULL_SHAPE_H
 #define FULL_SHAPE_H
 
-#include <SFML/Graphics.hpp>
-
-class Full_Shape {
+class Full_Shape : protected Setting_Manager {
 protected:
-	const static unsigned int themes = 2;
-	bool dark_mode = true;
 	bool hovered = false;
 	bool hoverable = true;
 	bool override_theme = false;
-	unsigned int theme = 0;
 
 public:
 
@@ -26,21 +24,15 @@ public:
 	* Constructor for Full_Shape.
 	*
 	* Parameter:
-	*	theme: the theme number.
 	*	hoverable: true if shape is hoverable.
-	*	is_light: true if light mode.
 	*	override_theme: true if theme is no longer in effect.
 	*/
-	Full_Shape(unsigned int theme = 0, bool hoverable = true, bool is_light = false, bool override_theme = false);
+	Full_Shape(bool hoverable = true, bool override_theme = false);
 
 	/*
 	* Flip shape's light mode and theme.
-	* 
-	* Parameter:
-	*	light: true if light mode.
-	*	new_theme: the theme number.
 	*/
-	virtual void flip_theme(bool light, unsigned int new_theme) = 0;
+	virtual void flip_theme() = 0;
 
 	/*
 	* Highlights shape.
@@ -70,12 +62,10 @@ public:
 	* Sets many configs for the shape.
 	*
 	* Parameter:
-	*	theme: the theme number.
 	*	hoverable: true if shape is hoverable.
-	*	is_light: true if light mode.
 	*	override_theme: true if theme is no longer in effect.
 	*/
-	void setThemeAndHover(unsigned int theme = 0, bool hoverable = true, bool is_light = false, bool override_theme = false);
+	void setThemeAndHover(bool hoverable = true, bool override_theme = false);
 
 	/*
 	* Getters for hovered.

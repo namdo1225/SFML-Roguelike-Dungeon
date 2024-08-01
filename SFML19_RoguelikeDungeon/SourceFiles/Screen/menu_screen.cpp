@@ -8,17 +8,17 @@
 #include "Manager/game_manager.h"
 
 Menu_Screen::Menu_Screen() : Screen(9, 9, false, false) {
-	setup_helper(true, 0, NULL,  100.f, 100.f, 630.f, 550.f);
-	setup_helper(true, 1, NULL, 1000.f, 310.f, 197.f, 99.f);
-	setup_helper(true, 2, NULL, 1000.f, 410.f, 197.f, 99.f);
-	setup_helper(true, 3, NULL, 1000.f, 510.f, 197.f, 99.f);
-	setup_helper(true, 4, NULL, 1000.f, 610.f, 197.f, 99.f);
-	setup_helper(true, 5, NULL, 1000.f, 700.f, 197.f, 99.f);
-	setup_helper(true, 6, NULL,  800.f, 700.f, 197.f, 99.f);
-	setup_helper(true, 7, NULL,  600.f, 700.f, 197.f, 99.f);
-	setup_helper(true, 8, NULL,  400.f, 700.f, 197.f, 99.f);
+	setup_helper(0, NULL,  100.f, 100.f, 630.f, 550.f);
+	setup_helper(1, NULL, 1000.f, 310.f, 197.f, 99.f);
+	setup_helper(2, NULL, 1000.f, 410.f, 197.f, 99.f);
+	setup_helper(3, NULL, 1000.f, 510.f, 197.f, 99.f);
+	setup_helper(4, NULL, 1000.f, 610.f, 197.f, 99.f);
+	setup_helper(5, NULL, 1000.f, 700.f, 197.f, 99.f);
+	setup_helper(6, NULL,  800.f, 700.f, 197.f, 99.f);
+	setup_helper(7, NULL,  600.f, 700.f, 197.f, 99.f);
+	setup_helper(8, NULL,  400.f, 700.f, 197.f, 99.f);
 
-	setup_helper(false, 0,
+	setup_helper(0,
 		"Arrow keys: Move player."
 		"\nW: Wait. Skip turn."
 		"\nQ: Move up a floor if you are standing on a stair."
@@ -32,14 +32,14 @@ Menu_Screen::Menu_Screen() : Screen(9, 9, false, false) {
 		"\nClick on the center to use the item/spell."
 		"\nClick on 'S' button and hover on enemies to scan\ntheir stat.",
 		110.f, 110.f, NULL, NULL);
-	setup_helper(false, 1,       "Help", 1010.f, 310.f, NULL, NULL);
-	setup_helper(false, 2,        "Map", 1010.f, 410.f, NULL, NULL);
-	setup_helper(false, 3,  "Inventory", 1010.f, 510.f, NULL, NULL);
-	setup_helper(false, 4,     "Spells", 1010.f, 610.f, NULL, NULL);
-	setup_helper(false, 5,       "Save", 1010.f, 710.f, NULL, NULL);
-	setup_helper(false, 6,       "Load",  810.f, 710.f, NULL, NULL);
-	setup_helper(false, 7,   "Settings",  610.f, 710.f, NULL, NULL);
-	setup_helper(false, 8,     "Status", 410.f, 710.f, NULL, NULL);
+	setup_helper(1,       "Help", 1010.f, 310.f, NULL, NULL);
+	setup_helper(2,        "Map", 1010.f, 410.f, NULL, NULL);
+	setup_helper(3,  "Inventory", 1010.f, 510.f, NULL, NULL);
+	setup_helper(4,     "Spells", 1010.f, 610.f, NULL, NULL);
+	setup_helper(5,       "Save", 1010.f, 710.f, NULL, NULL);
+	setup_helper(6,       "Load",  810.f, 710.f, NULL, NULL);
+	setup_helper(7,   "Settings",  610.f, 710.f, NULL, NULL);
+	setup_helper(8,     "Status", 410.f, 710.f, NULL, NULL);
 }
 
 void Menu_Screen::click_event_handler() {

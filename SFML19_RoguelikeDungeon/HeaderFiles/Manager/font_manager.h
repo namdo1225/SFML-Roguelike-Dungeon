@@ -17,11 +17,11 @@ private:
 	static sf::Font buffers[fonts];
 	static bool assets_loaded;
 
+protected:
 	/**
 	* Constructor for Font_Manager.
 	*/
 	Font_Manager();
-
 
 public:
 

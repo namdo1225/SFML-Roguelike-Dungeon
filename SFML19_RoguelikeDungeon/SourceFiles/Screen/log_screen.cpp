@@ -9,20 +9,20 @@
 const unsigned int Log_Screen::MAX_LOGS;
 
 Log_Screen::Log_Screen() : Screen(2, 4, true, false) {
-	setup_helper(true, 0, NULL, 570.f, 5.f, 630.f, 200.f, 0, false, false, true);
+	setup_helper(0, NULL, 570.f, 5.f, 630.f, 200.f, false, true);
 	rects[0].setFillColor(sf::Color(0, 0, 0, 128));
 	rects[0].setOutlineThickness(0.f);
 
-	setup_helper(true, 1, NULL,  50.f, -10.f,  500.f,  810.f);
-	setup_helper(true, 2, NULL,  590.f,  10.f, 500.f,   50.f);
-	setup_helper(true, 3, NULL,  590.f,  90.f, 180.f,   50.f);
+	setup_helper(1, NULL,  50.f, -10.f,  500.f,  810.f);
+	setup_helper(2, NULL,  590.f,  10.f, 500.f,   50.f);
+	setup_helper(3, NULL,  590.f,  90.f, 180.f,   50.f);
 
-	setup_helper(false, 0, "Only the last 50 logs are stored", 600.f, 20.f, 30.f, NULL);
-	setup_helper(false, 1, "Clear Log", 600.f, 100.f, 30.f, NULL);
+	setup_helper(0, "Only the last 50 logs are stored", 600.f, 20.f, 30.f, NULL);
+	setup_helper(1, "Clear Log", 600.f, 100.f, 30.f, NULL);
 
-	rects[0].setThemeAndHover(Setting_Manager::theme, false);
-	rects[1].setThemeAndHover(Setting_Manager::theme, false);
-	texts[0].setThemeAndHover(Setting_Manager::theme, false);
+	rects[0].setThemeAndHover(false);
+	rects[1].setThemeAndHover(false);
+	texts[0].setThemeAndHover(false);
 }
 
 void Log_Screen::click_event_handler() {

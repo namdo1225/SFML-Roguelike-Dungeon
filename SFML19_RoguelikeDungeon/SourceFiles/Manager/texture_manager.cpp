@@ -35,19 +35,19 @@ bool Texture_Manager::load() {
 		switch (i) {
 		case 0:
 			// Zombie
-			assets_loaded = tex_enemies[i].loadFromFile("Texture\\Enemies\\00_Zombie.png");
+			assets_loaded = tex_enemies[i].loadFromFile("Texture\\Enemies\\0000_Zombie.png");
 			break;
 		case 1:
 			// Skeleton
-			assets_loaded = tex_enemies[i].loadFromFile("Texture\\Enemies\\01_Skeleton.png");
+			assets_loaded = tex_enemies[i].loadFromFile("Texture\\Enemies\\0001_Skeleton.png");
 			break;
 		case 2:
 			// Mage
-			assets_loaded = tex_enemies[i].loadFromFile("Texture\\Enemies\\02_Mage.png");
+			assets_loaded = tex_enemies[i].loadFromFile("Texture\\Enemies\\0002_Mage.png");
 			break;
 		default:
 			// Bandit
-			assets_loaded = tex_enemies[i].loadFromFile("Texture\\Enemies\\03_Bandit.png");
+			assets_loaded = tex_enemies[i].loadFromFile("Texture\\Enemies\\0003_Bandit.png");
 			break;
 		}
 

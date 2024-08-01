@@ -1,13 +1,13 @@
 /**
 *
-* File: exit_screen.cpp
-* Description: Contain the implementation of the Exit_Screen class.
+* File: custom_screen.cpp
+* Description: Contain the implementation of the Custom_Screen class.
 */
 
-#include "Screen/exit_screen.h"
+#include "Screen/custom_screen.h"
 #include "interface.h"
 
-Exit_Screen::Exit_Screen() : Screen(4, 5, false, false) {
+Custom_Screen::Custom_Screen() : Screen(4, 5, false, false) {
 	setup_helper(0, NULL, 100.f, 100.f, 1000.f, 600.f, false, true);
 	rects[0].setFillColor(sf::Color(0, 0, 0, 128));
 	rects[0].setOutlineThickness(0.f);
@@ -26,7 +26,7 @@ Exit_Screen::Exit_Screen() : Screen(4, 5, false, false) {
 	texts[0].setThemeAndHover(false);
 }
 
-void Exit_Screen::click_event_handler() {
+void Custom_Screen::click_event_handler() {
 	if (mouse_in_helper(true, 2))
 		return_to_prev_screen(ExitScreen);
 	else if (mouse_in_helper(true, 3)) {
@@ -38,7 +38,7 @@ void Exit_Screen::click_event_handler() {
 		window.close();
 }
 
-void Exit_Screen::hover_event_handler() {
+void Custom_Screen::hover_event_handler() {
 	for (unsigned int i = 2; i < 5; i++)
 		hover_textbox(i, i - 1);
 }

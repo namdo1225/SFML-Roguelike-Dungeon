@@ -11,7 +11,7 @@
 
 Stat_Screen::Stat_Screen() : Screen(1, 0, true, true, true) {
 	update = true;
-	setup_helper(false, 0, "* HP can't be less than 5.", 750.f, 250.f , NULL, NULL);
+	setup_helper(0, "* HP can't be less than 5.", 750.f, 250.f , NULL, NULL);
 }
 
 void Stat_Screen::click_event_handler() {

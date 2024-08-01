@@ -10,14 +10,14 @@
 
 Inventory_Screen::Inventory_Screen() : Screen(5, 2, true, false) {
 	update = true;
-	setup_helper(true, 0, NULL, 200.f, 140.f, 60.f, 60.f);
-	setup_helper(true, 1, NULL, 600.f, 140.f, 60.f, 60.f);
+	setup_helper(0, NULL, 200.f, 140.f, 60.f, 60.f);
+	setup_helper(1, NULL, 600.f, 140.f, 60.f, 60.f);
 
-	setup_helper(false, 0,      "Weapon", 200.f, 100.f, NULL, NULL);
-	setup_helper(false, 1,       "Armor", 600.f, 100.f, NULL, NULL);
-	setup_helper(false, 2,   "Inventory", 360.f,  20.f, 36.f, NULL);
-	setup_helper(false, 3, "0 / 0 items", 360.f, 150.f, 24.f, NULL);
-	setup_helper(false, 4, "", 50.f, 720.f, 24.f, NULL);
+	setup_helper(0,      "Weapon", 200.f, 100.f, NULL, NULL);
+	setup_helper(1,       "Armor", 600.f, 100.f, NULL, NULL);
+	setup_helper(2,   "Inventory", 360.f,  20.f, 36.f, NULL);
+	setup_helper(3, "0 / 0 items", 360.f, 150.f, 24.f, NULL);
+	setup_helper(4, "", 50.f, 720.f, 24.f, NULL);
 }
 
 void Inventory_Screen::click_event_handler() {

@@ -9,15 +9,15 @@
 #include "Manager/game_manager.h"
 
 Name_Screen::Name_Screen() : Screen(1, 1, true, true, true, true) {
-	setup_helper(true, 0, NULL, 350.f, 240.f, 470.f, 50.f);
+	setup_helper(0, NULL, 350.f, 240.f, 470.f, 50.f);
 
-	setup_helper(false, 0,
+	setup_helper(0,
 		"Enter your name (<= 20 chars, ASCII). Press 'Enter' or click 'Confirm' when finished."
 		"\n\nSome characters can't be typed:  \\  =  $  *  |  ~  .  \"  '  ;",
 		20.f, 20.f, NULL, NULL);
 
-	rects[0].setThemeAndHover(Setting_Manager::theme, false);
-	texts[0].setThemeAndHover(Setting_Manager::theme, false);
+	rects[0].setThemeAndHover(false);
+	texts[0].setThemeAndHover(false);
 }
 
 void Name_Screen::click_event_handler() {

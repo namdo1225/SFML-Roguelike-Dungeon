@@ -130,11 +130,13 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(ProjectDir)lib;$(ProjectDir)\thor-v2.0-msvc2015\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>sfml-graphics-s.lib;sfml-window-s.lib;sfml-audio-s.lib;sfml-network-s.lib;sfml-system-s.lib;opengl32.lib;freetype.lib;winmm.lib;gdi32.lib;openal32.lib;flac.lib;vorbisenc.lib;vorbisfile.lib;vorbis.lib;ogg.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>sfml-graphics-s.lib;sfml-window-s.lib;sfml-audio-s.lib;sfml-network-s.lib;sfml-system-s.lib;opengl32.lib;freetype.lib;winmm.lib;gdi32.lib;openal32.lib;flac.lib;vorbisenc.lib;vorbisfile.lib;vorbis.lib;ogg.lib;ws2_32.lib;sqlite3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="HeaderFiles\Shape\full_textbox.cpp" />
     <ClCompile Include="SourceFiles\Floor\floor_object.cpp" />
+    <ClCompile Include="SourceFiles\Manager\database_manager.cpp" />
     <ClCompile Include="SourceFiles\Manager\font_manager.cpp" />
     <ClCompile Include="SourceFiles\Manager\audio_manager.cpp" />
     <ClCompile Include="SourceFiles\Floor\collectible.cpp" />
@@ -144,6 +146,7 @@
     <ClCompile Include="SourceFiles\Floor\gold_collectible.cpp" />
     <ClCompile Include="SourceFiles\Floor\interactible.cpp" />
     <ClCompile Include="SourceFiles\interface.cpp" />
+    <ClCompile Include="SourceFiles\Screen\custom_screen.cpp" />
     <ClCompile Include="SourceFiles\Screen\spell_attack_screen.cpp" />
     <ClCompile Include="SourceFiles\Screen\status_screen.cpp" />
     <ClCompile Include="SourceFiles\Tool\item.cpp" />
@@ -187,13 +190,16 @@
     <ClInclude Include="HeaderFiles\effect.h" />
     <ClInclude Include="HeaderFiles\Floor\enemy.h" />
     <ClInclude Include="HeaderFiles\Floor\floor.h" />
+    <ClInclude Include="HeaderFiles\Manager\database_manager.h" />
     <ClInclude Include="HeaderFiles\Manager\font_manager.h" />
     <ClInclude Include="HeaderFiles\Floor\gold_collectible.h" />
     <ClInclude Include="HeaderFiles\include.h" />
     <ClInclude Include="HeaderFiles\Floor\interactible.h" />
     <ClInclude Include="HeaderFiles\interface.h" />
+    <ClInclude Include="HeaderFiles\Screen\custom_screen.h" />
     <ClInclude Include="HeaderFiles\Screen\spell_attack_screen.h" />
     <ClInclude Include="HeaderFiles\Screen\status_screen.h" />
+    <ClInclude Include="HeaderFiles\Shape\full_textbox.h" />
     <ClInclude Include="HeaderFiles\Tool\item.h" />
     <ClInclude Include="HeaderFiles\Floor\map.h" />
     <ClInclude Include="HeaderFiles\Manager\game_manager.h" />

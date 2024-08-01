@@ -11,8 +11,9 @@
 
 #include <SFML/Graphics.hpp>
 #include "Shape/full_shape.h"
+#include "Manager/font_manager.h"
 
-class Full_Text : public sf::Text, public Full_Shape {
+class Full_Text : public sf::Text, public Full_Shape, protected Font_Manager {
 public:
 
 	/*
@@ -28,18 +29,16 @@ public:
 	*	y: text's y position.
 	*	size: text's font size.
 	*	text: text's string.
-	*	theme: the theme number.
 	*	hoverable: true if shape is hoverable.
-	*	is_light: true if light mode.
 	*	override_theme: true if theme is no longer in effect.
 	*	outline: text's outline color.
 	*	fill: text's fill color.
 	*/
 	Full_Text(float x, float y, float size, const char* text,
-		unsigned int theme = 0, bool hoverable = true, bool is_light = false, bool override_theme = false, 
+		bool hoverable = true, bool override_theme = false, 
 		sf::Color fill = sf::Color::Transparent, sf::Color outline = sf::Color::Transparent);
 
-	void flip_theme(bool light_mode, unsigned int new_theme);
+	void flip_theme();
 
 	void highlight(bool hovered = true);
 

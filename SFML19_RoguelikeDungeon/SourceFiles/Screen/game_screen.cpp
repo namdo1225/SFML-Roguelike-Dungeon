@@ -14,112 +14,112 @@ Game_Screen::Game_Screen() : Screen(37, 13, false, false) {
 	update = true;
 
 	// items
-	setup_helper(true, 0, NULL, 750.f, 250.f, 200.f, 200.f);
+	setup_helper(0, NULL, 750.f, 250.f, 200.f, 200.f);
 	// spells
-	setup_helper(true, 1, NULL, 970.f, 250.f, 200.f, 200.f);
+	setup_helper(1, NULL, 970.f, 250.f, 200.f, 200.f);
 	// history
-	setup_helper(true, 2, NULL, 750.f, 500.f, 425.f, 275.f);
+	setup_helper(2, NULL, 750.f, 500.f, 425.f, 275.f);
 	// health/mana
-	setup_helper(true, 3, NULL, 950.f, 5.f, 230.f, 80.f);
+	setup_helper(3, NULL, 950.f, 5.f, 230.f, 80.f);
 	// level
-	setup_helper(true, 4, NULL, 950.f, 100.f, 230.f, 100.f);
+	setup_helper(4, NULL, 950.f, 100.f, 230.f, 100.f);
 	// menu
-	setup_helper(true, 5, NULL, 1145.f, 745.f, 50.f, 50.f);
+	setup_helper(5, NULL, 1145.f, 745.f, 50.f, 50.f);
 	// log button
-	setup_helper(true, 6, NULL, 1150.f, 500.f, 25.f, 25.f);
+	setup_helper(6, NULL, 1150.f, 500.f, 25.f, 25.f);
 	// use item shortcut
-	setup_helper(true, 7, NULL,  825.f, 320.f, 50.f, 50.f);
+	setup_helper(7, NULL,  825.f, 320.f, 50.f, 50.f);
 	// use spell shortcut
-	setup_helper(true, 8, NULL, 1045.f, 320.f, 50.f, 50.f);
+	setup_helper(8, NULL, 1045.f, 320.f, 50.f, 50.f);
 	// grid button
-	setup_helper(true, 9, NULL,   10.f, 730.f, 50.f, 50.f);
+	setup_helper(9, NULL,   10.f, 730.f, 50.f, 50.f);
 	// opacity button
-	setup_helper(true, 10, NULL, 80.f, 730.f, 50.f, 50.f);
+	setup_helper(10, NULL, 80.f, 730.f, 50.f, 50.f);
 	for (unsigned int i = 0; i < 50; i++) {
-		grids[i] = i < 20 ? Full_Rectangle(i * 40.f, -10.f, 0.f, 900.f, 0, false, false, true, sf::Color::Black, sf::Color::Black)
-			: Full_Rectangle(-10, (i - 20) * 40.f, 770.f, 0.f, 0, false, false, true, sf::Color::Black, sf::Color::Black);
+		grids[i] = i < 20 ? Full_Rectangle(i * 40.f, -10.f, 0.f, 900.f, false, true, sf::Color::Black, sf::Color::Black)
+			: Full_Rectangle(-10, (i - 20) * 40.f, 770.f, 0.f, false, true, sf::Color::Black, sf::Color::Black);
 		grids[i].setOutlineThickness(1.f);
 	}
 	// range button
-	setup_helper(true, 11, NULL, 150.f, 730.f, 50.f, 50.f);
+	setup_helper(11, NULL, 150.f, 730.f, 50.f, 50.f);
 	// top, right, bottom, left
 	unsigned int range = Game_Manager::pl_weapon->get_range();
-	ranges[0] = Full_Rectangle(400.f, 400.f - (40.f * range), 0.f, 40.f, 40.f * range, false, false, true, sf::Color::Transparent, sf::Color(255, 0, 0, 100));
-	ranges[1] = Full_Rectangle(440.f, 400.f, 0.f, 40.f * range, 40.f, false, false, true, sf::Color::Transparent, sf::Color(255, 0, 0, 100));
-	ranges[2] = Full_Rectangle(400.f, 440.f, 0.f, 40.f, 40.f * range, false, false, true, sf::Color::Transparent, sf::Color(255, 0, 0, 100));
-	ranges[3] = Full_Rectangle(400.f - (40.f * range), 400.f, 0.f, 40.f * range, 40.f, false, false, true, sf::Color::Transparent, sf::Color(255, 0, 0, 100));
+	ranges[0] = Full_Rectangle(400.f, 400.f - (40.f * range), 40.f, 40.f * range, false, true, sf::Color::Transparent, sf::Color(255, 0, 0, 100));
+	ranges[1] = Full_Rectangle(440.f, 400.f, 40.f * range, 40.f, false, true, sf::Color::Transparent, sf::Color(255, 0, 0, 100));
+	ranges[2] = Full_Rectangle(400.f, 440.f, 40.f, 40.f * range, false, true, sf::Color::Transparent, sf::Color(255, 0, 0, 100));
+	ranges[3] = Full_Rectangle(400.f - (40.f * range), 400.f, 40.f * range, 40.f, false, true, sf::Color::Transparent, sf::Color(255, 0, 0, 100));
 	// scan button
-	setup_helper(true, 12, NULL, 220.f, 730.f, 50.f, 50.f);
+	setup_helper(12, NULL, 220.f, 730.f, 50.f, 50.f);
 
-	setup_helper(false, 0, "Name:", 740.f, 5.f, 18.f, 3.f);
-	setup_helper(false, 1, FULL_STATS[0], 960.f, 10.f, NULL, 3.f);
-	setup_helper(false, 2, FULL_STATS[1], 960.f, 50.f, NULL, 3.f);
+	setup_helper(0, "Name:", 740.f, 5.f, 18.f, 3.f);
+	setup_helper(1, FULL_STATS[0], 960.f, 10.f, NULL, 3.f);
+	setup_helper(2, FULL_STATS[1], 960.f, 50.f, NULL, 3.f);
 
-	setup_helper(false, 3,   "Items:", 740.f, 210.f, NULL, 3.f);
-	setup_helper(false, 4,  "Spells:", 950.f, 210.f, NULL, 3.f);
-	setup_helper(false, 5, "History:", 740.f, 455.f, NULL, 3.f);
-	setup_helper(false, 6,   "Level:", 960.f, 100.f, NULL, 3.f);
-	setup_helper(false, 7,     "Exp:", 960.f, 140.f, NULL, 3.f);
-	setup_helper(false, 8,   "Floor:", 10.f, 10.f, NULL, 3.f);
-	setup_helper(false, 9,    "Gold:", 10.f, 50.f, NULL, 3.f);
-	setup_helper(false, 10,  "Stats:", 740.f, 55.f, 18.f, 3.f);
+	setup_helper(3,   "Items:", 740.f, 210.f, NULL, 3.f);
+	setup_helper(4,  "Spells:", 950.f, 210.f, NULL, 3.f);
+	setup_helper(5, "History:", 740.f, 455.f, NULL, 3.f);
+	setup_helper(6,   "Level:", 960.f, 100.f, NULL, 3.f);
+	setup_helper(7,     "Exp:", 960.f, 140.f, NULL, 3.f);
+	setup_helper(8,   "Floor:", 10.f, 10.f, NULL, 3.f);
+	setup_helper(9,    "Gold:", 10.f, 50.f, NULL, 3.f);
+	setup_helper(10,  "Stats:", 740.f, 55.f, 18.f, 3.f);
 
-	setup_helper(false, 11, "<", 765.f, 335.f, NULL, NULL);
-	setup_helper(false, 12, ">", 925.f, 335.f, NULL, NULL);
-	setup_helper(false, 13, "<", 985.f, 335.f, NULL, NULL);
-	setup_helper(false, 14, ">", 1145.f, 335.f, NULL, NULL);
+	setup_helper(11, "<", 765.f, 335.f, NULL, NULL);
+	setup_helper(12, ">", 925.f, 335.f, NULL, NULL);
+	setup_helper(13, "<", 985.f, 335.f, NULL, NULL);
+	setup_helper(14, ">", 1145.f, 335.f, NULL, NULL);
 
-	setup_helper(false, 15, "...", 1153.f, 735.f, 36, NULL);
-	setup_helper(false, 16, "...", 1155.f, 495.f, 18, NULL);
-	setup_helper(false, 17,   "G",   25.f, 740.f, 22, NULL);
-	setup_helper(false, 18,   "O",   95.f, 740.f, 22, NULL);
-	setup_helper(false, 19,   "R",  165.f, 740.f, 22, NULL);
-	setup_helper(false, 20,   "S",  235.f, 740.f, 22, NULL);
+	setup_helper(15, "...", 1153.f, 735.f, 36, NULL);
+	setup_helper(16, "...", 1155.f, 495.f, 18, NULL);
+	setup_helper(17,   "G",   25.f, 740.f, 22, NULL);
+	setup_helper(18,   "O",   95.f, 740.f, 22, NULL);
+	setup_helper(19,   "R",  165.f, 740.f, 22, NULL);
+	setup_helper(20,   "S",  235.f, 740.f, 22, NULL);
 
-	setup_helper(false, 21, FULL_STATS[2], 750.f, 80.f, 18, 3.f);
-	setup_helper(false, 22, FULL_STATS[3], 750.f, 110.f, 18, 3.f);
-	setup_helper(false, 23, FULL_STATS[4], 750.f, 140.f, 18, 3.f);
-	setup_helper(false, 24, FULL_STATS[5], 750.f, 170.f, 18, 3.f);
+	setup_helper(21, FULL_STATS[2], 750.f, 80.f, 18, 3.f);
+	setup_helper(22, FULL_STATS[3], 750.f, 110.f, 18, 3.f);
+	setup_helper(23, FULL_STATS[4], 750.f, 140.f, 18, 3.f);
+	setup_helper(24, FULL_STATS[5], 750.f, 170.f, 18, 3.f);
 
 	// texts that can be changed:
 	// floor num
-	setup_helper(false, 25, "1", 100.f, 10.f, NULL, 3.f);
+	setup_helper(25, "1", 100.f, 10.f, NULL, 3.f);
 	// gold num
-	setup_helper(false, 26, "0", 100.f, 50.f, NULL, 3.f);
+	setup_helper(26, "0", 100.f, 50.f, NULL, 3.f);
 	// level
-	setup_helper(false, 27, "1", 1040.f, 100.f, NULL, 3.f);
+	setup_helper(27, "1", 1040.f, 100.f, NULL, 3.f);
 	// level exp
-	setup_helper(false, 28, "0 / 10", 1040.f, 140.f, NULL, 3.f);
+	setup_helper(28, "0 / 10", 1040.f, 140.f, NULL, 3.f);
 	// name
-	setup_helper(false, 29, "Player", 740.f, 30.f, 16.f, 3.f);
+	setup_helper(29, "Player", 740.f, 30.f, 16.f, 3.f);
 	// log limit
-	setup_helper(false, 30, "0 / 50", 850.f, 455.f, NULL, 3.f);
+	setup_helper(30, "0 / 50", 850.f, 455.f, NULL, 3.f);
 	// stats: hp, mp
-	setup_helper(false, 31, "10 / 10", 1060.f, 10.f, NULL, 3.f);
-	setup_helper(false, 32, "5 / 5", 1060.f, 50.f, NULL, 3.f);
+	setup_helper(31, "10 / 10", 1060.f, 10.f, NULL, 3.f);
+	setup_helper(32, "5 / 5", 1060.f, 50.f, NULL, 3.f);
 	// other stats
-	setup_helper(false, 33, "0", 890.f,  75.f, 18.f, 3.f);
-	setup_helper(false, 34, "0", 890.f, 105.f, 18.f, 3.f);
-	setup_helper(false, 35, "0", 890.f, 135.f, 18.f, 3.f);
-	setup_helper(false, 36, "0", 890.f, 165.f, 18.f, 3.f);
+	setup_helper(33, "0", 890.f,  75.f, 18.f, 3.f);
+	setup_helper(34, "0", 890.f, 105.f, 18.f, 3.f);
+	setup_helper(35, "0", 890.f, 135.f, 18.f, 3.f);
+	setup_helper(36, "0", 890.f, 165.f, 18.f, 3.f);
 
 	for (unsigned int i = 0; i < 5; i++)
-		rects[i].setThemeAndHover(Setting_Manager::theme, false, Setting_Manager::light, true);
+		rects[i].setThemeAndHover(false, true);
 	for (unsigned int i = 5; i < rects.size(); i++)
-		rects[i].setThemeAndHover(Setting_Manager::theme, true, Setting_Manager::light, true);
+		rects[i].setThemeAndHover(true, true);
 
 	for (unsigned int i = 0; i < 11; i++)
-		texts[i].setThemeAndHover(Setting_Manager::theme, true, Setting_Manager::light, true);
+		texts[i].setThemeAndHover(true, true);
 	for (unsigned int i = 11; i < 21; i++)
-		texts[i].setThemeAndHover(Setting_Manager::theme, true, Setting_Manager::light, true);
+		texts[i].setThemeAndHover(true, true);
 	for (unsigned int i = 21; i < 37; i++)
-		texts[i].setThemeAndHover(Setting_Manager::theme, false, Setting_Manager::light, true);
+		texts[i].setThemeAndHover(false, true);
 
-	rects[4].setThemeAndHover(Setting_Manager::theme, true, Setting_Manager::light, true);
-	texts[6].setThemeAndHover(Setting_Manager::theme, true, Setting_Manager::light, true);
-	texts[7].setThemeAndHover(Setting_Manager::theme, true, Setting_Manager::light, true);
-	texts[27].setThemeAndHover(Setting_Manager::theme, true, Setting_Manager::light, true);
-	texts[28].setThemeAndHover(Setting_Manager::theme, true, Setting_Manager::light, true);
+	rects[4].setThemeAndHover(true, true);
+	texts[6].setThemeAndHover(true, true);
+	texts[7].setThemeAndHover(true, true);
+	texts[27].setThemeAndHover(true, true);
+	texts[28].setThemeAndHover(true, true);
 }
 
 void Game_Screen::click_event_handler() {
@@ -327,8 +327,8 @@ void Game_Screen::update_draw() {
 }
 
 void Game_Screen::change_theme() {
-	scan_rect.flip_theme(Setting_Manager::light, Setting_Manager::theme);
-	scan_txt.flip_theme(Setting_Manager::light, Setting_Manager::theme);
+	scan_rect.flip_theme();
+	scan_txt.flip_theme();
 	scan_txt.setFont(Font_Manager::get_selected());
 
 	for (std::shared_ptr<Item> item : Game_Manager::items)

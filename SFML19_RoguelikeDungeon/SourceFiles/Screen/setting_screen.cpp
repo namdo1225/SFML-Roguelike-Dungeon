@@ -16,60 +16,60 @@ Setting_Screen::Setting_Screen() : Screen(31, 2, true) {
 	music_volume = Setting_Manager::music_volume;
 	font = Setting_Manager::font;
 
-	setup_helper(false, 0,   "Settings", 400.f, 10.f, 96.f, NULL);
-	setup_helper(false, 1,      "Theme", 20.f, 150.f, NULL, NULL);
-	setup_helper(false, 2, "Light Mode", 20.f, 200.f, NULL, NULL);
-	setup_helper(false, 3,       "Font", 20.f, 250.f, NULL, NULL);
-	setup_helper(false, 4, "SFX Volume", 20.f, 300.f, NULL, NULL);
-	setup_helper(false, 5,      "Music", 20.f, 350.f, NULL, NULL);
+	setup_helper(0,   "Settings", 400.f, 10.f, 96.f, NULL);
+	setup_helper(1,      "Theme", 20.f, 150.f, NULL, NULL);
+	setup_helper(2, "Light Mode", 20.f, 200.f, NULL, NULL);
+	setup_helper(3,       "Font", 20.f, 250.f, NULL, NULL);
+	setup_helper(4, "SFX Volume", 20.f, 300.f, NULL, NULL);
+	setup_helper(5,      "Music", 20.f, 350.f, NULL, NULL);
 
-	setup_helper(false, 6, "0", 300.f, 150.f, NULL, NULL);
-	setup_helper(false, 7, "1", 350.f, 150.f, NULL, NULL);
+	setup_helper(6, "0", 300.f, 150.f, NULL, NULL);
+	setup_helper(7, "1", 350.f, 150.f, NULL, NULL);
 
-	setup_helper(false, 8,  "Dark", 300.f, 200.f, NULL, NULL);
-	setup_helper(false, 9, "Light", 400.f, 200.f, NULL, NULL);
+	setup_helper(8,  "Dark", 300.f, 200.f, NULL, NULL);
+	setup_helper(9, "Light", 400.f, 200.f, NULL, NULL);
 
-	setup_helper(false, 10,  "Open Sans", 300.f, 250, NULL, NULL);
-	setup_helper(false, 11, "Comic Neue", 500.f, 250.f, NULL, NULL);
-	setup_helper(false, 12, "Montserrat", 700.f, 250.f, NULL, NULL);
+	setup_helper(10,  "Open Sans", 300.f, 250, NULL, NULL);
+	setup_helper(11, "Comic Neue", 500.f, 250.f, NULL, NULL);
+	setup_helper(12, "Montserrat", 700.f, 250.f, NULL, NULL);
 
-	setup_helper(false, 13,   "0", 300.f, 300.f, NULL, NULL);
-	setup_helper(false, 14,  "25", 350.f, 300.f, NULL, NULL);
-	setup_helper(false, 15,  "50", 400.f, 300.f, NULL, NULL);
-	setup_helper(false, 16,  "75", 450.f, 300.f, NULL, NULL);
-	setup_helper(false, 17, "100", 500.f, 300.f, NULL, NULL);
+	setup_helper(13,   "0", 300.f, 300.f, NULL, NULL);
+	setup_helper(14,  "25", 350.f, 300.f, NULL, NULL);
+	setup_helper(15,  "50", 400.f, 300.f, NULL, NULL);
+	setup_helper(16,  "75", 450.f, 300.f, NULL, NULL);
+	setup_helper(17, "100", 500.f, 300.f, NULL, NULL);
 
-	setup_helper(false, 18,   "0", 300.f, 350.f, NULL, NULL);
-	setup_helper(false, 19,  "25", 350.f, 350.f, NULL, NULL);
-	setup_helper(false, 20,  "50", 400.f, 350.f, NULL, NULL);
-	setup_helper(false, 21,  "75", 450.f, 350.f, NULL, NULL);
-	setup_helper(false, 22, "100", 500.f, 350.f, NULL, NULL);
+	setup_helper(18,   "0", 300.f, 350.f, NULL, NULL);
+	setup_helper(19,  "25", 350.f, 350.f, NULL, NULL);
+	setup_helper(20,  "50", 400.f, 350.f, NULL, NULL);
+	setup_helper(21,  "75", 450.f, 350.f, NULL, NULL);
+	setup_helper(22, "100", 500.f, 350.f, NULL, NULL);
 
-	setup_helper(false, 23,                           "Selected", 1000.f, 100.f, NULL, NULL);
-	setup_helper(false, 24,        std::to_string(theme).c_str(), 1000.f, 150.f, NULL, NULL);
-	setup_helper(false, 25,        light_mode ? "Light" : "Dark", 1000.f, 200.f, NULL, NULL);
-	setup_helper(false, 26, Font_Manager::get_selected().getInfo().family.c_str(), 1000.f, 250.f, NULL, NULL);
-	setup_helper(false, 27,   std::to_string(sfx_volume).c_str(), 1000.f, 300.f, NULL, NULL);
-	setup_helper(false, 28, std::to_string(music_volume).c_str(), 1000.f, 350.f, NULL, NULL);
+	setup_helper(23,                           "Selected", 1000.f, 100.f, NULL, NULL);
+	setup_helper(24,        std::to_string(theme).c_str(), 1000.f, 150.f, NULL, NULL);
+	setup_helper(25,        light_mode ? "Light" : "Dark", 1000.f, 200.f, NULL, NULL);
+	setup_helper(26, Font_Manager::get_selected().getInfo().family.c_str(), 1000.f, 250.f, NULL, NULL);
+	setup_helper(27,   std::to_string(sfx_volume).c_str(), 1000.f, 300.f, NULL, NULL);
+	setup_helper(28, std::to_string(music_volume).c_str(), 1000.f, 350.f, NULL, NULL);
 
-	setup_helper(false, 29, "Theme Preview: abcdefghijklmnopqrstuvwxyz, ABCDEFGHIJKLMNOPQRSTUVWXYZ", 25.f, 510.f,  NULL, NULL);
-	setup_helper(true,   0,                                                                    NULL, 20.f, 500.f, 1150.f, 45.f);
+	setup_helper(29, "Theme Preview: abcdefghijklmnopqrstuvwxyz, ABCDEFGHIJKLMNOPQRSTUVWXYZ", 25.f, 510.f,  NULL, NULL);
+	setup_helper(  0,                                                                    NULL, 20.f, 500.f, 1150.f, 45.f);
 
-	setup_helper(false, 30, "Save", 30.f, 610.f, NULL, NULL);
-	setup_helper(true,   1,   NULL, 20.f, 600.f, 80.f, 45.f);
+	setup_helper(30, "Save", 30.f, 610.f, NULL, NULL);
+	setup_helper(  1,   NULL, 20.f, 600.f, 80.f, 45.f);
 
-	texts[0].setThemeAndHover(Setting_Manager::theme, false);
-	texts[1].setThemeAndHover(Setting_Manager::theme, false);
-	texts[2].setThemeAndHover(Setting_Manager::theme, false);
-	texts[3].setThemeAndHover(Setting_Manager::theme, false);
-	texts[4].setThemeAndHover(Setting_Manager::theme, false);
-	texts[5].setThemeAndHover(Setting_Manager::theme, false);
-	texts[23].setThemeAndHover(Setting_Manager::theme, false);
-	texts[24].setThemeAndHover(Setting_Manager::theme, false);
-	texts[25].setThemeAndHover(Setting_Manager::theme, false);
-	texts[26].setThemeAndHover(Setting_Manager::theme, false);
-	texts[27].setThemeAndHover(Setting_Manager::theme, false);
-	texts[28].setThemeAndHover(Setting_Manager::theme, false);
+	texts[0].setThemeAndHover(false);
+	texts[1].setThemeAndHover(false);
+	texts[2].setThemeAndHover(false);
+	texts[3].setThemeAndHover(false);
+	texts[4].setThemeAndHover(false);
+	texts[5].setThemeAndHover(false);
+	texts[23].setThemeAndHover(false);
+	texts[24].setThemeAndHover(false);
+	texts[25].setThemeAndHover(false);
+	texts[26].setThemeAndHover(false);
+	texts[27].setThemeAndHover(false);
+	texts[28].setThemeAndHover(false);
 }
 
 void Setting_Screen::click_event_handler() {

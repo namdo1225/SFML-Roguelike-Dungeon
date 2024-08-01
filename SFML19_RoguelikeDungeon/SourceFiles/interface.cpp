@@ -28,6 +28,7 @@
 #include "Screen/shop_screen.h"
 #include "Screen/spell_attack_screen.h"
 #include "Screen/status_screen.h"
+#include "Screen/custom_screen.h"
 
 #include "Manager/setting_manager.h"
 #include "Manager/font_manager.h"
@@ -60,6 +61,7 @@ Interface::Interface() {
     Screen::screens[ShopScreen] = std::make_unique<Shop_Screen>();
     Screen::screens[SpellAttackScreen] = std::make_unique<Spell_Attack_Screen>();
     Screen::screens[StatusScreen] = std::make_unique<Status_Screen>();
+    Screen::screens[CustomScreen] = std::make_unique<Custom_Screen>();
 
     Screen::change_settings();
     Game_Manager::player = Player();

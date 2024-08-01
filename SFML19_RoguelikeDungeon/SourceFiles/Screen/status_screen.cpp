@@ -13,38 +13,38 @@ sf::View Status_Screen::viewEffect{ sf::FloatRect(0, 0, 1200, 800) };
 
 Status_Screen::Status_Screen() : Screen(37, 0, true, false) {
 	update = true;
-	setup_helper(false, 0, "Status", 100.f, 10.f, 48.f, NULL);
+	setup_helper(0, "Status", 100.f, 10.f, 48.f, NULL);
 
-	setup_helper(false, 1, "Name:", 30.f, 150.f, NULL, NULL);
-	setup_helper(false, 2, "Level:", 30.f, 200.f, NULL, NULL);
-	setup_helper(false, 3, "Current EXP:", 30.f, 250.f, NULL, NULL);
-	setup_helper(false, 4, "Level up EXP:", 30.f, 300.f, NULL, NULL);
-	setup_helper(false, 5, "Items:", 30.f, 350.f, NULL, NULL);
-	setup_helper(false, 6, "Spells:", 30.f, 400.f, NULL, NULL);
-	setup_helper(false, 7, "Floor:", 30.f, 450.f, NULL, NULL);
-	setup_helper(false, 8, "Gold:", 30.f, 500.f, NULL, NULL);
-	setup_helper(false, 9, "Stat points:", 30.f, 550.f, NULL, NULL);
-	setup_helper(false, 10, "Weapon:", 30.f, 600.f, NULL, NULL);
-	setup_helper(false, 11, "Armor:", 30.f, 650.f, NULL, NULL);
+	setup_helper(1, "Name:", 30.f, 150.f, NULL, NULL);
+	setup_helper(2, "Level:", 30.f, 200.f, NULL, NULL);
+	setup_helper(3, "Current EXP:", 30.f, 250.f, NULL, NULL);
+	setup_helper(4, "Level up EXP:", 30.f, 300.f, NULL, NULL);
+	setup_helper(5, "Items:", 30.f, 350.f, NULL, NULL);
+	setup_helper(6, "Spells:", 30.f, 400.f, NULL, NULL);
+	setup_helper(7, "Floor:", 30.f, 450.f, NULL, NULL);
+	setup_helper(8, "Gold:", 30.f, 500.f, NULL, NULL);
+	setup_helper(9, "Stat points:", 30.f, 550.f, NULL, NULL);
+	setup_helper(10, "Weapon:", 30.f, 600.f, NULL, NULL);
+	setup_helper(11, "Armor:", 30.f, 650.f, NULL, NULL);
 
-	setup_helper(false, 12, "Effects:", 600.f, 150.f, NULL, NULL);
+	setup_helper(12, "Effects:", 600.f, 150.f, NULL, NULL);
 
 	// Stats
 	for (unsigned int i = 0; i < NUM_NON_CUR_STATS; i++) {
-		setup_helper(false, i + 13, FULL_STATS[i], 400.f, 150.f + i * 50.f, NULL, NULL);
+		setup_helper(i + 13, FULL_STATS[i], 400.f, 150.f + i * 50.f, NULL, NULL);
 	}
 
 	// changing stats:
 	for (unsigned int i = 0; i < 11; i++) {
-		setup_helper(false, i + 19, "", 200.f, 150.f + i * 50.f, NULL, NULL);
+		setup_helper(i + 19, "", 200.f, 150.f + i * 50.f, NULL, NULL);
 	}
 
 	// effects
-	setup_helper(false, 30, "", 720.f, 150.f, NULL, NULL);
+	setup_helper(30, "", 720.f, 150.f, NULL, NULL);
 
     // stats
 	for (unsigned int i = 0; i < NUM_NON_CUR_STATS; i++)
-		setup_helper(false, i + 31, "", 550.f, 150.f + i * 50.f, NULL, NULL);
+		setup_helper(i + 31, "", 550.f, 150.f + i * 50.f, NULL, NULL);
 }
 
 void Status_Screen::click_event_handler() {
@@ -119,5 +119,5 @@ void Status_Screen::mouse_event_handler() {
 }
 
 void Status_Screen::change_theme() {
-	effect_txt.flip_theme(Setting_Manager::light, Setting_Manager::theme);
+	effect_txt.flip_theme();
 }

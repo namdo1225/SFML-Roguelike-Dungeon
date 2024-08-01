@@ -26,7 +26,7 @@ private:
 	// 0 = north, horizontal, 2 = south, horizontal. 1 = west, vertical, 3 = east, vertical.
 	bool doors[4] = { false, false, false, false };
 
-	Full_Rectangle dr_draw = Full_Rectangle(-100.f, -100.f, 0.f, 0.f, 0, false, false, true,
+	Full_Rectangle dr_draw = Full_Rectangle(-100.f, -100.f, 0.f, 0.f, false, true,
 		sf::Color::Transparent, sf::Color::White);
 
 public:

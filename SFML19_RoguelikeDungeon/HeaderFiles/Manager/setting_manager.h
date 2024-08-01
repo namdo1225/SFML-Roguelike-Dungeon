@@ -11,13 +11,14 @@
 #include <string>
 
 class Setting_Manager {
-private:
+protected:
 	/**
 	* Constructor for Setting_Manager.
 	*/
 	Setting_Manager();
 
 public:
+	const static unsigned int themes = 2;
 	static unsigned int theme;
 	static unsigned int sfx_volume;
 	static unsigned int music_volume;

@@ -9,20 +9,20 @@
 #include <iostream>
 
 Map_Screen::Map_Screen() : Screen(6, 6, true, false) {
-	setup_helper(false, 0, "^", 1060.f, 500.f, NULL, NULL);
-	setup_helper(false, 1, ">", 1130.f, 575.f, NULL, NULL);
-	setup_helper(false, 2, "v", 1060.f, 650.f, NULL, NULL);
-	setup_helper(false, 3, "<", 985.f, 575.f, NULL, NULL);
-	setup_helper(false, 4, "+", 985.f, 425.f, NULL, NULL);
-	setup_helper(false, 5, "-", 1130.f, 425.f, NULL, NULL);
+	setup_helper(0, "^", 1060.f, 500.f, NULL, NULL);
+	setup_helper(1, ">", 1130.f, 575.f, NULL, NULL);
+	setup_helper(2, "v", 1060.f, 650.f, NULL, NULL);
+	setup_helper(3, "<", 985.f, 575.f, NULL, NULL);
+	setup_helper(4, "+", 985.f, 425.f, NULL, NULL);
+	setup_helper(5, "-", 1130.f, 425.f, NULL, NULL);
 
 
-	setup_helper(true, 0, NULL, 1040.f, 490.f, 50.f, 50.f);
-	setup_helper(true, 1, NULL, 1110.f, 565.f, 50.f, 50.f);
-	setup_helper(true, 2, NULL, 1040.f, 640.f, 50.f, 50.f);
-	setup_helper(true, 3, NULL,  965.f, 565.f, 50.f, 50.f);
-	setup_helper(true, 4, NULL,  965.f, 415.f, 50.f, 50.f);
-	setup_helper(true, 5, NULL, 1110.f, 415.f, 50.f, 50.f);
+	setup_helper(0, NULL, 1040.f, 490.f, 50.f, 50.f);
+	setup_helper(1, NULL, 1110.f, 565.f, 50.f, 50.f);
+	setup_helper(2, NULL, 1040.f, 640.f, 50.f, 50.f);
+	setup_helper(3, NULL,  965.f, 565.f, 50.f, 50.f);
+	setup_helper(4, NULL,  965.f, 415.f, 50.f, 50.f);
+	setup_helper(5, NULL, 1110.f, 415.f, 50.f, 50.f);
 }
 
 void Map_Screen::click_event_handler() {

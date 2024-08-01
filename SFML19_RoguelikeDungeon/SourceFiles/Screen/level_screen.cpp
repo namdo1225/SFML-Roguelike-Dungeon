@@ -10,13 +10,13 @@
 
 Level_Screen::Level_Screen() : Screen(7, 1, true, true, true) {
 	update = true;
-	setup_helper(false, 0,           "Level:", 800.f, 190.f, NULL, NULL);
-	setup_helper(false, 1,     "Current EXP:", 800.f, 240.f, NULL, NULL);
-	setup_helper(false, 2, "EXP to level up:", 800.f, 290.f, NULL, NULL);
+	setup_helper(0,           "Level:", 800.f, 190.f, NULL, NULL);
+	setup_helper(1,     "Current EXP:", 800.f, 240.f, NULL, NULL);
+	setup_helper(2, "EXP to level up:", 800.f, 290.f, NULL, NULL);
 
-	setup_helper(false, 3, "0", 1000.f, 190.f, NULL, NULL);
-	setup_helper(false, 4, "0", 1000.f, 240.f, NULL, NULL);
-	setup_helper(false, 5, "0", 1000.f, 290.f, NULL, NULL);
+	setup_helper(3, "0", 1000.f, 190.f, NULL, NULL);
+	setup_helper(4, "0", 1000.f, 240.f, NULL, NULL);
+	setup_helper(5, "0", 1000.f, 290.f, NULL, NULL);
 }
 
 void Level_Screen::click_event_handler() {

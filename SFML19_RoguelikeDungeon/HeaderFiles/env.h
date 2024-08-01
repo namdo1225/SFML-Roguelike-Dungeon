@@ -18,4 +18,6 @@ constexpr auto START_WITH_MONEY = false;
 
 constexpr unsigned int INTERACTIBLE_CHANCE = 0;
 
+constexpr unsigned int DATABASE_VERSION = 1;
+
 #endif

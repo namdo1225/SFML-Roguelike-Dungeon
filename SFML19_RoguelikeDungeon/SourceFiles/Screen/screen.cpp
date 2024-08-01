@@ -76,7 +76,7 @@ Full_Text Screen::inv_sp_desc_txt = Full_Text(875.f, 100.f, 24.f, "Description")
 Full_Rectangle Screen::inv_sp_discard_rect = Full_Rectangle(420.f, 660.f, 160.f, 80.f);
 Full_Text Screen::inv_sp_discard_txt = Full_Text(430.f, 670.f, 36.f, "Discard");
 
-Full_Rectangle Screen::inv_sp_cur_slot = Full_Rectangle(-100.f, -100.f, 70.f, 70.f, 0, false, false, true, sf::Color::Red, sf::Color::Red);
+Full_Rectangle Screen::inv_sp_cur_slot = Full_Rectangle(-100.f, -100.f, 70.f, 70.f, 0, false, sf::Color::Red, sf::Color::Red);
 
 Full_Text Screen::inv_sp_gold_txt = Full_Text(750.f, 30.f, 24.f, "Golds:");
 Full_Text Screen::inv_sp_gold_amount_txt = Full_Text(850.f, 30.f, 24.f, "0");
@@ -150,11 +150,11 @@ void Screen::setup() {
 	}
 }
 
-void Screen::setup_helper(bool element, unsigned int i, const char* text, float x, float y, float sx, float sy,
-	unsigned int theme, bool hoverable, bool is_light, bool override_theme) {
-	element ? rects[i].setPhysical(x, y, sx, sy) : texts[i].setPhysical(x, y, text, sx, sy);
-	element ? rects[i].setThemeAndHover(theme, hoverable, is_light, override_theme) :
-		texts[i].setThemeAndHover(theme, hoverable, is_light, override_theme);
+void Screen::setup_helper(unsigned int i, const char* text, float x, float y, float sx, float sy,
+	bool hoverable, bool override_theme) {
+	text == NULL ? rects[i].setPhysical(x, y, sx, sy) : texts[i].setPhysical(x, y, text, sx, sy);
+	text == NULL ? rects[i].setThemeAndHover(hoverable, override_theme) :
+		texts[i].setThemeAndHover(hoverable, override_theme);
 }
 
 bool Screen::mouse_in_helper(bool element, unsigned int i) {
@@ -267,81 +267,81 @@ void Screen::change_settings() {
 		if (screens[i].get() != NULL) {
 			screens[i]->change_theme();
 			for (Full_Rectangle& rect : screens[i]->rects)
-				rect.flip_theme(Setting_Manager::light, Setting_Manager::theme);
+				rect.flip_theme();
 			for (Full_Text& text : screens[i]->texts) {
-				text.flip_theme(Setting_Manager::light, Setting_Manager::theme);
+				text.flip_theme();
 				text.setFont(Font_Manager::get_selected());
 			}
 		}
 	}
 
-	exit_rect.flip_theme(Setting_Manager::light, Setting_Manager::theme);
-	exit_txt.flip_theme(Setting_Manager::light, Setting_Manager::theme);
+	exit_rect.flip_theme();
+	exit_txt.flip_theme();
 	exit_txt.setFont(Font_Manager::get_selected());
 
-	confirm_rect.flip_theme(Setting_Manager::light, Setting_Manager::theme);
-	confirm_txt.flip_theme(Setting_Manager::light, Setting_Manager::theme);
+	confirm_rect.flip_theme();
+	confirm_txt.flip_theme();
 	confirm_txt.setFont(Font_Manager::get_selected());
 
-	stat_guide_txt.flip_theme(Setting_Manager::light, Setting_Manager::theme);
+	stat_guide_txt.flip_theme();
 	stat_guide_txt.setFont(Font_Manager::get_selected());
 
-	stat_left_txt.flip_theme(Setting_Manager::light, Setting_Manager::theme);
+	stat_left_txt.flip_theme();
 	stat_left_txt.setFont(Font_Manager::get_selected());
 
-	stat_left_pts.flip_theme(Setting_Manager::light, Setting_Manager::theme);
+	stat_left_pts.flip_theme();
 	stat_left_pts.setFont(Font_Manager::get_selected());
 
-	inv_sp_use_rect.flip_theme(Setting_Manager::light, Setting_Manager::theme);
-	inv_sp_desc_rect.flip_theme(Setting_Manager::light, Setting_Manager::theme);
-	inv_sp_discard_rect.flip_theme(Setting_Manager::light, Setting_Manager::theme);
+	inv_sp_use_rect.flip_theme();
+	inv_sp_desc_rect.flip_theme();
+	inv_sp_discard_rect.flip_theme();
 
 	inv_sp_use_txt.setFont(Font_Manager::get_selected());
-	inv_sp_use_txt.flip_theme(Setting_Manager::light, Setting_Manager::theme);
+	inv_sp_use_txt.flip_theme();
 
 	inv_sp_discard_txt.setFont(Font_Manager::get_selected());
-	inv_sp_discard_txt.flip_theme(Setting_Manager::light, Setting_Manager::theme);
+	inv_sp_discard_txt.flip_theme();
 
 	inv_sp_desc_txt.setFont(Font_Manager::get_selected());
-	inv_sp_desc_txt.flip_theme(Setting_Manager::light, Setting_Manager::theme);
+	inv_sp_desc_txt.flip_theme();
 
 	clear_txt.setFont(Font_Manager::get_selected());
-	clear_txt.flip_theme(Setting_Manager::light, Setting_Manager::theme);
+	clear_txt.flip_theme();
 
 	name_txt.setFont(Font_Manager::get_selected());
-	name_txt.flip_theme(Setting_Manager::light, Setting_Manager::theme);
+	name_txt.flip_theme();
 
-	clear_rect.flip_theme(Setting_Manager::light, Setting_Manager::theme);
-	name_rect.flip_theme(Setting_Manager::light, Setting_Manager::theme);
+	clear_rect.flip_theme();
+	name_rect.flip_theme();
 
 	inv_sp_gold_txt.setFont(Font_Manager::get_selected());
-	inv_sp_gold_txt.flip_theme(Setting_Manager::light, Setting_Manager::theme);
+	inv_sp_gold_txt.flip_theme();
 	
 	inv_sp_gold_amount_txt.setFont(Font_Manager::get_selected());
-	inv_sp_gold_amount_txt.flip_theme(Setting_Manager::light, Setting_Manager::theme);
+	inv_sp_gold_amount_txt.flip_theme();
 
-	background.flip_theme(Setting_Manager::light, Setting_Manager::theme);
+	background.flip_theme();
 
 	for (Full_Text& text : stat_full_txts) {
-		text.flip_theme(Setting_Manager::light, Setting_Manager::theme);
+		text.flip_theme();
 		text.setFont(Font_Manager::get_selected());
 	}
 
 	for (Full_Text& text : stat_curr_txts) {
-		text.flip_theme(Setting_Manager::light, Setting_Manager::theme);
+		text.flip_theme();
 		text.setFont(Font_Manager::get_selected());
 	}
 
 	for (Full_Text& text : stat_curr_arrows) {
-		text.flip_theme(Setting_Manager::light, Setting_Manager::theme);
+		text.flip_theme();
 		text.setFont(Font_Manager::get_selected());
 	}
 
 	for (Full_Rectangle& rect : inv_sp_slots)
-		rect.flip_theme(Setting_Manager::light, Setting_Manager::theme);
+		rect.flip_theme();
 
 	for (Full_Text& text : logs) {
-		text.flip_theme(Setting_Manager::light, Setting_Manager::theme);
+		text.flip_theme();
 		text.setFont(Font_Manager::get_selected());
 	}
 }

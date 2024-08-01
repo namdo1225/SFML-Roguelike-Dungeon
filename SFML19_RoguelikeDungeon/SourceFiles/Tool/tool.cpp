@@ -78,9 +78,9 @@ bool Tool::contains(float x, float y) {
 }
 
 void Tool::change_theme() {
-	icon.flip_theme(Setting_Manager::light, Setting_Manager::theme);
-	desc.flip_theme(Setting_Manager::light, Setting_Manager::theme);
-	txt.flip_theme(Setting_Manager::light, Setting_Manager::theme);
+	icon.flip_theme();
+	desc.flip_theme();
+	txt.flip_theme();
 
 	icon.setFont(Font_Manager::get_selected());
 	desc.setFont(Font_Manager::get_selected());

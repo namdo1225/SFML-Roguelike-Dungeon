@@ -19,7 +19,7 @@ protected:
 	const char* name;
 
 	Full_Text txt, icon, desc;
-	Full_Rectangle invisible_rect = Full_Rectangle(-100.f, -100.f, 60.f, 60.f, 0, false, false, true, sf::Color::Transparent,
+	Full_Rectangle invisible_rect = Full_Rectangle(-100.f, -100.f, 60.f, 60.f, false, true, sf::Color::Transparent,
 		sf::Color::Transparent);
 
 	unsigned int id = 0, range = 0, sell_gd = 0, buy_gd = 0, type = 0;

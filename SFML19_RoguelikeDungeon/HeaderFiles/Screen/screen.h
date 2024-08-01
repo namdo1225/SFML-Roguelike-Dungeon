@@ -16,13 +16,13 @@
 
 enum Display { TitleScreen, NameScreen, StatScreen, LevelScreen,
 	GameScreen, MenuScreen, InventoryScreen, SpellScreen, MapScreen, ShopScreen,
-	LoadScreen, SpellAttackScreen, LogScreen, StatusScreen, SettingScreen, ExitScreen
+	LoadScreen, SpellAttackScreen, LogScreen, StatusScreen, SettingScreen, CustomScreen, ExitScreen
 };
 
 enum ReusableButton { ExitButton, ConfirmButton, StatFulLButton, StatIncreaseButton, UseButton, DiscardButton,
 ClearButton, };
 
-class Screen : public SF_Manager {
+class Screen : public SF_Manager, protected Setting_Manager {
 protected:
 	static bool loaded;
 	bool exit_button = false;
@@ -76,20 +76,17 @@ protected:
 	* Helper to setup shape.
 	* 
 	* Parameter:
-	*	element: true if it is a rectangle. false if text.
 	*	i: index of the shape.
 	*	text: a string if it's a text. NULL otherwise.
 	*	x: shape's x position.
 	*	y: shape's y position.
 	*	sx: shape's width.
 	*	sy: shape's height.
-	*	theme: the theme number.
 	*	hoverable: true if shape is hoverable.
-	*	is_light: true if light mode.
 	*	override_theme: true if theme is no longer in effect.
 	*/
-	void setup_helper(bool element, unsigned int i, const char* text, float x, float y, float sx, float sy,
-		unsigned int theme = 0, bool hoverable = true, bool is_light = false, bool override_theme = false);
+	void setup_helper(unsigned int i, const char* text, float x, float y, float sx, float sy,
+		bool hoverable = true, bool override_theme = false);
 
 	/**
 	* Helper method to check mouse in shape.
@@ -193,7 +190,7 @@ public:
 	static Display display;
 	static std::vector<Display> prev_displays;
 
-	const static unsigned int num_screens = 16;
+	const static unsigned int num_screens = 17;
 	static bool visibilities[num_screens];
 	static std::unique_ptr<Screen> screens[num_screens];
 

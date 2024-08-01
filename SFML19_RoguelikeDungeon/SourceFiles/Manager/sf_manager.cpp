@@ -38,8 +38,8 @@ void SF_Manager::log_add(const char* log) {
             logs[i].setPosition(755, logs[i].getPosition().y - 30);
         }
     }
-    logs.push_back(Full_Text(755.f, 465 + size * 30, 24.f, log, Setting_Manager::theme, false, Setting_Manager::light));
-    logs.back().setThemeAndHover(Setting_Manager::theme, false, Setting_Manager::light, true);
+    logs.push_back(Full_Text(755.f, 465 + size * 30, 24.f, log, false));
+    logs.back().setThemeAndHover(false, true);
 
     bool less_eight = logs.size() < 8;
     for (unsigned int i = less_eight ? 0 : logs.size() - 8, offset = 0; i < logs.size(); i++, offset++)
