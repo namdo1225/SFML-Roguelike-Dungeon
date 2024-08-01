@@ -10,38 +10,38 @@
 #include "Manager/game_manager.h"
 #include <format>
 
-Game_Screen::Game_Screen() : Screen(37, 13, false, false) {
+Game_Screen::Game_Screen() : Screen(false, false) {
 	update = true;
 
 	// items
-	setup_helper(0, NULL, 750.f, 250.f, 200.f, 200.f);
+	setup_helper(NULL, 750.f, 250.f, 200.f, 200.f);
 	// spells
-	setup_helper(1, NULL, 970.f, 250.f, 200.f, 200.f);
+	setup_helper(NULL, 970.f, 250.f, 200.f, 200.f);
 	// history
-	setup_helper(2, NULL, 750.f, 500.f, 425.f, 275.f);
+	setup_helper(NULL, 750.f, 500.f, 425.f, 275.f);
 	// health/mana
-	setup_helper(3, NULL, 950.f, 5.f, 230.f, 80.f);
+	setup_helper(NULL, 950.f, 5.f, 230.f, 80.f);
 	// level
-	setup_helper(4, NULL, 950.f, 100.f, 230.f, 100.f);
+	setup_helper(NULL, 950.f, 100.f, 230.f, 100.f);
 	// menu
-	setup_helper(5, NULL, 1145.f, 745.f, 50.f, 50.f);
+	setup_helper(NULL, 1145.f, 745.f, 50.f, 50.f);
 	// log button
-	setup_helper(6, NULL, 1150.f, 500.f, 25.f, 25.f);
+	setup_helper(NULL, 1150.f, 500.f, 25.f, 25.f);
 	// use item shortcut
-	setup_helper(7, NULL,  825.f, 320.f, 50.f, 50.f);
+	setup_helper(NULL,  825.f, 320.f, 50.f, 50.f);
 	// use spell shortcut
-	setup_helper(8, NULL, 1045.f, 320.f, 50.f, 50.f);
+	setup_helper(NULL, 1045.f, 320.f, 50.f, 50.f);
 	// grid button
-	setup_helper(9, NULL,   10.f, 730.f, 50.f, 50.f);
+	setup_helper(NULL,   10.f, 730.f, 50.f, 50.f);
 	// opacity button
-	setup_helper(10, NULL, 80.f, 730.f, 50.f, 50.f);
+	setup_helper(NULL, 80.f, 730.f, 50.f, 50.f);
 	for (unsigned int i = 0; i < 50; i++) {
 		grids[i] = i < 20 ? Full_Rectangle(i * 40.f, -10.f, 0.f, 900.f, false, true, sf::Color::Black, sf::Color::Black)
 			: Full_Rectangle(-10, (i - 20) * 40.f, 770.f, 0.f, false, true, sf::Color::Black, sf::Color::Black);
 		grids[i].setOutlineThickness(1.f);
 	}
 	// range button
-	setup_helper(11, NULL, 150.f, 730.f, 50.f, 50.f);
+	setup_helper(NULL, 150.f, 730.f, 50.f, 50.f);
 	// top, right, bottom, left
 	unsigned int range = Game_Manager::pl_weapon->get_range();
 	ranges[0] = Full_Rectangle(400.f, 400.f - (40.f * range), 40.f, 40.f * range, false, true, sf::Color::Transparent, sf::Color(255, 0, 0, 100));
@@ -49,59 +49,59 @@ Game_Screen::Game_Screen() : Screen(37, 13, false, false) {
 	ranges[2] = Full_Rectangle(400.f, 440.f, 40.f, 40.f * range, false, true, sf::Color::Transparent, sf::Color(255, 0, 0, 100));
 	ranges[3] = Full_Rectangle(400.f - (40.f * range), 400.f, 40.f * range, 40.f, false, true, sf::Color::Transparent, sf::Color(255, 0, 0, 100));
 	// scan button
-	setup_helper(12, NULL, 220.f, 730.f, 50.f, 50.f);
+	setup_helper(NULL, 220.f, 730.f, 50.f, 50.f);
 
-	setup_helper(0, "Name:", 740.f, 5.f, 18.f, 3.f);
-	setup_helper(1, FULL_STATS[0], 960.f, 10.f, NULL, 3.f);
-	setup_helper(2, FULL_STATS[1], 960.f, 50.f, NULL, 3.f);
+	setup_helper("Name:", 740.f, 5.f, 18.f, 3.f);
+	setup_helper(FULL_STATS[0], 960.f, 10.f, NULL, 3.f);
+	setup_helper(FULL_STATS[1], 960.f, 50.f, NULL, 3.f);
 
-	setup_helper(3,   "Items:", 740.f, 210.f, NULL, 3.f);
-	setup_helper(4,  "Spells:", 950.f, 210.f, NULL, 3.f);
-	setup_helper(5, "History:", 740.f, 455.f, NULL, 3.f);
-	setup_helper(6,   "Level:", 960.f, 100.f, NULL, 3.f);
-	setup_helper(7,     "Exp:", 960.f, 140.f, NULL, 3.f);
-	setup_helper(8,   "Floor:", 10.f, 10.f, NULL, 3.f);
-	setup_helper(9,    "Gold:", 10.f, 50.f, NULL, 3.f);
-	setup_helper(10,  "Stats:", 740.f, 55.f, 18.f, 3.f);
+	setup_helper(   "Items:", 740.f, 210.f, NULL, 3.f);
+	setup_helper(  "Spells:", 950.f, 210.f, NULL, 3.f);
+	setup_helper( "History:", 740.f, 455.f, NULL, 3.f);
+	setup_helper(   "Level:", 960.f, 100.f, NULL, 3.f);
+	setup_helper(     "Exp:", 960.f, 140.f, NULL, 3.f);
+	setup_helper(   "Floor:", 10.f, 10.f, NULL, 3.f);
+	setup_helper(    "Gold:", 10.f, 50.f, NULL, 3.f);
+	setup_helper(   "Stats:", 740.f, 55.f, 18.f, 3.f);
 
-	setup_helper(11, "<", 765.f, 335.f, NULL, NULL);
-	setup_helper(12, ">", 925.f, 335.f, NULL, NULL);
-	setup_helper(13, "<", 985.f, 335.f, NULL, NULL);
-	setup_helper(14, ">", 1145.f, 335.f, NULL, NULL);
+	setup_helper("<", 765.f, 335.f, NULL, NULL);
+	setup_helper(">", 925.f, 335.f, NULL, NULL);
+	setup_helper("<", 985.f, 335.f, NULL, NULL);
+	setup_helper(">", 1145.f, 335.f, NULL, NULL);
 
-	setup_helper(15, "...", 1153.f, 735.f, 36, NULL);
-	setup_helper(16, "...", 1155.f, 495.f, 18, NULL);
-	setup_helper(17,   "G",   25.f, 740.f, 22, NULL);
-	setup_helper(18,   "O",   95.f, 740.f, 22, NULL);
-	setup_helper(19,   "R",  165.f, 740.f, 22, NULL);
-	setup_helper(20,   "S",  235.f, 740.f, 22, NULL);
+	setup_helper("...", 1153.f, 735.f, 36, NULL);
+	setup_helper("...", 1155.f, 495.f, 18, NULL);
+	setup_helper(  "G",   25.f, 740.f, 22, NULL);
+	setup_helper(  "O",   95.f, 740.f, 22, NULL);
+	setup_helper(  "R",  165.f, 740.f, 22, NULL);
+	setup_helper(  "S",  235.f, 740.f, 22, NULL);
 
-	setup_helper(21, FULL_STATS[2], 750.f, 80.f, 18, 3.f);
-	setup_helper(22, FULL_STATS[3], 750.f, 110.f, 18, 3.f);
-	setup_helper(23, FULL_STATS[4], 750.f, 140.f, 18, 3.f);
-	setup_helper(24, FULL_STATS[5], 750.f, 170.f, 18, 3.f);
+	setup_helper(FULL_STATS[2], 750.f, 80.f, 18, 3.f);
+	setup_helper(FULL_STATS[3], 750.f, 110.f, 18, 3.f);
+	setup_helper(FULL_STATS[4], 750.f, 140.f, 18, 3.f);
+	setup_helper(FULL_STATS[5], 750.f, 170.f, 18, 3.f);
 
 	// texts that can be changed:
 	// floor num
-	setup_helper(25, "1", 100.f, 10.f, NULL, 3.f);
+	setup_helper("1", 100.f, 10.f, NULL, 3.f);
 	// gold num
-	setup_helper(26, "0", 100.f, 50.f, NULL, 3.f);
+	setup_helper("0", 100.f, 50.f, NULL, 3.f);
 	// level
-	setup_helper(27, "1", 1040.f, 100.f, NULL, 3.f);
+	setup_helper("1", 1040.f, 100.f, NULL, 3.f);
 	// level exp
-	setup_helper(28, "0 / 10", 1040.f, 140.f, NULL, 3.f);
+	setup_helper("0 / 10", 1040.f, 140.f, NULL, 3.f);
 	// name
-	setup_helper(29, "Player", 740.f, 30.f, 16.f, 3.f);
+	setup_helper("Player", 740.f, 30.f, 16.f, 3.f);
 	// log limit
-	setup_helper(30, "0 / 50", 850.f, 455.f, NULL, 3.f);
+	setup_helper("0 / 50", 850.f, 455.f, NULL, 3.f);
 	// stats: hp, mp
-	setup_helper(31, "10 / 10", 1060.f, 10.f, NULL, 3.f);
-	setup_helper(32, "5 / 5", 1060.f, 50.f, NULL, 3.f);
+	setup_helper("10 / 10", 1060.f, 10.f, NULL, 3.f);
+	setup_helper("5 / 5", 1060.f, 50.f, NULL, 3.f);
 	// other stats
-	setup_helper(33, "0", 890.f,  75.f, 18.f, 3.f);
-	setup_helper(34, "0", 890.f, 105.f, 18.f, 3.f);
-	setup_helper(35, "0", 890.f, 135.f, 18.f, 3.f);
-	setup_helper(36, "0", 890.f, 165.f, 18.f, 3.f);
+	setup_helper("0", 890.f,  75.f, 18.f, 3.f);
+	setup_helper("0", 890.f, 105.f, 18.f, 3.f);
+	setup_helper("0", 890.f, 135.f, 18.f, 3.f);
+	setup_helper("0", 890.f, 165.f, 18.f, 3.f);
 
 	for (unsigned int i = 0; i < 5; i++)
 		rects[i].setThemeAndHover(false, true);

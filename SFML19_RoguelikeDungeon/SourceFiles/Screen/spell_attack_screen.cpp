@@ -8,9 +8,9 @@
 #include "Manager/game_manager.h"
 #include <format>
 
-Spell_Attack_Screen::Spell_Attack_Screen() : Screen(2, 0, true, false) {
-	setup_helper(0, "Spell range: ", 200.f, 10.f, NULL, 3.f);
-	setup_helper(1, "0", 400, 10.f, NULL, 3.f);
+Spell_Attack_Screen::Spell_Attack_Screen() : Screen(true, false) {
+	setup_helper("Spell range: ", 200.f, 10.f, NULL, 3.f);
+	setup_helper("0", 400, 10.f, NULL, 3.f);
 
 	unsigned int range = sp_inf[1];
 	ranges[0] = Full_Rectangle(400.f, 400.f - (40.f * range), 40.f, 40.f * range, false, true, sf::Color::Transparent, sf::Color(255, 0, 0, 100));

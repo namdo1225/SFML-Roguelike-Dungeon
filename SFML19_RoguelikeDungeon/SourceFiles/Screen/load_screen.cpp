@@ -7,10 +7,10 @@
 #include "Screen/load_screen.h"
 #include "Manager/game_manager.h"
 
-Load_Screen::Load_Screen() : Screen(1, 1, true, true, true, true) {
-	setup_helper(0, NULL, 350.f, 240.f, 470.f, 50.f);
+Load_Screen::Load_Screen() : Screen(true, true, true, true) {
+	setup_helper(NULL, 350.f, 240.f, 470.f, 50.f);
 
-	setup_helper(0,
+	setup_helper(
 		"Enter your save's name. Make sure the save file (.sav) is in"
 		"\nthe same folder as the EXE file."
 		"\n\nSome characters can't be typed:  \\  =  $  *  |  ~  .  \"  '  ;",

@@ -11,6 +11,7 @@
 #include <iostream>
 #include "Shape/full_text.h"
 #include "Shape/full_rectangle.h"
+#include "Shape/full_textbox.h"
 #include "Manager/setting_manager.h"
 #include "Manager/sf_manager.h"
 
@@ -33,6 +34,7 @@ protected:
 
 	std::vector<Full_Text> texts;
 	std::vector<Full_Rectangle> rects;
+	std::vector<Full_Textbox> textboxes;
 
 	// Stat selection common UI:
 	static Full_Text stat_full_txts[NUM_NON_CUR_STATS];
@@ -48,7 +50,6 @@ protected:
 	* Helper to setup shape.
 	* 
 	* Parameter:
-	*	i: index of the shape.
 	*	text: a string if it's a text. NULL otherwise.
 	*	x: shape's x position.
 	*	y: shape's y position.
@@ -57,7 +58,7 @@ protected:
 	*	hoverable: true if shape is hoverable.
 	*	override_theme: true if theme is no longer in effect.
 	*/
-	void setup_helper(unsigned int i, const char* text, float x, float y, float sx, float sy,
+	void setup_helper(const char* text, float x, float y, float sx, float sy,
 		bool hoverable = true, bool override_theme = false);
 
 	/**
@@ -170,15 +171,12 @@ public:
 	* Constructor for Screen.
 	* 
 	* Parameter:
-	*	txt: how many texts to create.
-	*	rect: how many rects to create.
 	*	exit_button: true to display an exit button.
 	*	show_bg: true to display the bg.
 	*	confirm_button: true to display a confirm button.
 	*	text_handler_enabled: true to enable text handler function.
 	*/
-	Screen(unsigned int txt, unsigned int rect, bool exit_button = false, bool show_bg = true, bool confirm_button = false,
-		bool text_handler_enabled = false);
+	Screen(bool exit_button = false, bool show_bg = true, bool confirm_button = false, bool text_handler_enabled = false);
 
 	/**
 	* Draw the screen.

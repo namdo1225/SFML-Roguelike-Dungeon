@@ -58,27 +58,10 @@ Full_Rectangle Screen::inv_sp_slots[MAX_INV_SPELL_SLOTS];
 std::map<std::string, Full_Rectangle> Screen::map_rects;
 std::map<std::string, Full_Text> Screen::map_txts;
 
-Screen::Screen(unsigned int txt, unsigned int rect,
-	bool exit_button, bool show_bg, bool confirm_button, bool text_handler_enabled):
+Screen::Screen(bool exit_button, bool show_bg, bool confirm_button, bool text_handler_enabled):
 	exit_button(exit_button), show_bg(show_bg), confirm_button(confirm_button), text_handler_enabled(text_handler_enabled) {
 	if (!loaded)
 		setup();
-
-	while (txt > 0) {
-		texts.push_back(Full_Text());
-		unsigned int i = texts.size() - 1;
-		texts[i].setFont(Font_Manager::get_selected());
-		texts[i].setCharacterSize(24);
-		texts[i].setStyle(sf::Text::Bold);
-		txt--;
-	}
-
-	while (rect > 0) {
-		rects.push_back(Full_Rectangle());
-		unsigned int i = rects.size() - 1;
-		rects[i].setOutlineThickness(3.f);
-		rect--;
-	}
 }
 
 void Screen::setup() {
@@ -132,6 +115,10 @@ void Screen::draw() {
 
 	for (Full_Rectangle rect : rects)
 		window.draw(rect);
+	for (Full_Textbox boxes : textboxes) {
+		window.draw(boxes.rect);
+		window.draw(boxes.text);
+	}
 	for (Full_Text text : texts)
 		window.draw(text);
 
@@ -153,11 +140,24 @@ void Screen::draw() {
 	}
 }
 
-void Screen::setup_helper(unsigned int i, const char* text, float x, float y, float sx, float sy,
+void Screen::setup_helper(const char* text, float x, float y, float sx, float sy,
 	bool hoverable, bool override_theme) {
-	text == NULL ? rects[i].setPhysical(x, y, sx, sy) : texts[i].setPhysical(x, y, text, sx, sy);
-	text == NULL ? rects[i].setThemeAndHover(hoverable, override_theme) :
+	if (text == NULL) {
+		rects.push_back(Full_Rectangle());
+		unsigned int i = rects.size() - 1;
+		rects[i].setOutlineThickness(3.f);
+		rects[i].setPhysical(x, y, sx, sy);
+		rects[i].setThemeAndHover(hoverable, override_theme);
+	}
+	else {
+		texts.push_back(Full_Text());
+		unsigned int i = texts.size() - 1;
+		texts[i].setFont(Font_Manager::get_selected());
+		texts[i].setCharacterSize(24);
+		texts[i].setStyle(sf::Text::Bold);
+		texts[i].setPhysical(x, y, text, sx, sy);
 		texts[i].setThemeAndHover(hoverable, override_theme);
+	}		
 }
 
 bool Screen::mouse_in_helper(bool element, unsigned int i) {

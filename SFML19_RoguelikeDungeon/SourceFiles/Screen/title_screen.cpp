@@ -10,26 +10,26 @@
 #include "Manager/audio_manager.h"
 #include <format>
 
-Title_Screen::Title_Screen() : Screen(8, 7) {
-	setup_helper(0, NULL, 330.f, 325.f, 150.f,  65.f);
-	setup_helper(1, NULL, 330.f, 400.f, 150.f,  65.f);
-	setup_helper(2, NULL, 330.f, 475.f, 150.f,  65.f);
-	setup_helper(3, NULL, 330.f, 550.f, 150.f,  65.f);
-	setup_helper(4, NULL, 330.f, 625.f, 150.f,  65.f);
-	setup_helper(5, NULL, 700.f,  10.f, 470.f, 780.f);
-	setup_helper(6, NULL, 330.f, 700.f, 150.f,  65.f);
+Title_Screen::Title_Screen() : Screen() {
+	setup_helper(NULL, 330.f, 325.f, 150.f,  65.f);
+	setup_helper(NULL, 330.f, 400.f, 150.f,  65.f);
+	setup_helper(NULL, 330.f, 475.f, 150.f,  65.f);
+	setup_helper(NULL, 330.f, 550.f, 150.f,  65.f);
+	setup_helper(NULL, 330.f, 625.f, 150.f,  65.f);
+	setup_helper(NULL, 700.f,  10.f, 470.f, 780.f);
+	setup_helper(NULL, 330.f, 700.f, 150.f,  65.f);
 
-	setup_helper(0, "New Game",   335.f, 343.f, NULL, NULL);
-	setup_helper(1, "Load Game",  335.f, 423.f, NULL, NULL);
-	setup_helper(2, "Settings",   345.f, 493.f, NULL, NULL);
-	setup_helper(3, "Quit Game",  335.f, 568.f, NULL, NULL);
-	setup_helper(4, std::format("Music: {}",
+	setup_helper("New Game",   335.f, 343.f, NULL, NULL);
+	setup_helper("Load Game",  335.f, 423.f, NULL, NULL);
+	setup_helper("Settings",   345.f, 493.f, NULL, NULL);
+	setup_helper("Quit Game",  335.f, 568.f, NULL, NULL);
+	setup_helper(std::format("Music: {}",
 		Audio_Manager::get_music_volume() ? "ON" : "OFF").c_str(),
 		335.f, 643.f, NULL, NULL);
 
-	setup_helper(5, "Roguelike\nDungeon", 170.f, 40.f, 96.f, NULL);
+	setup_helper("Roguelike\nDungeon", 170.f, 40.f, 96.f, NULL);
 
-	setup_helper(6, 
+	setup_helper(
 		"Developed with the help of\ninternet forums and SFML Graphics,\nzlib/png license."
 		"\n\nFonts: fontsource.org, Google Fonts\n\nInstructions: use the arrow keys to "
 		"\nmove the players. Tap on the level \nup button to upgrade your stats."
@@ -39,7 +39,7 @@ Title_Screen::Title_Screen() : Screen(8, 7) {
 		"\n\nJSON parser: \nhttps://github.com/nlohmann/json."
 		"\n\nVersion: 4.0, refactored UI.",
 		710.f, 20.f, NULL, NULL);
-	setup_helper(7, "Mod Game", 335.f, 718.f, NULL, NULL);
+	setup_helper("Mod Game", 335.f, 718.f, NULL, NULL);
 
 	rects[5].setThemeAndHover(false);
 	texts[5].setThemeAndHover(false);

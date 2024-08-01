@@ -11,29 +11,29 @@
 bool Shop_Screen::buy = true;
 Stock Shop_Screen::stock = ItemStock;
 
-Shop_Screen::Shop_Screen() : Screen(9, 8, true, false, false) {
+Shop_Screen::Shop_Screen() : Screen(true, false, false) {
 	update = true;
 
-	setup_helper(0, NULL, 100.f,  80.f,  80.f, 50.f);
-	setup_helper(1, NULL, 100.f, 150.f,  80.f, 50.f);
-	setup_helper(2, NULL, 290.f,  80.f, 120.f, 50.f);
-	setup_helper(3, NULL, 290.f, 150.f, 120.f, 50.f);
-	setup_helper(4, NULL, 450.f,  80.f, 130.f, 50.f);
+	setup_helper(NULL, 100.f,  80.f,  80.f, 50.f);
+	setup_helper(NULL, 100.f, 150.f,  80.f, 50.f);
+	setup_helper(NULL, 290.f,  80.f, 120.f, 50.f);
+	setup_helper(NULL, 290.f, 150.f, 120.f, 50.f);
+	setup_helper(NULL, 450.f,  80.f, 130.f, 50.f);
 
-	setup_helper(5, NULL,  113.f,  125.f,  50.f,  0.f);
-	setup_helper(6, NULL,  300.f,  125.f, 100.f,  0.f);
+	setup_helper(NULL,  113.f,  125.f,  50.f,  0.f);
+	setup_helper(NULL,  300.f,  125.f, 100.f,  0.f);
 
-	setup_helper(0, "Shop", 360.f, 20.f, 36.f, NULL);
+	setup_helper("Shop", 360.f, 20.f, 36.f, NULL);
 
-	setup_helper(1,     "Buy", 110.f,  90.f, 30.f, NULL);
-	setup_helper(2,    "Sell", 110.f, 160.f, 30.f, NULL);
-	setup_helper(3,   "Items", 300.f,  90.f, 30.f, NULL);
-	setup_helper(4,  "Spells", 300.f, 160.f, 30.f, NULL);
-	setup_helper(5, "Special", 460.f,  90.f, 30.f, NULL);
+	setup_helper(    "Buy", 110.f,  90.f, 30.f, NULL);
+	setup_helper(   "Sell", 110.f, 160.f, 30.f, NULL);
+	setup_helper(  "Items", 300.f,  90.f, 30.f, NULL);
+	setup_helper( "Spells", 300.f, 160.f, 30.f, NULL);
+	setup_helper("Special", 460.f,  90.f, 30.f, NULL);
 
-	setup_helper(6,  "0 / 32 spells", 460.f, 150.f, 24.f, NULL);
-	setup_helper(7,   "0 / 32 items", 460.f, 190.f, 24.f, NULL);
-	setup_helper(8, "", 50.f, 720.f, 24.f, NULL);
+	setup_helper( "0 / 32 spells", 460.f, 150.f, 24.f, NULL);
+	setup_helper(  "0 / 32 items", 460.f, 190.f, 24.f, NULL);
+	setup_helper("", 50.f, 720.f, 24.f, NULL);
 }
 
 void Shop_Screen::click_event_handler() {

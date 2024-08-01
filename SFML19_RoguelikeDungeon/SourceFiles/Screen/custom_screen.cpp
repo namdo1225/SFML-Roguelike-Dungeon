@@ -7,20 +7,20 @@
 #include "Screen/custom_screen.h"
 #include "interface.h"
 
-Custom_Screen::Custom_Screen() : Screen(4, 5, false, false) {
-	setup_helper(0, NULL, 100.f, 100.f, 1000.f, 600.f, false, true);
+Custom_Screen::Custom_Screen() : Screen(false, false) {
+	setup_helper(NULL, 100.f, 100.f, 1000.f, 600.f, false, true);
 	rects[0].setFillColor(sf::Color(0, 0, 0, 128));
 	rects[0].setOutlineThickness(0.f);
 
-	setup_helper(1, NULL, 200.f, 200.f, 800.f, 400.f);
-	setup_helper(2, NULL, 500.f, 340.f, 200.f, 40.f);
-	setup_helper(3, NULL, 500.f, 420.f, 200.f, 40.f);
-	setup_helper(4, NULL, 500.f, 500.f, 200.f, 40.f);
+	setup_helper(NULL, 200.f, 200.f, 800.f, 400.f);
+	setup_helper(NULL, 500.f, 340.f, 200.f, 40.f);
+	setup_helper(NULL, 500.f, 420.f, 200.f, 40.f);
+	setup_helper(NULL, 500.f, 500.f, 200.f, 40.f);
 
-	setup_helper(0, "Unsaved changes will be lost.\nDo you still want to quit?", 450, 220, NULL, NULL);
-	setup_helper(1, "Back", 575.f, 343.f, NULL, NULL);
-	setup_helper(2, "Title", 573.f, 423.f, NULL, NULL);
-	setup_helper(3, "Quit", 575.f, 503.f, NULL, NULL);
+	setup_helper("Unsaved changes will be lost.\nDo you still want to quit?", 450, 220, NULL, NULL);
+	setup_helper("Back", 575.f, 343.f, NULL, NULL);
+	setup_helper("Title", 573.f, 423.f, NULL, NULL);
+	setup_helper("Quit", 575.f, 503.f, NULL, NULL);
 
 	rects[1].setThemeAndHover(false);
 	texts[0].setThemeAndHover(false);

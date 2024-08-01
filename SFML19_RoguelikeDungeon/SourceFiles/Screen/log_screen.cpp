@@ -8,17 +8,17 @@
 
 const unsigned int Log_Screen::MAX_LOGS;
 
-Log_Screen::Log_Screen() : Screen(2, 4, true, false) {
-	setup_helper(0, NULL, 570.f, 5.f, 630.f, 200.f, false, true);
+Log_Screen::Log_Screen() : Screen(true, false) {
+	setup_helper(NULL, 570.f, 5.f, 630.f, 200.f, false, true);
 	rects[0].setFillColor(sf::Color(0, 0, 0, 128));
 	rects[0].setOutlineThickness(0.f);
 
-	setup_helper(1, NULL,  50.f, -10.f,  500.f,  810.f);
-	setup_helper(2, NULL,  590.f,  10.f, 500.f,   50.f);
-	setup_helper(3, NULL,  590.f,  90.f, 180.f,   50.f);
+	setup_helper(NULL,  50.f, -10.f,  500.f,  810.f);
+	setup_helper(NULL,  590.f,  10.f, 500.f,   50.f);
+	setup_helper(NULL,  590.f,  90.f, 180.f,   50.f);
 
-	setup_helper(0, "Only the last 50 logs are stored", 600.f, 20.f, 30.f, NULL);
-	setup_helper(1, "Clear Log", 600.f, 100.f, 30.f, NULL);
+	setup_helper("Only the last 50 logs are stored", 600.f, 20.f, 30.f, NULL);
+	setup_helper("Clear Log", 600.f, 100.f, 30.f, NULL);
 
 	rects[0].setThemeAndHover(false);
 	rects[1].setThemeAndHover(false);

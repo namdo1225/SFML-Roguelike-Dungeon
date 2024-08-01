@@ -8,21 +8,21 @@
 #include "Manager/game_manager.h"
 #include <iostream>
 
-Map_Screen::Map_Screen() : Screen(6, 6, true, false) {
-	setup_helper(0, "^", 1060.f, 500.f, NULL, NULL);
-	setup_helper(1, ">", 1130.f, 575.f, NULL, NULL);
-	setup_helper(2, "v", 1060.f, 650.f, NULL, NULL);
-	setup_helper(3, "<", 985.f, 575.f, NULL, NULL);
-	setup_helper(4, "+", 985.f, 425.f, NULL, NULL);
-	setup_helper(5, "-", 1130.f, 425.f, NULL, NULL);
+Map_Screen::Map_Screen() : Screen(true, false) {
+	setup_helper("^", 1060.f, 500.f, NULL, NULL);
+	setup_helper(">", 1130.f, 575.f, NULL, NULL);
+	setup_helper("v", 1060.f, 650.f, NULL, NULL);
+	setup_helper("<", 985.f, 575.f, NULL, NULL);
+	setup_helper("+", 985.f, 425.f, NULL, NULL);
+	setup_helper("-", 1130.f, 425.f, NULL, NULL);
 
 
-	setup_helper(0, NULL, 1040.f, 490.f, 50.f, 50.f);
-	setup_helper(1, NULL, 1110.f, 565.f, 50.f, 50.f);
-	setup_helper(2, NULL, 1040.f, 640.f, 50.f, 50.f);
-	setup_helper(3, NULL,  965.f, 565.f, 50.f, 50.f);
-	setup_helper(4, NULL,  965.f, 415.f, 50.f, 50.f);
-	setup_helper(5, NULL, 1110.f, 415.f, 50.f, 50.f);
+	setup_helper(NULL, 1040.f, 490.f, 50.f, 50.f);
+	setup_helper(NULL, 1110.f, 565.f, 50.f, 50.f);
+	setup_helper(NULL, 1040.f, 640.f, 50.f, 50.f);
+	setup_helper(NULL,  965.f, 565.f, 50.f, 50.f);
+	setup_helper(NULL,  965.f, 415.f, 50.f, 50.f);
+	setup_helper(NULL, 1110.f, 415.f, 50.f, 50.f);
 }
 
 void Map_Screen::click_event_handler() {

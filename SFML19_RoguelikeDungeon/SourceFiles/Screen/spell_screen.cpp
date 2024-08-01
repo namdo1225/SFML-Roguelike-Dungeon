@@ -9,11 +9,11 @@
 #include <format>
 #include "Manager/game_manager.h"
 
-Spell_Screen::Spell_Screen() : Screen(3, 0, true, false) {
+Spell_Screen::Spell_Screen() : Screen(true, false) {
 	update = true;
-	setup_helper(0, "Spells", 360.f, 20.f, 36.f, NULL);
-	setup_helper(1, "0 / 32 spells", 340.f, 150.f, 24.f, NULL);
-    setup_helper(2, "", 50.f, 720.f, 24.f, NULL);
+	setup_helper("Spells", 360.f, 20.f, 36.f, NULL);
+	setup_helper("0 / 32 spells", 340.f, 150.f, 24.f, NULL);
+    setup_helper("", 50.f, 720.f, 24.f, NULL);
 }
 
 void Spell_Screen::click_event_handler() {

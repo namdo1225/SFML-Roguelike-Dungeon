@@ -8,10 +8,10 @@
 #include "Screen/name_screen.h"
 #include "Manager/game_manager.h"
 
-Name_Screen::Name_Screen() : Screen(1, 1, true, true, true, true) {
-	setup_helper(0, NULL, 350.f, 240.f, 470.f, 50.f);
+Name_Screen::Name_Screen() : Screen(true, true, true, true) {
+	setup_helper(NULL, 350.f, 240.f, 470.f, 50.f);
 
-	setup_helper(0,
+	setup_helper(
 		"Enter your name (<= 20 chars, ASCII). Press 'Enter' or click 'Confirm' when finished."
 		"\n\nSome characters can't be typed:  \\  =  $  *  |  ~  .  \"  '  ;",
 		20.f, 20.f, NULL, NULL);

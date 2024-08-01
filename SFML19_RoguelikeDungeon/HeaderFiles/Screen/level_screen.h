@@ -13,8 +13,8 @@
 
 class Level_Screen : public Screen {
 private:
-	std::array<long, 8> backup_stats;
-	unsigned int backup_pts;
+	std::array<long, 8> backup_stats = {0, 0, 0, 0, 0, 0, 0, 0};
+	unsigned int backup_pts = 0;
 	bool reset = true;
 
 public:
