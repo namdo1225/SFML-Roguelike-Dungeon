@@ -23,15 +23,15 @@ Name_Screen::Name_Screen() : Screen(1, 1, true, true, true, true) {
 void Name_Screen::click_event_handler() {
 	if (mouse_in_button(ExitButton)) {
 		switch_screen(NameScreen, TitleScreen, false, true);
-		name_txt.setString("Player");
+		map_txts["name"].setString("Player");
 	}
 	else if (mouse_in_button(ConfirmButton)) {
 		switch_screen(NameScreen, StatScreen, false);
-		Game_Manager::player.set_name(name_txt.getString().toAnsiString().c_str());
-		name_txt.setString("Player");
+		Game_Manager::player.set_name(map_txts["name"].getString().toAnsiString().c_str());
+		map_txts["name"].setString("Player");
 	}
 	else if (mouse_in_button(ClearButton)) {
-		name_txt.setString("");
+		map_txts["name"].setString("");
 	}
 }
 
@@ -44,8 +44,8 @@ void Name_Screen::hover_event_handler() {
 void Name_Screen::text_event_handler() {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {
 		switch_screen(NameScreen, StatScreen, false, true);
-		Game_Manager::player.set_name(name_txt.getString().toAnsiString().c_str());
-		name_txt.setString("Player");
+		Game_Manager::player.set_name(map_txts["name"].getString().toAnsiString().c_str());
+		map_txts["name"].setString("Player");
 	}
 	Screen::text_event_handler();
 }

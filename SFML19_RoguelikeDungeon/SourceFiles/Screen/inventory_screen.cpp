@@ -83,7 +83,7 @@ void Inventory_Screen::click_event_handler() {
 				int i1x = item->get_pos('x'), i1y = item->get_pos('y');
 				Audio_Manager::play_sfx(4);
 				Game_Manager::inv_draw_desc = Game_Manager::inv_select = item;
-				inv_sp_cur_slot.setPosition(i1x - 5, i1y - 5);
+				map_rects["inv_sp_cur_slot"].setPosition(i1x - 5, i1y - 5);
 				return;
 			}
 		}
@@ -103,9 +103,9 @@ void Inventory_Screen::hover_event_handler() {
 }
 
 void Inventory_Screen::draw() {
-	window.draw(background);
+	window.draw(map_rects["background"]);
 	if (Game_Manager::inv_select->get_id())
-		window.draw(inv_sp_cur_slot);
+		window.draw(map_rects["inv_sp_cur_slot"]);
 	Screen::draw();
 
 	for (unsigned int i = 0; i < Game_Manager::player.get_max_itm(); i++)
@@ -115,12 +115,12 @@ void Inventory_Screen::draw() {
 		itm->draw('t');
 
 	if (Game_Manager::inv_select->get_type() == 0) {
-		window.draw(inv_sp_use_rect);
-		window.draw(inv_sp_use_txt);
+		window.draw(map_rects["inv_sp_use"]);
+		window.draw(map_txts["inv_sp_use"]);
 	}
 
-	window.draw(inv_sp_desc_rect);
-	window.draw(inv_sp_desc_txt);
+	window.draw(map_rects["inv_sp_desc"]);
+	window.draw(map_txts["inv_sp_desc"]);
 
 	if (Game_Manager::inv_draw_desc->get_id())
 		Game_Manager::inv_draw_desc->draw('d');
@@ -128,12 +128,12 @@ void Inventory_Screen::draw() {
 	if (Game_Manager::inv_select != Game_Manager::pl_weapon &&
 		Game_Manager::inv_select != Game_Manager::pl_armor &&
 		Game_Manager::inv_select->get_id()) {
-		window.draw(inv_sp_discard_rect);
-		window.draw(inv_sp_discard_txt);
+		window.draw(map_rects["inv_sp_discard"]);
+		window.draw(map_txts["inv_sp_discard"]);
 	}
 
-	window.draw(inv_sp_gold_txt);
-	window.draw(inv_sp_gold_amount_txt);
+	window.draw(map_txts["inv_sp_gold"]);
+	window.draw(map_txts["inv_sp_gold_amount"]);
 }
 
 void Inventory_Screen::update_draw() {
@@ -141,5 +141,5 @@ void Inventory_Screen::update_draw() {
 		Game_Manager::items.size(),
 		Game_Manager::player.get_max_itm()));
 
-	inv_sp_gold_amount_txt.setString(std::to_string(Game_Manager::player.get_gold()));
+	map_txts["inv_sp_gold_amount"].setString(std::to_string(Game_Manager::player.get_gold()));
 }

@@ -21,14 +21,6 @@ std::unique_ptr<Screen> Screen::screens[num_screens];
 
 bool Screen::loaded = false;
 
-Full_Text Screen::exit_txt = Full_Text(1130.f, 5.f, 48, "X");
-Full_Rectangle Screen::exit_rect = Full_Rectangle(1120, 10, 50, 50);
-
-Full_Text Screen::confirm_txt = Full_Text(530.f, 710.f, 24, "Confirm");
-Full_Rectangle Screen::confirm_rect = Full_Rectangle(500.f, 700.f, 150.f, 50.f);
-
-Full_Rectangle Screen::background = Full_Rectangle(-10, -10, 1210, 810, false);
-
 Full_Text Screen::stat_full_txts[NUM_NON_CUR_STATS] = {
 	Full_Text(280.f, 250.f, 24.f, FULL_STATS[0]),
 	Full_Text(280.f, 300.f, 24.f, FULL_STATS[1]),
@@ -60,32 +52,11 @@ Full_Text Screen::stat_curr_arrows[NUM_NON_CUR_STATS * 2] = {
 	Full_Text(660.f, 500.f, 24.f, ">"),
 };
 
-Full_Text Screen::stat_guide_txt = Full_Text(20.f, 20.f, 42, "Please allocate the player's stats. You have a limited \nnumber of stat points, so balance your stats carefully.\nYou can mess up your player if not done correctly.");
-Full_Text Screen::stat_left_txt = Full_Text(200.f, 190.f, 36, "Stat points left:");
-Full_Text Screen::stat_left_pts = Full_Text(580.f, 190.f, 36, "10");
-
 const unsigned int Screen::MAX_INV_SPELL_SLOTS;
 Full_Rectangle Screen::inv_sp_slots[MAX_INV_SPELL_SLOTS];
 
-Full_Rectangle Screen::inv_sp_use_rect = Full_Rectangle(620.f, 660.f, 100.f, 80.f);
-Full_Text Screen::inv_sp_use_txt = Full_Text(630.f, 670.f, 36.f, "Use");
-
-Full_Rectangle Screen::inv_sp_desc_rect = Full_Rectangle(750.f, 140.f, 400.f, 600.f);
-Full_Text Screen::inv_sp_desc_txt = Full_Text(875.f, 100.f, 24.f, "Description");
-
-Full_Rectangle Screen::inv_sp_discard_rect = Full_Rectangle(420.f, 660.f, 160.f, 80.f);
-Full_Text Screen::inv_sp_discard_txt = Full_Text(430.f, 670.f, 36.f, "Discard");
-
-Full_Rectangle Screen::inv_sp_cur_slot = Full_Rectangle(-100.f, -100.f, 70.f, 70.f, 0, false, sf::Color::Red, sf::Color::Red);
-
-Full_Text Screen::inv_sp_gold_txt = Full_Text(750.f, 30.f, 24.f, "Golds:");
-Full_Text Screen::inv_sp_gold_amount_txt = Full_Text(850.f, 30.f, 24.f, "0");
-
-Full_Rectangle Screen::clear_rect = Full_Rectangle(700.f, 700.f, 150.f, 50.f);
-Full_Text Screen::clear_txt = Full_Text(745.f, 710.f, 24.f, "Clear");
-
-Full_Rectangle Screen::name_rect = Full_Rectangle(350.f, 240.f, 470.f, 50.f);
-Full_Text Screen::name_txt = Full_Text(360.f, 250.f, 24.f, "Player");
+std::map<std::string, Full_Rectangle> Screen::map_rects;
+std::map<std::string, Full_Text> Screen::map_txts;
 
 Screen::Screen(unsigned int txt, unsigned int rect,
 	bool exit_button, bool show_bg, bool confirm_button, bool text_handler_enabled):
@@ -110,33 +81,6 @@ Screen::Screen(unsigned int txt, unsigned int rect,
 	}
 }
 
-void Screen::draw() {
-	if (show_bg)
-		window.draw(background);
-
-	for (Full_Rectangle rect : rects)
-		window.draw(rect);
-	for (Full_Text text : texts)
-		window.draw(text);
-
-	if (text_handler_enabled) {
-		window.draw(clear_rect);
-		window.draw(clear_txt);
-		window.draw(name_rect);
-		window.draw(name_txt);
-	}
-
-	if (confirm_button) {
-		window.draw(confirm_rect);
-		window.draw(confirm_txt);
-	}
-
-	if (exit_button) {
-		window.draw(exit_rect);
-		window.draw(exit_txt);
-	}
-}
-
 void Screen::setup() {
 	loaded = true;
 	window.create(sf::VideoMode(1200, 800), "RE: Dungeon");
@@ -144,9 +88,68 @@ void Screen::setup() {
 
 	for (unsigned int i = 0; i < MAX_INV_SPELL_SLOTS; i++) {
 		inv_sp_slots[i] = Full_Rectangle(200 + ((i % 6) * 80),
-			                             240 + ((i / 6) * 80),
-			                             60.f,
-			                             60.f);
+			240 + ((i / 6) * 80),
+			60.f,
+			60.f);
+	}
+
+	map_rects["background"] = Full_Rectangle(-10, -10, 1210, 810, false);
+
+	map_rects["exit"] = Full_Rectangle(1120, 10, 50, 50);
+	map_txts["exit"] = Full_Text(1130.f, 5.f, 48, "X");
+
+	map_rects["confirm"] = Full_Rectangle(500.f, 700.f, 150.f, 50.f);
+	map_txts["confirm"] = Full_Text(530.f, 710.f, 24, "Confirm");
+
+	map_rects["name"] = Full_Rectangle(350.f, 240.f, 470.f, 50.f);
+	map_txts["name"] = Full_Text(360.f, 250.f, 24.f, "Player");
+
+	map_rects["clear"] = Full_Rectangle(700.f, 700.f, 150.f, 50.f);
+	map_txts["clear"] = Full_Text(745.f, 710.f, 24.f, "Clear");
+
+	map_txts["stat_guide"] = Full_Text(20.f, 20.f, 42, "Please allocate the player's stats. You have a limited \nnumber of stat points, so balance your stats carefully.\nYou can mess up your player if not done correctly.");
+	map_txts["stat_left_guide"] = Full_Text(200.f, 190.f, 36, "Stat points left:");
+	map_txts["stat_left"] = Full_Text(580.f, 190.f, 36, "10");
+
+	map_rects["inv_sp_use"] = Full_Rectangle(620.f, 660.f, 100.f, 80.f);
+	map_txts["inv_sp_use"] = Full_Text(630.f, 670.f, 36.f, "Use");
+
+	map_rects["inv_sp_desc"] = Full_Rectangle(750.f, 140.f, 400.f, 600.f);
+	map_txts["inv_sp_desc"] = Full_Text(875.f, 100.f, 24.f, "Description");
+
+	map_rects["inv_sp_discard"] = Full_Rectangle(420.f, 660.f, 160.f, 80.f);
+	map_txts["inv_sp_discard"] = Full_Text(430.f, 670.f, 36.f, "Discard");
+
+	map_rects["inv_sp_cur_slot"] = Full_Rectangle(-100.f, -100.f, 70.f, 70.f, 0, false, sf::Color::Red, sf::Color::Red);
+
+	map_txts["inv_sp_gold"] = Full_Text(750.f, 30.f, 24.f, "Golds:");
+	map_txts["inv_sp_gold_amount"] = Full_Text(850.f, 30.f, 24.f, "0");
+}
+
+void Screen::draw() {
+	if (show_bg)
+		window.draw(map_rects["background"]);
+
+	for (Full_Rectangle rect : rects)
+		window.draw(rect);
+	for (Full_Text text : texts)
+		window.draw(text);
+
+	if (text_handler_enabled) {
+		window.draw(map_rects["clear"]);
+		window.draw(map_txts["clear"]);
+		window.draw(map_rects["name"]);
+		window.draw(map_txts["name"]);
+	}
+
+	if (confirm_button) {
+		window.draw(map_rects["confirm"]);
+		window.draw(map_txts["confirm"]);
+	}
+
+	if (exit_button) {
+		window.draw(map_rects["exit"]);
+		window.draw(map_txts["exit"]);
 	}
 }
 
@@ -165,39 +168,39 @@ bool Screen::mouse_in_helper(bool element, unsigned int i) {
 bool Screen::mouse_in_button(ReusableButton button) {
 	switch (button) {
 	case ExitButton:
-		return exit_rect.getGlobalBounds().contains(sf::Vector2f(x, y));
+		return map_rects["exit"].getGlobalBounds().contains(sf::Vector2f(x, y));
 	case ConfirmButton:
-		return confirm_rect.getGlobalBounds().contains(sf::Vector2f(x, y));
+		return map_rects["confirm"].getGlobalBounds().contains(sf::Vector2f(x, y));
 	case UseButton:
-		return inv_sp_use_rect.getGlobalBounds().contains(sf::Vector2f(x, y));
+		return map_rects["inv_sp_use"].getGlobalBounds().contains(sf::Vector2f(x, y));
 	case DiscardButton:
-		return inv_sp_discard_rect.getGlobalBounds().contains(sf::Vector2f(x, y));
+		return map_rects["inv_sp_discard"].getGlobalBounds().contains(sf::Vector2f(x, y));
 	case ClearButton:
-		return clear_rect.getGlobalBounds().contains(sf::Vector2f(x, y));
+		return map_rects["clear"].getGlobalBounds().contains(sf::Vector2f(x, y));
 	}
 	return false;
 }
 
 void Screen::hover_button(ReusableButton button) {
-	Full_Rectangle* button_rect = &exit_rect;
-	Full_Text* button_txt = &exit_txt;
+	Full_Rectangle* button_rect = &map_rects["exit"];
+	Full_Text* button_txt = &map_txts["exit"];
 
 	switch (button) {
 	case ConfirmButton:
-		button_rect = &confirm_rect;
-		button_txt = &confirm_txt;
+		button_rect = &map_rects["confirm"];
+		button_txt = &map_txts["confirm"];
 		break;
 	case UseButton:
-		button_rect = &inv_sp_use_rect;
-		button_txt = &inv_sp_use_txt;
+		button_rect = &map_rects["inv_sp_use"];
+		button_txt = &map_txts["inv_sp_use"];
 		break;
 	case DiscardButton:
-		button_rect = &inv_sp_discard_rect;
-		button_txt = &inv_sp_discard_txt;
+		button_rect = &map_rects["inv_sp_discard"];
+		button_txt = &map_txts["inv_sp_discard"];
 		break;
 	case ClearButton:
-		button_rect = &clear_rect;
-		button_txt = &clear_txt;
+		button_rect = &map_rects["clear"];
+		button_txt = &map_txts["clear"];
 		break;
 	}
 
@@ -275,52 +278,18 @@ void Screen::change_settings() {
 		}
 	}
 
-	exit_rect.flip_theme();
-	exit_txt.flip_theme();
-	exit_txt.setFont(Font_Manager::get_selected());
+	std::map<std::string, Full_Rectangle>::iterator it_r = map_rects.begin();
+	while (it_r != map_rects.end()) {
+		it_r->second.flip_theme();
+		it_r++;
+	}
 
-	confirm_rect.flip_theme();
-	confirm_txt.flip_theme();
-	confirm_txt.setFont(Font_Manager::get_selected());
-
-	stat_guide_txt.flip_theme();
-	stat_guide_txt.setFont(Font_Manager::get_selected());
-
-	stat_left_txt.flip_theme();
-	stat_left_txt.setFont(Font_Manager::get_selected());
-
-	stat_left_pts.flip_theme();
-	stat_left_pts.setFont(Font_Manager::get_selected());
-
-	inv_sp_use_rect.flip_theme();
-	inv_sp_desc_rect.flip_theme();
-	inv_sp_discard_rect.flip_theme();
-
-	inv_sp_use_txt.setFont(Font_Manager::get_selected());
-	inv_sp_use_txt.flip_theme();
-
-	inv_sp_discard_txt.setFont(Font_Manager::get_selected());
-	inv_sp_discard_txt.flip_theme();
-
-	inv_sp_desc_txt.setFont(Font_Manager::get_selected());
-	inv_sp_desc_txt.flip_theme();
-
-	clear_txt.setFont(Font_Manager::get_selected());
-	clear_txt.flip_theme();
-
-	name_txt.setFont(Font_Manager::get_selected());
-	name_txt.flip_theme();
-
-	clear_rect.flip_theme();
-	name_rect.flip_theme();
-
-	inv_sp_gold_txt.setFont(Font_Manager::get_selected());
-	inv_sp_gold_txt.flip_theme();
-	
-	inv_sp_gold_amount_txt.setFont(Font_Manager::get_selected());
-	inv_sp_gold_amount_txt.flip_theme();
-
-	background.flip_theme();
+	std::map<std::string, Full_Text>::iterator it_t = map_txts.begin();
+	while (it_t != map_txts.end()) {
+		it_t->second.flip_theme();
+		it_t->second.setFont(Font_Manager::get_selected());
+		it_t++;
+	}
 
 	for (Full_Text& text : stat_full_txts) {
 		text.flip_theme();
@@ -356,14 +325,14 @@ void Screen::text_event_handler() {
 
 void Screen::text_event_helper() {
 	char letter{ static_cast<char>(event.text.unicode) };
-	sf::String cur_string = name_txt.getString();
+	sf::String cur_string = map_txts["name"].getString();
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::BackSpace) && !name_txt.getString().isEmpty())
-		name_txt.setString(cur_string.substring(0, cur_string.getSize() - 1));
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::BackSpace) && !map_txts["name"].getString().isEmpty())
+		map_txts["name"].setString(cur_string.substring(0, cur_string.getSize() - 1));
 	else if (cur_string.getSize() < 20 && letter > ' ' && event.text.unicode < 128 && letter != '\\' && letter != '=' &&
 		letter != '$' && letter != '*' && letter != '|' && letter != '~' && letter != '.' && letter != '"' && letter != '\''
 		&& letter != ';')
-		name_txt.setString(cur_string + letter);
+		map_txts["name"].setString(cur_string + letter);
 }
 
 bool Screen::mouse_in_slot(unsigned int i) {

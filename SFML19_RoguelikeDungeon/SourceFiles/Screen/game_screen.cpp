@@ -126,7 +126,7 @@ void Game_Screen::click_event_handler() {
 	if (mouse_in_helper(true, 5))
 		show_dialog(Screen::display, MenuScreen);
 	else if (mouse_in_helper(true, 4)) {
-		stat_left_pts.setString(std::to_string(Game_Manager::player.get_pts()));
+		map_txts["stat_left"].setString(std::to_string(Game_Manager::player.get_pts()));
 		switch_screen(GameScreen, LevelScreen, false, true);
 	}
 	else if (mouse_in_helper(true, 6)) {
@@ -230,7 +230,7 @@ void Game_Screen::hover_event_handler() {
 }
 
 void Game_Screen::draw() {
-	window.draw(background);
+	window.draw(map_rects["background"]);
 	window.setView(viewWorld);
 
 	Game_Manager::floor.draw();

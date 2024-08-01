@@ -103,7 +103,7 @@ void Status_Screen::update_draw() {
 }
 
 void Status_Screen::draw() {
-	window.draw(background);
+	window.draw(map_rects["background"]);
 	Screen::draw();
 
 	window.setView(viewEffect);

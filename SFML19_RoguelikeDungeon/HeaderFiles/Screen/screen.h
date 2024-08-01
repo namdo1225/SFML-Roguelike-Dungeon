@@ -33,44 +33,16 @@ protected:
 
 	std::vector<Full_Text> texts;
 	std::vector<Full_Rectangle> rects;
-	static Full_Rectangle background;
 
 	// Stat selection common UI:
 	static Full_Text stat_full_txts[NUM_NON_CUR_STATS];
 	static Full_Text stat_curr_txts[NUM_NON_CUR_STATS];
 	static Full_Text stat_curr_arrows[NUM_NON_CUR_STATS * 2];
-	static Full_Text stat_guide_txt;
-	static Full_Text stat_left_txt;
-	static Full_Text stat_left_pts;
-
-	// Inventory/spell selection common UI:
 
 	static Full_Rectangle inv_sp_slots[MAX_INV_SPELL_SLOTS];
 
-	static Full_Rectangle inv_sp_use_rect;
-	static Full_Text inv_sp_use_txt;
-
-	static Full_Rectangle inv_sp_desc_rect;
-	static Full_Text inv_sp_desc_txt;
-
-	static Full_Rectangle inv_sp_discard_rect;
-	static Full_Text inv_sp_discard_txt;
-
-	static Full_Rectangle inv_sp_cur_slot;
-
-	static Full_Text inv_sp_gold_txt;
-	static Full_Text inv_sp_gold_amount_txt;
-
-	// Name selection, save, and load common UI:
-
-	static Full_Rectangle clear_rect;
-	static Full_Text clear_txt;
-
-	static Full_Rectangle name_rect;
-	static Full_Text name_txt;
-
-	static Full_Text confirm_txt;
-	static Full_Rectangle confirm_rect;
+	static std::map<std::string, Full_Rectangle> map_rects;
+	static std::map<std::string, Full_Text> map_txts;
 
 	/*
 	* Helper to setup shape.
@@ -274,10 +246,6 @@ public:
 	*	update value.
 	*/
 	bool get_update();
-
-private:
-	static Full_Text exit_txt;
-	static Full_Rectangle exit_rect;
 };
 
 

@@ -23,18 +23,18 @@ Load_Screen::Load_Screen() : Screen(1, 1, true, true, true, true) {
 void Load_Screen::click_event_handler() {
 	if (mouse_in_button(ExitButton)) {
 		return_to_prev_screen(LoadScreen);
-		name_txt.setString("Player");
+		map_txts["name"].setString("Player");
 	}
 	else if (mouse_in_button(ConfirmButton)) {
 		switch_screen(LoadScreen,
-			Game_Manager::read_save(name_txt.getString().toAnsiString().c_str())
+			Game_Manager::read_save(map_txts["name"].getString().toAnsiString().c_str())
 			? GameScreen
 			: TitleScreen,
 			false, true);
-		name_txt.setString("Player");
+		map_txts["name"].setString("Player");
 	}
 	else if (mouse_in_button(ClearButton)) {
-		name_txt.setString("");
+		map_txts["name"].setString("");
 	}
 }
 
@@ -46,9 +46,9 @@ void Load_Screen::hover_event_handler() {
 
 void Load_Screen::text_event_handler() {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {
-		if (Game_Manager::read_save(name_txt.getString().toAnsiString().c_str()))
+		if (Game_Manager::read_save(map_txts["name"].getString().toAnsiString().c_str()))
 			switch_screen(LoadScreen, GameScreen, false, true);
-		name_txt.setString("Player");
+		map_txts["name"].setString("Player");
 	}
 	Screen::text_event_handler();
 }

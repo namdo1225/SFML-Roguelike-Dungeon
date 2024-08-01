@@ -40,6 +40,7 @@ Interface* Interface::singleton;
 Interface::Interface() {
     if (!Texture_Manager::load() || !Audio_Manager::load())
         return;
+    Screen::setup();
     Game_Manager::setup();
     Setting_Manager::load();
     Audio_Manager::set_music_volume(Setting_Manager::music_volume);
@@ -66,11 +67,6 @@ Interface::Interface() {
     Screen::change_settings();
     Game_Manager::player = Player();
     Game_Manager::reset_game();
-
-    const sf::Time initialTime = sf::seconds(4.f);
-    // thor::StopWatch stopWatch;
-    //thor::CallbackTimer timer;
-    //timer.reset(initialTime);
 }
 
 Interface::~Interface() {}
@@ -86,7 +82,6 @@ void Interface::window_loop() {
     {
         handle_event();
         Game_Manager::ene_dead();
-
 
         window.clear();
         draw_interface();

@@ -100,14 +100,14 @@ void Shop_Screen::hover_event_handler() {
 }
 
 void Shop_Screen::draw() {
-	window.draw(background);
+	window.draw(map_rects["background"]);
 
 	unsigned int inv_select = Game_Manager::inv_select->get_id();
 	unsigned int sp_select = Game_Manager::spell_select->get_id();
 	unsigned int special_select = Game_Manager::special_select->get_id();
 
 	if (sp_select || inv_select || special_select)
-		window.draw(inv_sp_cur_slot);
+		window.draw(map_rects["inv_sp_cur_slot"]);
 
 	Screen::draw();
 
@@ -132,8 +132,8 @@ void Shop_Screen::draw() {
 		for (std::shared_ptr<Special> special : Game_Manager::special_stocks)
 			special->draw('t');
 
-	window.draw(inv_sp_desc_rect);
-	window.draw(inv_sp_desc_txt);
+	window.draw(map_rects["inv_sp_desc"]);
+	window.draw(map_txts["inv_sp_desc"]);
 
 	if (inv_select)
 		Game_Manager::inv_select->draw('d');
@@ -145,12 +145,12 @@ void Shop_Screen::draw() {
 		Game_Manager::special_select->draw('d');
 
 	if (sp_select|| inv_select || special_select) {
-		window.draw(confirm_rect);
-		window.draw(confirm_txt);
+		window.draw(map_rects["confirm"]);
+		window.draw(map_txts["confirm"]);
 	}
 
-	window.draw(inv_sp_gold_txt);
-	window.draw(inv_sp_gold_amount_txt);
+	window.draw(map_txts["inv_sp_gold"]);
+	window.draw(map_txts["inv_sp_gold_amount"]);
 }
 
 void Shop_Screen::item_shop(bool buy) {
@@ -176,14 +176,14 @@ void Shop_Screen::item_shop(bool buy) {
 			int sx = item->get_pos('x'), sy = item->get_pos('y');
 			// Selects another item
 			if (inv_select != 0 && item != Game_Manager::inv_select) {
-				inv_sp_cur_slot.setPosition(sx - 5, sy - 5);
+				map_rects["inv_sp_cur_slot"].setPosition(sx - 5, sy - 5);
 				Game_Manager::inv_select = Game_Manager::inv_draw_desc = item;
 				return;
 			}
 			// Selects an item
 			else if (inv_select == 0) {
 				Game_Manager::inv_select = Game_Manager::inv_draw_desc = item;
-				inv_sp_cur_slot.setPosition(sx - 5, sy - 5);
+				map_rects["inv_sp_cur_slot"].setPosition(sx - 5, sy - 5);
 				return;
 			}
 			// Unselects
@@ -218,14 +218,14 @@ void Shop_Screen::spell_shop(bool buy) {
 			int sx = spell->get_pos('x'), sy = spell->get_pos('y');
 			// Selects another spell
 			if (sp_select && spell != Game_Manager::spell_select) {
-				inv_sp_cur_slot.setPosition(sx - 5, sy - 5);
+				map_rects["inv_sp_cur_slot"].setPosition(sx - 5, sy - 5);
 				Game_Manager::spell_select = Game_Manager::spell_desc = spell;
 				return;
 			}
 			// Selects a spell
 			else if (!sp_select) {
 				Game_Manager::spell_select = Game_Manager::spell_desc = spell;
-				inv_sp_cur_slot.setPosition(sx - 5, sy - 5);
+				map_rects["inv_sp_cur_slot"].setPosition(sx - 5, sy - 5);
 				return;
 			}
 			// Unselects
@@ -258,14 +258,14 @@ void Shop_Screen::special_shop(bool buy)
 			int sx = special->get_pos('x'), sy = special->get_pos('y');
 			// Selects another special
 			if (sp_select && special != Game_Manager::special_select) {
-				inv_sp_cur_slot.setPosition(sx - 5, sy - 5);
+				map_rects["inv_sp_cur_slot"].setPosition(sx - 5, sy - 5);
 				Game_Manager::special_select = Game_Manager::special_desc = special;
 				return;
 			}
 			// Selects a special
 			else if (!sp_select) {
 				Game_Manager::special_select = Game_Manager::special_desc = special;
-				inv_sp_cur_slot.setPosition(sx - 5, sy - 5);
+				map_rects["inv_sp_cur_slot"].setPosition(sx - 5, sy - 5);
 				return;
 			}
 			// Unselects
@@ -289,5 +289,5 @@ void Shop_Screen::update_draw() {
 	texts[7].setString(std::format("{} / {} items",
 		Game_Manager::items.size(), Game_Manager::player.get_max_itm()));
 
-	inv_sp_gold_amount_txt.setString(std::to_string(Game_Manager::player.get_gold()));
+	map_txts["inv_sp_gold_amount"].setString(std::to_string(Game_Manager::player.get_gold()));
 }

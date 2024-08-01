@@ -52,7 +52,7 @@ void Spell_Screen::click_event_handler() {
             // Selects a spell
             else if (!Game_Manager::spell_select->get_id()) {
                 int sx = spell->get_pos('x'), sy = spell->get_pos('y');
-                inv_sp_cur_slot.setPosition(sx - 5, sy - 5);
+                map_rects["inv_sp_cur_slot"].setPosition(sx - 5, sy - 5);
                 Game_Manager::spell_desc = Game_Manager::spell_select = spell;
                 return;
             }
@@ -75,9 +75,9 @@ void Spell_Screen::hover_event_handler() {
 }
 
 void Spell_Screen::draw() {
-    window.draw(background);
+    window.draw(map_rects["background"]);
     if (Game_Manager::spell_select->get_id() != 0)
-        window.draw(inv_sp_cur_slot);
+        window.draw(map_rects["inv_sp_cur_slot"]);
 	Screen::draw();
 
 	for (Full_Rectangle& rect : inv_sp_slots)
@@ -87,25 +87,25 @@ void Spell_Screen::draw() {
         sp->draw('t');
 
     if (Game_Manager::spell_select->get_id()) {
-        window.draw(inv_sp_use_rect);
-        window.draw(inv_sp_use_txt);
-        window.draw(inv_sp_discard_rect);
-        window.draw(inv_sp_discard_txt);
+        window.draw(map_rects["inv_sp_use"]);
+        window.draw(map_txts["inv_sp_use"]);
+        window.draw(map_rects["inv_sp_discard"]);
+        window.draw(map_txts["inv_sp_discard"]);
     }
 
-	window.draw(inv_sp_desc_rect);
-	window.draw(inv_sp_desc_txt);
+	window.draw(map_rects["inv_sp_desc"]);
+	window.draw(map_txts["inv_sp_desc"]);
 
     if (Game_Manager::spell_select->get_id())
         Game_Manager::spell_select->draw('d');
 
-    window.draw(inv_sp_gold_txt);
-    window.draw(inv_sp_gold_amount_txt);
+    window.draw(map_txts["inv_sp_gold"]);
+    window.draw(map_txts["inv_sp_gold_amount"]);
 }
 
 void Spell_Screen::update_draw() {
 	texts[1].setString(std::format("{} / {} spells",
 		Game_Manager::spells.size(), Game_Manager::MAX_INV_SPELL_SLOTS));
 
-    inv_sp_gold_amount_txt.setString(std::to_string(Game_Manager::player.get_gold()));
+    map_txts["inv_sp_gold_amount"].setString(std::to_string(Game_Manager::player.get_gold()));
 }

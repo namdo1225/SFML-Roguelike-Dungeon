@@ -35,14 +35,14 @@ void Stat_Screen::click_event_handler() {
 			Game_Manager::player.set_stat(st, --cur_stat);
 			stat_curr_txts[st].setString(std::to_string(cur_stat));
 			Game_Manager::player.set_point(++pts_left);
-			stat_left_pts.setString(std::to_string(pts_left));
+			map_txts["stat_left"].setString(std::to_string(pts_left));
 		}
 		else if (i >= 6 && Game_Manager::player.get_pts() != 0) {
 			if (st <= Max_Mp) Game_Manager::player.set_stat((Stat)(6 + st), Game_Manager::player.get_stat((Stat)(6 + st)) + 1);
 			Game_Manager::player.set_stat(st, ++cur_stat);
 			stat_curr_txts[st].setString(std::to_string(cur_stat));
 			Game_Manager::player.set_point(--pts_left);
-			stat_left_pts.setString(std::to_string(pts_left));
+			map_txts["stat_left"].setString(std::to_string(pts_left));
 		}
 	}
 }
@@ -65,9 +65,9 @@ void Stat_Screen::hover_event_handler() {
 void Stat_Screen::draw() {
 	Screen::draw();
 
-	window.draw(stat_guide_txt);
-	window.draw(stat_left_txt);
-	window.draw(stat_left_pts);
+	window.draw(map_txts["stat_guide"]);
+	window.draw(map_txts["stat_left_guide"]);
+	window.draw(map_txts["stat_left"]);
 
 	for (Full_Text& text : stat_full_txts)
 		window.draw(text);
@@ -83,7 +83,7 @@ void Stat_Screen::update_draw() {
 		unsigned int cur_stat = Game_Manager::player.get_stat(st);
 		stat_curr_txts[i].setString(std::to_string(cur_stat));
 	}
-	stat_left_pts.setString(std::to_string(Game_Manager::player.get_pts()));
+	map_txts["stat_left"].setString(std::to_string(Game_Manager::player.get_pts()));
 
 }
 

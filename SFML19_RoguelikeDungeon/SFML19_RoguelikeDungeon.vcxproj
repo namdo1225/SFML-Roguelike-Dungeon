@@ -134,7 +134,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="HeaderFiles\Shape\full_textbox.cpp" />
+    <ClCompile Include="SourceFiles\Shape\full_textbox.cpp" />
     <ClCompile Include="SourceFiles\Floor\floor_object.cpp" />
     <ClCompile Include="SourceFiles\Manager\database_manager.cpp" />
     <ClCompile Include="SourceFiles\Manager\font_manager.cpp" />

@@ -28,7 +28,7 @@ void Level_Screen::click_event_handler() {
 		for (Stat i = Max_Hp; i < Hp; i++)
 			Game_Manager::player.set_stat(i, backup_stats[i]);
 		Game_Manager::player.set_point(backup_pts);
-		stat_left_pts.setString(std::to_string(backup_pts));
+		map_txts["stat_left"].setString(std::to_string(backup_pts));
 		reset = true;
 		switch_screen(LevelScreen, GameScreen, false, true);
 	}
@@ -36,7 +36,7 @@ void Level_Screen::click_event_handler() {
 		for (Stat i = Max_Hp; i < Hp; i++)
 			Game_Manager::player.set_stat(i, backup_stats[i]);
 		Game_Manager::player.set_point(backup_pts);
-		stat_left_pts.setString(std::to_string(backup_pts));
+		map_txts["stat_left"].setString(std::to_string(backup_pts));
 		reset = true;
 	}
 
@@ -50,7 +50,7 @@ void Level_Screen::click_event_handler() {
 			Game_Manager::player.set_stat(i, ++stat_pt);
 			stat_curr_txts[i].setString(std::to_string(stat_pt));
 			Game_Manager::player.set_point(--points);
-			stat_left_pts.setString(std::to_string(points));
+			map_txts["stat_left"].setString(std::to_string(points));
 		}
 	}
 }
@@ -74,12 +74,12 @@ void Level_Screen::hover_event_handler() {
 void Level_Screen::draw() {
 	Screen::draw();
 
-	window.draw(stat_guide_txt);
-	window.draw(stat_left_txt);
-	window.draw(stat_left_pts);
+	window.draw(map_txts["stat_guide"]);
+	window.draw(map_txts["stat_left_guide"]);
+	window.draw(map_txts["stat_left"]);
 
-	window.draw(clear_rect);
-	window.draw(clear_txt);
+	window.draw(map_rects["clear"]);
+	window.draw(map_txts["clear"]);
 
 	for (Full_Text& text : stat_full_txts)
 		window.draw(text);
