@@ -9,10 +9,13 @@ class Full_Textbox : public SF_Manager {
 public:
 	Full_Rectangle rect;
 	Full_Text text;
+	void (*callback)();
 
-	Full_Textbox(const char* text, float x, float y, float w, float h, float size);
+	Full_Textbox(const char* text, float x, float y, float w, float h, void (*func)(), float fontSize = 0.f, float fontOutline = 0.f);
 
 	void hover();
+
+	void click();
 };
 
 #endif

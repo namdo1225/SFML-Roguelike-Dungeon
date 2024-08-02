@@ -20,6 +20,7 @@ const sf::Color Full_Rectangle::light_edge_hover[themes] = { sf::Color(60, 60, 6
 const sf::Color Full_Rectangle::dark_edge_hover[themes] = { sf::Color::Black, sf::Color(240, 240, 240) };
 
 Full_Rectangle::Full_Rectangle() {
+	setOutlineThickness(3.f);
 }
 
 Full_Rectangle::Full_Rectangle(float x, float y, float w, float h,

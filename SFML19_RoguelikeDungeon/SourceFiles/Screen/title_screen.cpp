@@ -11,21 +11,26 @@
 #include <format>
 
 Title_Screen::Title_Screen() : Screen() {
-	setup_helper(NULL, 330.f, 325.f, 150.f,  65.f);
-	setup_helper(NULL, 330.f, 400.f, 150.f,  65.f);
-	setup_helper(NULL, 330.f, 475.f, 150.f,  65.f);
-	setup_helper(NULL, 330.f, 550.f, 150.f,  65.f);
 	setup_helper(NULL, 330.f, 625.f, 150.f,  65.f);
 	setup_helper(NULL, 700.f,  10.f, 470.f, 780.f);
-	setup_helper(NULL, 330.f, 700.f, 150.f,  65.f);
 
-	setup_helper("New Game",   335.f, 343.f, NULL, NULL);
-	setup_helper("Load Game",  335.f, 423.f, NULL, NULL);
-	setup_helper("Settings",   345.f, 493.f, NULL, NULL);
-	setup_helper("Quit Game",  335.f, 568.f, NULL, NULL);
+	setupTextbox("New Game", 330.f, 325.f, 150.f, 65.f, []() {
+		Game_Manager::reset_game();
+		switch_screen(TitleScreen, NameScreen, false);
+	});
+	setupTextbox("Load Game", 330.f, 400.f, 150.f, 65.f, []() {
+		switch_screen(TitleScreen, LoadScreen, true);
+	});
+	setupTextbox("Settings", 330.f, 475.f, 150.f, 65.f, []() {
+		switch_screen(TitleScreen, SettingScreen, true);
+	});
+	setupTextbox("Quit Game", 330.f, 550.f, 150.f, 65.f, []() {
+		window.close();
+	});
 	setup_helper(std::format("Music: {}",
 		Audio_Manager::get_music_volume() ? "ON" : "OFF").c_str(),
 		335.f, 643.f, NULL, NULL);
+	setupTextbox("Mod Game", 330.f, 700.f, 150.f, 65.f, []() { switch_screen(TitleScreen, CustomScreen, true); });
 
 	setup_helper("Roguelike\nDungeon", 170.f, 40.f, 96.f, NULL);
 
@@ -39,25 +44,10 @@ Title_Screen::Title_Screen() : Screen() {
 		"\n\nJSON parser: \nhttps://github.com/nlohmann/json."
 		"\n\nVersion: 4.0, refactored UI.",
 		710.f, 20.f, NULL, NULL);
-	setup_helper("Mod Game", 335.f, 718.f, NULL, NULL);
-
-	rects[5].setThemeAndHover(false);
-	texts[5].setThemeAndHover(false);
-	texts[6].setThemeAndHover(false);
 }
 
 void Title_Screen::click_event_handler() {
-	if (mouse_in_helper(true, 3))
-		window.close();
-	else if (mouse_in_helper(true, 0)) {
-		Game_Manager::reset_game();
-		switch_screen(TitleScreen, NameScreen, false);
-	}
-	else if (mouse_in_helper(true, 1))
-		switch_screen(TitleScreen, LoadScreen, true);
-	else if (mouse_in_helper(true, 2))
-		switch_screen(TitleScreen, SettingScreen, true);
-	else if (mouse_in_helper(true, 4)) {
+	if (mouse_in_helper(true, 0)) {
 		Audio_Manager::set_music_volume(Audio_Manager::get_music_volume() ? 0 : 100);
 		const float new_volume = Audio_Manager::get_music_volume();
 		Setting_Manager::music_volume = new_volume;
@@ -67,6 +57,5 @@ void Title_Screen::click_event_handler() {
 }
 
 void Title_Screen::hover_event_handler() {
-	for (unsigned int i = 0; i < 5; i++)
-		hover_textbox(i, i);
+	hover_textbox(0, 0);
 }

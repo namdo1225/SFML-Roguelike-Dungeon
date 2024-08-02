@@ -145,19 +145,19 @@ void Screen::setup_helper(const char* text, float x, float y, float sx, float sy
 	if (text == NULL) {
 		rects.push_back(Full_Rectangle());
 		unsigned int i = rects.size() - 1;
-		rects[i].setOutlineThickness(3.f);
 		rects[i].setPhysical(x, y, sx, sy);
 		rects[i].setThemeAndHover(hoverable, override_theme);
 	}
 	else {
 		texts.push_back(Full_Text());
 		unsigned int i = texts.size() - 1;
-		texts[i].setFont(Font_Manager::get_selected());
-		texts[i].setCharacterSize(24);
-		texts[i].setStyle(sf::Text::Bold);
 		texts[i].setPhysical(x, y, text, sx, sy);
 		texts[i].setThemeAndHover(hoverable, override_theme);
 	}		
+}
+
+void Screen::setupTextbox(const char* text, float x, float y, float sx, float sy, void (*func)(), float fontSize, float fontOutline) {
+	textboxes.push_back(Full_Textbox(text, x, y, sx, sy, func, fontSize, fontOutline));
 }
 
 bool Screen::mouse_in_helper(bool element, unsigned int i) {
@@ -378,4 +378,14 @@ void Screen::update_draw() {
 }
 
 void Screen::change_theme() {
+}
+
+void Screen::hover_textbox() {
+	for (unsigned int i = 0; i < screens[display]->textboxes.size(); i++)
+		screens[display]->textboxes[i].hover();
+}
+
+void Screen::click_textbox() {
+	for (unsigned int i = 0; i < screens[display]->textboxes.size(); i++)
+		screens[display]->textboxes[i].click();
 }

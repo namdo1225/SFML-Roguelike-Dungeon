@@ -17,6 +17,8 @@ const sf::Color Full_Text::dark_hover[themes] = { sf::Color(50, 50, 50), sf::Col
 Full_Text::Full_Text() {
 	sf::Text::setOutlineColor(sf::Color::Black);
 	setFont(get_selected());
+	setCharacterSize(24.f);
+	setStyle(sf::Text::Bold);
 }
 
 Full_Text::Full_Text(float x, float y, float size, const char* text,
@@ -31,9 +33,11 @@ Full_Text::Full_Text(float x, float y, float size, const char* text,
 	}
 
 	setPosition(x, y);
-	setCharacterSize(size);
+
+	setCharacterSize(size > 0.f ? size : 24.f);
 	setString(text);
 	setFont(get_selected());
+	setStyle(sf::Text::Bold);
 }
 
 void Full_Text::flip_theme() {

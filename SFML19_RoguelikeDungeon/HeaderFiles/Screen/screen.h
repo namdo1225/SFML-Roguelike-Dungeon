@@ -61,6 +61,21 @@ protected:
 	void setup_helper(const char* text, float x, float y, float sx, float sy,
 		bool hoverable = true, bool override_theme = false);
 
+	/*
+	* Helper to setup textbox.
+	*
+	* Parameter:
+	*	text: a string if it's a text. NULL otherwise.
+	*	x: shape's x position.
+	*	y: shape's y position.
+	*	sx: shape's width.
+	*	sy: shape's height.
+	*	void (*func)(): function for click textbox callback.
+	*	fontSize: text's size.
+	*	fontOutline: text's outline size.
+	*/
+	void setupTextbox(const char* text, float x, float y, float sx, float sy, void (*func)(), float fontSize = 0, float fontOutline = 0);
+
 	/**
 	* Helper method to check mouse in shape.
 	*
@@ -244,6 +259,10 @@ public:
 	*	update value.
 	*/
 	bool get_update();
+
+	void hover_textbox();
+
+	void click_textbox();
 };
 
 
