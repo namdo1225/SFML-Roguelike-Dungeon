@@ -54,9 +54,7 @@ void Status_Screen::click_event_handler() {
 	}
 }
 
-void Status_Screen::hover_event_handler() {
-	hover_button(ExitButton);
-}
+void Status_Screen::hover_event_handler() {}
 
 void Status_Screen::update_draw() {
 	// name

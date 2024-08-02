@@ -89,9 +89,6 @@ void Shop_Screen::click_event_handler() {
 }
 
 void Shop_Screen::hover_event_handler() {
-	hover_button(ExitButton);
-	hover_button(ConfirmButton);
-
 	for (unsigned int i = 0; i < MAX_INV_SPELL_SLOTS; i++)
 		hover_slot(i);
 

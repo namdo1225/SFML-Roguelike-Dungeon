@@ -36,8 +36,6 @@ void Log_Screen::click_event_handler() {
 }
 
 void Log_Screen::hover_event_handler() {
-	hover_button(ExitButton);
-	hover_button(ConfirmButton);
 	hover_textbox(3, 1);
 }
 

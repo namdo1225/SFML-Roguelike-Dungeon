@@ -39,8 +39,6 @@ void Load_Screen::click_event_handler() {
 }
 
 void Load_Screen::hover_event_handler() {
-	hover_button(ExitButton);
-	hover_button(ConfirmButton);
 	hover_button(ClearButton);
 }
 

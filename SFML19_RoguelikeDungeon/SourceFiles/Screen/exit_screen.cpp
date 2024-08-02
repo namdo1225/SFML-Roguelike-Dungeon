@@ -13,32 +13,25 @@ Exit_Screen::Exit_Screen() : Screen(false, false) {
 	rects[0].setOutlineThickness(0.f);
 
 	setup_helper(NULL, 200.f, 200.f, 800.f, 400.f);
-	setup_helper(NULL, 500.f, 340.f, 200.f, 40.f);
-	setup_helper(NULL, 500.f, 420.f, 200.f, 40.f);
-	setup_helper(NULL, 500.f, 500.f, 200.f, 40.f);
-
 	setup_helper("Unsaved changes will be lost.\nDo you still want to quit?", 450, 220, NULL, NULL);
-	setup_helper("Back", 575.f, 343.f, NULL, NULL);
-	setup_helper("Title", 573.f, 423.f, NULL, NULL);
-	setup_helper("Quit", 575.f, 503.f, NULL, NULL);
 
+	setupTextbox("Back", 570.f, 340.f, 80.f, 40.f, []() {
+		return_to_prev_screen(ExitScreen);
+	});
+	setupTextbox("Title", 570.f, 420.f, 80.f, 40.f, []() {
+		switch_screen(ExitScreen, TitleScreen, false, true);
+		for (unsigned int i = NameScreen; i < num_screens; i++)
+			visibilities[i] = false;
+	});
+	setupTextbox("Quit", 570.f, 500.f, 80.f, 40.f, []() {
+		window.close();
+	});
+
+	rects[0].setThemeAndHover(false);
 	rects[1].setThemeAndHover(false);
 	texts[0].setThemeAndHover(false);
 }
 
-void Exit_Screen::click_event_handler() {
-	if (mouse_in_helper(true, 2))
-		return_to_prev_screen(ExitScreen);
-	else if (mouse_in_helper(true, 3)) {
-		switch_screen(ExitScreen, TitleScreen, false, true);
-		for (unsigned int i = NameScreen; i < num_screens; i++)
-			visibilities[i] = false;
-	}
-	else if (mouse_in_helper(true, 4))
-		window.close();
-}
+void Exit_Screen::click_event_handler() {}
 
-void Exit_Screen::hover_event_handler() {
-	for (unsigned int i = 2; i < 5; i++)
-		hover_textbox(i, i - 1);
-}
+void Exit_Screen::hover_event_handler() {}

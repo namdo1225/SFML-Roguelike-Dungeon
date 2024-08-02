@@ -10,8 +10,6 @@
 #include "screen.h"
 
 class Exit_Screen : public Screen {
-private:
-
 public:
 	Exit_Screen();
 

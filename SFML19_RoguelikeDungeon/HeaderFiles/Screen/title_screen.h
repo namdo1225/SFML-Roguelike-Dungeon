@@ -10,8 +10,6 @@
 #include "screen.h"
 
 class Title_Screen : public Screen {
-private:
-
 public:
 	Title_Screen();
 

@@ -91,7 +91,6 @@ void Inventory_Screen::click_event_handler() {
 }
 
 void Inventory_Screen::hover_event_handler() {
-	hover_button(ExitButton);
 	hover_button(UseButton);
 	hover_button(DiscardButton);
 

@@ -57,9 +57,6 @@ void Stat_Screen::hover_event_handler() {
 		else if (!in && hover)
 			stat_curr_arrows[i].highlight(false);
 	}
-
-	hover_button(ExitButton);
-	hover_button(ConfirmButton);
 }
 
 void Stat_Screen::draw() {

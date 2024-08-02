@@ -45,8 +45,6 @@ void Map_Screen::click_event_handler() {
 }
 
 void Map_Screen::hover_event_handler() {
-	hover_button(ExitButton);
-
 	for (unsigned int i = 0; i < rects.size(); i++)
 		hover_textbox(i, i);
 }

@@ -66,8 +66,6 @@ void Level_Screen::hover_event_handler() {
 			stat_curr_arrows[i].highlight(false);
 	}
 
-	hover_button(ExitButton);
-	hover_button(ConfirmButton);
 	hover_button(ClearButton);
 }
 

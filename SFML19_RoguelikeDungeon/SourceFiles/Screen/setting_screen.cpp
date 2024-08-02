@@ -146,8 +146,6 @@ void Setting_Screen::hover_event_handler() {
 
 	hover_textbox(0, 29);
 	hover_textbox(1, 30);
-
-	hover_button(ExitButton);
 }
 
 void Setting_Screen::draw() {

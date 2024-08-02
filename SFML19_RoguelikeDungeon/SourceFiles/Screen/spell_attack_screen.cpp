@@ -43,8 +43,6 @@ void Spell_Attack_Screen::hover_event_handler() {
 		sp_inf = Game_Manager::spell_select->atk();
 		change_range();
 	}
-
-	hover_button(ExitButton);
 }
 
 void Spell_Attack_Screen::draw() {

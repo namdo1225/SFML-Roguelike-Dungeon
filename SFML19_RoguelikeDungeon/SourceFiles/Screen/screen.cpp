@@ -381,6 +381,12 @@ void Screen::change_theme() {
 }
 
 void Screen::hover_textbox() {
+	if (exit_button)
+		hover_button(ExitButton);
+
+	if (confirm_button)
+		hover_button(ConfirmButton);
+
 	for (unsigned int i = 0; i < screens[display]->textboxes.size(); i++)
 		screens[display]->textboxes[i].hover();
 }
