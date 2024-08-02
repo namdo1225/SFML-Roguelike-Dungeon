@@ -23,10 +23,6 @@ Game_Screen::Game_Screen() : Screen(false, false) {
 	setup_helper(NULL, 950.f, 5.f, 230.f, 80.f);
 	// level
 	setup_helper(NULL, 950.f, 100.f, 230.f, 100.f);
-	// menu
-	setup_helper(NULL, 1145.f, 745.f, 50.f, 50.f);
-	// log button
-	setup_helper(NULL, 1150.f, 500.f, 25.f, 25.f);
 	// use item shortcut
 	setup_helper(NULL,  825.f, 320.f, 50.f, 50.f);
 	// use spell shortcut
@@ -69,12 +65,20 @@ Game_Screen::Game_Screen() : Screen(false, false) {
 	setup_helper("<", 985.f, 335.f, NULL, NULL);
 	setup_helper(">", 1145.f, 335.f, NULL, NULL);
 
-	setup_helper("...", 1153.f, 735.f, 36, NULL);
-	setup_helper("...", 1155.f, 495.f, 18, NULL);
-	setup_helper(  "G",   25.f, 740.f, 22, NULL);
-	setup_helper(  "O",   95.f, 740.f, 22, NULL);
-	setup_helper(  "R",  165.f, 740.f, 22, NULL);
-	setup_helper(  "S",  235.f, 740.f, 22, NULL);
+	setup_helper("G",   25.f, 740.f, 22, NULL);
+	setup_helper("O",   95.f, 740.f, 22, NULL);
+	setup_helper("R",  165.f, 740.f, 22, NULL);
+	setup_helper("S",  235.f, 740.f, 22, NULL);
+
+	// menu
+	setupTextbox("...", 1145.f, 745.f, 50.f, 50.f, []() {
+		show_dialog(Screen::display, MenuScreen);
+	}, 26.0f);
+	// log button
+	setupTextbox("...", 1150.f, 500.f, 25.f, 25.f, []() {
+		log_view(true);
+		show_dialog(Screen::display, LogScreen);
+	}, 5.0f);
 
 	setup_helper(FULL_STATS[2], 750.f, 80.f, 18, 3.f);
 	setup_helper(FULL_STATS[3], 750.f, 110.f, 18, 3.f);
@@ -110,28 +114,22 @@ Game_Screen::Game_Screen() : Screen(false, false) {
 
 	for (unsigned int i = 0; i < 11; i++)
 		texts[i].setThemeAndHover(true, true);
-	for (unsigned int i = 11; i < 21; i++)
+	for (unsigned int i = 11; i < 19; i++)
 		texts[i].setThemeAndHover(true, true);
-	for (unsigned int i = 21; i < 37; i++)
+	for (unsigned int i = 19; i < 35; i++)
 		texts[i].setThemeAndHover(false, true);
 
-	rects[4].setThemeAndHover(true, true);
-	texts[6].setThemeAndHover(true, true);
-	texts[7].setThemeAndHover(true, true);
-	texts[27].setThemeAndHover(true, true);
-	texts[28].setThemeAndHover(true, true);
+	rects[4].setThemeAndHover(false, true);
+	texts[6].setThemeAndHover(false, true);
+	texts[7].setThemeAndHover(false, true);
+	texts[25].setThemeAndHover(false, true);
+	texts[26].setThemeAndHover(false, true);
 }
 
-void Game_Screen::click_event_handler() {
-	if (mouse_in_helper(true, 5))
-		show_dialog(Screen::display, MenuScreen);
-	else if (mouse_in_helper(true, 4)) {
+void Game_Screen::click_event_handler() {		
+	if (mouse_in_helper(true, 4)) {
 		map_txts["stat_left"].setString(std::to_string(Game_Manager::player.get_pts()));
 		switch_screen(GameScreen, LevelScreen, false, true);
-	}
-	else if (mouse_in_helper(true, 6)) {
-		log_view(true);
-		show_dialog(Screen::display, LogScreen);
 	}
 	// use item in shortcut
 	else if (mouse_in_helper(true, 7) && Game_Manager::inv_select->get_id())
@@ -150,10 +148,9 @@ void Game_Screen::click_event_handler() {
 		if (Game_Manager::spell_select->get_use() != 4) {
 			const char* spell_name = Game_Manager::spell_select->get_name();
 			bool success = Game_Manager::spell_use();
-			if (success)
-				Game_Manager::log_add(std::format("You used {}.", spell_name).c_str());
-			else
-				Game_Manager::log_add(std::format("You failed to cast {}.", spell_name).c_str());
+			Game_Manager::log_add(success ? std::format("You used {}.", spell_name).c_str() :
+				std::format("You failed to cast {}.", spell_name).c_str()
+			);
 		}
 		else
 			show_dialog(GameScreen, SpellAttackScreen);
@@ -188,14 +185,12 @@ void Game_Screen::click_event_handler() {
 }
 
 void Game_Screen::hover_event_handler() {
-	hover_textbox(5,  15);
-	hover_textbox(6,  16);
-	hover_textbox(7,  -1);
-	hover_textbox(8,  -1);
-	hover_textbox(9,  17);
+	hover_textbox( 5, -1);
+	hover_textbox( 6, -1);
+	hover_textbox( 7, 15);
+	hover_textbox( 8, 16);
+	hover_textbox( 9, 17);
 	hover_textbox(10, 18);
-	hover_textbox(11, 19);
-	hover_textbox(12, 20);
 
 	hover_helper(false, 11);
 	hover_helper(false, 12);
@@ -306,21 +301,21 @@ void Game_Screen::update_draw() {
 		return;
 	}
 
-	texts[30].setString(std::format("{} / 50", logs.size()));
+	texts[28].setString(std::format("{} / 50", logs.size()));
 
-	texts[25].setString(std::to_string(Game_Manager::player.get_floor()));
-	texts[26].setString(std::to_string(Game_Manager::player.get_gold()));
-	texts[27].setString(std::to_string(Game_Manager::player.get_lvl()));
-	texts[28].setString(std::format("{} / {}", Game_Manager::player.get_cur_exp(), Game_Manager::player.get_lvl_up()));
-	texts[29].setString(Game_Manager::player.get_name());
+	texts[23].setString(std::to_string(Game_Manager::player.get_floor()));
+	texts[24].setString(std::to_string(Game_Manager::player.get_gold()));
+	texts[25].setString(std::to_string(Game_Manager::player.get_lvl()));
+	texts[26].setString(std::format("{} / {}", Game_Manager::player.get_cur_exp(), Game_Manager::player.get_lvl_up()));
+	texts[27].setString(Game_Manager::player.get_name());
 
-	texts[31].setString(std::format("{} / {}", Game_Manager::player.get_stat(Hp), Game_Manager::player.get_stat(Max_Hp)));
-	texts[32].setString(std::format("{} / {}", Game_Manager::player.get_stat(Mp), Game_Manager::player.get_stat(Max_Mp)));
+	texts[29].setString(std::format("{} / {}", Game_Manager::player.get_stat(Hp), Game_Manager::player.get_stat(Max_Hp)));
+	texts[30].setString(std::format("{} / {}", Game_Manager::player.get_stat(Mp), Game_Manager::player.get_stat(Max_Mp)));
 
-	texts[33].setString(std::to_string(Game_Manager::player.get_stat(Str)));
-	texts[34].setString(std::to_string(Game_Manager::player.get_stat(Def)));
-	texts[35].setString(std::to_string(Game_Manager::player.get_stat(Mgk)));
-	texts[36].setString(std::to_string(Game_Manager::player.get_stat(Res)));
+	texts[31].setString(std::to_string(Game_Manager::player.get_stat(Str)));
+	texts[32].setString(std::to_string(Game_Manager::player.get_stat(Def)));
+	texts[33].setString(std::to_string(Game_Manager::player.get_stat(Mgk)));
+	texts[34].setString(std::to_string(Game_Manager::player.get_stat(Res)));
 
 	if (range)
 		change_range();

@@ -266,7 +266,9 @@ void Floor::make_collectible(unsigned int floor) {
 	int rand_items{ rand() % 6 + static_cast<int>(floor * 0.25) };
 
 	for (unsigned int i{ 0 }; i < rand_items; i++) {
-		int temp_x{ -1 }, temp_y{ -1 }, rand_room{ rand() % static_cast<int>(rooms.size()) }, counter{ 0 };
+		int rand_room{ rand() % static_cast<int>(rooms.size()) }, counter{ 0 },
+			temp_x{ (rand() % (rooms[rand_room].get_rm('w') - 40)) + rooms[rand_room].get_rm('x') },
+			temp_y{ (rand() % (rooms[rand_room].get_rm('h') - 40)) + rooms[rand_room].get_rm('y') };
 
 		bool loop{ true };
 		while (loop) {
@@ -295,7 +297,9 @@ void Floor::make_gold(unsigned int floor) {
 	int rand_gold{ rand() % 10 + static_cast<int>(floor * 0.50) };
 
 	for (unsigned int i{ 0 }; i < rand_gold; i++) {
-		int temp_x{ -1 }, temp_y{ -1 }, rand_room{ rand() % static_cast<int>(rooms.size()) }, counter{ 0 };
+		int rand_room{ rand() % static_cast<int>(rooms.size()) }, counter{ 0 },
+			temp_x{ (rand() % (rooms[rand_room].get_rm('w') - 40)) + rooms[rand_room].get_rm('x') },
+			temp_y{ (rand() % (rooms[rand_room].get_rm('h') - 40)) + rooms[rand_room].get_rm('y') };
 
 		bool break_loop{ true };
 		while (break_loop) {
@@ -320,7 +324,9 @@ void Floor::make_interactible(unsigned int floor) {
 	int rand_interact{ rand() % 50 + static_cast<int>(floor * 0.50) };
 
 	for (unsigned int i{ 0 }; i < rand_interact; i++) {
-		int temp_x{ -1 }, temp_y{ -1 }, rand_room{ rand() % static_cast<int>(rooms.size()) }, counter{ 0 };
+		int rand_room{ rand() % static_cast<int>(rooms.size()) }, counter{ 0 },
+		temp_x{ (rand() % (rooms[rand_room].get_rm('w') - 40)) + rooms[rand_room].get_rm('x') },
+		temp_y{ (rand() % (rooms[rand_room].get_rm('h') - 40)) + rooms[rand_room].get_rm('y') };
 
 		while (true) {
 			for (unsigned int j{ 0 }; j < interactibles.size(); j++) {

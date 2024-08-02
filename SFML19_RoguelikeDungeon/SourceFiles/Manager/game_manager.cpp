@@ -446,7 +446,7 @@ void Game_Manager::handle_move_pick_gld() {
 
 void Game_Manager::handle_move_pick_interact() {
     sf::FloatRect rect = player.get_rect();
-    for (int i{ static_cast<int>(floor.interactibles.size()) - 1 }; i > -1; i--) {
+    for (int i{ static_cast<int>(floor.interactibles.size()) - 1 }; i >= 0; i--) {
         if (floor.interactibles[i].intersects(rect)) {
             Audio_Manager::play_sfx(0);
 

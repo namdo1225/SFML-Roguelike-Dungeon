@@ -65,8 +65,6 @@ void Level_Screen::hover_event_handler() {
 		else if (!in && hover)
 			stat_curr_arrows[i].highlight(false);
 	}
-
-	hover_button(ClearButton);
 }
 
 void Level_Screen::draw() {

@@ -35,9 +35,7 @@ void Name_Screen::click_event_handler() {
 	}
 }
 
-void Name_Screen::hover_event_handler() {
-	hover_button(ClearButton);
-}
+void Name_Screen::hover_event_handler() {}
 
 void Name_Screen::text_event_handler() {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {

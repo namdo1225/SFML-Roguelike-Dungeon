@@ -387,6 +387,9 @@ void Screen::hover_textbox() {
 	if (confirm_button)
 		hover_button(ConfirmButton);
 
+	if (text_handler_enabled)
+		hover_button(ClearButton);
+
 	for (unsigned int i = 0; i < screens[display]->textboxes.size(); i++)
 		screens[display]->textboxes[i].hover();
 }
