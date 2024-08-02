@@ -119,11 +119,7 @@ Game_Screen::Game_Screen() : Screen(false, false) {
 	for (unsigned int i = 19; i < 35; i++)
 		texts[i].setThemeAndHover(false, true);
 
-	rects[4].setThemeAndHover(false, true);
-	texts[6].setThemeAndHover(false, true);
-	texts[7].setThemeAndHover(false, true);
-	texts[25].setThemeAndHover(false, true);
-	texts[26].setThemeAndHover(false, true);
+	rects[4].setThemeAndHover(true, true);
 }
 
 void Game_Screen::click_event_handler() {		
@@ -132,10 +128,10 @@ void Game_Screen::click_event_handler() {
 		switch_screen(GameScreen, LevelScreen, false, true);
 	}
 	// use item in shortcut
-	else if (mouse_in_helper(true, 7) && Game_Manager::inv_select->get_id())
+	else if (mouse_in_helper(true, 5) && Game_Manager::inv_select->get_id())
 		Game_Manager::item_use();
 	// select new item
-	else if (mouse_in_helper(true, 7) && !Game_Manager::inv_select->get_id())
+	else if (mouse_in_helper(true, 5) && !Game_Manager::inv_select->get_id())
 		Game_Manager::itm_select_shortcut('s');
 	// selects left item
 	else if (mouse_in_helper(false, 11) && Game_Manager::items.size() > 1)
@@ -144,7 +140,7 @@ void Game_Screen::click_event_handler() {
 	else if (mouse_in_helper(false, 12) && Game_Manager::items.size() > 1)
 		Game_Manager::itm_select_shortcut('r');
 	// use spell in shortcut
-	else if (mouse_in_helper(true, 8) && Game_Manager::spell_select->get_id()) {
+	else if (mouse_in_helper(true, 6) && Game_Manager::spell_select->get_id()) {
 		if (Game_Manager::spell_select->get_use() != 4) {
 			const char* spell_name = Game_Manager::spell_select->get_name();
 			bool success = Game_Manager::spell_use();
@@ -156,7 +152,7 @@ void Game_Screen::click_event_handler() {
 			show_dialog(GameScreen, SpellAttackScreen);
 	}
 	// select new spell
-	else if (mouse_in_helper(true, 8) && !Game_Manager::spell_select->get_id())
+	else if (mouse_in_helper(true, 6) && !Game_Manager::spell_select->get_id())
 		Game_Manager::sp_select_shortcut('s');
 	// selects left spell
 	else if (mouse_in_helper(false, 13) && Game_Manager::spells.size() > 1)
@@ -172,15 +168,15 @@ void Game_Screen::click_event_handler() {
 		Game_Manager::handle_player_action('d', 1);
 	else if (x >= 360 - ((Game_Manager::pl_weapon->get_range() - 1) * 40) && x <= 400 && y >= 400 && y <= 440)
 		Game_Manager::handle_player_action('l', 1);
-	else if (mouse_in_helper(true, 9))
+	else if (mouse_in_helper(true, 7))
 		grid = !grid;
-	else if (mouse_in_helper(true, 10))
+	else if (mouse_in_helper(true, 8))
 		change_opacity();
-	else if (mouse_in_helper(true, 11)) {
+	else if (mouse_in_helper(true, 9)) {
 		range = !range;
 		if (range) change_range();
 	}
-	else if (mouse_in_helper(true, 12))
+	else if (mouse_in_helper(true, 10))
 		scan = !scan;
 }
 
@@ -199,10 +195,6 @@ void Game_Screen::hover_event_handler() {
 	hover_helper(false, 14);
 
 	hover_helper(true, 4);
-	hover_helper(false, 6);
-	hover_helper(false, 7);
-	hover_helper(false, 27);
-	hover_helper(false, 28);
 
 	if (scan) {
 		bool enemy_found = false;

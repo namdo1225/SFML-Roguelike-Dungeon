@@ -80,7 +80,7 @@ protected:
 	* Helper method to check mouse in shape.
 	*
 	* Parameter:
-	*	element: true if shape is a text. false for rectangle.
+	*	element: true if shape is a rectangle. false for text.
 	*	i: the index of where the shape is located.
 	* 
 	* Return:
@@ -161,7 +161,7 @@ protected:
 	* Helper method to set hover status.
 	* 
 	* Parameter:
-	*	element: true if shape is a text. false for rectangle.
+	*	element: true if shape is a rectangle. false for text.
 	*	i: the index of where the shape is located.
 	* 
 	* Return:

@@ -73,6 +73,8 @@ void Game_Manager::setup() {
 
 void Game_Manager::reorganize_inv() {
     int size = items.size();
+    if (size <= 2)
+        return;
 
     for (unsigned int i{ 0 }; i < player.get_max_itm() && i < size; i++) {
         int z{ 0 };
