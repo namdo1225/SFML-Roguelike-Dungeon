@@ -9,7 +9,7 @@
 #include "interface.h"
 #include <string>
 
-Setting_Screen::Setting_Screen() : Screen(true) {
+Setting_Screen::Setting_Screen() : Screen(true, true, true) {
 	light_mode = Setting_Manager::light;
 	theme = Setting_Manager::theme;
 	sfx_volume = Setting_Manager::sfx_volume;
@@ -23,8 +23,8 @@ Setting_Screen::Setting_Screen() : Screen(true) {
 	setup_helper("SFX Volume", 20.f, 300.f, NULL, NULL);
 	setup_helper(     "Music", 20.f, 350.f, NULL, NULL);
 
-	setup_helper("0", 300.f, 150.f, NULL, NULL);
-	setup_helper("1", 350.f, 150.f, NULL, NULL);
+	for (int i = 0; i < themes; i++)
+		setup_helper(std::to_string(i).c_str(), 300.f + (50 * i), 150.f, NULL, NULL);
 
 	setup_helper( "Dark", 300.f, 200.f, NULL, NULL);
 	setup_helper("Light", 400.f, 200.f, NULL, NULL);
@@ -33,17 +33,10 @@ Setting_Screen::Setting_Screen() : Screen(true) {
 	setup_helper("Comic Neue", 500.f, 250.f, NULL, NULL);
 	setup_helper("Montserrat", 700.f, 250.f, NULL, NULL);
 
-	setup_helper(  "0", 300.f, 300.f, NULL, NULL);
-	setup_helper( "25", 350.f, 300.f, NULL, NULL);
-	setup_helper( "50", 400.f, 300.f, NULL, NULL);
-	setup_helper( "75", 450.f, 300.f, NULL, NULL);
-	setup_helper("100", 500.f, 300.f, NULL, NULL);
-
-	setup_helper(  "0", 300.f, 350.f, NULL, NULL);
-	setup_helper( "25", 350.f, 350.f, NULL, NULL);
-	setup_helper( "50", 400.f, 350.f, NULL, NULL);
-	setup_helper( "75", 450.f, 350.f, NULL, NULL);
-	setup_helper("100", 500.f, 350.f, NULL, NULL);
+	for (int i = 0; i <= 4; i++)
+		setup_helper(std::to_string(i * 25).c_str(), 300.f + (50 * i), 300.f, NULL, NULL);
+	for (int i = 0; i <= 4; i++)
+		setup_helper(std::to_string(i * 25).c_str(), 300.f + (50 * i), 350.f, NULL, NULL);
 
 	setup_helper(                          "Selected", 1000.f, 100.f, NULL, NULL);
 	setup_helper(       std::to_string(theme).c_str(), 1000.f, 150.f, NULL, NULL);
@@ -52,11 +45,8 @@ Setting_Screen::Setting_Screen() : Screen(true) {
 	setup_helper(  std::to_string(sfx_volume).c_str(), 1000.f, 300.f, NULL, NULL);
 	setup_helper(std::to_string(music_volume).c_str(), 1000.f, 350.f, NULL, NULL);
 
-	setup_helper("Theme Preview: abcdefghijklmnopqrstuvwxyz, ABCDEFGHIJKLMNOPQRSTUVWXYZ", 25.f, 510.f,  NULL, NULL);
-	setup_helper(                                                                   NULL, 20.f, 500.f, 1150.f, 45.f);
-
-	setup_helper("Save", 30.f, 610.f, NULL, NULL);
-	setup_helper(  NULL, 20.f, 600.f, 80.f, 45.f);
+	setup_helper("abcdefghijklmnopqrstuvwxyz, ABCDEFGHIJKLMNOPQRSTUVWXYZ\n!@#$%%^&*()_+-=", 25.f, 510.f,  NULL, NULL);
+	setup_helper(                                                                     NULL, 20.f, 500.f, 1150.f, 95.f);
 
 	texts[0].setThemeAndHover(false);
 	texts[1].setThemeAndHover(false);
@@ -104,7 +94,7 @@ void Setting_Screen::click_event_handler() {
 		texts[25].setString("Light");
 
 	}
-	else if (mouse_in_helper(true, 1) && (Setting_Manager::light != light_mode ||
+	else if (mouse_in_button(ConfirmButton) && (Setting_Manager::light != light_mode ||
 		Setting_Manager::theme != theme || Setting_Manager::sfx_volume != sfx_volume ||
 		Setting_Manager::music_volume != music_volume || Setting_Manager::font != font)) {
 		Setting_Manager::light = light_mode;
@@ -145,7 +135,6 @@ void Setting_Screen::hover_event_handler() {
 	}
 
 	hover_textbox(0, 29);
-	hover_textbox(1, 30);
 }
 
 void Setting_Screen::draw() {

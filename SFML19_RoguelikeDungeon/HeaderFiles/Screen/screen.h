@@ -226,12 +226,12 @@ public:
 	/**
 	* Click event handler for the screen.
 	*/
-	virtual void click_event_handler() = 0;
+	virtual void click_event_handler();
 
 	/**
 	* Hover event handler for the screen.
 	*/
-	virtual void hover_event_handler() = 0;
+	virtual void hover_event_handler();
 
 	/**
 	* Key press event handler for the screen.
@@ -277,7 +277,7 @@ public:
 
 	void hover();
 
-	void click_textbox();
+	void click();
 };
 
 #endif

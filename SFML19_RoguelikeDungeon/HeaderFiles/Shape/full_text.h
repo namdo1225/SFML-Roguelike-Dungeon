@@ -6,13 +6,13 @@
 *
 */
 
-#ifndef FULL_TEXT_H
-#define FULL_TEXT_H
-
 #include <SFML/Graphics.hpp>
 #include "Shape/full_shape.h"
 #include "Manager/font_manager.h"
 #include "Manager/sf_manager.h"
+
+#ifndef FULL_TEXT_H
+#define FULL_TEXT_H
 
 class Full_Text : public sf::Text, public Full_Shape, protected Font_Manager, protected SF_Manager {
 protected:
@@ -62,6 +62,8 @@ public:
 	void setPhysical(float x, float y, const char* text, float size, float outline);
 
 	void hover();
+
+	void click();
 
 private:
 	using sf::Text::setFillColor;

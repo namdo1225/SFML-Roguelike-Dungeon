@@ -83,3 +83,8 @@ void Full_Text::hover() {
 	else if (!in && hovered)
 		highlight(false);
 }
+
+void Full_Text::click() {
+	if (getGlobalBounds().contains(sf::Vector2f(x, y)) && clickCallback != NULL)
+		clickCallback();
+}

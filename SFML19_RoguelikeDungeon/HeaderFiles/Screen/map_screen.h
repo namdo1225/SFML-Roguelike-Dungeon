@@ -11,16 +11,14 @@
 
 class Map_Screen : public Screen {
 private:
-	sf::Vector2f oldPos;
-	bool moving = false;
-	sf::View viewMap;
+	static sf::Vector2f oldPos;
+	static bool moving;
+	static sf::View viewMap;
 
 public:
 	Map_Screen();
 
 	virtual void click_event_handler();
-
-	virtual void hover_event_handler();
 
 	virtual void mouse_event_handler();
 

@@ -81,7 +81,7 @@ void Screen::setup() {
 	map_rects["exit"] = Full_Rectangle(1120, 10, 50, 50);
 	map_txts["exit"] = Full_Text(1130.f, 5.f, 48, "X");
 
-	map_rects["confirm"] = Full_Rectangle(500.f, 700.f, 150.f, 50.f);
+	map_rects["confirm"] = Full_Rectangle(500.f, 700.f, 160.f, 50.f);
 	map_txts["confirm"] = Full_Text(530.f, 710.f, 24, "Confirm");
 
 	map_rects["name"] = Full_Rectangle(350.f, 240.f, 470.f, 50.f);
@@ -119,6 +119,8 @@ void Screen::draw() {
 		window.draw(boxes.rect);
 		window.draw(boxes.text);
 	}
+	for (Full_Text text : hoverableTexts)
+		window.draw(text);
 	for (Full_Text text : texts)
 		window.draw(text);
 
@@ -161,7 +163,7 @@ void Screen::setupTextbox(const char* text, float x, float y, float sx, float sy
 }
 
 void Screen::setupHoverableText(const char* text, float x, float y, void(*func)(), float fontSize, float fontOutline) {
-	hoverableTexts.push_back(Full_Text());
+	hoverableTexts.push_back(Full_Text(x, y, fontSize, text, true, false, func));
 	hoverableTexts[hoverableTexts.size() - 1].setPhysical(x, y, text, fontSize, fontOutline);
 }
 
@@ -361,6 +363,10 @@ void Screen::hover_slot(unsigned int i) {
 void Screen::mouse_event_handler() {
 }
 
+void Screen::click_event_handler() {}
+
+void Screen::hover_event_handler() {}
+
 bool Screen::hover_helper(bool element, unsigned int i) {
 	bool in = mouse_in_helper(element, i);
 	bool hover = element ? rects[i].getHover() : texts[i].getHover();
@@ -402,7 +408,10 @@ void Screen::hover() {
 		screens[display]->textboxes[i].hover();
 }
 
-void Screen::click_textbox() {
+void Screen::click() {
+	for (unsigned int i = 0; i < screens[display]->hoverableTexts.size(); i++)
+		screens[display]->hoverableTexts[i].click();
+
 	for (unsigned int i = 0; i < screens[display]->textboxes.size(); i++)
 		screens[display]->textboxes[i].click();
 }

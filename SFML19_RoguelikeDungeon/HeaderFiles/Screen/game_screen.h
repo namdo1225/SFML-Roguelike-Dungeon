@@ -14,15 +14,15 @@ protected:
 	virtual void change_theme();
 
 private:
-	bool grid = false;
-	bool range = false;
-	bool scan = false;
-	unsigned int opacity = 255;
-	Full_Rectangle grids[50];
-	Full_Rectangle ranges[4];
+	static bool grid;
+	static bool range;
+	static bool scan;
+	static unsigned int opacity;
+	static Full_Rectangle grids[50];
+	static Full_Rectangle ranges[4];
 
-	Full_Rectangle scan_rect = Full_Rectangle(10.f, 530.f, 100.f, 160.f);
-	Full_Text scan_txt = Full_Text(20.f, 540.f, 18.f, "");
+	static Full_Rectangle scan_rect;
+	static Full_Text scan_txt;
 
 	/*
 	* Change opacity of the UI.
@@ -32,7 +32,7 @@ private:
 	/*
 	* Change range display due to the player's weapon.
 	*/
-	void change_range();
+	static void change_range();
 
 public:
 	Game_Screen();

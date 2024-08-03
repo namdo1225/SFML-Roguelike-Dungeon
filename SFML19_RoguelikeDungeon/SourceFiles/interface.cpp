@@ -116,7 +116,7 @@ void Interface::handle_event() {
         }
         else if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
             Screen::screens[Screen::display]->click_event_handler();
-            Screen::screens[Screen::display]->click_textbox();
+            Screen::screens[Screen::display]->click();
         } 
         if (event.type == sf::Event::MouseButtonPressed || event.type == sf::Event::MouseButtonReleased ||
             event.type == sf::Event::MouseMoved || event.type == sf::Event::MouseWheelScrolled)

@@ -52,7 +52,7 @@ void Title_Screen::click_event_handler() {
 		const float new_volume = Audio_Manager::get_music_volume();
 		Setting_Manager::music_volume = new_volume;
 		Setting_Manager::save();
-		texts[4].setString(std::format("Music: {}", new_volume == 0 ? "OFF" : "ON").c_str());
+		texts[0].setString(std::format("Music: {}", new_volume == 0 ? "OFF" : "ON").c_str());
 	}
 }
 
