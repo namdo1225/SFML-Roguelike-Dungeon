@@ -27,6 +27,7 @@ constexpr bool MODIFY_START_STATS = false;
 constexpr unsigned int INTERACTIBLE_CHANCE = 0;
 constexpr unsigned int STARTING_FLOOR = 0;
 constexpr unsigned int STARTING_GOLD = 0;
+constexpr unsigned int STARTING_INTERACTIBLES = 100;
 constexpr unsigned int STARTING_STAT_PTS = 0;
 
 #endif

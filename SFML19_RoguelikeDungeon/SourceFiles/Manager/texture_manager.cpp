@@ -21,6 +21,7 @@ sf::Texture Texture_Manager::collectible;
 sf::Texture Texture_Manager::stair;
 sf::Texture Texture_Manager::shop;
 sf::Texture Texture_Manager::interactible;
+sf::Texture Texture_Manager::interactibleInactive;
 
 Texture_Manager::Texture_Manager() {
 	if (!assets_loaded)
@@ -81,7 +82,8 @@ bool Texture_Manager::load() {
 		collectible.loadFromFile("Texture\\GG_04_Items.png") &&
 		stair.loadFromFile("Texture\\GG_05_Stair.png") &&
 		shop.loadFromFile("Texture\\GG_06_Shop.jpg") &&
-		interactible.loadFromFile("Texture\\GG_10_Interactible.jpg")) {
+		interactible.loadFromFile("Texture\\GG_10_Interactible.jpg") &&
+		interactibleInactive.loadFromFile("Texture\\GG_11_Interactible_Inactive.jpg")) {
 		assets_loaded = true;
 		return assets_loaded;
 	}

@@ -92,7 +92,6 @@ void Setting_Screen::click_event_handler() {
 	else if (mouse_in_helper(false, 9)) {
 		light_mode = true;
 		texts[25].setString("Light");
-
 	}
 	else if (mouse_in_button(ConfirmButton) && (Setting_Manager::light != light_mode ||
 		Setting_Manager::theme != theme || Setting_Manager::sfx_volume != sfx_volume ||

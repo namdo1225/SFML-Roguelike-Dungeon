@@ -11,6 +11,7 @@
 
 class Custom_Screen : public Screen {
 private:
+	static char* category;
 
 public:
 	Custom_Screen();

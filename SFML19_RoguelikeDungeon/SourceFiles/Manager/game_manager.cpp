@@ -449,7 +449,7 @@ void Game_Manager::handle_move_pick_gld() {
 void Game_Manager::handle_move_pick_interact() {
     sf::FloatRect rect = player.get_rect();
     for (int i{ static_cast<int>(floor.interactibles.size()) - 1 }; i >= 0; i--) {
-        if (floor.interactibles[i].intersects(rect)) {
+        if (!floor.interactibles[i].inactive && floor.interactibles[i].intersects(rect)) {
             Audio_Manager::play_sfx(0);
 
             int effect = INTERACTIBLE_CHANCE == 0 ? rand() % 100 : INTERACTIBLE_CHANCE;
@@ -525,8 +525,7 @@ void Game_Manager::handle_move_pick_interact() {
             else
                 log_add("Nothing happened.");
 
-            floor.interactibles.erase(floor.interactibles.begin() + i);
-            return;
+            floor.interactibles[i].setInactive();
         }
     }
 }
@@ -925,6 +924,7 @@ void Game_Manager::save() {
             j["interactibles"][i] = {
                 {"x", interact.getPosition().x},
                 {"y", interact.getPosition().y},
+                {"hidden", interact.hidden}
             };
         }
 
@@ -1035,7 +1035,7 @@ bool Game_Manager::read_save(const char* name) {
 
         if (j.contains("interactibles"))
             for (auto& interactible : j.at("interactibles"))
-                floor.load_interactible(interactible.at("x"), interactible.at("y"));
+                floor.load_interactible(interactible.at("x"), interactible.at("y"), interactible.at("hidden"));
 
         player.reset_effect();
 

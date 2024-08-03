@@ -86,7 +86,8 @@ Save file MUST have the extension ```.sav```.
 	interactibles: [
 		{
 			x: int,
-			y: int
+			y: int,
+			hidden: boolean
 		}
 	],
 	effects: [

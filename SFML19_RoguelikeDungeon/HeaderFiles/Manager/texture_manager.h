@@ -26,6 +26,7 @@ public:
 	static sf::Texture stair;
 	static sf::Texture shop;
 	static sf::Texture interactible;
+	static sf::Texture interactibleInactive;
 
 
 	/**

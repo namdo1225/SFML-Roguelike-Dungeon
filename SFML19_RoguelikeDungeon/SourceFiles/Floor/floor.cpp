@@ -235,7 +235,8 @@ void Floor::draw() {
 		SF_Manager::window.draw(col);
 
 	for (Interactible interactible : interactibles)
-		SF_Manager::window.draw(interactible);
+		if (!interactible.hidden)
+			SF_Manager::window.draw(interactible);
 }
 
 void Floor::set_shop_pos(int x, int y) { shop.setPosition(x, y); }
@@ -260,7 +261,7 @@ void Floor::load_gold(int x, int y, unsigned int amount) { golds.push_back(Gold_
 
 void Floor::load_shop(int x, int y) { shop = Shop(x, y); }
 
-void Floor::load_interactible(int x, int y) { interactibles.push_back(Interactible(x, y)); }
+void Floor::load_interactible(int x, int y, bool hidden) { interactibles.push_back(Interactible(x, y, hidden)); }
 
 void Floor::make_collectible(unsigned int floor) {
 	int rand_items{ rand() % 6 + static_cast<int>(floor * 0.25) };
@@ -321,7 +322,7 @@ void Floor::make_gold(unsigned int floor) {
 }
 
 void Floor::make_interactible(unsigned int floor) {
-	int rand_interact{ rand() % 50 + static_cast<int>(floor * 0.50) };
+	int rand_interact{ STARTING_INTERACTIBLES ? STARTING_INTERACTIBLES : rand() % 50 + static_cast<int>(floor * 0.50) };
 
 	for (unsigned int i{ 0 }; i < rand_interact; i++) {
 		int rand_room{ rand() % static_cast<int>(rooms.size()) }, counter{ 0 },
@@ -339,7 +340,9 @@ void Floor::make_interactible(unsigned int floor) {
 			}
 
 			if (interactibles.size() == counter) {
-				interactibles.push_back(Interactible(temp_x, temp_y));
+				int hidden{ rand() % 5 };
+
+				interactibles.push_back(Interactible(temp_x, temp_y, !hidden));
 				break;
 			}
 		}

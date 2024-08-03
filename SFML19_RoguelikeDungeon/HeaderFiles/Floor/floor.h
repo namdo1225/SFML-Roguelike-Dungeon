@@ -218,8 +218,9 @@ public:
 	* Parameter:
 	*	x: an int for the interactible's x position.
 	*	y: an int for the interactible's y position.
+	*	hidden: a bool. Whether the interactible is hidden from player.
 	*/
-	void load_interactible(int x, int y);
+	void load_interactible(int x, int y, bool hidden);
 
 	/**
 	* Make item collectibles for the current floor.

@@ -10,4 +10,12 @@
 
 Interactible::Interactible() : Floor_Object(Texture_Manager::interactible) {}
 
-Interactible::Interactible(float x, float y) : Floor_Object(x, y, Texture_Manager::interactible) {}
+Interactible::Interactible(float x, float y, bool hidden) : Floor_Object(x, y, Texture_Manager::interactible) {
+	this->hidden = hidden;
+}
+
+void Interactible::setInactive() {
+	hidden = false;
+	inactive = true;
+	setTexture(&Texture_Manager::interactibleInactive);
+}

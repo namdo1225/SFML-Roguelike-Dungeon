@@ -15,6 +15,9 @@
 
 class Interactible : public Floor_Object {
 public:
+	bool hidden = false;
+	bool inactive = false;
+
 	/**
 	* Constructor for Interactible.
 	*/
@@ -26,8 +29,11 @@ public:
 	* Parameter:
 	*	x: a float for the interactible's x position.
 	* 	y: a float for the interactible's x position.
+	*	hidden: a bool. Whether the interactible is hidden from player.
 	*/
-	Interactible(float x, float y);
+	Interactible(float x, float y, bool hidden);
+
+	void setInactive();
 };
 
 
