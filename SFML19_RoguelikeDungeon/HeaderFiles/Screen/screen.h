@@ -4,16 +4,16 @@
 * Description: Contain the declaration of the Screen class, which represents a game scene.
 */
 
-#ifndef SCREEN_H
-#define SCREEN_H
-
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include "Shape/full_text.h"
 #include "Shape/full_rectangle.h"
 #include "Shape/full_textbox.h"
 #include "Manager/setting_manager.h"
-#include "Manager/sf_manager.h"
+#include "Manager/log_manager.h"
+
+#ifndef SCREEN_H
+#define SCREEN_H
 
 enum Display { TitleScreen, NameScreen, StatScreen, LevelScreen,
 	GameScreen, MenuScreen, InventoryScreen, SpellScreen, MapScreen, ShopScreen,
@@ -23,7 +23,7 @@ enum Display { TitleScreen, NameScreen, StatScreen, LevelScreen,
 enum ReusableButton { ExitButton, ConfirmButton, StatFulLButton, StatIncreaseButton, UseButton, DiscardButton,
 ClearButton, };
 
-class Screen : public SF_Manager, protected Setting_Manager {
+class Screen : public Log_Manager, protected Setting_Manager {
 protected:
 	static bool loaded;
 	bool exit_button = false;
@@ -33,6 +33,7 @@ protected:
 	bool update = false;
 
 	std::vector<Full_Text> texts;
+	std::vector<Full_Text> hoverableTexts;
 	std::vector<Full_Rectangle> rects;
 	std::vector<Full_Textbox> textboxes;
 
@@ -65,7 +66,7 @@ protected:
 	* Helper to setup textbox.
 	*
 	* Parameter:
-	*	text: a string if it's a text. NULL otherwise.
+	*	text: a string for the text.
 	*	x: shape's x position.
 	*	y: shape's y position.
 	*	sx: shape's width.
@@ -75,6 +76,20 @@ protected:
 	*	fontOutline: text's outline size.
 	*/
 	void setupTextbox(const char* text, float x, float y, float sx, float sy, void (*func)(), float fontSize = 0, float fontOutline = 0);
+
+	/*
+	* Helper to setup hoverable and clickable texts.
+	*
+	* Parameter:
+	*	text: a string for the text.
+	*	x: text's x position.
+	*	y: text's y position.
+	*	void (*func)(): function for click textbox callback.
+	*	fontSize: text's size.
+	*	fontOutline: text's outline size.
+	*/
+	void setupHoverableText(const char* text, float x, float y, void (*func)(), float fontSize = 0, float fontOutline = 0);
+
 
 	/**
 	* Helper method to check mouse in shape.
@@ -260,10 +275,9 @@ public:
 	*/
 	bool get_update();
 
-	void hover_textbox();
+	void hover();
 
 	void click_textbox();
 };
-
 
 #endif

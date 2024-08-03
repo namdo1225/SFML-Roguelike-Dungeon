@@ -5,16 +5,16 @@
 *
 */
 
-#ifndef GAME_MANAGER_H
-#define GAME_MANAGER_H
-
 #include "include.h"
 #include <iostream>
-#include "Manager/sf_manager.h"
+#include "Manager/log_manager.h"
 #include "Manager/font_manager.h"
 #include "Tool/special.h"
 
-class Game_Manager : public SF_Manager {
+#ifndef GAME_MANAGER_H
+#define GAME_MANAGER_H
+
+class Game_Manager : public Log_Manager {
 private:
 	/**
 	* Constructor for Setting_Manager.

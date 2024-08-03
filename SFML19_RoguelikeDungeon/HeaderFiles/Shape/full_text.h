@@ -12,10 +12,13 @@
 #include <SFML/Graphics.hpp>
 #include "Shape/full_shape.h"
 #include "Manager/font_manager.h"
+#include "Manager/sf_manager.h"
 
-class Full_Text : public sf::Text, public Full_Shape, protected Font_Manager {
+class Full_Text : public sf::Text, public Full_Shape, protected Font_Manager, protected SF_Manager {
+protected:
+	void (*clickCallback)() = NULL;
+
 public:
-
 	/*
 	* Constructor for Full_Text.
 	*/
@@ -35,7 +38,7 @@ public:
 	*	fill: text's fill color.
 	*/
 	Full_Text(float x, float y, float size, const char* text,
-		bool hoverable = true, bool override_theme = false, 
+		bool hoverable = true, bool override_theme = false, void (*click)() = NULL,
 		sf::Color fill = sf::Color::Transparent, sf::Color outline = sf::Color::Transparent);
 
 	void flip_theme();
@@ -57,6 +60,8 @@ public:
 	*	outline: text's outline size.
 	*/
 	void setPhysical(float x, float y, const char* text, float size, float outline);
+
+	void hover();
 
 private:
 	using sf::Text::setFillColor;

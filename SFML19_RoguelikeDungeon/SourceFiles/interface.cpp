@@ -123,7 +123,7 @@ void Interface::handle_event() {
             Screen::screens[Screen::display]->mouse_event_handler();
 
         Screen::screens[Screen::display]->hover_event_handler();
-        Screen::screens[Screen::display]->hover_textbox();
+        Screen::screens[Screen::display]->hover();
 
         if (event.type == sf::Event::TextEntered)
             Screen::screens[Screen::display]->text_event_handler();

@@ -22,7 +22,7 @@ Full_Text::Full_Text() {
 }
 
 Full_Text::Full_Text(float x, float y, float size, const char* text,
-	bool hoverable, bool override_theme,
+	bool hoverable, bool override_theme, void (*click)(),
 	sf::Color fill, sf::Color outline): Full_Shape(hoverable, override_theme) {
 	if (!override_theme) {
 		sf::Text::setFillColor(Setting_Manager::light ? light[theme] : dark[theme]);
@@ -38,6 +38,8 @@ Full_Text::Full_Text(float x, float y, float size, const char* text,
 	setString(text);
 	setFont(get_selected());
 	setStyle(sf::Text::Bold);
+
+	clickCallback = click;
 }
 
 void Full_Text::flip_theme() {
@@ -72,4 +74,12 @@ void Full_Text::setPhysical(float x, float y, const char* text, float size, floa
 	setOutlineThickness(outline);
 	if (size != NULL)
 		setCharacterSize(size);
+}
+
+void Full_Text::hover() {
+	bool in = getGlobalBounds().contains(sf::Vector2f(x, y));
+	if (in && !hovered)
+		highlight();
+	else if (!in && hovered)
+		highlight(false);
 }

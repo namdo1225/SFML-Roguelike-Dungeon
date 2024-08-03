@@ -160,6 +160,11 @@ void Screen::setupTextbox(const char* text, float x, float y, float sx, float sy
 	textboxes.push_back(Full_Textbox(text, x, y, sx, sy, func, fontSize, fontOutline));
 }
 
+void Screen::setupHoverableText(const char* text, float x, float y, void(*func)(), float fontSize, float fontOutline) {
+	hoverableTexts.push_back(Full_Text());
+	hoverableTexts[hoverableTexts.size() - 1].setPhysical(x, y, text, fontSize, fontOutline);
+}
+
 bool Screen::mouse_in_helper(bool element, unsigned int i) {
 	return (element && rects[i].getGlobalBounds().contains(sf::Vector2f(x, y))) ||
 		(!element && texts[i].getGlobalBounds().contains(sf::Vector2f(x, y)));
@@ -380,7 +385,7 @@ void Screen::update_draw() {
 void Screen::change_theme() {
 }
 
-void Screen::hover_textbox() {
+void Screen::hover() {
 	if (exit_button)
 		hover_button(ExitButton);
 
@@ -389,6 +394,9 @@ void Screen::hover_textbox() {
 
 	if (text_handler_enabled)
 		hover_button(ClearButton);
+
+	for (unsigned int i = 0; i < screens[display]->hoverableTexts.size(); i++)
+		screens[display]->hoverableTexts[i].hover();
 
 	for (unsigned int i = 0; i < screens[display]->textboxes.size(); i++)
 		screens[display]->textboxes[i].hover();
