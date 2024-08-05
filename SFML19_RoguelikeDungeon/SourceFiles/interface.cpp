@@ -6,32 +6,42 @@
 */
 
 #include "interface.h"
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <nlohmann/json.hpp>
 #include <format>
+#include <fstream>
+#include <iostream>
+#include <nlohmann/json.hpp>
+#include <sstream>
 
+#include "Screen/custom_screen.h"
 #include "Screen/exit_screen.h"
-#include "Screen/title_screen.h"
-#include "Screen/setting_screen.h"
-#include "Screen/name_screen.h"
-#include "Screen/stat_screen.h"
 #include "Screen/game_screen.h"
-#include "Screen/menu_screen.h"
 #include "Screen/inventory_screen.h"
 #include "Screen/level_screen.h"
 #include "Screen/load_screen.h"
-#include "Screen/map_screen.h"
-#include "Screen/spell_screen.h"
 #include "Screen/log_screen.h"
+#include "Screen/map_screen.h"
+#include "Screen/menu_screen.h"
+#include "Screen/name_screen.h"
+#include "Screen/setting_screen.h"
 #include "Screen/shop_screen.h"
 #include "Screen/spell_attack_screen.h"
+#include "Screen/spell_screen.h"
+#include "Screen/stat_screen.h"
 #include "Screen/status_screen.h"
-#include "Screen/custom_screen.h"
+#include "Screen/title_screen.h"
 
-#include "Manager/setting_manager.h"
 #include "Manager/font_manager.h"
+#include "Manager/setting_manager.h"
+#include <Manager/audio_manager.h>
+#include <Manager/game_manager.h>
+#include <Manager/texture_manager.h>
+#include <memory>
+#include <player.h>
+#include <Screen/screen.h>
+#include <SFML/System/Vector2.hpp>
+#include <SFML/Window/Event.hpp>
+#include <SFML/Window/Keyboard.hpp>
+#include <SFML/Window/Mouse.hpp>
 
 using json = nlohmann::json;
 

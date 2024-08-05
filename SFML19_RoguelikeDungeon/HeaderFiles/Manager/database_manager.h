@@ -5,10 +5,10 @@
 *
 */
 
+#include <sqlite3.h>
+
 #ifndef DATABASE_H
 #define DATABASE_H
-
-#include <sqlite3.h>
 
 class Database_Manager {
 private:
@@ -37,6 +37,8 @@ public:
 	static void close();
 
 	static void executeNonSelectStatement(const char* statement);
+
+	static void executeSelect(const char* statement, int (*callback)(void*, int, char**, char**));
 };
 
 

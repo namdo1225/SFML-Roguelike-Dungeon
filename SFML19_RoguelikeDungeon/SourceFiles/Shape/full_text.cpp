@@ -6,7 +6,11 @@
 */
 
 #include "Shape/full_text.h"
-#include "Manager/font_manager.h"
+#include <Manager/setting_manager.h>
+#include <SFML/Graphics/Color.hpp>
+#include <SFML/Graphics/Text.hpp>
+#include <SFML/System/Vector2.hpp>
+#include <Shape/full_shape.h>
 
 const sf::Color Full_Text::light[themes] = { sf::Color(87, 87, 87), sf::Color(100, 100, 100) };
 const sf::Color Full_Text::dark[themes] = { sf::Color(230, 230, 230), sf::Color(175, 175, 175)};
@@ -25,7 +29,9 @@ Full_Text::Full_Text(float x, float y, float size, const char* text,
 	bool hoverable, bool override_theme, void (*click)(),
 	sf::Color fill, sf::Color outline): Full_Shape(hoverable, override_theme) {
 	if (!override_theme) {
-		sf::Text::setFillColor(Setting_Manager::light ? light[theme] : dark[theme]);
+		sf::Color fill = getFillColor();
+		sf::Color theme_fill = Setting_Manager::light ? light[theme] : dark[theme];
+		sf::Text::setFillColor(sf::Color(theme_fill.r, theme_fill.g, theme_fill.g, fill.a ? fill.a : 255));
 	}
 	else {
 		sf::Text::setOutlineColor(outline);

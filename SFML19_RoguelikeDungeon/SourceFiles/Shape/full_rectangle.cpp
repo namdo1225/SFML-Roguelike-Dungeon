@@ -27,8 +27,11 @@ Full_Rectangle::Full_Rectangle(float x, float y, float w, float h,
 	bool hoverable, bool override_theme,
 	sf::Color fill, sf::Color outline) : Full_Shape(hoverable, override_theme) {
 	if (!override_theme) {
-		sf::RectangleShape::setFillColor(Setting_Manager::light ? light_bg[theme] : dark_bg[theme]);
-		sf::RectangleShape::setOutlineColor(Setting_Manager::light ? light_edge[theme] : dark_edge[theme]);
+		sf::Color theme_fill = Setting_Manager::light ? light_bg[theme] : dark_bg[theme];
+		sf::Color theme_outline = Setting_Manager::light ? light_edge[theme] : dark_edge[theme];
+
+		sf::RectangleShape::setFillColor(sf::Color(theme_fill.r, theme_fill.g, theme_fill.g, fill.a ? fill.a : 255));
+		sf::RectangleShape::setOutlineColor(sf::Color(theme_outline.r, theme_outline.g, theme_outline.g, outline.a ? outline.a : 255));
 	}
 	else {
 		sf::RectangleShape::setOutlineColor(outline);

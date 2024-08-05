@@ -1,7 +1,8 @@
-#include "Manager/database_manager.h"
-#include <iostream>
-#include <format>
 #include "env.h"
+#include "Manager/database_manager.h"
+#include <cstdio>
+#include <format>
+#include <sqlite3.h>
 
 sqlite3* Database_Manager::db;
 
@@ -49,14 +50,15 @@ bool Database_Manager::migrate() {
                                   range INTEGER NOT NULL, \
                                   experience INTEGER NOT NULL, \
                                   experience_growth REAL DEFAULT 0.5, \
-                                  attack_type INTEGER NOT NULL \
+                                  attack_type INTEGER NOT NULL, \
                                   floor INTEGER DEFAULT 1 \
             );");
+
             executeNonSelectStatement("INSERT INTO enemies VALUES(0, 'Zombie',   9, 0.5,  3,  0.5, 3,   0.5, 1, 0.25, 1,  3, 0.75,  1, 1);");
             executeNonSelectStatement("INSERT INTO enemies VALUES(1, 'Skeleton', 7, 0.4,  2, 0.25, 2,  0.25, 2,  0.5, 3,  3, 0.75,  1, 1);");
             executeNonSelectStatement("INSERT INTO enemies VALUES(2, 'Mage',     3, 0.3,  4,  0.5, 1, 0.125, 4,  0.5, 4,  3, 0.75,  0, 1);");
             executeNonSelectStatement("INSERT INTO enemies VALUES(3, 'Bandit',  12, 0.6,  4, 0.25, 5,  0.25, 3, 0.25, 2,  5, 1.50,  1, 1);");
-            executeNonSelectStatement("INSERT INTO enemies VALUES(4, 'Mimic',    9, 0.7, 10,  0.7, 2,   0.4, 2,  0.4, 1, 10, 1, 1,  1, 5);");
+            executeNonSelectStatement("INSERT INTO enemies VALUES(4, 'Mimic',    9, 0.7, 10,  0.7, 2,   0.4, 2,  0.4, 1, 10,    1,  1, 5);");
             executeNonSelectStatement("INSERT INTO enemies VALUES(5, 'Warrior', 20, 0.7,  8,  0.5, 7,   0.5, 4,  0.4, 1,  8,  0.8,  1, 10);");
             executeNonSelectStatement("INSERT INTO enemies VALUES(6, 'Priest',   8, 0.3,  8,  0.5, 3, 0.125, 7,  0.5, 5,  9,  0.8,  0, 10);");
             version++;
@@ -75,7 +77,7 @@ bool Database_Manager::migrate() {
                                   range INTEGER NOT NULL, \
                                   experience INTEGER NOT NULL, \
                                   experience_growth REAL DEFAULT 0.5, \
-                                  attack_type INTEGER NOT NULL \
+                                  attack_type INTEGER NOT NULL, \
                                   floor INTEGER DEFAULT 1 \
             );");
         }
@@ -91,6 +93,7 @@ bool Database_Manager::reverse(unsigned int target) {
         switch (version) {
         case 1:
             executeNonSelectStatement("DROP TABLE enemies;");
+            executeNonSelectStatement("DROP TABLE spells;");
             version--;
         }
 
@@ -108,4 +111,17 @@ void Database_Manager::executeNonSelectStatement(const char* statement) {
     char* errmsg;
     if (sqlite3_exec(db, statement, 0, 0, &errmsg))
         throw errmsg;
+    else
+        sqlite3_free(errmsg);
+}
+
+void Database_Manager::executeSelect(const char* statement, int (*callback)(void*, int, char**, char**)) {
+    char* errmsg = 0;
+    int rc;
+    rc = sqlite3_exec(db, statement, callback, NULL, &errmsg);
+
+    if (rc != SQLITE_OK)
+        throw errmsg;
+    else
+        sqlite3_free(errmsg);
 }

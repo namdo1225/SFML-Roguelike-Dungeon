@@ -7,6 +7,9 @@
 
 #include "interface.h"
 #include "Manager/database_manager.h"
+#include <cstdio>
+#include <cstdlib>
+#include <ctime>
 
 int main() {
     try {
@@ -17,7 +20,7 @@ int main() {
             Interface::get().window_loop();
         }
 
-        //Database_Manager::reverse(0);
+        Database_Manager::reverse(0);
         Database_Manager::close();
     }
     catch (char* error) {

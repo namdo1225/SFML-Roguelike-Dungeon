@@ -5,9 +5,22 @@
 */
 
 
-#include "Screen/screen.h"
-#include "Manager/font_manager.h"
 #include "Manager/audio_manager.h"
+#include "Manager/font_manager.h"
+#include "Screen/screen.h"
+#include <Manager/setting_manager.h>
+#include <map>
+#include <memory>
+#include <SFML/Graphics/Color.hpp>
+#include <SFML/System/String.hpp>
+#include <SFML/System/Vector2.hpp>
+#include <SFML/Window/Keyboard.hpp>
+#include <SFML/Window/VideoMode.hpp>
+#include <Shape/full_rectangle.h>
+#include <Shape/full_text.h>
+#include <Shape/full_textbox.h>
+#include <string>
+#include <vector>
 
 Display Screen::display = TitleScreen;
 std::vector<Display> Screen::prev_displays = {};
@@ -281,6 +294,11 @@ void Screen::change_settings() {
 			for (Full_Text& text : screens[i]->texts) {
 				text.flip_theme();
 				text.setFont(Font_Manager::get_selected());
+			}
+			for (Full_Textbox& textbox : screens[i]->textboxes) {
+				textbox.text.flip_theme();
+				textbox.text.setFont(Font_Manager::get_selected());
+				textbox.rect.flip_theme();
 			}
 		}
 	}
