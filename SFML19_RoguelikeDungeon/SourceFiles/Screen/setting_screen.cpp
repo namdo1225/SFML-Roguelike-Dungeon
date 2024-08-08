@@ -6,7 +6,10 @@
 
 
 #include "Screen/setting_screen.h"
-#include "interface.h"
+#include <cstdlib>
+#include <Manager/font_manager.h>
+#include <Manager/setting_manager.h>
+#include <Screen/screen.h>
 #include <string>
 
 Setting_Screen::Setting_Screen() : Screen(true, true, true) {

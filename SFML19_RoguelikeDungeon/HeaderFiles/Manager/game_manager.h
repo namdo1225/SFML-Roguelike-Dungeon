@@ -5,11 +5,16 @@
 *
 */
 
-#include "include.h"
-#include <iostream>
 #include "Manager/log_manager.h"
-#include "Manager/font_manager.h"
 #include "Tool/special.h"
+#include <array>
+#include <Floor/enemy.h>
+#include <Floor/floor.h>
+#include <memory>
+#include <player.h>
+#include <Tool/item.h>
+#include <Tool/spell.h>
+#include <vector>
 
 #ifndef GAME_MANAGER_H
 #define GAME_MANAGER_H
@@ -240,11 +245,8 @@ public:
 
 	/**
 	* Read the content of a save file.
-	* 
-	* Parameter:
-	*	file_name: a string for the name of the save file.	
 	*/
-	static bool read_save(const char* name);
+	static bool read_save();
 
 	/**
 	* Organize player's spell list.

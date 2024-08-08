@@ -4,8 +4,9 @@
 * Description: Contain the implementation of the Menu_Screen class.
 */
 
-#include "Screen/menu_screen.h"
 #include "Manager/game_manager.h"
+#include "Screen/menu_screen.h"
+#include <Screen/screen.h>
 
 Menu_Screen::Menu_Screen() : Screen(false, false) {
 	setup_helper(NULL,  100.f, 100.f, 630.f, 550.f);
@@ -62,7 +63,7 @@ void Menu_Screen::click_event_handler() {
 	else if (mouse_in_helper(true, 7))
 		switch_screen(MenuScreen, SettingScreen, true);
 	else if (mouse_in_helper(true, 8))
-		switch_screen(MenuScreen, StatusScreen, false, true);
+		switch_screen(MenuScreen, StatusScreen, true);
 	else
 		return_to_prev_screen(MenuScreen);
 }

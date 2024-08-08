@@ -5,13 +5,37 @@
 *
 */
 
-#include "Manager/game_manager.h"
-#include "Manager/audio_manager.h"
-#include <format>
-#include <fstream>
-#include <nlohmann/json.hpp>
-#include <sstream>
 #include "env.h"
+#include "Manager/audio_manager.h"
+#include "Manager/game_manager.h"
+#include <array>
+#include <cstdio>
+#include <cstdlib>
+#include <effect.h>
+#include <exception>
+#include <Floor/collectible.h>
+#include <Floor/enemy.h>
+#include <Floor/floor.h>
+#include <Floor/gold_collectible.h>
+#include <Floor/interactible.h>
+#include <Floor/room.h>
+#include <format>
+#include <iomanip>
+#include <iosfwd>
+#include <malloc.h>
+#include <Manager/texture_manager.h>
+#include <memory>
+#include <nfd.h>
+#include <nlohmann/json.hpp>
+#include <ostream>
+#include <player.h>
+#include <SFML/Graphics/Rect.hpp>
+#include <stat.h>
+#include <Tool/item.h>
+#include <Tool/special.h>
+#include <Tool/spell.h>
+#include <vector>
+#include <fstream>
 
 using json = nlohmann::json;
 
@@ -943,8 +967,20 @@ void Game_Manager::save() {
         log_add("An error occurred while gathering data to save.");
     };
 
+    nfdchar_t* outPath = NULL;
+    nfdresult_t result = NFD_OpenDialog("sav", NULL, &outPath);
+
+    if (result == NFD_CANCEL) {
+        log_add("You closed the save dialog.");
+        return;
+    }
+    else if (result != NFD_OKAY) {
+        log_add("Errors occured while saving.");
+        return;
+    }
+
     try {
-        std::ofstream file_out{ std::format("{}.sav", player.get_name()) };
+        std::ofstream file_out{ outPath };
         if (!file_out) {
             log_add("Save not successful.");
             return;
@@ -952,6 +988,7 @@ void Game_Manager::save() {
 
         file_out << std::setw(4) << j << std::endl;
         file_out.close();
+        free(outPath);
         log_add("Saved successfully.");
     }
     catch (const std::exception&) {
@@ -959,11 +996,23 @@ void Game_Manager::save() {
     }
 }
 
-bool Game_Manager::read_save(const char* name) {
-    std::ifstream file;
+bool Game_Manager::read_save() {
+    nfdchar_t* outPath = NULL;
+    nfdresult_t result = NFD_OpenDialog("sav", NULL, &outPath);
+
+    if (result == NFD_CANCEL) {
+        printf("Error: User pressed cancel.");
+        return false;
+    }
+    else if (result != NFD_OKAY) {
+        printf("Error: %s\n", NFD_GetError());
+        return false;
+    }
+
     try {
+        std::ifstream file;
         file.exceptions(std::ifstream::badbit);
-        file.open(std::format("{}.sav", name));
+        file.open(outPath);
         if (!file) {
             return false;
         }
@@ -1049,6 +1098,8 @@ bool Game_Manager::read_save(const char* name) {
 
         log_add("The maze changed its appearance...");
         log_add("Save loaded.");
+
+        free(outPath);
     }
     catch (const std::exception&) {
         printf("Error while trying to open save file.");

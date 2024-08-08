@@ -5,10 +5,23 @@
 * 
 */
 
-#include "Screen/game_screen.h"
-#include "interface.h"
 #include "Manager/game_manager.h"
+#include "Screen/game_screen.h"
+#include <Floor/enemy.h>
 #include <format>
+#include <Manager/font_manager.h>
+#include <memory>
+#include <Screen/screen.h>
+#include <SFML/Graphics/Color.hpp>
+#include <SFML/System/Vector2.hpp>
+#include <SFML/Window/Keyboard.hpp>
+#include <Shape/full_rectangle.h>
+#include <Shape/full_text.h>
+#include <stat.h>
+#include <string>
+#include <Tool/item.h>
+#include <Tool/special.h>
+#include <Tool/spell.h>
 
 bool Game_Screen::grid = false;
 bool Game_Screen::range = false;

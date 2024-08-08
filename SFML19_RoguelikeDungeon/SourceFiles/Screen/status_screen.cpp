@@ -4,10 +4,18 @@
 * Description: Contain the implementation of the Status_Screen class.
 */
 
-#include "Screen/status_screen.h"
-#include "interface.h"
 #include "Manager/game_manager.h"
+#include "Screen/status_screen.h"
+#include <effect.h>
 #include <format>
+#include <Screen/screen.h>
+#include <SFML/Graphics/Rect.hpp>
+#include <SFML/Graphics/View.hpp>
+#include <SFML/System/Vector2.hpp>
+#include <SFML/Window/Event.hpp>
+#include <stat.h>
+#include <string>
+#include <vector>
 
 sf::View Status_Screen::viewEffect{ sf::FloatRect(0, 0, 1200, 800) };
 
@@ -50,7 +58,7 @@ Status_Screen::Status_Screen() : Screen(true, false) {
 void Status_Screen::click_event_handler() {
 	if (mouse_in_button(ExitButton)) {
 		viewEffect.reset(sf::FloatRect(0, 0, 1200, 800));
-		switch_screen(StatusScreen, GameScreen, false, true);
+		return_to_prev_screen(StatusScreen);
 	}
 }
 

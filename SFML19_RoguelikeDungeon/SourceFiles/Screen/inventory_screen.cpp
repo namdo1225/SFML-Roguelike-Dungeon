@@ -4,9 +4,14 @@
 * Description: Contain the implementation of the Inventory_Screen class.
 */
 
-#include "Screen/inventory_screen.h"
 #include "Manager/game_manager.h"
+#include "Screen/inventory_screen.h"
 #include <format>
+#include <Manager/audio_manager.h>
+#include <memory>
+#include <Screen/screen.h>
+#include <string>
+#include <Tool/item.h>
 
 Inventory_Screen::Inventory_Screen() : Screen(true, false) {
 	update = true;

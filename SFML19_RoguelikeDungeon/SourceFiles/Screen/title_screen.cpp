@@ -5,10 +5,12 @@
 */
 
 
-#include "Screen/title_screen.h"
-#include "interface.h"
 #include "Manager/audio_manager.h"
+#include "Screen/title_screen.h"
 #include <format>
+#include <Manager/game_manager.h>
+#include <Manager/setting_manager.h>
+#include <Screen/screen.h>
 
 Title_Screen::Title_Screen() : Screen() {
 	setup_helper(NULL, 330.f, 625.f, 150.f,  65.f);
@@ -35,15 +37,18 @@ Title_Screen::Title_Screen() : Screen() {
 	setup_helper("Roguelike\nDungeon", 170.f, 40.f, 96.f, NULL);
 
 	setup_helper(
-		"Developed with the help of\ninternet forums and SFML Graphics,\nzlib/png license."
+		"Developed with the help of internet forums\nand SFML Graphics, zlib/png license."
 		"\n\nFonts: fontsource.org, Google Fonts\n\nInstructions: use the arrow keys to "
-		"\nmove the players. Tap on the level \nup button to upgrade your stats."
-		"\n\nSound effects created on \nsfxr.me/, MIT License."
-		"\n\nSongs created on \nbeepbox.co/, MIT License."
+		"move the\nplayers. Tap on the level up button\nto upgrade your stats."
+		"\n\nSound effects created on sfxr.me, MIT License."
+		"\n\nSongs created on beepbox.co, MIT License."
 		"\n\nSprites created in Krita."
-		"\n\nJSON parser: \nhttps://github.com/nlohmann/json."
-		"\n\nVersion: 4.0, refactored UI.",
-		710.f, 20.f, NULL, NULL);
+		"\n\nJSON parser: github.com/nlohmann/json."
+		"\n\SQLite3: sqlite.org."
+		"\n\NativeFileDialog:"
+		"\ngithub.com / mlabbe / nativefiledialog."
+		"\n\nVersion: 5.0, major overhaul.",
+		710.f, 20.f, 18.f, NULL);
 }
 
 void Title_Screen::click_event_handler() {
