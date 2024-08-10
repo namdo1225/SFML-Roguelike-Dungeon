@@ -6,11 +6,6 @@
 */
 
 #include "interface.h"
-#include <format>
-#include <fstream>
-#include <iostream>
-#include <nlohmann/json.hpp>
-#include <sstream>
 
 #include "Screen/custom_screen.h"
 #include "Screen/exit_screen.h"
@@ -30,7 +25,6 @@
 #include "Screen/status_screen.h"
 #include "Screen/title_screen.h"
 
-#include "Manager/font_manager.h"
 #include "Manager/setting_manager.h"
 #include <Manager/audio_manager.h>
 #include <Manager/game_manager.h>
@@ -43,7 +37,9 @@
 #include <SFML/Window/Keyboard.hpp>
 #include <SFML/Window/Mouse.hpp>
 
-using json = nlohmann::json;
+#include "Candle/RadialLight.hpp"
+#include <Candle/LightSource.hpp>
+#include <vector>
 
 Interface* Interface::singleton;
 
@@ -86,15 +82,29 @@ Interface& Interface::get() {
     return singleton;
 }
 
-// major functionalities
 void Interface::window_loop() {
+
+    candle::RadialLight light;
+    light.setRange(150);
+
+    candle::EdgeVector edges;
+    edges.emplace_back(sf::Vector2f(200.f, 100.f),
+        sf::Vector2f(200.f, 300.f));
+
+    light.setPosition(sf::Vector2f(100.f, 100.f));
+    light.castLight(edges.begin(), edges.end());
+
     while (window.isOpen())
     {
         handle_event();
         Game_Manager::ene_dead();
 
         window.clear();
+
+
         draw_interface();
+        window.draw(light);
+
         window.display();
     }
 }

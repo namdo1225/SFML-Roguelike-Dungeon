@@ -9,12 +9,8 @@
 #ifndef INTERFACE_H
 #define INTERFACE_H
 
-#include <SFML/Graphics.hpp>
-#include <SFML/Audio.hpp>
-#include <array>
-#include "include.h"
 #include "Screen/screen.h"
-#include "Manager/game_manager.h"
+#include <SFML/Graphics/RenderWindow.hpp>
 
 class Interface {
 protected:
