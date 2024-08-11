@@ -41,6 +41,8 @@
 #include <Candle/LightSource.hpp>
 #include <vector>
 
+#include <Thor/Shapes/ConcaveShape.hpp>
+
 Interface* Interface::singleton;
 
 Interface::Interface() {
@@ -93,6 +95,8 @@ void Interface::window_loop() {
 
     light.setPosition(sf::Vector2f(100.f, 100.f));
     light.castLight(edges.begin(), edges.end());
+
+    thor::ConcaveShape concaveShape;
 
     while (window.isOpen())
     {
