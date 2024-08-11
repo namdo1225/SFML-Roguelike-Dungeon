@@ -4,13 +4,15 @@
 * Description: Contain the declaration of the Screen class, which represents a game scene.
 */
 
-#include <SFML/Graphics.hpp>
-#include <iostream>
-#include "Shape/full_text.h"
-#include "Shape/full_rectangle.h"
-#include "Shape/full_textbox.h"
-#include "Manager/setting_manager.h"
 #include "Manager/log_manager.h"
+#include "Manager/setting_manager.h"
+#include "Shape/full_rectangle.h"
+#include "Shape/full_text.h"
+#include "Shape/full_textbox.h"
+#include <map>
+#include <memory>
+#include <string>
+#include <vector>
 
 #ifndef SCREEN_H
 #define SCREEN_H

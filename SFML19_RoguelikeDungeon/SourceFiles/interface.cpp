@@ -37,12 +37,6 @@
 #include <SFML/Window/Keyboard.hpp>
 #include <SFML/Window/Mouse.hpp>
 
-#include "Candle/RadialLight.hpp"
-#include <Candle/LightSource.hpp>
-#include <vector>
-
-#include <Thor/Shapes/ConcaveShape.hpp>
-
 Interface* Interface::singleton;
 
 Interface::Interface() {
@@ -85,30 +79,13 @@ Interface& Interface::get() {
 }
 
 void Interface::window_loop() {
-
-    candle::RadialLight light;
-    light.setRange(150);
-
-    candle::EdgeVector edges;
-    edges.emplace_back(sf::Vector2f(200.f, 100.f),
-        sf::Vector2f(200.f, 300.f));
-
-    light.setPosition(sf::Vector2f(100.f, 100.f));
-    light.castLight(edges.begin(), edges.end());
-
-    thor::ConcaveShape concaveShape;
-
     while (window.isOpen())
     {
         handle_event();
         Game_Manager::ene_dead();
 
         window.clear();
-
-
         draw_interface();
-        window.draw(light);
-
         window.display();
     }
 }

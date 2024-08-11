@@ -8,6 +8,10 @@
 #define GAME_SCREEN_H
 
 #include "screen.h"
+#include <Shape/full_rectangle.h>
+#include <Shape/full_text.h>
+#include "Candle/LightingArea.hpp"
+#include "Candle/RadialLight.hpp"
 
 class Game_Screen : public Screen {
 protected:
@@ -23,6 +27,9 @@ private:
 
 	static Full_Rectangle scan_rect;
 	static Full_Text scan_txt;
+
+	static candle::LightingArea fog;
+	static candle::RadialLight light;
 
 	/*
 	* Change opacity of the UI.

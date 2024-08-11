@@ -7,6 +7,9 @@
 
 #include "Manager/game_manager.h"
 #include "Screen/game_screen.h"
+#include <Candle/LightingArea.hpp>
+#include <Candle/RadialLight.hpp>
+#include <cstdio>
 #include <Floor/enemy.h>
 #include <format>
 #include <Manager/font_manager.h>
@@ -34,8 +37,17 @@ Full_Rectangle Game_Screen::ranges[4];
 Full_Rectangle Game_Screen::scan_rect = Full_Rectangle(10.f, 530.f, 100.f, 160.f);
 Full_Text Game_Screen::scan_txt = Full_Text(20.f, 540.f, 18.f, "");
 
+candle::LightingArea Game_Screen::fog = candle::LightingArea(candle::LightingArea::FOG,
+	sf::Vector2f(0.f, 0.f),
+	sf::Vector2f(DEFAULT_SCREEN_X, DEFAULT_SCREEN_Y));
+candle::RadialLight Game_Screen::light;
+
 Game_Screen::Game_Screen() : Screen(false, false) {
 	update = true;
+	fog.setAreaColor(sf::Color::Black);
+	light.setRange(300);
+	light.setFade(true);
+	light.setPosition(sf::Vector2f(420.f, 420.f));
 
 	// items
 	setup_helper(NULL, 750.f, 250.f, 200.f, 200.f);
@@ -226,6 +238,12 @@ void Game_Screen::draw() {
 		window.draw(en);
 
 	window.setView(viewUI);
+
+	fog.clear();
+	fog.draw(light);
+	fog.display();
+
+	window.draw(fog);
 
 	if (grid)
 		for (Full_Rectangle& rect : grids)

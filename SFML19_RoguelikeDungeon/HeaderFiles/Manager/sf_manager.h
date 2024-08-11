@@ -9,10 +9,16 @@
 #ifndef SF_MANAGER_H
 #define SF_MANAGER_H
 
-#include <SFML/Graphics.hpp>
+#include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Graphics/View.hpp>
+#include <SFML/System/Vector2.hpp>
+#include <SFML/Window/Event.hpp>
 
 class SF_Manager {
 public:
+	const static float DEFAULT_SCREEN_X;
+	const static float DEFAULT_SCREEN_Y;
+
 	const static unsigned int MAX_INV_SPELL_SLOTS = 32;
 	const static unsigned int NUM_NON_CUR_STATS = 6;
 	const static char* FULL_STATS[];

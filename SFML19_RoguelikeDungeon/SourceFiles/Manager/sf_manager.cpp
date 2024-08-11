@@ -6,9 +6,16 @@
 */
 
 #include "Manager/sf_manager.h"
-#include "Manager/setting_manager.h"
+#include <SFML/Graphics/Rect.hpp>
+#include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Graphics/View.hpp>
+#include <SFML/System/Vector2.hpp>
+#include <SFML/Window/Event.hpp>
 
 const char* SF_Manager::FULL_STATS[] = { "Health", "Mana", "Strength", "Magic", "Defense", "Resistance" };
+
+const float SF_Manager::DEFAULT_SCREEN_X = 1200.f;
+const float SF_Manager::DEFAULT_SCREEN_Y = 800.f;
 
 float SF_Manager::x;
 float SF_Manager::y;

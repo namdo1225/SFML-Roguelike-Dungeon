@@ -79,7 +79,7 @@ Screen::Screen(bool exit_button, bool show_bg, bool confirm_button, bool text_ha
 
 void Screen::setup() {
 	loaded = true;
-	window.create(sf::VideoMode(1200, 800), "RE: Dungeon");
+	window.create(sf::VideoMode(DEFAULT_SCREEN_X, DEFAULT_SCREEN_Y), "RE: Dungeon");
 	window.setKeyRepeatEnabled(false);
 
 	for (unsigned int i = 0; i < MAX_INV_SPELL_SLOTS; i++) {
