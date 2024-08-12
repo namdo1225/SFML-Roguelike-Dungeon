@@ -702,11 +702,11 @@ void Game_Manager::add_item(std::shared_ptr<Item> item) {
     reorganize_inv();
 }
 
-void Game_Manager::reset_game() {
+void Game_Manager::reset_game(bool cheat) {
     viewUI.reset(sf::FloatRect(0, 0, 1200, 800));
     viewWorld.reset(sf::FloatRect(0, 0, 1200, 800));
 
-    player.reset();
+    player.reset(cheat);
 
     floor = Floor();
     pl_random_pos();

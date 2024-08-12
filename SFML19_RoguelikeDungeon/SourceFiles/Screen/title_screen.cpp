@@ -7,32 +7,63 @@
 
 #include "Manager/audio_manager.h"
 #include "Screen/title_screen.h"
+#include <cstdio>
+#include <cstdlib>
 #include <format>
 #include <Manager/game_manager.h>
 #include <Manager/setting_manager.h>
 #include <Screen/screen.h>
+#include <format>
+
+// https://stackoverflow.com/questions/3037088/how-to-open-the-default-web-browser-in-windows-in-c
+#if defined(_WIN32)
+const char* OS = "Windows";
+const char* OPEN_BROWSER = "start";
+#elif defined(__APPLE__)
+const char* OS = "Mac OS";
+const char* OPEN_BROWSER = "open";
+#elif defined(__linux__)
+const char* OS = "Linux";
+const char* OPEN_BROWSER = "xdg-open";
+#elif defined(__unix__) 
+const char* OS = "Unix";
+const char* OPEN_BROWSER = "xdg-open";
+#else
+const char* OS = "Other";
+const char* OPEN_BROWSER = "";
+#endif
 
 Title_Screen::Title_Screen() : Screen() {
-	setup_helper(NULL, 330.f, 625.f, 150.f,  65.f);
+	setup_helper(NULL, 410.f, 475.f, 150.f,  65.f);
 	setup_helper(NULL, 700.f,  10.f, 470.f, 780.f);
 
-	setupTextbox("New Game", 330.f, 325.f, 150.f, 65.f, []() {
+	setupTextbox("New Game", 250.f, 325.f, 150.f, 65.f, []() {
 		Game_Manager::reset_game();
+		switch_screen(TitleScreen, NameScreen, false);
+	});
+	setupTextbox("Cheat Mode", 410.f, 325.f, 150.f, 65.f, []() {
+		Game_Manager::reset_game(true);
 		switch_screen(TitleScreen, NameScreen, false);
 	});
 	setupTextbox("Load Game", 330.f, 400.f, 150.f, 65.f, []() {
 		switch_screen(TitleScreen, LoadScreen, true);
 	});
-	setupTextbox("Settings", 330.f, 475.f, 150.f, 65.f, []() {
+	setupTextbox("Settings", 250.f, 475.f, 150.f, 65.f, []() {
 		switch_screen(TitleScreen, SettingScreen, true);
-	});
-	setupTextbox("Quit Game", 330.f, 550.f, 150.f, 65.f, []() {
-		window.close();
 	});
 	setup_helper(std::format("Music: {}",
 		Audio_Manager::get_music_volume() ? "ON" : "OFF").c_str(),
-		335.f, 643.f, NULL, NULL);
-	setupTextbox("Mod Game", 330.f, 700.f, 150.f, 65.f, []() { switch_screen(TitleScreen, CustomScreen, true); });
+		420.f, 490.f, NULL, NULL);
+	setupTextbox("Mod Game", 330.f, 550.f, 150.f, 65.f, []() { switch_screen(TitleScreen, CustomScreen, true); });
+	setupTextbox("Repository", 330.f, 625.f, 150.f, 65.f, []() {
+		if (OS != "Other")
+			system(std::format("{} https://github.com/namdo1225/SFML-Roguelike-Dungeon", OPEN_BROWSER).c_str());
+		else
+			printf("We cannot open the repository with your OS.");
+	});
+	setupTextbox("Quit Game", 330.f, 700.f, 150.f, 65.f, []() {
+		window.close();
+	});
 
 	setup_helper("Roguelike\nDungeon", 170.f, 40.f, 96.f, NULL);
 

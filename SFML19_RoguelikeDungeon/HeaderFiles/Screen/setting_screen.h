@@ -21,11 +21,11 @@ public:
 
 	virtual void draw();
 
-	bool light_mode = false;
-	unsigned int theme = 0;
-	unsigned int sfx_volume = 100;
-	unsigned int music_volume = 100;
-	unsigned int font = 0;
+	static bool light_mode;
+	static unsigned int theme;
+	static unsigned int sfx_volume;
+	static unsigned int music_volume;
+	static unsigned int font;
 };
 
 #endif

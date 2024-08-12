@@ -86,17 +86,20 @@ void Player::set_stat(Stat t_stat, unsigned int num) { stat[t_stat] = num; }
 
 bool Player::is_dead() { return (stat[Hp] <= 0); }
 
-void Player::reset() {
+void Player::reset(bool cheat) {
 	if (MODIFY_START_STATS)
 		stat = STARTING_STATS;
+	else if (cheat)
+		stat = { 999, 999, 999, 999, 999, 999, 999, 999 };
 	else
 		stat = { 10, 5, 0, 0, 0, 0, 10, 5 };
+
 	name = "Player";
 	points = STARTING_STAT_PTS ? STARTING_STAT_PTS : 10;
 	level = 1;
 	floor = STARTING_FLOOR ? STARTING_FLOOR : 1;
 	cur_exp = 0;
-	gold = STARTING_GOLD;
+	gold = cheat ? 10000 : STARTING_GOLD;
 	lvl_up = 10;
 }
 

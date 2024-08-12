@@ -32,6 +32,6 @@ void Full_Textbox::hover() {
 }
 
 void Full_Textbox::click() {
-	if (rect.getGlobalBounds().contains(sf::Vector2f(x, y)))
+	if (rect.getGlobalBounds().contains(sf::Vector2f(x, y)) && callback != NULL)
 		callback();
 }

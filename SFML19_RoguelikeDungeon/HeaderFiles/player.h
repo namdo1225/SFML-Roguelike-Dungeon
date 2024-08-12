@@ -8,9 +8,13 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include <SFML/Graphics.hpp>
-#include <array>
 #include "effect.h"
+#include "stat.h"
+#include <array>
+#include <SFML/Graphics/Rect.hpp>
+#include <SFML/Graphics/RectangleShape.hpp>
+#include <string>
+#include <vector>
 
 class Player : public sf::RectangleShape {
 private:
@@ -278,8 +282,11 @@ public:
 
 	/**
 	* Method to reset object's members to default value.
+	* 
+	* Parameter:
+	*	cheat: true if player is powerful upon start.
 	*/
-	void reset();
+	void reset(bool cheat = false);
 
 	/**
 	* Copy player's stat for general usage.

@@ -12,6 +12,12 @@
 #include <Screen/screen.h>
 #include <string>
 
+bool Setting_Screen::light_mode = false;
+unsigned int Setting_Screen::theme = 0;
+unsigned int Setting_Screen::sfx_volume = 100;
+unsigned int Setting_Screen::music_volume = 100;
+unsigned int Setting_Screen::font = 0;
+
 Setting_Screen::Setting_Screen() : Screen(true, true, true) {
 	light_mode = Setting_Manager::light;
 	theme = Setting_Manager::theme;
@@ -19,12 +25,12 @@ Setting_Screen::Setting_Screen() : Screen(true, true, true) {
 	music_volume = Setting_Manager::music_volume;
 	font = Setting_Manager::font;
 
-	setup_helper(  "Settings", 400.f, 10.f, 96.f, NULL);
-	setup_helper(     "Theme", 20.f, 150.f, NULL, NULL);
-	setup_helper("Light Mode", 20.f, 200.f, NULL, NULL);
-	setup_helper(      "Font", 20.f, 250.f, NULL, NULL);
-	setup_helper("SFX Volume", 20.f, 300.f, NULL, NULL);
-	setup_helper(     "Music", 20.f, 350.f, NULL, NULL);
+	setup_helper(  "Settings", 400.f, 10.f, 96.f, NULL, false);
+	setup_helper(     "Theme", 20.f, 150.f, NULL, NULL, false);
+	setup_helper("Light Mode", 20.f, 200.f, NULL, NULL, false);
+	setup_helper(      "Font", 20.f, 250.f, NULL, NULL, false);
+	setup_helper("SFX Volume", 20.f, 300.f, NULL, NULL, false);
+	setup_helper(     "Music", 20.f, 350.f, NULL, NULL, false);
 
 	for (int i = 0; i < themes; i++)
 		setup_helper(std::to_string(i).c_str(), 300.f + (50 * i), 150.f, NULL, NULL);
@@ -41,28 +47,13 @@ Setting_Screen::Setting_Screen() : Screen(true, true, true) {
 	for (int i = 0; i <= 4; i++)
 		setup_helper(std::to_string(i * 25).c_str(), 300.f + (50 * i), 350.f, NULL, NULL);
 
-	setup_helper(                          "Selected", 1000.f, 100.f, NULL, NULL);
-	setup_helper(       std::to_string(theme).c_str(), 1000.f, 150.f, NULL, NULL);
-	setup_helper(       light_mode ? "Light" : "Dark", 1000.f, 200.f, NULL, NULL);
-	setup_helper(Font_Manager::get_selected().getInfo().family.c_str(), 1000.f, 250.f, NULL, NULL);
-	setup_helper(  std::to_string(sfx_volume).c_str(), 1000.f, 300.f, NULL, NULL);
-	setup_helper(std::to_string(music_volume).c_str(), 1000.f, 350.f, NULL, NULL);
-
-	setup_helper("abcdefghijklmnopqrstuvwxyz, ABCDEFGHIJKLMNOPQRSTUVWXYZ\n!@#$%%^&*()_+-=", 25.f, 510.f,  NULL, NULL);
-	setup_helper(                                                                     NULL, 20.f, 500.f, 1150.f, 95.f);
-
-	texts[0].setThemeAndHover(false);
-	texts[1].setThemeAndHover(false);
-	texts[2].setThemeAndHover(false);
-	texts[3].setThemeAndHover(false);
-	texts[4].setThemeAndHover(false);
-	texts[5].setThemeAndHover(false);
-	texts[23].setThemeAndHover(false);
-	texts[24].setThemeAndHover(false);
-	texts[25].setThemeAndHover(false);
-	texts[26].setThemeAndHover(false);
-	texts[27].setThemeAndHover(false);
-	texts[28].setThemeAndHover(false);
+	setup_helper(                          "Selected", 1000.f, 100.f, NULL, NULL, false);
+	setup_helper(       std::to_string(theme).c_str(), 1000.f, 150.f, NULL, NULL, false);
+	setup_helper(       light_mode ? "Light" : "Dark", 1000.f, 200.f, NULL, NULL, false);
+	setup_helper(Font_Manager::get_selected().getInfo().family.c_str(), 1000.f, 250.f, NULL, NULL, false);
+	setup_helper(  std::to_string(sfx_volume).c_str(), 1000.f, 300.f, NULL, NULL, false);
+	setup_helper(std::to_string(music_volume).c_str(), 1000.f, 350.f, NULL, NULL, false);
+	setupTextbox("abcdefghijklmnopqrstuvwxyz, ABCDEFGHIJKLMNOPQRSTUVWXYZ\n!@#$%%^&*()_+-=", 20.f, 500.f, 1150.f, 95.f, NULL);
 }
 
 void Setting_Screen::click_event_handler() {
@@ -135,8 +126,6 @@ void Setting_Screen::hover_event_handler() {
 		else if (!in && hover)
 			texts[i].highlight(false);
 	}
-
-	hover_textbox(0, 29);
 }
 
 void Setting_Screen::draw() {

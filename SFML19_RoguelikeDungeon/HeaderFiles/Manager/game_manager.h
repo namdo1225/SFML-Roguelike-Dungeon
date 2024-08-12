@@ -201,8 +201,11 @@ public:
 
 	/**
 	* Reset the game in preparation for a new playthrough.
+	* 
+	* Parameter:
+	*	cheat: true if player wants to cheat the game.
 	*/
-	static void reset_game();
+	static void reset_game(bool cheat = false);
 
 	/**
 	* Add a spell to the spell list.
