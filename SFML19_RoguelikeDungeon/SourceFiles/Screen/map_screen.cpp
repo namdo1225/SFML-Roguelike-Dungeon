@@ -4,9 +4,14 @@
 * Description: Contain the implementation of the Map_Screen class.
 */
 
-#include "Screen/map_screen.h"
 #include "Manager/game_manager.h"
-#include <iostream>
+#include "Screen/map_screen.h"
+#include <Screen/screen.h>
+#include <SFML/Graphics/Rect.hpp>
+#include <SFML/Graphics/View.hpp>
+#include <SFML/System/Vector2.hpp>
+#include <SFML/Window/Event.hpp>
+#include <SFML/Window/Mouse.hpp>
 
 sf::Vector2f Map_Screen::oldPos;
 bool Map_Screen::moving = false;
@@ -30,6 +35,9 @@ Map_Screen::Map_Screen() : Screen(true, false) {
 	});
 	setupTextbox("-", 1110.f, 415.f, 50.f, 50.f, []() {
 		viewMap.zoom(2.f);
+	});
+	setupTextbox("Reset Position", 975.f, 330.f, 180.f, 50.f, []() {
+		viewMap.reset(sf::FloatRect(0, 0, DEFAULT_SCREEN_X, DEFAULT_SCREEN_Y));
 	});
 }
 

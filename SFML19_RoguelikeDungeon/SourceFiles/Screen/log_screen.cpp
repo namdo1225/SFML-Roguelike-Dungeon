@@ -5,6 +5,12 @@
 */
 
 #include "Screen/log_screen.h"
+#include <Screen/screen.h>
+#include <SFML/Graphics/Color.hpp>
+#include <SFML/Graphics/Rect.hpp>
+#include <SFML/System/Vector2.hpp>
+#include <SFML/Window/Event.hpp>
+#include <Shape/full_text.h>
 
 const unsigned int Log_Screen::MAX_LOGS;
 
@@ -15,10 +21,20 @@ Log_Screen::Log_Screen() : Screen(true, false) {
 
 	setup_helper(NULL,  50.f, -10.f,  500.f,  810.f);
 	setup_helper(NULL,  590.f,  10.f, 500.f,   50.f);
-	setup_helper(NULL,  590.f,  90.f, 180.f,   50.f);
 
-	setup_helper("Only the last 50 logs are stored", 600.f, 20.f, 30.f, NULL);
-	setup_helper("Clear Log", 600.f, 100.f, 30.f, NULL);
+	setup_helper("Only the last 50 logs are stored.", 600.f, 20.f, 30.f, NULL);
+	setupTextbox("Clear Log", 590.f, 90.f, 180.f, 50.f, []() {
+		logs.clear();
+	});
+	setupTextbox("Reset Scroll", 790.f, 90.f, 180.f, 50.f, []() {
+		viewLog.reset(sf::FloatRect(0, 0, DEFAULT_SCREEN_X, DEFAULT_SCREEN_Y));
+	});
+	setupTextbox("^", 590.f, 190.f, 50.f, 50.f, []() {
+		viewLog.move(sf::Vector2f(0.f, 10.f));
+	});
+	setupTextbox("v", 590.f, 290.f, 50.f, 50.f, []() {
+		viewLog.move(sf::Vector2f(0.f, -10.f));
+	});
 
 	rects[0].setThemeAndHover(false);
 	rects[1].setThemeAndHover(false);
@@ -31,12 +47,6 @@ void Log_Screen::click_event_handler() {
 		log_view(false);
 		return_to_prev_screen(LogScreen);
 	}
-	else if (mouse_in_helper(true, 3))
-		logs.clear();
-}
-
-void Log_Screen::hover_event_handler() {
-	hover_textbox(3, 1);
 }
 
 void Log_Screen::draw() {

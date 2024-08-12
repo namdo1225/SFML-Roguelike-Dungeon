@@ -53,6 +53,16 @@ Status_Screen::Status_Screen() : Screen(true, false) {
     // stats
 	for (unsigned int i = 0; i < NUM_NON_CUR_STATS; i++)
 		setup_helper("", 550.f, 150.f + i * 50.f, NULL, NULL);
+
+	setupTextbox("Reset Scroll", 620.f, 390.f, 180.f, 50.f, []() {
+		viewEffect.reset(sf::FloatRect(0, 0, DEFAULT_SCREEN_X, DEFAULT_SCREEN_Y));
+	});
+	setupTextbox("^", 620.f, 190.f, 50.f, 50.f, []() {
+		viewEffect.move(sf::Vector2f(0.f, 10.f));
+	});
+	setupTextbox("v", 620.f, 290.f, 50.f, 50.f, []() {
+		viewEffect.move(sf::Vector2f(0.f, -10.f));
+	});
 }
 
 void Status_Screen::click_event_handler() {

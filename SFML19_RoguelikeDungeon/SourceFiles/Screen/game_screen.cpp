@@ -9,7 +9,6 @@
 #include "Screen/game_screen.h"
 #include <Candle/LightingArea.hpp>
 #include <Candle/RadialLight.hpp>
-#include <cstdio>
 #include <Floor/enemy.h>
 #include <format>
 #include <Manager/font_manager.h>
@@ -20,6 +19,7 @@
 #include <SFML/Window/Keyboard.hpp>
 #include <Shape/full_rectangle.h>
 #include <Shape/full_text.h>
+#include <Shape/full_textbox.h>
 #include <stat.h>
 #include <string>
 #include <Tool/item.h>
@@ -159,6 +159,10 @@ Game_Screen::Game_Screen() : Screen(false, false) {
 		texts[i].setThemeAndHover(true, true);
 	for (unsigned int i = 12; i < texts.size(); i++)
 		texts[i].setThemeAndHover(false, true);
+	for (unsigned int i = 0; i < textboxes.size(); i++) {
+		textboxes[i].text.setThemeAndHover(true, true);
+		textboxes[i].rect.setThemeAndHover(true, true);
+	}
 
 	rects[4].setThemeAndHover(true, true);
 }
@@ -197,7 +201,7 @@ void Game_Screen::click_event_handler() {
 		Game_Manager::handle_player_action('d', 1);
 	else if (x >= 360 - ((Game_Manager::pl_weapon->get_range() - 1) * 40) && x <= 400 && y >= 400 && y <= 440)
 		Game_Manager::handle_player_action('l', 1);
-	else if (mouse_in_helper(true, 8))
+	else if (mouse_in_helper(true, 7))
 		change_opacity();
 }
 
@@ -354,6 +358,20 @@ void Game_Screen::change_opacity() {
 	if (opacity == 0)
 		opacity = 255;
 
+	for (Full_Textbox& textbox : textboxes) {
+		sf::Color fillRect = textbox.rect.getFillColor();
+		sf::Color outlineRect = textbox.rect.getOutlineColor();
+
+		textbox.rect.setFillColor(sf::Color(fillRect.r, fillRect.g, fillRect.b, opacity));
+		textbox.rect.setOutlineColor(sf::Color(outlineRect.r, outlineRect.g, outlineRect.b, opacity));
+
+		sf::Color fillText = textbox.text.getFillColor();
+		sf::Color outlineText = textbox.text.getOutlineColor();
+
+		textbox.text.setFillColor(sf::Color(fillText.r, fillText.g, fillText.b, opacity));
+		textbox.text.setOutlineColor(sf::Color(outlineText.r, outlineText.g, outlineText.b, opacity));
+	}
+
 	for (Full_Rectangle& rect : rects) {
 		sf::Color fill = rect.getFillColor();
 		sf::Color outline = rect.getOutlineColor();
@@ -363,14 +381,6 @@ void Game_Screen::change_opacity() {
 	}
 
 	for (Full_Text& text : texts) {
-		sf::Color fill = text.getFillColor();
-		sf::Color outline = text.getOutlineColor();
-
-		text.setFillColor(sf::Color(fill.r, fill.g, fill.b, opacity));
-		text.setOutlineColor(sf::Color(outline.r, outline.g, outline.b, opacity));
-	}
-
-	for (Full_Text& text : logs) {
 		sf::Color fill = text.getFillColor();
 		sf::Color outline = text.getOutlineColor();
 

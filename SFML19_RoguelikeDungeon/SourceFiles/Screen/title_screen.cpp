@@ -44,6 +44,8 @@ Title_Screen::Title_Screen() : Screen() {
 		"\n\nSongs created on beepbox.co, MIT License."
 		"\n\nSprites created in Krita."
 		"\n\nJSON parser: github.com/nlohmann/json."
+		"\n\Candle: github.com/Denvi/Candle."
+		"\n\Thor: bromeon.ch/libraries/thor/."
 		"\n\SQLite3: sqlite.org."
 		"\n\NativeFileDialog:"
 		"\ngithub.com / mlabbe / nativefiledialog."

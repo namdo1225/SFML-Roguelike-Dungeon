@@ -5,7 +5,8 @@
 */
 
 #include "Screen/exit_screen.h"
-#include "interface.h"
+#include <Screen/screen.h>
+#include <SFML/Graphics/Color.hpp>
 
 Exit_Screen::Exit_Screen() : Screen(false, false) {
 	setup_helper(NULL, 100.f, 100.f, 1000.f, 600.f, false, true);
@@ -15,15 +16,15 @@ Exit_Screen::Exit_Screen() : Screen(false, false) {
 	setup_helper(NULL, 200.f, 200.f, 800.f, 400.f);
 	setup_helper("Unsaved changes will be lost.\nDo you still want to quit?", 450, 220, NULL, NULL);
 
-	setupTextbox("Back", 570.f, 340.f, 80.f, 40.f, []() {
+	setupTextbox("Back", 470.f, 340.f, 280.f, 40.f, []() {
 		return_to_prev_screen(ExitScreen);
 	});
-	setupTextbox("Title", 570.f, 420.f, 80.f, 40.f, []() {
+	setupTextbox("Title", 470.f, 420.f, 280.f, 40.f, []() {
 		switch_screen(ExitScreen, TitleScreen, false, true);
 		for (unsigned int i = NameScreen; i < num_screens; i++)
 			visibilities[i] = false;
 	});
-	setupTextbox("Quit", 570.f, 500.f, 80.f, 40.f, []() {
+	setupTextbox("Quit", 470.f, 500.f, 280.f, 40.f, []() {
 		window.close();
 	});
 

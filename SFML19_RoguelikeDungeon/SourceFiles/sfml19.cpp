@@ -20,7 +20,7 @@ int main() {
             Interface::get().window_loop();
         }
 
-        Database_Manager::reverse(0);
+        // Database_Manager::reverse(0);
         Database_Manager::close();
     }
     catch (char* error) {

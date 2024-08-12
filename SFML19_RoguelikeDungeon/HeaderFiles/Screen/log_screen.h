@@ -19,8 +19,6 @@ public:
 
 	virtual void click_event_handler();
 
-	virtual void hover_event_handler();
-
 	virtual void draw();
 
 	virtual void mouse_event_handler();
