@@ -130,7 +130,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(ProjectDir)lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Candle-s.lib;advapi32.lib;comdlg32.lib;flac.lib;freetype.lib;gdi32.lib;kernel32.lib;nfd.lib;ogg.lib;ole32.lib;oleaut32.lib;openal32.lib;opengl32.lib;sfml-audio.lib;sfml-graphics.lib;sfml-network.lib;sfml-system.lib;sfml-window.lib;shell32.lib;sqlite3.lib;thor.lib;user32.lib;uuid.lib;vorbis.lib;vorbisenc.lib;vorbisfile.lib;winmm.lib;winspool.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Candle-s.lib;advapi32.lib;comdlg32.lib;flac.lib;freetype.lib;gdi32.lib;kernel32.lib;nfd.lib;ogg.lib;ole32.lib;oleaut32.lib;openal32.lib;opengl32.lib;SFML\sfml-audio.lib;SFML\sfml-graphics.lib;SFML\sfml-network.lib;SFML\sfml-system.lib;SFML\sfml-window.lib;shell32.lib;sqlite3.lib;thor.lib;user32.lib;uuid.lib;vorbis.lib;vorbisenc.lib;vorbisfile.lib;winmm.lib;winspool.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

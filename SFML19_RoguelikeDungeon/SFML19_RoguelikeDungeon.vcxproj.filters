@@ -326,9 +326,4 @@
   <ItemGroup>
     <None Include="todo.md" />
   </ItemGroup>
-  <ItemGroup>
-    <Image Include="icon.ico">
-      <Filter>Resource Files</Filter>
-    </Image>
-  </ItemGroup>
 </Project>
