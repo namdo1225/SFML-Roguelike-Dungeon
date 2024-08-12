@@ -10,10 +10,22 @@
 #define FULL_RECT_H
 
 #include "Shape/full_shape.h"
-#include <SFML/Graphics.hpp>
+#include <SFML/Graphics/Color.hpp>
+#include <SFML/Graphics/RectangleShape.hpp>
 
 class Full_Rectangle : public sf::RectangleShape, public Full_Shape {
 public:
+	const static sf::Color light_bg[themes];
+	const static sf::Color dark_bg[themes];
+
+	const static sf::Color light_edge[themes];
+	const static sf::Color dark_edge[themes];
+
+	const static sf::Color light_bg_hover[themes];
+	const static sf::Color dark_bg_hover[themes];
+
+	const static sf::Color light_edge_hover[themes];
+	const static sf::Color dark_edge_hover[themes];
 
 	/*
 	* Constructor for Full_Rectangle.
@@ -58,19 +70,6 @@ public:
 private:
 	using sf::RectangleShape::setFillColor;
 	using sf::RectangleShape::setOutlineColor;
-
-	const static sf::Color light_bg[themes];
-	const static sf::Color dark_bg[themes];
-
-	const static sf::Color light_edge[themes];
-	const static sf::Color dark_edge[themes];
-
-	const static sf::Color light_bg_hover[themes];
-	const static sf::Color dark_bg_hover[themes];
-
-	const static sf::Color light_edge_hover[themes];
-	const static sf::Color dark_edge_hover[themes];
-
 };
 
 #endif

@@ -6,6 +6,11 @@
 */
 
 #include "Shape/full_rectangle.h"
+#include <Manager/setting_manager.h>
+#include <SFML/Graphics/Color.hpp>
+#include <SFML/Graphics/RectangleShape.hpp>
+#include <SFML/System/Vector2.hpp>
+#include <Shape/full_shape.h>
 
 const sf::Color Full_Rectangle::light_bg[themes] = { sf::Color::White, sf::Color(240, 240, 240) };
 const sf::Color Full_Rectangle::dark_bg[themes] = { sf::Color::Black, sf::Color(50, 50, 50) };

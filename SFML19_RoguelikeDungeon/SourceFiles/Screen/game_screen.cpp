@@ -12,6 +12,7 @@
 #include <Floor/enemy.h>
 #include <format>
 #include <Manager/font_manager.h>
+#include <Manager/setting_manager.h>
 #include <memory>
 #include <Screen/screen.h>
 #include <SFML/Graphics/Color.hpp>
@@ -338,6 +339,8 @@ void Game_Screen::change_theme() {
 	scan_rect.flip_theme();
 	scan_txt.flip_theme();
 	scan_txt.setFont(Font_Manager::get_selected());
+
+	fog.setAreaColor(Setting_Manager::light ? Full_Rectangle::light_bg[theme] : Full_Rectangle::dark_bg[theme]);
 
 	for (std::shared_ptr<Item> item : Game_Manager::items)
 		item->change_theme();

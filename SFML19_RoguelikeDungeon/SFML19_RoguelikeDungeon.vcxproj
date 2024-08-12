@@ -237,6 +237,7 @@
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
+    <ResourceCompile Include="icon.rc" />
     <ResourceCompile Include="SFML19_RoguelikeDungeon.rc" />
   </ItemGroup>
   <ItemGroup>
