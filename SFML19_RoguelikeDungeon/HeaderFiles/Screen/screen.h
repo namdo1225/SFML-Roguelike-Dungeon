@@ -17,8 +17,8 @@
 #ifndef SCREEN_H
 #define SCREEN_H
 
-enum Display { TitleScreen, NameScreen, StatScreen, LevelScreen,
-	GameScreen, MenuScreen, InventoryScreen, SpellScreen, MapScreen, ShopScreen,
+enum Display { TitleScreen, NameScreen, StatScreen,
+	GameScreen, MenuScreen, LevelScreen, InventoryScreen, SpellScreen, MapScreen, ShopScreen,
 	LoadScreen, SpellAttackScreen, LogScreen, StatusScreen, SettingScreen, CustomScreen, ExitScreen
 };
 
@@ -114,7 +114,7 @@ protected:
 	* Return:
 	*	true if mouse is in button.
 	*/
-	bool mouse_in_button(ReusableButton button);
+	static bool mouse_in_button(ReusableButton button);
 
 	/**
 	* Check if mouse is in slow.
@@ -133,7 +133,7 @@ protected:
 	* Parameter:
 	*	button: the button to check.
 	*/
-	void hover_button(ReusableButton button);
+	static void hover_button(ReusableButton button);
 
 	/**
 	* Helper method to set hover status for an inventory slot.
@@ -246,11 +246,6 @@ public:
 	virtual void text_event_handler();
 
 	/**
-	* Text event helper for handler.
-	*/
-	static void text_event_helper();
-
-	/**
 	* Performs setup work for Screen class.
 	*/
 	static void setup();
@@ -279,7 +274,7 @@ public:
 
 	void hover();
 
-	void click();
+	static void click();
 };
 
 #endif

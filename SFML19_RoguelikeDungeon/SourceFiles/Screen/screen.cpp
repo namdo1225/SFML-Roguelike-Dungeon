@@ -344,20 +344,16 @@ void Screen::key_event_handler() {
 }
 
 void Screen::text_event_handler() {
-	if (text_handler_enabled)
-		text_event_helper();
-}
+	if (text_handler_enabled) {
+		char letter{ static_cast<char>(event.text.unicode) };
+		sf::String cur_string = map_txts["name"].getString();
 
-void Screen::text_event_helper() {
-	char letter{ static_cast<char>(event.text.unicode) };
-	sf::String cur_string = map_txts["name"].getString();
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::BackSpace) && !map_txts["name"].getString().isEmpty())
-		map_txts["name"].setString(cur_string.substring(0, cur_string.getSize() - 1));
-	else if (cur_string.getSize() < 20 && letter > ' ' && event.text.unicode < 128 && letter != '\\' && letter != '=' &&
-		letter != '$' && letter != '*' && letter != '|' && letter != '~' && letter != '.' && letter != '"' && letter != '\''
-		&& letter != ';')
-		map_txts["name"].setString(cur_string + letter);
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::BackSpace) && !map_txts["name"].getString().isEmpty())
+			map_txts["name"].setString(cur_string.substring(0, cur_string.getSize() - 1));
+		else if (cur_string.getSize() < 20 && ((letter >= '0' && letter <= '9') || (letter >= 'a' && letter <= 'z') ||
+			(letter >= 'A' && letter <= 'Z')))
+			map_txts["name"].setString(cur_string + letter);
+	}
 }
 
 bool Screen::mouse_in_slot(unsigned int i) {

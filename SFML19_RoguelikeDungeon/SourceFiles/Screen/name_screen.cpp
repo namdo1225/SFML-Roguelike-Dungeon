@@ -5,15 +5,17 @@
 */
 
 
-#include "Screen/name_screen.h"
 #include "Manager/game_manager.h"
+#include "Screen/name_screen.h"
+#include <Screen/screen.h>
+#include <SFML/Window/Keyboard.hpp>
 
 Name_Screen::Name_Screen() : Screen(true, true, true, true) {
 	setup_helper(NULL, 350.f, 240.f, 470.f, 50.f);
 
 	setup_helper(
 		"Enter your name (<= 20 chars, ASCII). Press 'Enter' or click 'Confirm' when finished."
-		"\n\nSome characters can't be typed:  \\  =  $  *  |  ~  .  \"  '  ;",
+		"\n\nAlphanumeric Only.",
 		20.f, 20.f, NULL, NULL);
 
 	rects[0].setThemeAndHover(false);
@@ -34,8 +36,6 @@ void Name_Screen::click_event_handler() {
 		map_txts["name"].setString("");
 	}
 }
-
-void Name_Screen::hover_event_handler() {}
 
 void Name_Screen::text_event_handler() {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {

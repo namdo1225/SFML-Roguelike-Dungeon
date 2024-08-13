@@ -11,14 +11,12 @@
 
 class Menu_Screen : public Screen {
 private:
-	bool show_help = false;
+	static bool help;
 
 public:
 	Menu_Screen();
 
 	virtual void click_event_handler();
-
-	virtual void hover_event_handler();
 
 	virtual void draw();
 };

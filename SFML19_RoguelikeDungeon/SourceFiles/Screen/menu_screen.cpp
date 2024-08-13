@@ -7,18 +7,12 @@
 #include "Manager/game_manager.h"
 #include "Screen/menu_screen.h"
 #include <Screen/screen.h>
+#include <string>
 
-Menu_Screen::Menu_Screen() : Screen(false, false) {
+bool Menu_Screen::help = false;
+
+Menu_Screen::Menu_Screen() : Screen(true, false) {
 	setup_helper(NULL,  100.f, 100.f, 630.f, 550.f);
-	setup_helper(NULL, 1000.f, 310.f, 197.f, 99.f);
-	setup_helper(NULL, 1000.f, 410.f, 197.f, 99.f);
-	setup_helper(NULL, 1000.f, 510.f, 197.f, 99.f);
-	setup_helper(NULL, 1000.f, 610.f, 197.f, 99.f);
-	setup_helper(NULL, 1000.f, 700.f, 197.f, 99.f);
-	setup_helper(NULL,  800.f, 700.f, 197.f, 99.f);
-	setup_helper(NULL,  600.f, 700.f, 197.f, 99.f);
-	setup_helper(NULL,  400.f, 700.f, 197.f, 99.f);
-
 	setup_helper(
 		"Arrow keys: Move player."
 		"\nW: Wait. Skip turn."
@@ -33,54 +27,56 @@ Menu_Screen::Menu_Screen() : Screen(false, false) {
 		"\nClick on the center to use the item/spell."
 		"\nClick on 'S' button and hover on enemies to scan\ntheir stat.",
 		110.f, 110.f, NULL, NULL);
-	setup_helper(      "Help", 1010.f, 310.f, NULL, NULL);
-	setup_helper(       "Map", 1010.f, 410.f, NULL, NULL);
-	setup_helper( "Inventory", 1010.f, 510.f, NULL, NULL);
-	setup_helper(    "Spells", 1010.f, 610.f, NULL, NULL);
-	setup_helper(      "Save", 1010.f, 710.f, NULL, NULL);
-	setup_helper(      "Load",  810.f, 710.f, NULL, NULL);
-	setup_helper(  "Settings",  610.f, 710.f, NULL, NULL);
-	setup_helper(    "Status", 410.f, 710.f, NULL, NULL);
+
+	setupTextbox("Help", 1000.f, 300.f, 197.f, 99.f, []() {
+		help = !help;
+	});
+	setupTextbox( "Map", 1000.f, 400.f, 197.f, 99.f, []() {
+		switch_screen(MenuScreen, MapScreen, false, true);
+	});
+	setupTextbox("Inventory", 1000.f, 500.f, 197.f, 99.f, []() {
+		Game_Manager::inv_select = Game_Manager::inv_draw_desc = Game_Manager::placeholder_item;
+		switch_screen(MenuScreen, InventoryScreen, false, true);
+	});
+	setupTextbox("Spells", 1000.f, 600.f, 197.f, 99.f, []() {
+		Game_Manager::spell_select = Game_Manager::spell_desc = Game_Manager::placeholder_spell;
+		switch_screen(MenuScreen, SpellScreen, false, true);
+	});
+	setupTextbox("Load", 800.f, 700.f, 197.f, 99.f, []() {
+		switch_screen(MenuScreen, LoadScreen, true);
+	});
+	setupTextbox("Settings", 600.f, 700.f, 197.f, 99.f, []() {
+		switch_screen(MenuScreen, SettingScreen, true);
+	});
+	setupTextbox("Status", 400.f, 700.f, 197.f, 99.f, []() {
+		switch_screen(MenuScreen, StatusScreen, true);;
+	});
+	setupTextbox("Level", 200.f, 700.f, 197.f, 99.f, []() {
+		map_txts["stat_left"].setString(std::to_string(Game_Manager::player.get_pts()));
+		switch_screen(MenuScreen, LevelScreen, false, true);
+	});
+	setupTextbox("Save", 0.f, 700.f, 197.f, 99.f, []() {
+		Game_Manager::save();
+	});
 }
 
 void Menu_Screen::click_event_handler() {
-	if (mouse_in_helper(true, 1))
-		show_help = !show_help;
-	else if (mouse_in_helper(true, 2))
-		switch_screen(MenuScreen, MapScreen, false, true);
-	else if (mouse_in_helper(true, 3)) {
-		Game_Manager::inv_select = Game_Manager::inv_draw_desc = Game_Manager::placeholder_item;
-		switch_screen(MenuScreen, InventoryScreen, false, true);
-	}
-	else if (mouse_in_helper(true, 4)) {
-		Game_Manager::spell_select = Game_Manager::spell_desc = Game_Manager::placeholder_spell;
-		switch_screen(MenuScreen, SpellScreen, false, true);
-	}
-	else if (mouse_in_helper(true, 5))
-		Game_Manager::save();
-	else if (mouse_in_helper(true, 6))
-		switch_screen(MenuScreen, LoadScreen, true);
-	else if (mouse_in_helper(true, 7))
-		switch_screen(MenuScreen, SettingScreen, true);
-	else if (mouse_in_helper(true, 8))
-		switch_screen(MenuScreen, StatusScreen, true);
-	else
+	if (mouse_in_button(ExitButton))
 		return_to_prev_screen(MenuScreen);
 }
 
-void Menu_Screen::hover_event_handler() {
-	for (unsigned int i = 1; i < 9; i++)
-		if (hover_textbox(i, i))
-			break;
-}
-
 void Menu_Screen::draw() {
-	for (unsigned int i = 1; i < rects.size(); i++)
-		window.draw(rects[i]);
-	for (unsigned int i = 1; i < texts.size(); i++)
-		window.draw(texts[i]);
+	for (unsigned int i = 0; i < textboxes.size(); i++) {
+		window.draw(textboxes[i].rect);
+		window.draw(textboxes[i].text);
+	}
 
-	if (show_help) {
+	if (exit_button) {
+		window.draw(map_rects["exit"]);
+		window.draw(map_txts["exit"]);
+	}
+
+	if (help) {
 		window.draw(rects[0]);
 		window.draw(texts[0]);
 	}
