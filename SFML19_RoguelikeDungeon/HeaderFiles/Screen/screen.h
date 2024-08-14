@@ -13,6 +13,7 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <Shape/full_textinput.h>
 
 #ifndef SCREEN_H
 #define SCREEN_H
@@ -30,14 +31,15 @@ protected:
 	static bool loaded;
 	bool exit_button = false;
 	bool confirm_button = false;
+	bool clearButton = false;
 	bool show_bg = true;
-	bool text_handler_enabled = false;
 	bool update = false;
 
 	std::vector<Full_Text> texts;
 	std::vector<Full_Text> hoverableTexts;
 	std::vector<Full_Rectangle> rects;
 	std::vector<Full_Textbox> textboxes;
+	std::vector<Full_TextInput> textInputs;
 
 	// Stat selection common UI:
 	static Full_Text stat_full_txts[NUM_NON_CUR_STATS];
@@ -92,6 +94,10 @@ protected:
 	*/
 	void setupHoverableText(const char* text, float x, float y, void (*func)(), float fontSize = 0, float fontOutline = 0);
 
+	/*
+	* Helper to setup hoverable and clickable texts.
+	*/
+	void setupTextInput(const char* defaultText, unsigned int length, float x, float y, float w, float h, float fontSize = 0.f, float fontOutline = 0.f);
 
 	/**
 	* Helper method to check mouse in shape.
@@ -206,9 +212,8 @@ public:
 	*	exit_button: true to display an exit button.
 	*	show_bg: true to display the bg.
 	*	confirm_button: true to display a confirm button.
-	*	text_handler_enabled: true to enable text handler function.
 	*/
-	Screen(bool exit_button = false, bool show_bg = true, bool confirm_button = false, bool text_handler_enabled = false);
+	Screen(bool exit_button = false, bool show_bg = true, bool confirm_button = false, bool clearButton = false);
 
 	/**
 	* Draw the screen.
@@ -241,11 +246,6 @@ public:
 	virtual void key_event_handler();
 
 	/**
-	* Text entered event handler for the screen.
-	*/
-	virtual void text_event_handler();
-
-	/**
 	* Performs setup work for Screen class.
 	*/
 	static void setup();
@@ -275,6 +275,8 @@ public:
 	void hover();
 
 	static void click();
+
+	static void handleTextEvent();
 };
 
 #endif

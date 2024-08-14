@@ -12,13 +12,12 @@
 #include <map>
 #include <memory>
 #include <SFML/Graphics/Color.hpp>
-#include <SFML/System/String.hpp>
 #include <SFML/System/Vector2.hpp>
-#include <SFML/Window/Keyboard.hpp>
 #include <SFML/Window/VideoMode.hpp>
 #include <Shape/full_rectangle.h>
 #include <Shape/full_text.h>
 #include <Shape/full_textbox.h>
+#include <Shape/full_textinput.h>
 #include <string>
 #include <vector>
 
@@ -71,8 +70,8 @@ Full_Rectangle Screen::inv_sp_slots[MAX_INV_SPELL_SLOTS];
 std::map<std::string, Full_Rectangle> Screen::map_rects;
 std::map<std::string, Full_Text> Screen::map_txts;
 
-Screen::Screen(bool exit_button, bool show_bg, bool confirm_button, bool text_handler_enabled):
-	exit_button(exit_button), show_bg(show_bg), confirm_button(confirm_button), text_handler_enabled(text_handler_enabled) {
+Screen::Screen(bool exit_button, bool show_bg, bool confirm_button, bool clearButton):
+	exit_button(exit_button), show_bg(show_bg), confirm_button(confirm_button), clearButton(clearButton) {
 	if (!loaded)
 		setup();
 }
@@ -132,16 +131,18 @@ void Screen::draw() {
 		window.draw(boxes.rect);
 		window.draw(boxes.text);
 	}
+	for (Full_TextInput input : textInputs) {
+		window.draw(input.rect);
+		window.draw(input.text);
+	}
 	for (Full_Text text : hoverableTexts)
 		window.draw(text);
 	for (Full_Text text : texts)
 		window.draw(text);
 
-	if (text_handler_enabled) {
+	if (clearButton) {
 		window.draw(map_rects["clear"]);
 		window.draw(map_txts["clear"]);
-		window.draw(map_rects["name"]);
-		window.draw(map_txts["name"]);
 	}
 
 	if (confirm_button) {
@@ -178,6 +179,10 @@ void Screen::setupTextbox(const char* text, float x, float y, float sx, float sy
 void Screen::setupHoverableText(const char* text, float x, float y, void(*func)(), float fontSize, float fontOutline) {
 	hoverableTexts.push_back(Full_Text(x, y, fontSize, text, true, false, func));
 	hoverableTexts[hoverableTexts.size() - 1].setPhysical(x, y, text, fontSize, fontOutline);
+}
+
+void Screen::setupTextInput(const char* defaultText, unsigned int length, float x, float y, float w, float h, float fontSize, float fontOutline) {
+	textInputs.push_back(Full_TextInput(defaultText, length, x, y, w, h, fontSize, fontOutline));
 }
 
 bool Screen::mouse_in_helper(bool element, unsigned int i) {
@@ -343,19 +348,6 @@ void Screen::change_settings() {
 void Screen::key_event_handler() {
 }
 
-void Screen::text_event_handler() {
-	if (text_handler_enabled) {
-		char letter{ static_cast<char>(event.text.unicode) };
-		sf::String cur_string = map_txts["name"].getString();
-
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::BackSpace) && !map_txts["name"].getString().isEmpty())
-			map_txts["name"].setString(cur_string.substring(0, cur_string.getSize() - 1));
-		else if (cur_string.getSize() < 20 && ((letter >= '0' && letter <= '9') || (letter >= 'a' && letter <= 'z') ||
-			(letter >= 'A' && letter <= 'Z')))
-			map_txts["name"].setString(cur_string + letter);
-	}
-}
-
 bool Screen::mouse_in_slot(unsigned int i) {
 	return inv_sp_slots[i].getGlobalBounds().contains(sf::Vector2f(x, y));
 }
@@ -412,7 +404,7 @@ void Screen::hover() {
 	if (confirm_button)
 		hover_button(ConfirmButton);
 
-	if (text_handler_enabled)
+	if (clearButton)
 		hover_button(ClearButton);
 
 	for (unsigned int i = 0; i < screens[display]->hoverableTexts.size(); i++)
@@ -428,4 +420,12 @@ void Screen::click() {
 
 	for (unsigned int i = 0; i < screens[display]->textboxes.size(); i++)
 		screens[display]->textboxes[i].click();
+
+	for (unsigned int i = 0; i < screens[display]->textInputs.size(); i++)
+		screens[display]->textInputs[i].click();
+}
+
+void Screen::handleTextEvent() {
+	for (unsigned int i = 0; i < screens[display]->textInputs.size(); i++)
+		screens[display]->textInputs[i].handleTextEvent();
 }

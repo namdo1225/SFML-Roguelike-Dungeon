@@ -127,7 +127,7 @@ void Interface::handle_event() {
         Screen::screens[Screen::display]->hover();
 
         if (event.type == sf::Event::TextEntered)
-            Screen::screens[Screen::display]->text_event_handler();
+            Screen::handleTextEvent();
 
         if (event.type == sf::Event::KeyPressed)
             Screen::screens[Screen::display]->key_event_handler();

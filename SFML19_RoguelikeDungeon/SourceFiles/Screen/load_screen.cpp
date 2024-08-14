@@ -29,8 +29,6 @@ void Load_Screen::click_event_handler() {
 			false, true);
 }
 
-void Load_Screen::hover_event_handler() {}
-
 void Load_Screen::text_event_handler() {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && Game_Manager::read_save())
 		switch_screen(LoadScreen, GameScreen, false, true);
