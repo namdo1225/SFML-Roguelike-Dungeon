@@ -135,6 +135,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="SourceFiles\Manager\log_manager.cpp" />
+    <ClCompile Include="SourceFiles\Screen\message_screen.cpp" />
     <ClCompile Include="SourceFiles\Shape\full_textbox.cpp" />
     <ClCompile Include="SourceFiles\Floor\floor_object.cpp" />
     <ClCompile Include="SourceFiles\Manager\database_manager.cpp" />
@@ -200,6 +201,7 @@
     <ClInclude Include="HeaderFiles\interface.h" />
     <ClInclude Include="HeaderFiles\Manager\log_manager.h" />
     <ClInclude Include="HeaderFiles\Screen\custom_screen.h" />
+    <ClInclude Include="HeaderFiles\Screen\message_screen.h" />
     <ClInclude Include="HeaderFiles\Screen\spell_attack_screen.h" />
     <ClInclude Include="HeaderFiles\Screen\status_screen.h" />
     <ClInclude Include="HeaderFiles\Shape\full_textbox.h" />

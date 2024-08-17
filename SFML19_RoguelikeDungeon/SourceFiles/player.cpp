@@ -5,9 +5,18 @@
 *
 */
 
-#include "player.h"
-#include "Manager/texture_manager.h"
 #include "env.h"
+#include "Manager/texture_manager.h"
+#include "player.h"
+#include <array>
+#include <climits>
+#include <effect.h>
+#include <SFML/Graphics/Color.hpp>
+#include <SFML/Graphics/Rect.hpp>
+#include <SFML/System/Vector2.hpp>
+#include <stat.h>
+#include <string>
+#include <vector>
 
 Player::Player() {
 	setSize(sf::Vector2f(40, 40));
@@ -86,7 +95,7 @@ void Player::set_stat(Stat t_stat, unsigned int num) { stat[t_stat] = num; }
 
 bool Player::is_dead() { return (stat[Hp] <= 0); }
 
-void Player::reset(bool cheat) {
+void Player::reset(bool cheat, bool replaceName) {
 	if (MODIFY_START_STATS)
 		stat = STARTING_STATS;
 	else if (cheat)
@@ -94,7 +103,7 @@ void Player::reset(bool cheat) {
 	else
 		stat = { 10, 5, 0, 0, 0, 0, 10, 5 };
 
-	name = "Player";
+	if (replaceName) name = "Player";
 	points = STARTING_STAT_PTS ? STARTING_STAT_PTS : 10;
 	level = 1;
 	floor = STARTING_FLOOR ? STARTING_FLOOR : 1;

@@ -16,6 +16,7 @@
 #include <memory>
 #include <Screen/screen.h>
 #include <SFML/Graphics/Color.hpp>
+#include <SFML/System/Clock.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Window/Keyboard.hpp>
 #include <Shape/full_rectangle.h>
@@ -42,6 +43,9 @@ candle::LightingArea Game_Screen::fog = candle::LightingArea(candle::LightingAre
 	sf::Vector2f(0.f, 0.f),
 	sf::Vector2f(DEFAULT_SCREEN_X, DEFAULT_SCREEN_Y));
 candle::RadialLight Game_Screen::light;
+
+sf::Clock Game_Screen::clock;
+const float Game_Screen::KEY_PRESS_TIME_LIMIT = 250.f;
 
 Game_Screen::Game_Screen() : Screen(false, false) {
 	update = true;
@@ -275,23 +279,29 @@ void Game_Screen::draw() {
 }
 
 void Game_Screen::key_event_handler() {
-	if (!Game_Manager::player.is_stuck(0) && event.key.code == sf::Keyboard::Up) {
-		Game_Manager::handle_player_action('u', 0);
-		window.setView(viewWorld);
+	if (clock.getElapsedTime().asMilliseconds() > KEY_PRESS_TIME_LIMIT) {
+		clock.restart();
+		if (!Game_Manager::player.is_stuck(0) && event.key.code == sf::Keyboard::Up) {
+			Game_Manager::handle_player_action('u', 0);
+			window.setView(viewWorld);
+		}
+		else if (!Game_Manager::player.is_stuck(1) && event.key.code == sf::Keyboard::Right) {
+			Game_Manager::handle_player_action('r', 0);
+			window.setView(viewWorld);
+		}
+		else if (!Game_Manager::player.is_stuck(2) && event.key.code == sf::Keyboard::Down) {
+			Game_Manager::handle_player_action('d', 0);
+			window.setView(viewWorld);
+		}
+		else if (!Game_Manager::player.is_stuck(3) && event.key.code == sf::Keyboard::Left) {
+			Game_Manager::handle_player_action('l', 0);
+			window.setView(viewWorld);
+		}
 	}
-	else if (!Game_Manager::player.is_stuck(1) && event.key.code == sf::Keyboard::Right) {
-		Game_Manager::handle_player_action('r', 0);
-		window.setView(viewWorld);
-	}
-	else if (!Game_Manager::player.is_stuck(2) && event.key.code == sf::Keyboard::Down) {
-		Game_Manager::handle_player_action('d', 0);
-		window.setView(viewWorld);
-	}
-	else if (!Game_Manager::player.is_stuck(3) && event.key.code == sf::Keyboard::Left) {
-		Game_Manager::handle_player_action('l', 0);
-		window.setView(viewWorld);
-	}
-	else if (event.key.code == sf::Keyboard::W) {
+	else if (clock.getElapsedTime().asMilliseconds() > KEY_PRESS_TIME_LIMIT * 30)
+		clock.restart();
+
+	if (event.key.code == sf::Keyboard::W) {
 		Game_Manager::handle_turn();
 		window.setView(viewWorld);
 	}

@@ -79,7 +79,6 @@ Screen::Screen(bool exit_button, bool show_bg, bool confirm_button, bool clearBu
 void Screen::setup() {
 	loaded = true;
 	window.create(sf::VideoMode(DEFAULT_SCREEN_X, DEFAULT_SCREEN_Y), "RE: Dungeon");
-	window.setKeyRepeatEnabled(false);
 
 	for (unsigned int i = 0; i < MAX_INV_SPELL_SLOTS; i++) {
 		inv_sp_slots[i] = Full_Rectangle(200 + ((i % 6) * 80),
@@ -181,8 +180,8 @@ void Screen::setupHoverableText(const char* text, float x, float y, void(*func)(
 	hoverableTexts[hoverableTexts.size() - 1].setPhysical(x, y, text, fontSize, fontOutline);
 }
 
-void Screen::setupTextInput(const char* defaultText, unsigned int length, float x, float y, float w, float h, float fontSize, float fontOutline) {
-	textInputs.push_back(Full_TextInput(defaultText, length, x, y, w, h, fontSize, fontOutline));
+void Screen::setupTextInput(const char* defaultText, unsigned int length, float x, float y, float w, float h, InputValidation validation, float fontSize, float fontOutline) {
+	textInputs.push_back(Full_TextInput(defaultText, length, x, y, w, h, validation, fontSize, fontOutline));
 }
 
 bool Screen::mouse_in_helper(bool element, unsigned int i) {
@@ -265,6 +264,28 @@ void Screen::show_dialog(Display old_screen, Display new_screen) {
 	visibilities[new_screen] = true;
 	display = new_screen;
 	prev_displays.push_back(old_screen);
+}
+
+void Screen::showMessage(Display old_screen, const char* newMsg, Msg category)
+{
+	visibilities[MessageScreen] = true;
+	display = MessageScreen;
+	prev_displays.push_back(old_screen);
+	screens[MessageScreen]->texts[0].setString(newMsg);
+	switch (category) {
+	case NormalMsg:
+		screens[MessageScreen]->rects[1].setOutlineColor(sf::Color::Cyan);
+		screens[MessageScreen]->texts[0].setFillColor(sf::Color::Cyan);
+		break;
+	case ErrorMsg:
+		screens[MessageScreen]->rects[1].setOutlineColor(sf::Color::Red);
+		screens[MessageScreen]->texts[0].setFillColor(sf::Color::Red);
+		break;
+	case SuccessMsg:
+		screens[MessageScreen]->rects[1].setOutlineColor(sf::Color::Green);
+		screens[MessageScreen]->texts[0].setFillColor(sf::Color::Green);
+		break;
+	}
 }
 
 bool Screen::hover_textbox(unsigned int i, int j) {
@@ -426,6 +447,6 @@ void Screen::click() {
 }
 
 void Screen::handleTextEvent() {
-	for (unsigned int i = 0; i < screens[display]->textInputs.size(); i++)
-		screens[display]->textInputs[i].handleTextEvent();
+	for (unsigned int i = 0; i < textInputs.size(); i++)
+		textInputs[i].handleTextEvent();
 }

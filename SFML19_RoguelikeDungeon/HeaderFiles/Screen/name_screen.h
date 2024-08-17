@@ -17,7 +17,7 @@ public:
 
 	virtual void click_event_handler();
 
-	virtual void text_event_handler();
+	virtual void key_event_handler();
 };
 
 #endif

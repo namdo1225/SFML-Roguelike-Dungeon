@@ -5,8 +5,14 @@
 */
 
 
-#include "Screen/level_screen.h"
 #include "Manager/game_manager.h"
+#include "Screen/level_screen.h"
+#include <Screen/screen.h>
+#include <SFML/System/Vector2.hpp>
+#include <SFML/Window/Keyboard.hpp>
+#include <Shape/full_text.h>
+#include <stat.h>
+#include <string>
 
 Level_Screen::Level_Screen() : Screen(true, true, true) {
 	update = true;
@@ -101,7 +107,7 @@ void Level_Screen::update_draw() {
 	}
 }
 
-void Level_Screen::text_event_handler() {
+void Level_Screen::key_event_handler() {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {
 		switch_screen(StatScreen, GameScreen, false, true);
 	}

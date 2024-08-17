@@ -20,11 +20,13 @@
 
 enum Display { TitleScreen, NameScreen, StatScreen,
 	GameScreen, MenuScreen, LevelScreen, InventoryScreen, SpellScreen, MapScreen, ShopScreen,
-	LoadScreen, SpellAttackScreen, LogScreen, StatusScreen, SettingScreen, CustomScreen, ExitScreen
+	LoadScreen, SpellAttackScreen, LogScreen, StatusScreen, SettingScreen, CustomScreen, MessageScreen, ExitScreen
 };
 
 enum ReusableButton { ExitButton, ConfirmButton, StatFulLButton, StatIncreaseButton, UseButton, DiscardButton,
 ClearButton, };
+
+enum Msg { NormalMsg, ErrorMsg, SuccessMsg };
 
 class Screen : public Log_Manager, protected Setting_Manager {
 protected:
@@ -97,7 +99,7 @@ protected:
 	/*
 	* Helper to setup hoverable and clickable texts.
 	*/
-	void setupTextInput(const char* defaultText, unsigned int length, float x, float y, float w, float h, float fontSize = 0.f, float fontOutline = 0.f);
+	void setupTextInput(const char* defaultText, unsigned int length, float x, float y, float w, float h, InputValidation validation, float fontSize = 0.f, float fontOutline = 0.f);
 
 	/**
 	* Helper method to check mouse in shape.
@@ -201,7 +203,7 @@ public:
 	static Display display;
 	static std::vector<Display> prev_displays;
 
-	const static unsigned int num_screens = 17;
+	const static unsigned int num_screens = 18;
 	static bool visibilities[num_screens];
 	static std::unique_ptr<Screen> screens[num_screens];
 
@@ -259,6 +261,8 @@ public:
 	*/
 	static void show_dialog(Display old_screen, Display new_screen);
 
+	static void showMessage(Display old_screen, const char* newMsg, Msg category);
+
 	/**
 	* Change UI appearance according to settings.
 	*/
@@ -276,7 +280,7 @@ public:
 
 	static void click();
 
-	static void handleTextEvent();
+	virtual void handleTextEvent();
 };
 
 #endif

@@ -6,10 +6,11 @@
 *
 */
 
-#include <SFML/Graphics.hpp>
-#include "Shape/full_shape.h"
 #include "Manager/font_manager.h"
 #include "Manager/sf_manager.h"
+#include "Shape/full_shape.h"
+#include <SFML/Graphics/Color.hpp>
+#include <SFML/Graphics/Text.hpp>
 
 #ifndef FULL_TEXT_H
 #define FULL_TEXT_H

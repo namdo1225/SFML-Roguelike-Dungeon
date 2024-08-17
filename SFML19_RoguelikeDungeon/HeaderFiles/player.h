@@ -286,7 +286,7 @@ public:
 	* Parameter:
 	*	cheat: true if player is powerful upon start.
 	*/
-	void reset(bool cheat = false);
+	void reset(bool cheat = false, bool replaceName = true);
 
 	/**
 	* Copy player's stat for general usage.

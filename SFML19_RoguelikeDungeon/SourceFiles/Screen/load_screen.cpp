@@ -21,12 +21,13 @@ Load_Screen::Load_Screen() : Screen(true, true, true) {
 void Load_Screen::click_event_handler() {
 	if (mouse_in_button(ExitButton))
 		return_to_prev_screen(LoadScreen);
-	else if (mouse_in_button(ConfirmButton))
-		switch_screen(LoadScreen,
-			Game_Manager::read_save()
-			? GameScreen
-			: TitleScreen,
-			false, true);
+	else if (mouse_in_button(ConfirmButton)) {
+
+		if (Game_Manager::read_save())
+			switch_screen(LoadScreen, GameScreen, false, true);
+		else
+			showMessage(LoadScreen, "You cancelled the save dialog.", ErrorMsg);
+	}
 }
 
 void Load_Screen::text_event_handler() {

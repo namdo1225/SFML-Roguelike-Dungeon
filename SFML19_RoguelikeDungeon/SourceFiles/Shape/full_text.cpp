@@ -6,6 +6,7 @@
 */
 
 #include "Shape/full_text.h"
+#include <Manager/font_manager.h>
 #include <Manager/setting_manager.h>
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/Text.hpp>
@@ -52,6 +53,7 @@ void Full_Text::flip_theme() {
 	sf::Color fill = getFillColor();
 	sf::Color theme_fill = Setting_Manager::light ? light[theme] : dark[theme];
 	sf::Text::setFillColor(sf::Color(theme_fill.r, theme_fill.g, theme_fill.g, fill.a ? fill.a : 255));
+	setFont(Font_Manager::get_selected());
 }
 
 void Full_Text::highlight(bool hovered) {

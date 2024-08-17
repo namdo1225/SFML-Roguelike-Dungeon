@@ -5,11 +5,16 @@
 */
 
 
+#include "Manager/game_manager.h"
 #include "Screen/stat_screen.h"
 #include "stat.h"
-#include "Manager/game_manager.h"
+#include <Screen/screen.h>
+#include <SFML/System/Vector2.hpp>
+#include <SFML/Window/Keyboard.hpp>
+#include <Shape/full_text.h>
+#include <string>
 
-Stat_Screen::Stat_Screen() : Screen(true, true, true) {
+Stat_Screen::Stat_Screen() : Screen(true, true, true, true) {
 	update = true;
 	setup_helper("* HP can't be less than 5.", 750.f, 250.f , NULL, NULL);
 }
@@ -21,7 +26,8 @@ void Stat_Screen::click_event_handler() {
 	else if (mouse_in_button(ExitButton)) {
 		Game_Manager::player.reset();
 		switch_screen(StatScreen, NameScreen, false, true);
-	}
+	} else if (mouse_in_button(ClearButton))
+		Game_Manager::player.reset(Game_Manager::player.get_gold() == 10000, false);
 
 	for (unsigned int i{ 0 }; i < NUM_NON_CUR_STATS * 2; i++) {
 		if (!stat_curr_arrows[i].getGlobalBounds().contains(sf::Vector2f(x, y)))
@@ -84,7 +90,7 @@ void Stat_Screen::update_draw() {
 
 }
 
-void Stat_Screen::text_event_handler() {
+void Stat_Screen::key_event_handler() {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {
 		switch_screen(StatScreen, GameScreen, false, true);
 	}

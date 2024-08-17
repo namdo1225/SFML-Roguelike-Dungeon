@@ -9,7 +9,7 @@
 #include <SFML/Graphics/Color.hpp>
 
 Exit_Screen::Exit_Screen() : Screen(false, false) {
-	setup_helper(NULL, 100.f, 100.f, 1000.f, 600.f, false, true);
+	setup_helper(NULL, 0.f, 0.f, 1200.f, 800.f, false, true);
 	rects[0].setFillColor(sf::Color(0, 0, 0, 128));
 	rects[0].setOutlineThickness(0.f);
 

@@ -7,11 +7,12 @@
 #ifndef GAME_SCREEN_H
 #define GAME_SCREEN_H
 
-#include "screen.h"
-#include <Shape/full_rectangle.h>
-#include <Shape/full_text.h>
 #include "Candle/LightingArea.hpp"
 #include "Candle/RadialLight.hpp"
+#include "screen.h"
+#include <SFML/System/Clock.hpp>
+#include <Shape/full_rectangle.h>
+#include <Shape/full_text.h>
 
 class Game_Screen : public Screen {
 protected:
@@ -30,6 +31,9 @@ private:
 
 	static candle::LightingArea fog;
 	static candle::RadialLight light;
+
+	static sf::Clock clock;
+	const static float KEY_PRESS_TIME_LIMIT;
 
 	/*
 	* Change opacity of the UI.

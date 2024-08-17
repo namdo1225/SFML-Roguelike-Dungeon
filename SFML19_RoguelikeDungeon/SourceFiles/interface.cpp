@@ -31,6 +31,7 @@
 #include <Manager/texture_manager.h>
 #include <memory>
 #include <player.h>
+#include <Screen/message_screen.h>
 #include <Screen/screen.h>
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Window/Event.hpp>
@@ -65,6 +66,7 @@ Interface::Interface() {
     Screen::screens[SpellAttackScreen] = std::make_unique<Spell_Attack_Screen>();
     Screen::screens[StatusScreen] = std::make_unique<Status_Screen>();
     Screen::screens[CustomScreen] = std::make_unique<Custom_Screen>();
+    Screen::screens[MessageScreen] = std::make_unique<Message_Screen>();
 
     Screen::change_settings();
     Game_Manager::player = Player();
@@ -99,6 +101,9 @@ void Interface::draw_interface() {
 }
 void Interface::handle_event() {
     sf::Event& event = Screen::event;
+
+
+
     while (window.pollEvent(event)) {
         Game_Manager::pl_move_obstacle();
         Screen::mouse_pos = sf::Mouse::getPosition(window);
@@ -127,7 +132,7 @@ void Interface::handle_event() {
         Screen::screens[Screen::display]->hover();
 
         if (event.type == sf::Event::TextEntered)
-            Screen::handleTextEvent();
+            Screen::screens[Screen::display]->handleTextEvent();
 
         if (event.type == sf::Event::KeyPressed)
             Screen::screens[Screen::display]->key_event_handler();
