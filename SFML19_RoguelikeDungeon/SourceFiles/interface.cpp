@@ -26,6 +26,7 @@
 #include "Screen/title_screen.h"
 
 #include "Manager/setting_manager.h"
+#include <Floor/enemy.h>
 #include <Manager/audio_manager.h>
 #include <Manager/game_manager.h>
 #include <Manager/texture_manager.h>
@@ -41,11 +42,12 @@
 Interface* Interface::singleton;
 
 Interface::Interface() {
-    if (!Texture_Manager::load() || !Audio_Manager::load())
+    if (!Texture_Manager::load() || !Audio_Manager::load() || !Enemy::setup() ||
+        !Setting_Manager::load())
         return;
     Screen::setup();
     Game_Manager::setup();
-    Setting_Manager::load();
+
     Audio_Manager::set_music_volume(Setting_Manager::music_volume);
     Audio_Manager::set_sfx_volume(Setting_Manager::sfx_volume);
 
@@ -120,10 +122,8 @@ void Interface::handle_event() {
         if (event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
             Screen::show_dialog(Screen::display, ExitScreen);
         }
-        else if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
-            Screen::screens[Screen::display]->click_event_handler();
-            Screen::click();
-        } 
+        else if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
+            Screen::click() || Screen::screens[Screen::display]->click_event_handler();
         if (event.type == sf::Event::MouseButtonPressed || event.type == sf::Event::MouseButtonReleased ||
             event.type == sf::Event::MouseMoved || event.type == sf::Event::MouseWheelScrolled)
             Screen::screens[Screen::display]->mouse_event_handler();

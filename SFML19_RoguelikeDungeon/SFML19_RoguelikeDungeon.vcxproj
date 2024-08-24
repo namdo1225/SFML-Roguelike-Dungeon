@@ -184,6 +184,7 @@
     <ClCompile Include="SourceFiles\Floor\stair.cpp" />
     <ClCompile Include="SourceFiles\Manager\texture_manager.cpp" />
     <ClCompile Include="SourceFiles\Tool\tool.cpp" />
+    <ClCompile Include="SourceFiles\util.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="HeaderFiles\env.h" />
@@ -238,6 +239,7 @@
     <ClInclude Include="HeaderFiles\stat.h" />
     <ClInclude Include="HeaderFiles\Manager\texture_manager.h" />
     <ClInclude Include="HeaderFiles\Tool\tool.h" />
+    <ClInclude Include="HeaderFiles\util.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>

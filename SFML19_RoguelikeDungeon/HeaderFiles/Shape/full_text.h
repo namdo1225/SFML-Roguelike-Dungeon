@@ -11,13 +11,14 @@
 #include "Shape/full_shape.h"
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/Text.hpp>
+#include <functional>
 
 #ifndef FULL_TEXT_H
 #define FULL_TEXT_H
 
 class Full_Text : public sf::Text, public Full_Shape, protected Font_Manager, protected SF_Manager {
 protected:
-	void (*clickCallback)() = NULL;
+	std::function<void()> clickCallback = NULL;
 
 public:
 	/*
@@ -39,7 +40,7 @@ public:
 	*	fill: text's fill color.
 	*/
 	Full_Text(float x, float y, float size, const char* text,
-		bool hoverable = true, bool override_theme = false, void (*click)() = NULL,
+		bool hoverable = true, bool override_theme = false, std::function<void()> click = NULL,
 		sf::Color fill = sf::Color::Transparent, sf::Color outline = sf::Color::Transparent);
 
 	void flip_theme();
@@ -64,7 +65,7 @@ public:
 
 	void hover();
 
-	void click();
+	bool click();
 
 private:
 	using sf::Text::setFillColor;

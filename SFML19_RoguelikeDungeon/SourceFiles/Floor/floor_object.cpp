@@ -6,6 +6,9 @@
 */
 
 #include "Floor/floor_object.h"
+#include <SFML/Graphics/Rect.hpp>
+#include <SFML/Graphics/Texture.hpp>
+#include <SFML/System/Vector2.hpp>
 
 Floor_Object::Floor_Object() {
 	setSize(sf::Vector2f(40, 40));
@@ -13,7 +16,7 @@ Floor_Object::Floor_Object() {
 }
 
 Floor_Object::Floor_Object(const sf::Texture &texture) : Floor_Object() {
-	setTexture(&texture);
+	setTexture(&texture, false);
 }
 
 Floor_Object::Floor_Object(float x, float y, const sf::Texture& texture) : Floor_Object(texture) {

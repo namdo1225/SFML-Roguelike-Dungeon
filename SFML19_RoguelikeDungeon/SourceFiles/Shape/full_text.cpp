@@ -6,6 +6,7 @@
 */
 
 #include "Shape/full_text.h"
+#include <functional>
 #include <Manager/font_manager.h>
 #include <Manager/setting_manager.h>
 #include <SFML/Graphics/Color.hpp>
@@ -27,7 +28,7 @@ Full_Text::Full_Text() {
 }
 
 Full_Text::Full_Text(float x, float y, float size, const char* text,
-	bool hoverable, bool override_theme, void (*click)(),
+	bool hoverable, bool override_theme, std::function<void()> click,
 	sf::Color fill, sf::Color outline): Full_Shape(hoverable, override_theme) {
 	if (!override_theme) {
 		sf::Color fill = getFillColor();
@@ -92,7 +93,10 @@ void Full_Text::hover() {
 		highlight(false);
 }
 
-void Full_Text::click() {
-	if (getGlobalBounds().contains(sf::Vector2f(x, y)) && clickCallback != NULL)
+bool Full_Text::click() {
+	if (getGlobalBounds().contains(sf::Vector2f(x, y)) && clickCallback != NULL) {
 		clickCallback();
+		return true;
+	}
+	return false;
 }

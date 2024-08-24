@@ -13,11 +13,12 @@ Full_TextInput::Full_TextInput(const char* defaultText, unsigned int length, flo
 	text.setOutlineThickness(fontOutline);
 }
 
-void Full_TextInput::click() {
+bool Full_TextInput::click() {
 	const bool oldFocus = focused;
 	focused = rect.getGlobalBounds().contains(sf::Vector2f(x, y));
 	if (oldFocus != focused)
 		rect.setOutlineThickness(focused ? 10.f : 2.f);
+	return focused;
 }
 
 void Full_TextInput::handleTextEvent() {

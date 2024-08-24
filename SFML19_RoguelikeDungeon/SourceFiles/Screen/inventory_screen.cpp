@@ -25,21 +25,25 @@ Inventory_Screen::Inventory_Screen() : Screen(true, false) {
 	setup_helper( "", 50.f, 720.f, 24.f, NULL);
 }
 
-void Inventory_Screen::click_event_handler() {
+bool Inventory_Screen::click_event_handler() {
 	if (mouse_in_button(ExitButton)) {
 		Game_Manager::inv_select = Game_Manager::inv_draw_desc = Game_Manager::placeholder_item;
 		switch_screen(InventoryScreen, GameScreen, false, true);
 		texts[4].setString("");
+		return true;
 	}
 	else if (mouse_in_button(UseButton) && Game_Manager::inv_select->get_type() == 0) {
 		texts[4].setString(std::format("You used a {}.", Game_Manager::inv_select->get_name()));
 		Game_Manager::item_use();
+		return true;
 	}
 	else if (mouse_in_button(DiscardButton) &&
 		Game_Manager::inv_select->get_id() != 0 &&
 		Game_Manager::inv_select != Game_Manager::pl_weapon &&
-		Game_Manager::inv_select != Game_Manager::pl_weapon)
+		Game_Manager::inv_select != Game_Manager::pl_weapon) {
 		Game_Manager::delete_selected_itm();
+		return true;
+	}
 
 	for (std::shared_ptr<Item> item : Game_Manager::items) {
 		if (item->contains(x, y)) {
@@ -50,7 +54,7 @@ void Inventory_Screen::click_event_handler() {
 			if (select_type != 3 && inv_select_contain) {
 				Game_Manager::inv_select = Game_Manager::inv_draw_desc =
 					Game_Manager::placeholder_item;
-				return;
+				return true;
 			}
 			// Equips another weapon
 			else if ((Game_Manager::inv_select == Game_Manager::pl_weapon && item->get_type() == 1) ||
@@ -60,7 +64,7 @@ void Inventory_Screen::click_event_handler() {
 					: Game_Manager::equip_weapon(Game_Manager::inv_select);
 
 				Game_Manager::inv_select = Game_Manager::inv_draw_desc = Game_Manager::placeholder_item;
-				return;
+				return true;
 			}
 			// Equips another armor
 			else if ((Game_Manager::inv_select == Game_Manager::pl_armor && item->get_type() == 2) ||
@@ -70,7 +74,7 @@ void Inventory_Screen::click_event_handler() {
 					: Game_Manager::equip_armor(Game_Manager::inv_select);
 
 				Game_Manager::inv_select = Game_Manager::inv_draw_desc = Game_Manager::placeholder_item;
-				return;
+				return true;
 			}
 			// Swaps 2 item placement for non-weapon and non-armor slots
 			else if (select_type != 3 && Game_Manager::inv_select != Game_Manager::pl_weapon &&
@@ -81,7 +85,7 @@ void Inventory_Screen::click_event_handler() {
 				item->set_pos(i2x, i2y);
 				Game_Manager::inv_select = Game_Manager::inv_draw_desc =
 					Game_Manager::placeholder_item;
-				return;
+				return true;
 			}
 			// Selects new item
 			else if (select_type == 3) {
@@ -89,10 +93,11 @@ void Inventory_Screen::click_event_handler() {
 				Audio_Manager::play_sfx(4);
 				Game_Manager::inv_draw_desc = Game_Manager::inv_select = item;
 				map_rects["inv_sp_cur_slot"].setPosition(i1x - 5, i1y - 5);
-				return;
+				return true;
 			}
 		}
 	}
+	return false;
 }
 
 void Inventory_Screen::hover_event_handler() {

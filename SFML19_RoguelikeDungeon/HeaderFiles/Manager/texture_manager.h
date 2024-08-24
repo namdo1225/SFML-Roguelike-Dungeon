@@ -8,17 +8,15 @@
 #ifndef TEXTURE_H
 #define TEXTURE_H
 
-#include <SFML/Graphics.hpp>
-#include <array>
+#include <map>
+#include <SFML/Graphics/Texture.hpp>
+#include <vector>
 
 class Texture_Manager {
 public:
-	static const unsigned int num_enemies = 4;
-	static const unsigned int num_rooms = 4;
-
 	static bool assets_loaded;
-	static std::array<sf::Texture, 4> tex_enemies;
-	static std::array<sf::Texture, 4> tex_rooms;
+	static std::map<unsigned int, sf::Texture> tex_enemies;
+	static std::vector<sf::Texture> tex_rooms;
 
 	static sf::Texture gold;
 	static sf::Texture player;

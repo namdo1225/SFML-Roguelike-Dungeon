@@ -12,10 +12,6 @@
 class Exit_Screen : public Screen {
 public:
 	Exit_Screen();
-
-	void click_event_handler();
-
-	void hover_event_handler();
 };
 
 #endif

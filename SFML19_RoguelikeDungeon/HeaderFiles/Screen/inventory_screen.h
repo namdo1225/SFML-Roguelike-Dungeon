@@ -15,7 +15,7 @@ private:
 public:
 	Inventory_Screen();
 
-	virtual void click_event_handler();
+	virtual bool click_event_handler();
 
 	virtual void hover_event_handler();
 

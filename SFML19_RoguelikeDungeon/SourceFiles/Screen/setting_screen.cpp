@@ -56,7 +56,7 @@ Setting_Screen::Setting_Screen() : Screen(true, true, true) {
 	setupTextbox("abcdefghijklmnopqrstuvwxyz, ABCDEFGHIJKLMNOPQRSTUVWXYZ\n!@#$%%^&*()_+-=", 20.f, 500.f, 1150.f, 95.f, NULL);
 }
 
-void Setting_Screen::click_event_handler() {
+bool Setting_Screen::click_event_handler() {
 	if (mouse_in_button(ExitButton)) {
 		light_mode = Setting_Manager::light;
 		theme = Setting_Manager::theme;

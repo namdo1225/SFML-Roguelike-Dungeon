@@ -16,9 +16,9 @@ private:
 public:
 	Load_Screen();
 
-	virtual void click_event_handler();
+	bool click_event_handler();
 
-	virtual void text_event_handler();
+	void text_event_handler();
 };
 
 #endif

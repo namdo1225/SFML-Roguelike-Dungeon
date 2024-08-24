@@ -5,10 +5,10 @@
 *
 */
 
-#include "Shape/full_text.h"
 #include "Shape/full_rectangle.h"
-#include "player.h"
-#include "stat.h"
+#include "Shape/full_text.h"
+#include <SFML/Graphics/Color.hpp>
+#include <string>
 
 #ifndef TOOL_H
 #define TOOL_H

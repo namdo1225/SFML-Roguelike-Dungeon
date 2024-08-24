@@ -32,7 +32,3 @@ Exit_Screen::Exit_Screen() : Screen(false, false) {
 	rects[1].setThemeAndHover(false);
 	texts[0].setThemeAndHover(false);
 }
-
-void Exit_Screen::click_event_handler() {}
-
-void Exit_Screen::hover_event_handler() {}

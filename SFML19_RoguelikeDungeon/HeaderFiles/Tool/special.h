@@ -8,12 +8,8 @@
 #ifndef SPECIAL_H
 #define SPECIAL_H
 
-#include <SFML/Graphics.hpp>
-#include "player.h"
-#include "Floor/enemy.h"
-#include "Floor/floor.h"
-#include "Shape/full_text.h"
-#include "Shape/full_rectangle.h"
+#include "tool.h"
+#include <memory>
 
 class Special : public Tool {
 public:

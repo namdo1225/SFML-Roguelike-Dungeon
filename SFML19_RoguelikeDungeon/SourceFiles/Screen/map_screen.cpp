@@ -41,10 +41,11 @@ Map_Screen::Map_Screen() : Screen(true, false) {
 	});
 }
 
-void Map_Screen::click_event_handler() {
+bool Map_Screen::click_event_handler() {
 	if (mouse_in_button(ExitButton)) {
 		viewMap.reset(sf::FloatRect(0, 0, 1200, 800));
 		switch_screen(MapScreen, GameScreen, false, true);
+		return true;
 	}
 }
 

@@ -25,7 +25,7 @@ public:
 
 	Full_TextInput(const char* defaultText, unsigned int length, float x, float y, float w, float h, InputValidation validation, float fontSize = 0.f, float fontOutline = 0.f);
 
-	void click();
+	bool click();
 
 	void handleTextEvent();
 

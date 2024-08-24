@@ -24,7 +24,7 @@ public:
 
 	void key_event_handler();
 
-	void click_event_handler();
+	bool click_event_handler();
 };
 
 #endif

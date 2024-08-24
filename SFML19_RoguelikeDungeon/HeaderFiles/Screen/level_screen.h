@@ -20,15 +20,15 @@ private:
 public:
 	Level_Screen();
 
-	virtual void click_event_handler();
+	bool click_event_handler();
 
-	virtual void hover_event_handler();
+	void hover_event_handler();
 
-	virtual void draw();
+	void draw();
 
-	virtual void update_draw();
+	void update_draw();
 
-	virtual void key_event_handler();
+	void key_event_handler();
 };
 
 #endif

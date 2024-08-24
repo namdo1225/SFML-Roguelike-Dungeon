@@ -25,10 +25,11 @@ Level_Screen::Level_Screen() : Screen(true, true, true) {
 	setup_helper("0", 1000.f, 290.f, NULL, NULL);
 }
 
-void Level_Screen::click_event_handler() {
+bool Level_Screen::click_event_handler() {
 	if (mouse_in_button(ConfirmButton)) {
 		reset = true;
 		switch_screen(LevelScreen, GameScreen, false, true);
+		return true;
 	}
 	else if (mouse_in_button(ExitButton)) {
 		for (Stat i = Max_Hp; i < Hp; i++)
@@ -37,6 +38,7 @@ void Level_Screen::click_event_handler() {
 		map_txts["stat_left"].setString(std::to_string(backup_pts));
 		reset = true;
 		switch_screen(LevelScreen, GameScreen, false, true);
+		return true;
 	}
 	else if (mouse_in_button(ClearButton)) {
 		for (Stat i = Max_Hp; i < Hp; i++)
@@ -44,6 +46,7 @@ void Level_Screen::click_event_handler() {
 		Game_Manager::player.set_point(backup_pts);
 		map_txts["stat_left"].setString(std::to_string(backup_pts));
 		reset = true;
+		return true;
 	}
 
 	for (Stat i{ Max_Hp }; i < Hp; i++) {
@@ -57,6 +60,7 @@ void Level_Screen::click_event_handler() {
 			stat_curr_txts[i].setString(std::to_string(stat_pt));
 			Game_Manager::player.set_point(--points);
 			map_txts["stat_left"].setString(std::to_string(points));
+			return true;
 		}
 	}
 }

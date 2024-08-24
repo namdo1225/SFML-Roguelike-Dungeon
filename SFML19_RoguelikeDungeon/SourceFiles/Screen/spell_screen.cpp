@@ -5,9 +5,14 @@
 */
 
 
+#include "Manager/game_manager.h"
 #include "Screen/spell_screen.h"
 #include <format>
-#include "Manager/game_manager.h"
+#include <memory>
+#include <Screen/screen.h>
+#include <Shape/full_rectangle.h>
+#include <string>
+#include <Tool/spell.h>
 
 Spell_Screen::Spell_Screen() : Screen(true, false) {
 	update = true;
@@ -16,28 +21,29 @@ Spell_Screen::Spell_Screen() : Screen(true, false) {
     setup_helper("", 50.f, 720.f, 24.f, NULL);
 }
 
-void Spell_Screen::click_event_handler() {
+bool Spell_Screen::click_event_handler() {
     if (mouse_in_button(ExitButton)) {
         Game_Manager::spell_select = Game_Manager::spell_desc = Game_Manager::placeholder_spell;
         texts[2].setString("");
         switch_screen(SpellScreen, GameScreen, false, true);
+        return true;
     }
     else if (mouse_in_button(UseButton) && Game_Manager::spell_select->get_id()) {
         if (Game_Manager::spell_select->get_use() != 4) {
             const char* spell_name = Game_Manager::spell_select->get_name();
-            bool success = Game_Manager::spell_use();
-            if (success)
-                texts[2].setString(std::format("You used {}.", spell_name));
-            else
-                texts[2].setString(std::format("You failed to cast {}.", spell_name));
+            texts[2].setString(Game_Manager::spell_use() ? std::format("You used {}.", spell_name) :
+                    std::format("You failed to cast {}.", spell_name));
         }
         else {
             switch_screen(SpellScreen, GameScreen, false, true);
             show_dialog(GameScreen, SpellAttackScreen);
         }
+        return true;
     }
-    else if (mouse_in_button(DiscardButton) && Game_Manager::spell_select->get_id())
+    else if (mouse_in_button(DiscardButton) && Game_Manager::spell_select->get_id()) {
         Game_Manager::deleted_selected_sp();
+        return true;
+    }
 
     for (std::shared_ptr<Spell> spell : Game_Manager::spells) {
         if (spell->contains(x, y)) {
@@ -47,19 +53,19 @@ void Spell_Screen::click_event_handler() {
                 Game_Manager::spell_select->set_pos(spell->get_pos('x'), spell->get_pos('y'));
                 spell->set_pos(sx, sy);
                 Game_Manager::spell_desc = Game_Manager::spell_select = Game_Manager::placeholder_spell;
-                return;
+                return true;
             }
             // Selects a spell
             else if (!Game_Manager::spell_select->get_id()) {
                 int sx = spell->get_pos('x'), sy = spell->get_pos('y');
                 map_rects["inv_sp_cur_slot"].setPosition(sx - 5, sy - 5);
                 Game_Manager::spell_desc = Game_Manager::spell_select = spell;
-                return;
+                return true;
             }
             // Unselects
             else if (spell == Game_Manager::spell_select) {
                 Game_Manager::spell_desc = Game_Manager::spell_select = Game_Manager::placeholder_spell;
-                return;
+                return true;
             }
         }
     }

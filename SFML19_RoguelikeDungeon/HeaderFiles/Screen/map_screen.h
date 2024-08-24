@@ -8,6 +8,8 @@
 #define MAP_SCREEN_H
 
 #include "screen.h"
+#include <SFML/Graphics/View.hpp>
+#include <SFML/System/Vector2.hpp>
 
 class Map_Screen : public Screen {
 private:
@@ -18,11 +20,11 @@ private:
 public:
 	Map_Screen();
 
-	virtual void click_event_handler();
+	bool click_event_handler();
 
-	virtual void mouse_event_handler();
+	void mouse_event_handler();
 
-	virtual void draw();
+	void draw();
 };
 
 #endif

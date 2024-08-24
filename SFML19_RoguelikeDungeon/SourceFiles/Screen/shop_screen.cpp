@@ -36,17 +36,19 @@ Shop_Screen::Shop_Screen() : Screen(true, false, false) {
 	setup_helper("", 50.f, 720.f, 24.f, NULL);
 }
 
-void Shop_Screen::click_event_handler() {
+bool Shop_Screen::click_event_handler() {
 	if (mouse_in_button(ExitButton)) {
 		reset_select();
 		texts[8].setString("");
 		switch_screen(ShopScreen, GameScreen, false, true);
+		return true;
 	}
 	// buy button
 	else if (mouse_in_helper(true, 0)) {
 		rects[5].setPosition(113.f, 125.f);
 		buy = true;
 		reset_select();
+		return true;
 	}
 	// sell button
 	else if (mouse_in_helper(true, 1)) {
@@ -57,18 +59,21 @@ void Shop_Screen::click_event_handler() {
 			rects[5].setPosition(113.f, 125.f);
 		}
 		reset_select();
+		return true;
 	}
 	// items button
 	else if (mouse_in_helper(true, 2)) {
 		rects[6].setPosition(300.f, 125.f);
 		stock = ItemStock;
 		reset_select();
+		return true;
 	}
 	// spells button
 	else if (mouse_in_helper(true, 3)) {
 		rects[6].setPosition(300.f, 195.f);
 		stock = SpellStock;
 		reset_select();
+		return true;
 	}
 	// special button
 	else if (mouse_in_helper(true, 4)) {
@@ -79,13 +84,20 @@ void Shop_Screen::click_event_handler() {
 			rects[5].setPosition(113.f, 125.f);
 		}
 		reset_select();
+		return true;
 	}
-	else if (stock == ItemStock)
+
+	switch (stock) {
+	case ItemStock:
 		item_shop(buy);
-	else if (stock == SpellStock)
+		return true;
+	case SpellStock:
 		spell_shop(buy);
-	else if (stock == SpecialStock)
+		return true;
+	case SpecialStock:
 		special_shop(buy);
+		return true;
+	}
 }
 
 void Shop_Screen::hover_event_handler() {

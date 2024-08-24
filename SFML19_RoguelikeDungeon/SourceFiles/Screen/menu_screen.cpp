@@ -49,7 +49,7 @@ Menu_Screen::Menu_Screen() : Screen(true, false) {
 		switch_screen(MenuScreen, SettingScreen, true);
 	});
 	setupTextbox("Status", 400.f, 700.f, 197.f, 99.f, []() {
-		switch_screen(MenuScreen, StatusScreen, true);;
+		switch_screen(MenuScreen, StatusScreen, true);
 	});
 	setupTextbox("Level", 200.f, 700.f, 197.f, 99.f, []() {
 		map_txts["stat_left"].setString(std::to_string(Game_Manager::player.get_pts()));
@@ -60,9 +60,11 @@ Menu_Screen::Menu_Screen() : Screen(true, false) {
 	});
 }
 
-void Menu_Screen::click_event_handler() {
-	if (mouse_in_button(ExitButton))
+bool Menu_Screen::click_event_handler() {
+	if (mouse_in_button(ExitButton)) {
 		return_to_prev_screen(MenuScreen);
+		return true;
+	}
 }
 
 void Menu_Screen::draw() {

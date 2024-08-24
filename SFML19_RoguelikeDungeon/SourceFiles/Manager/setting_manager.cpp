@@ -6,9 +6,12 @@
 */
 
 #include "Manager/setting_manager.h"
-#include <nlohmann/json.hpp>
+#include <exception>
+#include <iomanip>
+#include <iosfwd>
+#include <ostream>
 #include <fstream>
-#include <format>
+#include <nlohmann/json.hpp>
 
 using json = nlohmann::json;
 unsigned int Setting_Manager::theme = 0;
@@ -44,7 +47,7 @@ bool Setting_Manager::load()
         save();
         return false;
     }
-    return true;;
+    return true;
 }
 
 bool Setting_Manager::save(bool create)

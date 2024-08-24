@@ -1,10 +1,11 @@
 #include "Shape/full_textbox.h"
+#include <functional>
 #include <SFML/Graphics/Rect.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <Shape/full_rectangle.h>
 #include <Shape/full_text.h>
 
-Full_Textbox::Full_Textbox(const char* text, float x, float y, float w, float h, void (*func)(), float fontSize, float fontOutline) :
+Full_Textbox::Full_Textbox(const char* text, float x, float y, float w, float h, std::function<void()> func, float fontSize, float fontOutline) :
 	callback(func), rect(Full_Rectangle(x, y, w, h)) {
 	this->text = Full_Text(x + 10, y + 10, fontSize, text);
 
@@ -31,7 +32,24 @@ void Full_Textbox::hover() {
 	}
 }
 
-void Full_Textbox::click() {
-	if (rect.getGlobalBounds().contains(sf::Vector2f(x, y)) && callback != NULL)
+bool Full_Textbox::click() {
+	if (rect.getGlobalBounds().contains(sf::Vector2f(x, y)) && callback != NULL) {
 		callback();
+		return true;
+	}
+	return false;
+}
+
+void Full_Textbox::updateCallback(std::function<void()> func) {
+	callback = func;
+}
+
+
+void Full_Textbox::recenterText() {
+	sf::FloatRect textRect = text.getLocalBounds();
+	text.setOrigin(textRect.left + textRect.width / 2.0f,
+		textRect.top + textRect.height / 2.0f);
+
+	sf::FloatRect floatRect = rect.getGlobalBounds();
+	text.setPosition(sf::Vector2f(floatRect.width / 2.0f + floatRect.getPosition().x, floatRect.height / 2.0f + floatRect.getPosition().y));
 }

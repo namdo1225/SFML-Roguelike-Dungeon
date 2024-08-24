@@ -18,16 +18,17 @@ Load_Screen::Load_Screen() : Screen(true, true, true) {
 	texts[0].setThemeAndHover(false);
 }
 
-void Load_Screen::click_event_handler() {
-	if (mouse_in_button(ExitButton))
+bool Load_Screen::click_event_handler() {
+	if (mouse_in_button(ExitButton)) {
 		return_to_prev_screen(LoadScreen);
-	else if (mouse_in_button(ConfirmButton)) {
-
-		if (Game_Manager::read_save())
-			switch_screen(LoadScreen, GameScreen, false, true);
-		else
-			showMessage(LoadScreen, "You cancelled the save dialog.", ErrorMsg);
+		return true;
 	}
+	else if (mouse_in_button(ConfirmButton)) {
+		Game_Manager::read_save() ? switch_screen(LoadScreen, GameScreen, false, true) :
+			showMessage(LoadScreen, "You cancelled the save dialog.", ErrorMsg);
+		return true;
+	}
+	return false;
 }
 
 void Load_Screen::text_event_handler() {

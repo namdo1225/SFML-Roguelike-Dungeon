@@ -5,10 +5,12 @@
 *
 */
 
-#include "Tool/spell.h"
-#include "Manager/font_manager.h"
 #include "Manager/game_manager.h"
+#include "Tool/spell.h"
+#include <array>
 #include <format>
+#include <memory>
+#include <stat.h>
 
 Spell::Spell(const char abbre[3],
 	unsigned int id, unsigned int buy, unsigned int sell, unsigned int use,
@@ -101,7 +103,7 @@ bool Damage_All::use() {
 	unsigned int mgk = Game_Manager::player.get_stat(Mgk);
 
 	for (unsigned int i = 0; i < Game_Manager::enemies.size(); i++)
-		Game_Manager::enemies[i].set_stat(0, Game_Manager::enemies[i].get_stat(0) - quantity + mgk * 0.10);
+		Game_Manager::enemies[i].stat.hp -= quantity + mgk * 0.10;
 	return true;
 }
 

@@ -13,21 +13,27 @@
 #include <SFML/Window/Keyboard.hpp>
 #include <Shape/full_text.h>
 #include <string>
+#include <env.h>
 
 Stat_Screen::Stat_Screen() : Screen(true, true, true, true) {
 	update = true;
 	setup_helper("* HP can't be less than 5.", 750.f, 250.f , NULL, NULL);
 }
 
-void Stat_Screen::click_event_handler() {
+bool Stat_Screen::click_event_handler() {
 	if (mouse_in_button(ConfirmButton)) {
 		switch_screen(StatScreen, GameScreen, false, true);
+		return true;
 	}
 	else if (mouse_in_button(ExitButton)) {
 		Game_Manager::player.reset();
 		switch_screen(StatScreen, NameScreen, false, true);
-	} else if (mouse_in_button(ClearButton))
-		Game_Manager::player.reset(Game_Manager::player.get_gold() == 10000, false);
+		return true;
+	}
+	else if (mouse_in_button(ClearButton)) {
+		Game_Manager::player.reset(Game_Manager::player.get_gold() > STARTING_GOLD, false);
+		return true;
+	}
 
 	for (unsigned int i{ 0 }; i < NUM_NON_CUR_STATS * 2; i++) {
 		if (!stat_curr_arrows[i].getGlobalBounds().contains(sf::Vector2f(x, y)))
@@ -42,6 +48,7 @@ void Stat_Screen::click_event_handler() {
 			stat_curr_txts[st].setString(std::to_string(cur_stat));
 			Game_Manager::player.set_point(++pts_left);
 			map_txts["stat_left"].setString(std::to_string(pts_left));
+			return true;
 		}
 		else if (i >= 6 && Game_Manager::player.get_pts() != 0) {
 			if (st <= Max_Mp) Game_Manager::player.set_stat((Stat)(6 + st), Game_Manager::player.get_stat((Stat)(6 + st)) + 1);
@@ -49,6 +56,7 @@ void Stat_Screen::click_event_handler() {
 			stat_curr_txts[st].setString(std::to_string(cur_stat));
 			Game_Manager::player.set_point(--pts_left);
 			map_txts["stat_left"].setString(std::to_string(pts_left));
+			return true;
 		}
 	}
 }
@@ -87,7 +95,6 @@ void Stat_Screen::update_draw() {
 		stat_curr_txts[i].setString(std::to_string(cur_stat));
 	}
 	map_txts["stat_left"].setString(std::to_string(Game_Manager::player.get_pts()));
-
 }
 
 void Stat_Screen::key_event_handler() {

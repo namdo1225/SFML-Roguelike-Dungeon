@@ -5,10 +5,20 @@
 *
 */
 
-#include "Floor/floor.h"
-#include "Tool/item.h"
 #include "env.h"
+#include "Floor/floor.h"
 #include "Manager/sf_manager.h"
+#include "Tool/item.h"
+#include <array>
+#include <cstdlib>
+#include <Floor/collectible.h>
+#include <Floor/gold_collectible.h>
+#include <Floor/interactible.h>
+#include <Floor/map.h>
+#include <Floor/room.h>
+#include <Floor/shop.h>
+#include <Floor/stair.h>
+#include <SFML/Graphics/Rect.hpp>
 
 Floor::Floor(bool load) {
 	if (!load) {

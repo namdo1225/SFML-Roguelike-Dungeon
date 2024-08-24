@@ -6,8 +6,12 @@
 */
 
 #include "Floor/room.h"
-#include "Manager/texture_manager.h"
 #include "Manager/sf_manager.h"
+#include "Manager/texture_manager.h"
+#include <cstdlib>
+#include <SFML/Graphics/Color.hpp>
+#include <SFML/Graphics/Rect.hpp>
+#include <SFML/System/Vector2.hpp>
 
 Room::Room() {
 	setFillColor(sf::Color::White);
@@ -17,8 +21,12 @@ Room::Room() {
 
 	setOutlineColor(rgb);
 
-	int texture_num = rand() % Texture_Manager::num_rooms;
-	setTexture(&Texture_Manager::tex_rooms[texture_num], false);
+	int size = Texture_Manager::tex_rooms.size();
+
+	if (size) {
+		int texture_num = rand() % size;
+		setTexture(&Texture_Manager::tex_rooms[texture_num], false);
+	}
 
 }
 

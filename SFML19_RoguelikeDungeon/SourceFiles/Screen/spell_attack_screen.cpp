@@ -4,9 +4,15 @@
 * Description: Contain the implementation of the Spell_Attack_Screen class.
 */
 
-#include "Screen/spell_attack_screen.h"
 #include "Manager/game_manager.h"
+#include "Screen/spell_attack_screen.h"
 #include <format>
+#include <Screen/screen.h>
+#include <SFML/Graphics/Color.hpp>
+#include <SFML/System/Vector2.hpp>
+#include <Shape/full_rectangle.h>
+#include <stat.h>
+#include <string>
 
 Spell_Attack_Screen::Spell_Attack_Screen() : Screen(true, false) {
 	setup_helper("Spell range: ", 200.f, 10.f, NULL, 3.f);
@@ -19,23 +25,24 @@ Spell_Attack_Screen::Spell_Attack_Screen() : Screen(true, false) {
 	ranges[3] = Full_Rectangle(400.f - (40.f * range), 400.f, 40.f * range, 40.f, false, true, sf::Color::Transparent, sf::Color(255, 0, 0, 100));
 }
 
-void Spell_Attack_Screen::click_event_handler() {
-	if (mouse_in_button(ExitButton))
+bool Spell_Attack_Screen::click_event_handler() {
+	if (mouse_in_button(ExitButton)) {
 		reset_spell();
-
-	if (sp_inf[3] > Game_Manager::player.get_stat(Mp)) {
+		return true;
+	}
+	else if (sp_inf[3] > Game_Manager::player.get_stat(Mp)) {
 		log_add(std::format("Insufficient MP for spell: requires {}.", sp_inf[3]).c_str());
 		reset_spell();
+		return true;
 	}
-    else if (x >= 400 - (sp_inf[1] * 40) && x <= 440 + (sp_inf[1] * 40) && y >= 400 - (sp_inf[1] * 40) && y <= 440 + (sp_inf[1] * 40))
-        for (unsigned int i{ 0 }; i < Game_Manager::enemies.size(); i++) {
-            if (Game_Manager::enemies[i].contains(world_x, world_y)) {
-                Game_Manager::pl_sp_atk(i, sp_inf);
+	else if (x >= 400 - (sp_inf[1] * 40) && x <= 440 + (sp_inf[1] * 40) && y >= 400 - (sp_inf[1] * 40) && y <= 440 + (sp_inf[1] * 40))
+		for (unsigned int i{ 0 }; i < Game_Manager::enemies.size(); i++)
+			if (Game_Manager::enemies[i].contains(world_x, world_y)) {
+				Game_Manager::pl_sp_atk(i, sp_inf);
 				reset_spell();
 				Game_Manager::handle_turn();
-                return;
-            }
-        }
+				return true;
+			}
 }
 
 void Spell_Attack_Screen::hover_event_handler() {

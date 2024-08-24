@@ -5,15 +5,17 @@
 */
 
 #include "Screen/custom_screen.h"
-#include <cstdio>
 #include <format>
 #include <Manager/database_manager.h>
+#include <map>
 #include <Screen/screen.h>
 #include <Shape/full_rectangle.h>
 #include <Shape/full_text.h>
 #include <Shape/full_textbox.h>
 #include <Shape/full_textinput.h>
+#include <string>
 #include <vector>
+#include <Floor/enemy.h>
 
 char* Custom_Screen::category;
 
@@ -22,14 +24,9 @@ Full_Rectangle Custom_Screen::line = Full_Rectangle(80.f, 60.f, 60.f, 0.5f, fals
 Mod Custom_Screen::currentMod = EnemyMod;
 
 bool Custom_Screen::addContent = false;
+bool Custom_Screen::updateContent = false;
 
 std::vector<Full_Textbox> Custom_Screen::boxes;
-
-std::vector<Full_Text> Custom_Screen::enemyTexts;
-
-std::vector<Full_Text> Custom_Screen::itemTexts;
-
-std::vector<Full_Text> Custom_Screen::spellTexts;
 
 std::vector<Full_TextInput> Custom_Screen::enemyInputs;
 
@@ -37,41 +34,85 @@ std::vector<Full_TextInput> Custom_Screen::itemInputs;
 
 std::vector<Full_TextInput> Custom_Screen::spellInputs;
 
-Full_Textbox Custom_Screen::create = Full_Textbox("Create", 800.f, 700.f, 100.f, 50.f, []() {
+std::vector<Full_Text> Custom_Screen::enemyTexts;
+
+std::vector<Full_Text> Custom_Screen::itemTexts;
+
+std::vector<Full_Text> Custom_Screen::spellTexts;
+
+Full_Textbox Custom_Screen::create = Full_Textbox("Finish", 800.f, 700.f, 100.f, 50.f, []() {
+	switch (currentMod) {
+	case EnemyMod:
+		for (Full_TextInput& input : enemyInputs) {
+			if (input.text.getString().getSize() == 0) {
+				showMessage(CustomScreen, "Please fill out all fields.", ErrorMsg);
+				return;
+			}
+		}
+
+		Database_Manager::executeNonSelectStatement(std::format(
+			"INSERT INTO enemies (name, health, health_growth, attack, attack_growth, defense, defense_growth, resistance, resistance_growth, range, experience, experience_growth, attack_type, floor) VALUES('{}', {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {});",
+			enemyInputs[0].text.getString().toAnsiString().c_str(),
+			enemyInputs[1].text.getString().toAnsiString().c_str(),
+			std::stof(enemyInputs[2].text.getString().toAnsiString().c_str()) / 100.f,
+			enemyInputs[3].text.getString().toAnsiString().c_str(),
+			std::stof(enemyInputs[4].text.getString().toAnsiString().c_str()) / 100.f,
+			enemyInputs[5].text.getString().toAnsiString().c_str(),
+			std::stof(enemyInputs[6].text.getString().toAnsiString().c_str()) / 100.f,
+			enemyInputs[7].text.getString().toAnsiString().c_str(),
+			std::stof(enemyInputs[8].text.getString().toAnsiString().c_str()) / 100.f,
+			enemyInputs[9].text.getString().toAnsiString().c_str(),
+			enemyInputs[10].text.getString().toAnsiString().c_str(),
+			std::stof(enemyInputs[11].text.getString().toAnsiString().c_str()) / 100.f,
+			enemyInputs[12].text.getString().toAnsiString().c_str(),
+			enemyInputs[13].text.getString().toAnsiString().c_str()
+		).c_str());
+
+		break;
+	case ItemMod:
+		break;
+	case SpellMod:
+		break;
+	}
 });
 
-unsigned int Custom_Screen::offset = 0;
+unsigned int Custom_Screen::idOffset = 0;
+unsigned int Custom_Screen::boxIndex = 0;
+
+std::map<unsigned int, EnemyFull>::iterator Custom_Screen::enemyIter;
 
 Custom_Screen::Custom_Screen() : Screen(true) {
 	setupTextbox("Enemies", 50.f, 20.f, 120.f, 50.f, []() {
-		offset = 100;
 		line.setPosition(80.f, 60.f);
 		currentMod = EnemyMod;
-		addContent = false;
-		Database_Manager::executeSelect(std::format("SELECT * FROM enemies WHERE id >= 100 LIMIT 20 OFFSET {};", offset).c_str(), [](void* data, int argc, char** argv, char** azColName) {
-			int i;
+		addContent = updateContent = false;
+		boxIndex = 0;
 
-			for (i = 0; i < argc; i++) {
-				printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
-			}
-
-			printf("\n");
-
-			return 0;
-			}
-		);
+		unsigned int i = 0;
+		for (enemyIter = Enemy::enemies.begin(); enemyIter != Enemy::enemies.end() && i < 20; ++enemyIter) {
+			boxes[i].text.setString(std::format("{}. {}\nMin floor: {}", enemyIter->second.growth.id, enemyIter->second.growth.name, enemyIter->second.growth.minimumFloor).c_str());
+			boxes[i].updateCallback([i]() {
+				updateContent = true;
+				auto name = std::string(enemyIter->second.growth.name);
+				enemyInputs[0].text.setString(name);
+			});
+			boxes[i].recenterText();
+			i++;
+		}
 	});
 	setupTextbox("Items", 250.f, 20.f, 100.f, 50.f, []() {
-		offset = 100;
+		idOffset = 100;
 		line.setPosition(265.f, 60.f);
 		currentMod = ItemMod;
-		addContent = false;
+		addContent = updateContent = false;
+		boxIndex = 0;
 	});
 	setupTextbox("Spells", 450.f, 20.f, 100.f, 50.f, []() {
-		offset = 100;
+		idOffset = 100;
 		line.setPosition(465.f, 60.f);
 		currentMod = SpellMod;
-		addContent = false;
+		addContent = updateContent = false;
+		boxIndex = 0;
 		});
 
 	setupTextbox("Previous Page", 640.f, 20.f, 200.f, 50.f, []() {
@@ -80,6 +121,7 @@ Custom_Screen::Custom_Screen() : Screen(true) {
 	});
 	setupTextbox("+", 1035.f, 20.f, 50.f, 50.f, []() {
 		addContent = !addContent;
+		updateContent = false;
 	}, 28.f);
 
 	for (unsigned int i = 0; i < 20; i++) {
@@ -89,9 +131,6 @@ Custom_Screen::Custom_Screen() : Screen(true) {
 
 	enemyTexts.push_back(Full_Text(50.f, 100.f, NULL, "Name"));
 	enemyInputs.push_back(Full_TextInput("", 20, 50.f, 150.f, 300.f, 50.f, AlphanumericValidation));
-
-	enemyTexts.push_back(Full_Text(400.f, 100.f, NULL, "Attack Type"));
-	enemyInputs.push_back(Full_TextInput("", 1, 400.f, 150.f, 30.f, 50.f, TrueFalseValidation));
 
 	enemyTexts.push_back(Full_Text(50.f, 250.f, NULL, "Health"));
 	enemyInputs.push_back(Full_TextInput("", 6, 50.f, 300.f, 110.f, 50.f, NumberValidation));
@@ -105,7 +144,6 @@ Custom_Screen::Custom_Screen() : Screen(true) {
 	enemyTexts.push_back(Full_Text(750.f, 250.f, NULL, "Attack Growth (%)"));
 	enemyInputs.push_back(Full_TextInput("", 6, 750.f, 300.f, 110.f, 50.f, NumberValidation));
 
-
 	enemyTexts.push_back(Full_Text(50.f, 400.f, NULL, "Defense"));
 	enemyInputs.push_back(Full_TextInput("", 6, 50.f, 450.f, 110.f, 50.f, NumberValidation));
 
@@ -118,39 +156,55 @@ Custom_Screen::Custom_Screen() : Screen(true) {
 	enemyTexts.push_back(Full_Text(750.f, 400.f, NULL, "Resistance Growth (%)"));
 	enemyInputs.push_back(Full_TextInput("", 6, 750.f, 450.f, 110.f, 50.f, NumberValidation));
 
-
 	enemyTexts.push_back(Full_Text(50.f, 550.f, NULL, "Range"));
 	enemyInputs.push_back(Full_TextInput("", 1, 50.f, 600.f, 110.f, 50.f, NumberValidation));
-
-	enemyTexts.push_back(Full_Text(250.f, 550.f, NULL, "Min Floor to Spawn"));
-	enemyInputs.push_back(Full_TextInput("", 6, 250.f, 600.f, 110.f, 50.f, NumberValidation));
 
 	enemyTexts.push_back(Full_Text(550.f, 550.f, NULL, "Experience"));
 	enemyInputs.push_back(Full_TextInput("", 6, 550.f, 600.f, 110.f, 50.f, NumberValidation));
 
 	enemyTexts.push_back(Full_Text(750.f, 550.f, NULL, "Experience Growth (%)"));
 	enemyInputs.push_back(Full_TextInput("", 6, 750.f, 600.f, 110.f, 50.f, NumberValidation));
+
+	enemyTexts.push_back(Full_Text(400.f, 100.f, NULL, "Attack Type"));
+	enemyInputs.push_back(Full_TextInput("", 1, 400.f, 150.f, 30.f, 50.f, TrueFalseValidation));
+
+	enemyTexts.push_back(Full_Text(250.f, 550.f, NULL, "Min Floor to Spawn"));
+	enemyInputs.push_back(Full_TextInput("", 6, 250.f, 600.f, 110.f, 50.f, NumberValidation));
 }
 
-void Custom_Screen::click_event_handler() {
-	if (mouse_in_button(ExitButton))
+bool Custom_Screen::click_event_handler() {
+	if (mouse_in_button(ExitButton)) {
 		switch_screen(display, TitleScreen, false, true);
-	if (addContent) {
+		return true;
+	}
+	if (addContent || updateContent) {
 		switch (currentMod) {
 		case EnemyMod:
 			for (Full_TextInput& input : enemyInputs)
-				input.click();
+				if (input.click())
+					return true;
 			break;
 		case ItemMod:
 			for (Full_TextInput& input : itemInputs)
-				input.click();
+				if (input.click())
+					return true;
 			break;
 		case SpellMod:
 			for (Full_TextInput& input : spellInputs)
-				input.click();
+				if (input.click())
+					return true;
 			break;
 		}
+
+		if (create.click())
+			return true;
 	}
+	else
+		for (Full_Textbox& box : boxes)
+			if (box.click())
+				return true;
+
+	return false;
 }
 
 void Custom_Screen::hover_event_handler() {
@@ -163,15 +217,15 @@ void Custom_Screen::draw() {
 	Screen::draw();
 	window.draw(line);
 
-	if (addContent) {
+	if (addContent || updateContent) {
 		window.draw(create.rect);
 		window.draw(create.text);
 
 		switch (currentMod) {
 		case EnemyMod:
-			for (Full_Text txt : enemyTexts)
+			for (Full_Text& txt : enemyTexts)
 				window.draw(txt);
-			for (Full_TextInput input : enemyInputs) {
+			for (Full_TextInput& input : enemyInputs) {
 				window.draw(input.rect);
 				window.draw(input.text);
 			}
@@ -218,7 +272,7 @@ void Custom_Screen::executeSQL()
 }
 
 void Custom_Screen::handleTextEvent() {
-	if (addContent) {
+	if (addContent || updateContent) {
 		switch (currentMod) {
 		case EnemyMod:
 			for (Full_TextInput& input : enemyInputs)

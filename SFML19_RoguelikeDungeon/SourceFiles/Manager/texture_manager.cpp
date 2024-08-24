@@ -6,14 +6,17 @@
 */
 
 #include "Manager/texture_manager.h"
+#include "util.h"
+#include <filesystem>
+#include <map>
+#include <SFML/Graphics/Texture.hpp>
+#include <string>
+#include <vector>
 
 bool Texture_Manager::assets_loaded = false;
 
-const unsigned int Texture_Manager::num_enemies;
-std::array<sf::Texture, Texture_Manager::num_enemies> Texture_Manager::tex_enemies = { sf::Texture(), sf::Texture(), sf::Texture(), sf::Texture() };
-
-const unsigned int Texture_Manager::num_rooms;
-std::array<sf::Texture, Texture_Manager::num_rooms> Texture_Manager::tex_rooms = { sf::Texture(), sf::Texture(), sf::Texture(), sf::Texture() };
+std::map<unsigned int, sf::Texture> Texture_Manager::tex_enemies;
+std::vector<sf::Texture> Texture_Manager::tex_rooms;
 
 sf::Texture Texture_Manager::gold;
 sf::Texture Texture_Manager::player;
@@ -32,49 +35,25 @@ bool Texture_Manager::load() {
 	if (assets_loaded)
 		return true;
 
-	for (unsigned int i = 0; i < num_enemies; i++) {
-		switch (i) {
-		case 0:
-			// Zombie
-			assets_loaded = tex_enemies[i].loadFromFile("Texture\\Enemies\\0000_Zombie.png");
-			break;
-		case 1:
-			// Skeleton
-			assets_loaded = tex_enemies[i].loadFromFile("Texture\\Enemies\\0001_Skeleton.png");
-			break;
-		case 2:
-			// Mage
-			assets_loaded = tex_enemies[i].loadFromFile("Texture\\Enemies\\0002_Mage.png");
-			break;
-		default:
-			// Bandit
-			assets_loaded = tex_enemies[i].loadFromFile("Texture\\Enemies\\0003_Bandit.png");
-			break;
-		}
 
-		if (!assets_loaded)
-			return assets_loaded;
+	for (auto& file : std::filesystem::directory_iterator("Texture\\Enemies")) {
+		const std::string path = file.path().string();
+		auto splits = Util::split(path, "\\");
+		std::string filename = splits[splits.size() - 1];
+		auto splits2 = Util::split(filename, "_");
+		unsigned int id = std::stoi(splits2[0]);
+
+		if (!tex_enemies[id].loadFromFile(path))
+			return false;
 	}
 
-	for (unsigned int i = 0; i < num_rooms; i++) {
-		tex_rooms[i].setRepeated(true);
-		switch (i) {
-		case 0:
-			assets_loaded = tex_rooms[i].loadFromFile("Texture\\Paths\\00_Stone.jpg");
-			break;
-		case 1:
-			assets_loaded = tex_rooms[i].loadFromFile("Texture\\Paths\\01_Wood.jpg");
-			break;
-		case 2:
-			assets_loaded = tex_rooms[i].loadFromFile("Texture\\Paths\\02_Grass.jpg");
-			break;
-		default:
-			assets_loaded = tex_rooms[i].loadFromFile("Texture\\Paths\\03_Lava.jpg");
-			break;
-		}
+	for (auto& file : std::filesystem::directory_iterator("Texture\\Paths")) {
+		tex_rooms.push_back(sf::Texture());
+		unsigned int i = tex_rooms.size() - 1;
+		if (!tex_rooms[i].loadFromFile(file.path().string()))
+			return false;
 
-		if (!assets_loaded)
-			return assets_loaded;
+		tex_rooms[i].setRepeated(true);
 	}
 
 	if (gold.loadFromFile("Texture\\GG_01_Gold.png") &&

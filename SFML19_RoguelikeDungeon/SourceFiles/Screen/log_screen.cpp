@@ -41,11 +41,12 @@ Log_Screen::Log_Screen() : Screen(true, false) {
 	texts[0].setThemeAndHover(false);
 }
 
-void Log_Screen::click_event_handler() {
+bool Log_Screen::click_event_handler() {
 	if (mouse_in_button(ExitButton)) {
 		viewLog.reset(sf::FloatRect(0, 0, 1200, 800));
 		log_view(false);
 		return_to_prev_screen(LogScreen);
+		return true;
 	}
 }
 

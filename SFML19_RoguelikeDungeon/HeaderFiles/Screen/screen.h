@@ -9,11 +9,12 @@
 #include "Shape/full_rectangle.h"
 #include "Shape/full_text.h"
 #include "Shape/full_textbox.h"
+#include <functional>
 #include <map>
 #include <memory>
+#include <Shape/full_textinput.h>
 #include <string>
 #include <vector>
-#include <Shape/full_textinput.h>
 
 #ifndef SCREEN_H
 #define SCREEN_H
@@ -81,7 +82,7 @@ protected:
 	*	fontSize: text's size.
 	*	fontOutline: text's outline size.
 	*/
-	void setupTextbox(const char* text, float x, float y, float sx, float sy, void (*func)(), float fontSize = 0, float fontOutline = 0);
+	void setupTextbox(const char* text, float x, float y, float sx, float sy, std::function<void()> func, float fontSize = 0, float fontOutline = 0);
 
 	/*
 	* Helper to setup hoverable and clickable texts.
@@ -94,7 +95,7 @@ protected:
 	*	fontSize: text's size.
 	*	fontOutline: text's outline size.
 	*/
-	void setupHoverableText(const char* text, float x, float y, void (*func)(), float fontSize = 0, float fontOutline = 0);
+	void setupHoverableText(const char* text, float x, float y, std::function<void()> func, float fontSize = 0, float fontOutline = 0);
 
 	/*
 	* Helper to setup hoverable and clickable texts.
@@ -235,7 +236,7 @@ public:
 	/**
 	* Click event handler for the screen.
 	*/
-	virtual void click_event_handler();
+	virtual bool click_event_handler();
 
 	/**
 	* Hover event handler for the screen.
@@ -278,7 +279,7 @@ public:
 
 	void hover();
 
-	static void click();
+	static bool click();
 
 	virtual void handleTextEvent();
 };

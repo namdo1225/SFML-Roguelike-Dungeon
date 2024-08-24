@@ -7,61 +7,68 @@
 
 #include "Floor/enemy.h"
 #include "Manager/texture_manager.h"
-#include "Manager/sf_manager.h"
+#include <cstdlib>
+#include <Floor/floor_object.h>
+#include <Manager/database_manager.h>
+#include <map>
+#include <memory>
+#include <string>
+#include <utility>
 
-Enemy::Enemy(int hp, int floor, unsigned int id, float x, float y) : Floor_Object(x, y, Texture_Manager::collectible) {
-	this->id = id;
-	switch (id) {
-	case 0:
-		name = "Zombie";
-		set_stat_h(9 + floor, 3 + (floor * 0.5), 3 + (floor * 0.5), 1 + (floor * 0.25), 1, 3 + (floor * 0.75));
-		break;
-	case 1:
-		name = "Skeleton";
-		set_stat_h(7 + floor, 2 + (floor * 0.25), 2 + (floor * 0.25), 2 + (floor * 0.5), 3, 3 + (floor * 0.75));
-		break;
-	case 2:
-		name = "Mage";
-		type = false;
-		set_stat_h(3 + floor, 4 + (floor * 0.5), 1 + (floor * 0.125), 4 + (floor * 0.5), 4, 3 + (floor * 0.75));
-		break;
-	case 3:
-		name = "Bandit";
-		set_stat_h(12 + floor, 4 + (floor * 0.25), 5 + (floor * 0.25), 3 + (floor * 0.25), 2, 5 + (floor * 1.5));
-		break;
-	}
+std::map<unsigned int, EnemyFull> Enemy::enemies;
 
-	setTexture(&Texture_Manager::tex_enemies[id], false);
+bool Enemy::setup() {
+	enemies.clear();
+	Database_Manager::executeSelect("SELECT * FROM enemies;", [](void* data, int argc, char** argv, char** azColName) -> int {
+		unsigned int i = strtol(argv[0], NULL, 10);
 
-	// It means that the enemies aren't being added from a save file; use default hp.
-	if (hp != -1)
-		stats[0] = hp;
+		enemies[i] = EnemyFull(
+			{
+				strtol(argv[2], NULL, 10),
+				strtol(argv[4], NULL, 10),
+				strtol(argv[6], NULL, 10),
+				strtol(argv[8], NULL, 10),
+				strtol(argv[10], NULL, 10),
+				strtol(argv[11], NULL, 10),
+				strtol(argv[13], NULL, 10)
+			},
+			{
+				argv[1],
+				strtol(argv[0], NULL, 10),
+				std::stof(argv[3]),
+				std::stof(argv[5]),
+				std::stof(argv[7]),
+				std::stof(argv[9]),
+				std::stof(argv[12]),
+				strtol(argv[14], NULL, 10)
+			}
+		);
+
+
+		return 0;
+	});
+	return true;
 }
 
-void Enemy::set_stat_h(int hp, int atk, int def, int res, int range, int exp) {
-	stats[0] = hp;
-	stats[1] = atk;
-	stats[2] = def;
-	stats[3] = res;
-	stats[4] = range;
-	stats[5] = exp;
+Enemy::Enemy(int floor, unsigned int id, float x, float y, int hp) : 
+	Floor_Object(x, y,
+		Texture_Manager::tex_enemies.contains(id) ? Texture_Manager::tex_enemies[id] : Texture_Manager::tex_enemies[0]) {
+	EnemyFull& info = enemies[id];
+
+	stat = info.stat;
+
+	stat.hp = hp != -1 ? hp : info.stat.hp + (info.growth.hpGrowth * floor);
+	stat.atk = info.stat.atk + (info.growth.atkGrowth * floor);
+	stat.def = info.stat.def + (info.growth.defGrowth * floor);
+	stat.res = info.stat.res + (info.growth.resGrowth * floor);
+	stat.exp = info.stat.exp + (info.growth.expGrowth * floor);
+
+	constant = std::make_shared<EnemyConstant>(info.growth);
 }
 
-int Enemy::set_hp(int atk_type, int amount) {
-	int stat{ atk_type == 2 ? stats[2] : stats[3] };
-	int quantity{ stat >= amount ? 1 : amount - stat };
-	stats[0] -= quantity;
+int Enemy::damageEnemy(bool type, int amount) {
+	int protect{ type ? stat.def : stat.res };
+	int quantity = std::max(1, amount - protect);
+	stat.hp -= quantity;
 	return quantity;
 }
-
-unsigned int Enemy::get_id() { return id; }
-
-int Enemy::get_stat(unsigned int i) { return stats[i]; }
-
-bool Enemy::get_type() { return type; }
-
-std::string Enemy::get_name() {
-	return name;
-}
-
-void Enemy::set_stat(unsigned int i, int j) { stats[i] = j; }

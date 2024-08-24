@@ -7,6 +7,7 @@
 
 #include "Floor/collectible.h"
 #include "Manager/texture_manager.h"
+#include <Floor/floor_object.h>
 
 Collectible::Collectible() : Floor_Object(Texture_Manager::collectible) {}
 

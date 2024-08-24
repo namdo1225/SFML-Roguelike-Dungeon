@@ -22,6 +22,7 @@ public:
 	const static unsigned int MAX_INV_SPELL_SLOTS = 32;
 	const static unsigned int NUM_NON_CUR_STATS = 6;
 	const static char* FULL_STATS[];
+	const static char* ABR_STATS[];
 
 	static sf::RenderWindow window;
 	static sf::View viewUI;

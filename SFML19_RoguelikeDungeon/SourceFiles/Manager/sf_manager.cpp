@@ -13,6 +13,7 @@
 #include <SFML/Window/Event.hpp>
 
 const char* SF_Manager::FULL_STATS[] = { "Health", "Mana", "Strength", "Magic", "Defense", "Resistance" };
+const char* SF_Manager::ABR_STATS[] = { "HP", "MP", "STR", "MGK", "DEF", "RES" };
 
 const float SF_Manager::DEFAULT_SCREEN_X = 1200.f;
 const float SF_Manager::DEFAULT_SCREEN_Y = 800.f;

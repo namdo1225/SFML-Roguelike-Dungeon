@@ -65,14 +65,14 @@ Status_Screen::Status_Screen() : Screen(true, false) {
 	});
 }
 
-void Status_Screen::click_event_handler() {
+bool Status_Screen::click_event_handler() {
 	if (mouse_in_button(ExitButton)) {
 		viewEffect.reset(sf::FloatRect(0, 0, 1200, 800));
 		return_to_prev_screen(StatusScreen);
+		return true;
 	}
+	return false;
 }
-
-void Status_Screen::hover_event_handler() {}
 
 void Status_Screen::update_draw() {
 	// name

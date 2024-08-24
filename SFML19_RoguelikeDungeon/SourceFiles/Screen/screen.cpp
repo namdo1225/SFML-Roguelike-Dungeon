@@ -8,6 +8,7 @@
 #include "Manager/audio_manager.h"
 #include "Manager/font_manager.h"
 #include "Screen/screen.h"
+#include <functional>
 #include <Manager/setting_manager.h>
 #include <map>
 #include <memory>
@@ -171,11 +172,11 @@ void Screen::setup_helper(const char* text, float x, float y, float sx, float sy
 	}		
 }
 
-void Screen::setupTextbox(const char* text, float x, float y, float sx, float sy, void (*func)(), float fontSize, float fontOutline) {
+void Screen::setupTextbox(const char* text, float x, float y, float sx, float sy, std::function<void()> func, float fontSize, float fontOutline) {
 	textboxes.push_back(Full_Textbox(text, x, y, sx, sy, func, fontSize, fontOutline));
 }
 
-void Screen::setupHoverableText(const char* text, float x, float y, void(*func)(), float fontSize, float fontOutline) {
+void Screen::setupHoverableText(const char* text, float x, float y, std::function<void()> func, float fontSize, float fontOutline) {
 	hoverableTexts.push_back(Full_Text(x, y, fontSize, text, true, false, func));
 	hoverableTexts[hoverableTexts.size() - 1].setPhysical(x, y, text, fontSize, fontOutline);
 }
@@ -387,10 +388,11 @@ void Screen::hover_slot(unsigned int i) {
 	}
 }
 
-void Screen::mouse_event_handler() {
-}
+void Screen::mouse_event_handler() {}
 
-void Screen::click_event_handler() {}
+bool Screen::click_event_handler() {
+	return false;
+}
 
 void Screen::hover_event_handler() {}
 
@@ -435,15 +437,19 @@ void Screen::hover() {
 		screens[display]->textboxes[i].hover();
 }
 
-void Screen::click() {
+bool Screen::click() {
 	for (unsigned int i = 0; i < screens[display]->hoverableTexts.size(); i++)
-		screens[display]->hoverableTexts[i].click();
+		if (screens[display]->hoverableTexts[i].click())
+			return true;
 
 	for (unsigned int i = 0; i < screens[display]->textboxes.size(); i++)
-		screens[display]->textboxes[i].click();
+		if (screens[display]->textboxes[i].click())
+			return true;
 
 	for (unsigned int i = 0; i < screens[display]->textInputs.size(); i++)
-		screens[display]->textInputs[i].click();
+		if (screens[display]->textInputs[i].click())
+			return true;
+	return false;
 }
 
 void Screen::handleTextEvent() {

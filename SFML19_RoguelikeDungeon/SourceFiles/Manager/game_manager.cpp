@@ -20,12 +20,11 @@
 #include <Floor/interactible.h>
 #include <Floor/room.h>
 #include <format>
+#include <fstream>
 #include <iomanip>
 #include <iosfwd>
 #include <malloc.h>
-#include <Manager/texture_manager.h>
 #include <memory>
-#include <nfd.h>
 #include <nlohmann/json.hpp>
 #include <ostream>
 #include <player.h>
@@ -35,7 +34,7 @@
 #include <Tool/special.h>
 #include <Tool/spell.h>
 #include <vector>
-#include <fstream>
+#include <nfd.h>
 
 using json = nlohmann::json;
 
@@ -51,7 +50,7 @@ int Game_Manager::cur_it_shortcut = 0;
 int Game_Manager::cur_sp_shortcut = 0;
 
 Player Game_Manager::player;
-Floor Game_Manager::floor;
+Floor Game_Manager::floor = NULL;
 std::vector<Enemy> Game_Manager::enemies;
 
 std::vector<std::shared_ptr<Item>> Game_Manager::items;
@@ -160,7 +159,7 @@ void Game_Manager::ene_action() {
         int chase_player_rand{ rand() % 3 };
 
         // If so, attack.
-        int range = enemies[i].get_stat(4);
+        int range = enemies[i].stat.range;
         if ((x >= en_x - (range * 40) && x_2 <= en_x && y == en_y) or
             (x_2 <= en_x2 + (range * 40) && x >= en_x2 && y == en_y) or
             (y_2 <= en_y && y >= en_y - (range * 40) && x == en_x) or
@@ -227,13 +226,13 @@ void Game_Manager::ene_atk(unsigned int v) {
     )
         return;
 
-    unsigned int enemy_type = enemies[v].get_type();
+    unsigned int enemy_type = enemies[v].stat.type;
     int quantity = pl_armor->get_quantity();
     Stat armor_stat = pl_armor->get_stat();
     int armor = (enemy_type && armor_stat == Def) || (!enemy_type && armor_stat == Mgk) ? quantity : 0;
-    int damage = player.attack_pl(enemy_type, enemies[v].get_stat(1) - armor);
+    int damage = player.attack_pl(enemy_type, enemies[v].stat.hp - armor);
 
-    log_add(std::format("{} did {} damage to you.", enemies[v].get_name(), damage).c_str());
+    log_add(std::format("{} did {} damage to you.", enemies[v].constant->name, damage).c_str());
     Audio_Manager::play_sfx(2);
 }
 
@@ -375,10 +374,10 @@ void Game_Manager::ene_rand_move(unsigned int v) {
 
 void Game_Manager::pl_sp_atk(unsigned int en_i, std::array<int, 4> sp_inf) {
     player.use_mp(sp_inf[3]);
-    int quantity = enemies[en_i].set_hp(sp_inf[2], sp_inf[0]);
+    enemies[en_i].stat.hp -= enemies[en_i].stat.res >= sp_inf[0] ? 1 : sp_inf[0] - enemies[en_i].stat.res;
     spell_desc = spell_select = placeholder_spell;
     ene_action();
-    log_add(std::format("Your spell did {} to {}.", sp_inf[0], enemies[en_i].get_name()).c_str());
+    log_add(std::format("Your spell did {} to {}.", sp_inf[0], enemies[en_i].constant->name).c_str());
 }
 
 void Game_Manager::handle_player_action(char input, unsigned int mode) {
@@ -587,9 +586,9 @@ void Game_Manager::pl_atk() {
             return;
 
     log_add(std::format("You did {} damage to {}.",
-        en->set_hp(pl_weapon->get_stat(),
+        en->stat.hp = (pl_weapon->get_stat(),
         player.get_stat(pl_weapon->get_stat()) + pl_weapon->get_quantity()),
-        en->get_name())
+        en->constant->name)
     .c_str());
     Audio_Manager::play_sfx(2);
 }
@@ -599,8 +598,8 @@ void Game_Manager::ene_dead() {
         return;
 
     for (int i{ static_cast<int>(enemies.size()) - 1 }; i > -1; i--)
-        if (enemies[i].get_stat(0) <= 0) {
-            player.set_cur_exp(player.get_cur_exp() + enemies[i].get_stat(5));
+        if (enemies[i].stat.hp <= 0) {
+            player.set_cur_exp(player.get_cur_exp() + enemies[i].stat.exp);
             enemies.erase(enemies.begin() + i);
             refresh_exp();
         }
@@ -664,8 +663,11 @@ void Game_Manager::ene_add() {
             if (enemies.size() == counter)
                 break;
         }
-        int rand_enemy{ rand() % Texture_Manager::num_enemies };
-        enemies.push_back(Enemy(-1, player.get_floor(), rand_enemy, temp_x, temp_y));
+
+        auto it = Enemy::enemies.begin();
+        std::advance(it, rand() % Enemy::enemies.size());
+        unsigned int id = it->first;
+        enemies.push_back(Enemy(player.get_floor(), id, temp_x, temp_y));
     }
 
     if (enemy_respawn == 0)
@@ -915,8 +917,8 @@ void Game_Manager::save() {
             j["enemies"].push_back(json::object());
             unsigned int i = j["enemies"].size() - 1;
             j["enemies"][i] = {
-                {"id", en.get_id()},
-                {"health", en.get_stat(0)},
+                {"id", en.constant->id},
+                {"health", en.stat.hp},
                 {"x", en.getPosition().x},
                 {"y", en.getPosition().y},
             };

@@ -8,15 +8,15 @@
 #ifndef FLOOR_H
 #define FLOOR_H
 
-#include <SFML/Graphics.hpp>
-#include "Tool/item.h"
-#include "stair.h"
-#include "shop.h"
 #include "collectible.h"
 #include "gold_collectible.h"
-#include "room.h"
-#include "map.h"
 #include "interactible.h"
+#include "map.h"
+#include "room.h"
+#include "shop.h"
+#include "stair.h"
+#include <SFML/Graphics/Rect.hpp>
+#include <vector>
 
 class Floor {
 private:

@@ -16,9 +16,9 @@ private:
 public:
 	Menu_Screen();
 
-	virtual void click_event_handler();
+	bool click_event_handler();
 
-	virtual void draw();
+	void draw();
 };
 
 #endif

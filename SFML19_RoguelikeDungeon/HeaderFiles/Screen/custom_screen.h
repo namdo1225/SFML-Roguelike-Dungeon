@@ -5,6 +5,8 @@
 */
 
 #include "screen.h"
+#include <Floor/enemy.h>
+#include <map>
 #include <Shape/full_rectangle.h>
 #include <Shape/full_text.h>
 #include <Shape/full_textbox.h>
@@ -19,6 +21,8 @@ enum Mod { EnemyMod, ItemMod, SpellMod };
 class Custom_Screen : public Screen {
 private:
 	static char* category;
+
+	static std::map<unsigned int, EnemyFull>::iterator enemyIter;
 
 	static Full_Rectangle line;
 
@@ -41,13 +45,15 @@ private:
 	static Mod currentMod;
 
 	static bool addContent;
+	static bool updateContent;
 
-	static unsigned int offset;
+	static unsigned int idOffset;
+	static unsigned int boxIndex;
 
 public:
 	Custom_Screen();
 
-	void click_event_handler();
+	bool click_event_handler();
 
 	void hover_event_handler();
 

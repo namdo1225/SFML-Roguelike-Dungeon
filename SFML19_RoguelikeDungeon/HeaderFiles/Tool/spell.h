@@ -9,12 +9,9 @@
 #ifndef SPELL_H
 #define SPELL_H
 
-#include <SFML/Graphics.hpp>
-#include "player.h"
-#include "Floor/enemy.h"
-#include "Floor/floor.h"
-#include "Shape/full_text.h"
-#include "Shape/full_rectangle.h"
+#include "tool.h"
+#include <array>
+#include <memory>
 
 class Spell : public Tool {
 protected:
