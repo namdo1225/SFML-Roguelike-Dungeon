@@ -115,6 +115,17 @@ void Database_Manager::executeNonSelectStatement(const char* statement) {
         sqlite3_free(errmsg);
 }
 
+void Database_Manager::resetDB() {
+    char* errmsg;
+    sqlite3_db_config(db, SQLITE_DBCONFIG_RESET_DATABASE, 1, 0);
+
+    if (sqlite3_exec(db, "VACUUM", 0, 0, &errmsg))
+        throw errmsg;
+
+    sqlite3_db_config(db, SQLITE_DBCONFIG_RESET_DATABASE, 0, 0);
+    sqlite3_free(errmsg);
+}
+
 void Database_Manager::executeSelect(const char* statement, int (*callback)(void*, int, char**, char**)) {
     char* errmsg = 0;
     int rc;

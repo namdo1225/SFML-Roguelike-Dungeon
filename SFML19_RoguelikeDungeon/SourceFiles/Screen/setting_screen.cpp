@@ -11,6 +11,7 @@
 #include <Manager/setting_manager.h>
 #include <Screen/screen.h>
 #include <string>
+#include <Manager/database_manager.h>
 
 bool Setting_Screen::light_mode = false;
 unsigned int Setting_Screen::theme = 0;
@@ -54,6 +55,11 @@ Setting_Screen::Setting_Screen() : Screen(true, true, true) {
 	setup_helper(  std::to_string(sfx_volume).c_str(), 1000.f, 300.f, NULL, NULL, false);
 	setup_helper(std::to_string(music_volume).c_str(), 1000.f, 350.f, NULL, NULL, false);
 	setupTextbox("abcdefghijklmnopqrstuvwxyz, ABCDEFGHIJKLMNOPQRSTUVWXYZ\n!@#$%%^&*()_+-=", 20.f, 500.f, 1150.f, 95.f, NULL);
+
+	setupTextbox("Reset Database", 800.f, 700.f, 300.f, 50.f, []() {
+		Database_Manager::resetDB();
+		window.close();
+	});
 }
 
 bool Setting_Screen::click_event_handler() {
@@ -63,21 +69,22 @@ bool Setting_Screen::click_event_handler() {
 		sfx_volume = Setting_Manager::sfx_volume;
 		music_volume = Setting_Manager::music_volume;
 		font = Setting_Manager::font;
-		texts[24].setString(std::to_string(theme).c_str());
+		texts[24].setString(std::to_string(theme));
 		texts[25].setString(light_mode ? "Light" : "Dark");
-		texts[26].setString(Font_Manager::get_selected().getInfo().family.c_str());
-		texts[27].setString(std::to_string(sfx_volume).c_str());
-		texts[28].setString(std::to_string(music_volume).c_str());
+		texts[26].setString(Font_Manager::get_selected().getInfo().family);
+		texts[27].setString(std::to_string(sfx_volume));
+		texts[28].setString(std::to_string(music_volume));
 
 		return_to_prev_screen(SettingScreen);
+		return true;
 	}
 	else if (mouse_in_helper(false, 6)) {
 		theme = 0;
-		texts[24].setString(std::to_string(theme).c_str());
+		texts[24].setString(std::to_string(theme));
 	}
 	else if (mouse_in_helper(false, 7)) {
 		theme = 1;
-		texts[24].setString(std::to_string(theme).c_str());
+		texts[24].setString(std::to_string(theme));
 	}
 	else if (mouse_in_helper(false, 8)) {
 		light_mode = false;

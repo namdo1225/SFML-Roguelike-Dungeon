@@ -26,6 +26,8 @@ Mod Custom_Screen::currentMod = EnemyMod;
 bool Custom_Screen::addContent = false;
 bool Custom_Screen::updateContent = false;
 
+unsigned int Custom_Screen::updateID = 0;
+
 std::vector<Full_Textbox> Custom_Screen::boxes;
 
 std::vector<Full_TextInput> Custom_Screen::enemyInputs;
@@ -50,23 +52,45 @@ Full_Textbox Custom_Screen::create = Full_Textbox("Finish", 800.f, 700.f, 100.f,
 			}
 		}
 
-		Database_Manager::executeNonSelectStatement(std::format(
-			"INSERT INTO enemies (name, health, health_growth, attack, attack_growth, defense, defense_growth, resistance, resistance_growth, range, experience, experience_growth, attack_type, floor) VALUES('{}', {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {});",
-			enemyInputs[0].text.getString().toAnsiString().c_str(),
-			enemyInputs[1].text.getString().toAnsiString().c_str(),
-			std::stof(enemyInputs[2].text.getString().toAnsiString().c_str()) / 100.f,
-			enemyInputs[3].text.getString().toAnsiString().c_str(),
-			std::stof(enemyInputs[4].text.getString().toAnsiString().c_str()) / 100.f,
-			enemyInputs[5].text.getString().toAnsiString().c_str(),
-			std::stof(enemyInputs[6].text.getString().toAnsiString().c_str()) / 100.f,
-			enemyInputs[7].text.getString().toAnsiString().c_str(),
-			std::stof(enemyInputs[8].text.getString().toAnsiString().c_str()) / 100.f,
-			enemyInputs[9].text.getString().toAnsiString().c_str(),
-			enemyInputs[10].text.getString().toAnsiString().c_str(),
-			std::stof(enemyInputs[11].text.getString().toAnsiString().c_str()) / 100.f,
-			enemyInputs[12].text.getString().toAnsiString().c_str(),
-			enemyInputs[13].text.getString().toAnsiString().c_str()
-		).c_str());
+		if (!updateContent) {
+			Database_Manager::executeNonSelectStatement(std::format(
+				"INSERT INTO enemies (name, health, health_growth, attack, attack_growth, defense, defense_growth, resistance, resistance_growth, range, experience, experience_growth, attack_type, floor) VALUES('{}', {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {});",
+				enemyInputs[0].text.getString().toAnsiString().c_str(),
+				enemyInputs[1].text.getString().toAnsiString().c_str(),
+				std::stof(enemyInputs[2].text.getString().toAnsiString().c_str()) / 100.f,
+				enemyInputs[3].text.getString().toAnsiString().c_str(),
+				std::stof(enemyInputs[4].text.getString().toAnsiString().c_str()) / 100.f,
+				enemyInputs[5].text.getString().toAnsiString().c_str(),
+				std::stof(enemyInputs[6].text.getString().toAnsiString().c_str()) / 100.f,
+				enemyInputs[7].text.getString().toAnsiString().c_str(),
+				std::stof(enemyInputs[8].text.getString().toAnsiString().c_str()) / 100.f,
+				enemyInputs[9].text.getString().toAnsiString().c_str(),
+				enemyInputs[10].text.getString().toAnsiString().c_str(),
+				std::stof(enemyInputs[11].text.getString().toAnsiString().c_str()) / 100.f,
+				enemyInputs[12].text.getString().toAnsiString().c_str(),
+				enemyInputs[13].text.getString().toAnsiString().c_str()
+			).c_str());
+		}
+		else {
+			Database_Manager::executeNonSelectStatement(std::format(
+				"UPDATE enemies SET name = '{}', health = {}, health_growth = {}, attack = {}, attack_growth = {}, defense = {}, defense_growth = {}, resistance = {}, resistance_growth = {}, range = {}, experience = {}, experience_growth = {}, attack_type = {}, floor = {} WHERE id = {};",
+				enemyInputs[0].text.getString().toAnsiString().c_str(),
+				enemyInputs[1].text.getString().toAnsiString().c_str(),
+				std::stof(enemyInputs[2].text.getString().toAnsiString().c_str()) / 100.f,
+				enemyInputs[3].text.getString().toAnsiString().c_str(),
+				std::stof(enemyInputs[4].text.getString().toAnsiString().c_str()) / 100.f,
+				enemyInputs[5].text.getString().toAnsiString().c_str(),
+				std::stof(enemyInputs[6].text.getString().toAnsiString().c_str()) / 100.f,
+				enemyInputs[7].text.getString().toAnsiString().c_str(),
+				std::stof(enemyInputs[8].text.getString().toAnsiString().c_str()) / 100.f,
+				enemyInputs[9].text.getString().toAnsiString().c_str(),
+				enemyInputs[10].text.getString().toAnsiString().c_str(),
+				std::stof(enemyInputs[11].text.getString().toAnsiString().c_str()) / 100.f,
+				enemyInputs[12].text.getString().toAnsiString().c_str(),
+				enemyInputs[13].text.getString().toAnsiString().c_str(),
+				updateID
+			).c_str());
+		}
 
 		break;
 	case ItemMod:
@@ -74,6 +98,20 @@ Full_Textbox Custom_Screen::create = Full_Textbox("Finish", 800.f, 700.f, 100.f,
 	case SpellMod:
 		break;
 	}
+	showMessage(CustomScreen, "Successfully created entity.\nReset game to see changes.", SuccessMsg);
+});
+Full_Textbox Custom_Screen::delContent = Full_Textbox("Delete", 1000.f, 700.f, 100.f, 50.f, []() {
+	std::string delTable = "enemies";
+	switch (currentMod) {
+	case ItemMod:
+		delTable = "items";
+		break;
+	case SpellMod:
+		delTable = "spells";
+		break;
+	}
+	Database_Manager::executeNonSelectStatement(std::format("DELETE FROM {} WHERE id = {}", delTable, updateID).c_str());
+	showMessage(CustomScreen, "Successfully deleted entity.\nReset game to see changes.", SuccessMsg);
 });
 
 unsigned int Custom_Screen::idOffset = 0;
@@ -90,11 +128,26 @@ Custom_Screen::Custom_Screen() : Screen(true) {
 
 		unsigned int i = 0;
 		for (enemyIter = Enemy::enemies.begin(); enemyIter != Enemy::enemies.end() && i < 20; ++enemyIter) {
+			unsigned int id = enemyIter->second.growth.id;
 			boxes[i].text.setString(std::format("{}. {}\nMin floor: {}", enemyIter->second.growth.id, enemyIter->second.growth.name, enemyIter->second.growth.minimumFloor).c_str());
-			boxes[i].updateCallback([i]() {
+			boxes[i].updateCallback([id]() {
 				updateContent = true;
-				auto name = std::string(enemyIter->second.growth.name);
-				enemyInputs[0].text.setString(name);
+				updateID = id;
+				EnemyFull& en = Enemy::enemies[id];
+				enemyInputs[0].text.setString(en.growth.name);
+				enemyInputs[1].text.setString(std::to_string(en.stat.hp));
+				enemyInputs[2].text.setString(std::to_string(int(en.growth.hpGrowth * 100)));
+				enemyInputs[3].text.setString(std::to_string(en.stat.atk));
+				enemyInputs[4].text.setString(std::to_string(int(en.growth.atkGrowth * 100)));
+				enemyInputs[5].text.setString(std::to_string(en.stat.def));
+				enemyInputs[6].text.setString(std::to_string(int(en.growth.defGrowth * 100)));
+				enemyInputs[7].text.setString(std::to_string(en.stat.res));
+				enemyInputs[8].text.setString(std::to_string(int(en.growth.resGrowth * 100)));
+				enemyInputs[9].text.setString(std::to_string(en.stat.range));
+				enemyInputs[10].text.setString(std::to_string(en.stat.exp));
+				enemyInputs[11].text.setString(std::to_string(int(en.growth.expGrowth * 100)));
+				enemyInputs[12].text.setString(std::to_string(en.stat.type));
+				enemyInputs[13].text.setString(std::to_string(en.growth.minimumFloor));
 			});
 			boxes[i].recenterText();
 			i++;
@@ -196,7 +249,7 @@ bool Custom_Screen::click_event_handler() {
 			break;
 		}
 
-		if (create.click())
+		if (create.click() || (updateContent && delContent.click()))
 			return true;
 	}
 	else
@@ -211,6 +264,7 @@ void Custom_Screen::hover_event_handler() {
 	for (Full_Textbox& textbox : boxes)
 		textbox.hover();
 	create.hover();
+	delContent.hover();
 }
 
 void Custom_Screen::draw() {
@@ -220,6 +274,11 @@ void Custom_Screen::draw() {
 	if (addContent || updateContent) {
 		window.draw(create.rect);
 		window.draw(create.text);
+
+		if (updateContent) {
+			window.draw(delContent.rect);
+			window.draw(delContent.text);
+		}
 
 		switch (currentMod) {
 		case EnemyMod:
@@ -260,6 +319,8 @@ void Custom_Screen::change_theme() {
 	line.flip_theme();
 	create.text.flip_theme();
 	create.rect.flip_theme();
+	delContent.text.flip_theme();
+	delContent.rect.flip_theme();
 
 	for (unsigned int i = 0; i < boxes.size(); i++) {
 		boxes[i].text.flip_theme();

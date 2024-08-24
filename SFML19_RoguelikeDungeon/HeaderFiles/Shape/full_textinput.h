@@ -18,6 +18,7 @@ private:
 	bool focused = false;
 	unsigned int maxLength = 20;
 	InputValidation validation = AllValidation;
+	static Full_TextInput* chosenInput;
 
 public:
 	Full_Rectangle rect;

@@ -585,9 +585,13 @@ void Game_Manager::pl_atk() {
         !(pl_room->door_exist() && pl_room->touch_door(plx, ply, plx2, ply2) && pl_room->touch_door(enx, eny, enx2, eny2)))
             return;
 
+    int stat{ en->stat.type ? en->stat.def : en->stat.res };
+    const int amount = player.get_stat(pl_weapon->get_stat()) + pl_weapon->get_quantity();
+    int quantity{ stat >= amount ? 1 : amount - stat };
+    en->stat.hp -= quantity;
+
     log_add(std::format("You did {} damage to {}.",
-        en->stat.hp = (pl_weapon->get_stat(),
-        player.get_stat(pl_weapon->get_stat()) + pl_weapon->get_quantity()),
+        quantity,
         en->constant->name)
     .c_str());
     Audio_Manager::play_sfx(2);
@@ -606,17 +610,19 @@ void Game_Manager::ene_dead() {
 }
 
 void Game_Manager::refresh_exp() {
-    if (player.get_cur_exp() < player.get_lvl_up())
+    const unsigned int lvlUpExp = player.get_lvl_up();
+
+    if (player.get_cur_exp() < lvlUpExp)
         return;
 
-    unsigned int carry_over_exp{ player.get_cur_exp() - player.get_lvl_up() };
+    unsigned int carry_over_exp{ player.get_cur_exp() - lvlUpExp };
     player.set_cur_exp(carry_over_exp);
 
     player.set_level(player.get_lvl() + 1);
 
     player.set_point(player.get_pts() + 5);
 
-    player.set_lvl_up(10 + (player.get_lvl_up() / 10));
+    player.set_lvl_up(10 + (lvlUpExp / 10.f * 1.5));
 
     log_add("You leveled up!");
 }

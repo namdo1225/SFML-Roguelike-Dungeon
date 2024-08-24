@@ -9,10 +9,8 @@
 #include "Screen/game_screen.h"
 #include <Candle/LightingArea.hpp>
 #include <Candle/RadialLight.hpp>
-#include <cstdio>
 #include <Floor/enemy.h>
 #include <format>
-#include <Manager/font_manager.h>
 #include <Manager/setting_manager.h>
 #include <memory>
 #include <Screen/screen.h>
@@ -153,13 +151,11 @@ Game_Screen::Game_Screen() : Screen(false, false) {
 	// history
 	setup_helper(NULL, 750.f, 500.f, 425.f, 275.f, false, true);
 
-	setup_helper("Name:", 740.f, 5.f, 18.f, 3.f, false, true);
 	setup_helper("Items:", 740.f, 210.f, NULL, 3.f, false, true);
 	setup_helper("Spells:", 950.f, 210.f, NULL, 3.f, false, true);
 	setup_helper("History:", 740.f, 455.f, NULL, 3.f, false, true);
 	setup_helper("Floor:", 10.f, 10.f, NULL, 3.f, false, true);
 	setup_helper("Gold:", 10.f, 50.f, NULL, 3.f, false, true);
-	setup_helper("Stats:", 740.f, 55.f, 18.f, 3.f, false, true);
 
 	setup_helper(ABR_STATS[2], 750.f, 80.f, 18, 3.f, false, true);
 	setup_helper(ABR_STATS[3], 750.f, 110.f, 18, 3.f, false, true);
@@ -172,14 +168,14 @@ Game_Screen::Game_Screen() : Screen(false, false) {
 	// gold num
 	setup_helper("0", 100.f, 50.f, NULL, 3.f, false, true);
 	// name
-	setup_helper("Player", 740.f, 30.f, 16.f, 3.f, false, true);
+	setup_helper("Player", 740.f, 10.f, 16.f, 3.f, false, true);
 	// log limit
 	setup_helper("0 / 50", 850.f, 455.f, NULL, 3.f, false, true);
 	// other stats
-	setup_helper("0", 890.f,  75.f, 18.f, 3.f, false, true);
-	setup_helper("0", 890.f, 105.f, 18.f, 3.f, false, true);
-	setup_helper("0", 890.f, 135.f, 18.f, 3.f, false, true);
-	setup_helper("0", 890.f, 165.f, 18.f, 3.f, false, true);
+	setup_helper("0", 820.f,  75.f, 18.f, 3.f, false, true);
+	setup_helper("0", 820.f, 105.f, 18.f, 3.f, false, true);
+	setup_helper("0", 820.f, 135.f, 18.f, 3.f, false, true);
+	setup_helper("0", 820.f, 165.f, 18.f, 3.f, false, true);
 
 	for (unsigned int i = 0; i < textboxes.size(); i++) {
 		textboxes[i].text.setThemeAndHover(true, true);
@@ -325,17 +321,17 @@ void Game_Screen::update_draw() {
 		Game_Manager::player.get_stat(Mp), Game_Manager::player.get_stat(Max_Mp)));
 	textboxes[1].recenterText();
 
-	texts[11].setString(std::to_string(Game_Manager::player.get_floor()));
-	texts[12].setString(std::to_string(Game_Manager::player.get_gold()));
+	texts[9].setString(std::to_string(Game_Manager::player.get_floor()));
+	texts[10].setString(std::to_string(Game_Manager::player.get_gold()));
 
-	texts[13].setString(Game_Manager::player.get_name());
+	texts[11].setString(Game_Manager::player.get_name());
 
-	texts[14].setString(std::format("{} / 50", logs.size()));
+	texts[12].setString(std::format("{} / 50", logs.size()));
 
-	texts[15].setString(std::to_string(Game_Manager::player.get_stat(Str)));
-	texts[16].setString(std::to_string(Game_Manager::player.get_stat(Def)));
-	texts[17].setString(std::to_string(Game_Manager::player.get_stat(Mgk)));
-	texts[18].setString(std::to_string(Game_Manager::player.get_stat(Res)));
+	texts[13].setString(std::to_string(Game_Manager::player.get_stat(Str)));
+	texts[14].setString(std::to_string(Game_Manager::player.get_stat(Def)));
+	texts[15].setString(std::to_string(Game_Manager::player.get_stat(Mgk)));
+	texts[16].setString(std::to_string(Game_Manager::player.get_stat(Res)));
 
 	if (range)
 		change_range();

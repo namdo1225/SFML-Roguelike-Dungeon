@@ -104,8 +104,6 @@ void Interface::draw_interface() {
 void Interface::handle_event() {
     sf::Event& event = Screen::event;
 
-
-
     while (window.pollEvent(event)) {
         Game_Manager::pl_move_obstacle();
         Screen::mouse_pos = sf::Mouse::getPosition(window);

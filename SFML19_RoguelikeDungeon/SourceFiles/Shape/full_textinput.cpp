@@ -6,6 +6,8 @@
 #include <Shape/full_text.h>
 #include <cctype>
 
+Full_TextInput* Full_TextInput::chosenInput = NULL;
+
 Full_TextInput::Full_TextInput(const char* defaultText, unsigned int length, float x, float y, float w, float h, InputValidation validation, float fontSize, float fontOutline) :
 	maxLength(length), rect(Full_Rectangle(x, y, w, h)), validation(validation) {
 	text = Full_Text(x + 10, y + 10, fontSize, defaultText);
@@ -16,6 +18,13 @@ Full_TextInput::Full_TextInput(const char* defaultText, unsigned int length, flo
 bool Full_TextInput::click() {
 	const bool oldFocus = focused;
 	focused = rect.getGlobalBounds().contains(sf::Vector2f(x, y));
+
+	if (chosenInput != NULL && chosenInput != this)
+		chosenInput->click();
+
+	if (focused)
+		chosenInput = this;
+
 	if (oldFocus != focused)
 		rect.setOutlineThickness(focused ? 10.f : 2.f);
 	return focused;

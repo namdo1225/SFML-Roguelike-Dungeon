@@ -36,6 +36,8 @@ public:
 
 	static void close();
 
+	static void resetDB();
+
 	static void executeNonSelectStatement(const char* statement);
 
 	static void executeSelect(const char* statement, int (*callback)(void*, int, char**, char**));

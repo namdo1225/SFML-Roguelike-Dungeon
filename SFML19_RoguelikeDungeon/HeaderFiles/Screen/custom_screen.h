@@ -41,11 +41,13 @@ private:
 	static std::vector<Full_TextInput> spellInputs;
 
 	static Full_Textbox create;
+	static Full_Textbox delContent;
 
 	static Mod currentMod;
 
 	static bool addContent;
 	static bool updateContent;
+	static unsigned int updateID;
 
 	static unsigned int idOffset;
 	static unsigned int boxIndex;

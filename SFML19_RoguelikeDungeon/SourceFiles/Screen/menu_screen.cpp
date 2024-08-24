@@ -28,7 +28,7 @@ Menu_Screen::Menu_Screen() : Screen(true, false) {
 		"\nClick on 'S' button and hover on enemies to scan\ntheir stat.",
 		110.f, 110.f, NULL, NULL);
 
-	setupTextbox("Help", 1000.f, 300.f, 197.f, 99.f, []() {
+	setupTextbox("Help", 1000.f, 700.f, 197.f, 99.f, []() {
 		help = !help;
 	});
 	setupTextbox( "Map", 1000.f, 400.f, 197.f, 99.f, []() {
@@ -73,10 +73,8 @@ void Menu_Screen::draw() {
 		window.draw(textboxes[i].text);
 	}
 
-	if (exit_button) {
-		window.draw(map_rects["exit"]);
-		window.draw(map_txts["exit"]);
-	}
+	window.draw(map_rects["exit"]);
+	window.draw(map_txts["exit"]);
 
 	if (help) {
 		window.draw(rects[0]);

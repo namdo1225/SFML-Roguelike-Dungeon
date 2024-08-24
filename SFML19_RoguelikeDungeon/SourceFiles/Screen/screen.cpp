@@ -267,8 +267,7 @@ void Screen::show_dialog(Display old_screen, Display new_screen) {
 	prev_displays.push_back(old_screen);
 }
 
-void Screen::showMessage(Display old_screen, const char* newMsg, Msg category)
-{
+void Screen::showMessage(Display old_screen, const char* newMsg, Msg category) {
 	visibilities[MessageScreen] = true;
 	display = MessageScreen;
 	prev_displays.push_back(old_screen);
@@ -438,17 +437,18 @@ void Screen::hover() {
 }
 
 bool Screen::click() {
-	for (unsigned int i = 0; i < screens[display]->hoverableTexts.size(); i++)
+	for (int i = screens[display]->hoverableTexts.size() - 1; i >= 0; i--)
 		if (screens[display]->hoverableTexts[i].click())
 			return true;
 
-	for (unsigned int i = 0; i < screens[display]->textboxes.size(); i++)
+	for (int i = screens[display]->textboxes.size() - 1; i >= 0; i--)
 		if (screens[display]->textboxes[i].click())
 			return true;
 
-	for (unsigned int i = 0; i < screens[display]->textInputs.size(); i++)
+	for (int i = screens[display]->textInputs.size() - 1; i >= 0; i--)
 		if (screens[display]->textInputs[i].click())
 			return true;
+
 	return false;
 }
 
