@@ -52,7 +52,7 @@ long Player::get_stat(Stat stat) { return this->stat[stat]; }
 
 int Player::get_pos(char z) { return (z == 'x') ? getPosition().x : getPosition().y; }
 
-bool Player::use_gold(int quantity) {
+bool Player::use_gold(unsigned int quantity) {
 	if (quantity > gold)
 		return false;
 	gold -= quantity;

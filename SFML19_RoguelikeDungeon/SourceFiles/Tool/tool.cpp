@@ -13,7 +13,7 @@
 
 Tool::Tool(const char* name, const char* desc, const char* abbrev,
 	unsigned int id, unsigned int buy, unsigned int sell, int quantity,
-	unsigned int range) :
+	unsigned int range) : id(id),
 	name(name), desc(desc), abbrev(abbrev), range(range), buy(buy), sell(sell),
 	quantity(quantity) {
 	icon.setFillColor(sf::Color::White);

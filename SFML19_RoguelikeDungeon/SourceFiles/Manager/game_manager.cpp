@@ -66,14 +66,20 @@ std::vector<Special> Game_Manager::special_stocks;
 
 void Game_Manager::setup() {
     unsigned int i = 0;
-    for (auto it = Item::items.begin(); it != Item::items.end(); it++, i++)
-        it->second.setPos(200 + ((i % 6) * 80), 240 + ((i / 6.0f) * 80));
+    for (auto it = Item::items.begin(); it != Item::items.end(); it++, i++) {
+        it->second.setPos(200 + ((i % 6) * 80), 240 + (static_cast<int>(i / 6.f) * 80.f));
+        item_stocks.push_back(it->second);
+    }
     i = 0;
-    for (auto it = Spell::spells.begin(); it != Spell::spells.end(); it++, i++)
-        it->second.setPos(200 + ((i % 6) * 80), 240 + ((i / 6.0f) * 80));
+    for (auto it = Spell::spells.begin(); it != Spell::spells.end(); it++, i++) {
+        it->second.setPos(200 + ((i % 6) * 80), 240 + (static_cast<int>(i / 6.f) * 80));
+        spell_stocks.push_back(it->second);
+    }
     i = 0;
-    for (auto it = Special::specials.begin(); it != Special::specials.end(); it++, i++)
-        it->second.setPos(200 + ((i % 6) * 80), 240 + ((i / 6.0f) * 80));
+    for (auto it = Special::specials.begin(); it != Special::specials.end(); it++, i++) {
+        it->second.setPos(200 + ((i % 6) * 80), 240 + (static_cast<int>(i / 6.f) * 80));
+        special_stocks.push_back(it->second);
+    }
 }
 
 void Game_Manager::reorganize_inv() {
@@ -99,34 +105,21 @@ void Game_Manager::reorganize_inv() {
     }
 }
 
-void Game_Manager::itm_select_shortcut(char place) {
+void Game_Manager::itm_select_shortcut(bool left) {
     unsigned int size = items.size();
     if (size <= 2)
         return;
 
-    switch (place) {
-    case 's':
-        for (unsigned int i{ 0 }; i < size; i++)
-            if (items[i].type != Weapon && items[i].type != Armor) {
-                inv_select = &items[i];
-                cur_it_shortcut = i;
-                return;
-            }
-        return;
-    case 'r':
-    case 'l':
-        int stop{ cur_it_shortcut };
+    int stop{ cur_it_shortcut };
 
-        while (true) {
-            cur_it_shortcut = (cur_it_shortcut + (place == 'l' ? -1 : 1)) % size;
-            if (items[cur_it_shortcut].type != Weapon && items[cur_it_shortcut].type != Armor) {
-                inv_select = &items[cur_it_shortcut];
-                return;
-            }
-            else if (stop == cur_it_shortcut)
-                return;
+    while (true) {
+        cur_it_shortcut = (cur_it_shortcut + (left ? -1 : 1)) % size;
+        if (items[cur_it_shortcut].type != Weapon && items[cur_it_shortcut].type != Armor) {
+            inv_select = &items[cur_it_shortcut];
+            return;
         }
-        break;
+        else if (stop == cur_it_shortcut)
+            return;
     }
 }
 
@@ -154,22 +147,13 @@ void Game_Manager::ene_action() {
     }
 }
 
-void Game_Manager::sp_select_shortcut(char place) {
+void Game_Manager::sp_select_shortcut(bool left) {
     unsigned int size = spells.size();
     if (size == 0)
         return;
 
-    switch (place) {
-    case 's':
-        spell_select = &spells[0];
-        cur_sp_shortcut = 0;
-        return;
-    case 'l':
-    case 'r':
-        cur_sp_shortcut = (cur_sp_shortcut + (place == 'l' ? -1 : 1)) % size;
-        spell_select = &spells[cur_sp_shortcut];
-        return;
-    }
+    cur_sp_shortcut = (cur_sp_shortcut + (left ? -1 : 1)) % size;
+    spell_select = &spells[cur_sp_shortcut];
 }
 
 void Game_Manager::ene_atk(unsigned int v) {
@@ -600,7 +584,7 @@ void Game_Manager::pl_random_pos() {
     int temp_x = ((rand() % (room.get_rm('w') / 40)) + (room.get_rm('x') / 40)) * 40,
         temp_y = ((rand() % (room.get_rm('h') / 40)) + (room.get_rm('y') / 40)) * 40;
 
-    player.setPosition(temp_x, temp_y);
+    PLACE_SHOP_ON_PLAYER ? player.setPosition(floor.get_shop_pos('x'), floor.get_shop_pos('y')) : player.setPosition(temp_x, temp_y);
 }
 
 void Game_Manager::ene_add() {
@@ -713,7 +697,6 @@ void Game_Manager::reset_game(bool cheat) {
 void Game_Manager::add_spell(unsigned int id) {
     if (spells.size() == MAX_INV_SPELL_SLOTS)
         return;
-
     spells.push_back(Spell(id));
 
     int x{ 0 }, y{ 0 };

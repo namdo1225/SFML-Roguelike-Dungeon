@@ -103,6 +103,7 @@ Full_Textbox Custom_Screen::create = Full_Textbox("Finish", 800.f, 700.f, 100.f,
 	showMessage(CustomScreen, "Successfully created entity.\nReset game to see changes.", SuccessMsg);
 	addContent = updateContent = false;
 });
+
 Full_Textbox Custom_Screen::delContent = Full_Textbox("Delete", 1000.f, 700.f, 100.f, 50.f, []() {
 	std::string delTable = "enemies";
 	switch (currentMod) {

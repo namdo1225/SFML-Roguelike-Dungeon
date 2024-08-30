@@ -78,7 +78,7 @@ bool Spell::setup() {
 	spells.insert(std::make_pair(id++, Spell("LT", id, 40, 10, Offensive, 7, 4, 3,
 		"Hit an enemy with light 7 \nspaces away.\n\nENEMY HP-: 3 + (MGK * \n0.75) - ENEMY RES", "Light", 0.75f)
 	));
-	spells.insert(std::make_pair(id++, Spell("DA", id, 50, 15, Offensive, 2, 4, 2,
+	spells.insert(std::make_pair(id++, Spell("DK", id, 50, 15, Offensive, 2, 4, 2,
 		"Hit an enemy with dark 1 \nspace away.\n\nENEMY HP-: 2 + MGK -\nENEMY RES", "Dark", 1)
 	));
 	return true;

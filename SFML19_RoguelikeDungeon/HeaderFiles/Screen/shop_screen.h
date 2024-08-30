@@ -43,7 +43,7 @@ private:
 	/*
 	* Resets item, spell, and special select.
 	*/
-	void reset_select();
+	static void reset_select();
 
 public:
 	Shop_Screen();

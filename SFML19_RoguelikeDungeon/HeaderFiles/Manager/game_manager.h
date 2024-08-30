@@ -117,7 +117,7 @@ public:
 	*		'r' or 'l' to select the left/right item of the currently selected item in
 	*		inventory.
 	*/
-	static void itm_select_shortcut(char place);
+	static void itm_select_shortcut(bool leftOrRight);
 
 	/**
 	* Picks a spell to be on the quick spell slot/shortcut.
@@ -127,7 +127,7 @@ public:
 	*		'r' or 'l' to select the left/right spell of the currently selected spell in
 	*		inventory.
 	*/
-	static void sp_select_shortcut(char place);
+	static void sp_select_shortcut(bool leftOrRight);
 
 	/**
 	* Handles player attacking with a spell.

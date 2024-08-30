@@ -273,12 +273,12 @@ public:
 	* Spend player's gold.
 	*
 	* Parameter:
-	*	quantity: an int for how much money to spend.
+	*	quantity: How much money to spend.
 	*
 	* Return:
 	*	a bool. True if the player has that amount to spend. False if not.
 	*/
-	bool use_gold(int quantity);
+	bool use_gold(unsigned int quantity);
 
 	/**
 	* Method to reset object's members to default value.

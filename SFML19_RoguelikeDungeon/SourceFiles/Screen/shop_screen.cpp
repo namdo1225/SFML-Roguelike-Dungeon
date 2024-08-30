@@ -18,7 +18,7 @@
 bool Shop_Screen::buy = true;
 Stock Shop_Screen::stock = ItemStock;
 
-Shop_Screen::Shop_Screen() : Screen(true, false, false) {
+Shop_Screen::Shop_Screen() : Screen(true, false, true) {
 	update = true;
 
 	setup_helper(NULL, 100.f,  80.f,  80.f, 50.f);
@@ -119,11 +119,10 @@ void Shop_Screen::draw() {
 	window.draw(map_rects["background"]);
 
 	bool selected = Game_Manager::inv_select || Game_Manager::spell_select || Game_Manager::special_select;
-	window.draw(map_rects["inv_sp_desc"]);
-	window.draw(map_txts["inv_sp_desc"]);
-
 
 	if (selected) {
+		window.draw(map_rects["inv_sp_desc"]);
+		window.draw(map_txts["inv_sp_desc"]);
 		window.draw(map_rects["inv_sp_cur_slot"]);
 		window.draw(map_txts["inv_sp_detail"]);
 		window.draw(map_rects["confirm"]);
@@ -158,10 +157,10 @@ void Shop_Screen::draw() {
 }
 
 void Shop_Screen::item_shop(bool buy) {
-	unsigned int inv_select = Game_Manager::inv_select->id;
+	unsigned int inv_select = Game_Manager::inv_select ? Game_Manager::inv_select->id : 0;
 	std::vector<Item>& stocks = buy ? Game_Manager::item_stocks : Game_Manager::items;
 
-	if (inv_select && mouse_in_button(ConfirmButton)) {
+	if (Game_Manager::inv_select && mouse_in_button(ConfirmButton)) {
 		if (buy && Game_Manager::player.use_gold(Game_Manager::inv_select->buy)) {
 			Game_Manager::add_item(inv_select);
 			Game_Manager::reorganize_inv();
@@ -175,18 +174,11 @@ void Shop_Screen::item_shop(bool buy) {
 		Game_Manager::inv_select = NULL;
 	}
 
-	for (Item item : stocks) {
+	for (Item& item : stocks) {
 		if (item.contains(x, y)) {
 			int sx = item.getPos('x'), sy = item.getPos('y');
-			// Selects another item
-			if (inv_select != 0 && &item != Game_Manager::inv_select) {
-				map_rects["inv_sp_cur_slot"].setPosition(sx - 5, sy - 5);
-				Game_Manager::inv_select = &item;
-				map_txts["inv_sp_detail"].setString(item.desc);
-				return;
-			}
 			// Selects an item
-			else if (inv_select == 0) {
+			if (!Game_Manager::inv_select) {
 				Game_Manager::inv_select = &item;
 				map_rects["inv_sp_cur_slot"].setPosition(sx - 5, sy - 5);
 				map_txts["inv_sp_detail"].setString(item.desc);
@@ -202,10 +194,10 @@ void Shop_Screen::item_shop(bool buy) {
 }
 
 void Shop_Screen::spell_shop(bool buy) {
-	unsigned int sp_select = Game_Manager::spell_select->id;
+	unsigned int sp_select = Game_Manager::spell_select ? Game_Manager::spell_select->id : 0;
 	std::vector<Spell>& stocks = buy ? Game_Manager::spell_stocks : Game_Manager::spells;
 
-	if (sp_select && mouse_in_button(ConfirmButton)) {
+	if (Game_Manager::spell_select && mouse_in_button(ConfirmButton)) {
 		if (buy && Game_Manager::player.use_gold(Game_Manager::spell_select->buy)) {
 			Game_Manager::add_spell(sp_select);
 			Game_Manager::reorganize_spell();
@@ -219,18 +211,11 @@ void Shop_Screen::spell_shop(bool buy) {
 		Game_Manager::spell_select = NULL;
 	}
 
-	for (Spell spell : stocks) {
+	for (Spell& spell : stocks) {
 		if (spell.contains(x, y)) {
 			int sx = spell.getPos('x'), sy = spell.getPos('y');
-			// Selects another spell
-			if (sp_select && &spell != Game_Manager::spell_select) {
-				map_rects["inv_sp_cur_slot"].setPosition(sx - 5, sy - 5);
-				map_txts["inv_sp_detail"].setString(spell.desc);
-				Game_Manager::spell_select = &spell;
-				return;
-			}
 			// Selects a spell
-			else if (!sp_select) {
+			if (!Game_Manager::spell_select) {
 				Game_Manager::spell_select = &spell;
 				map_txts["inv_sp_detail"].setString(spell.desc);
 				map_rects["inv_sp_cur_slot"].setPosition(sx - 5, sy - 5);
@@ -250,10 +235,10 @@ void Shop_Screen::special_shop(bool buy)
 	if (!buy)
 		return;
 
-	unsigned int sp_select = Game_Manager::special_select->id;
+	unsigned int sp_select = Game_Manager::special_select ? Game_Manager::special_select->id : 0;
 	std::vector<Special>& stocks = Game_Manager::special_stocks;
 
-	if (sp_select && mouse_in_button(ConfirmButton)) {
+	if (Game_Manager::special_select && mouse_in_button(ConfirmButton)) {
 		if (buy && Game_Manager::player.use_gold(Game_Manager::special_select->buy)) {
 			Game_Manager::special_select->use();
 			texts[8].setString(std::format("Bought {} for {}G.", Game_Manager::special_select->name, Game_Manager::special_select->buy));
@@ -261,18 +246,11 @@ void Shop_Screen::special_shop(bool buy)
 		Game_Manager::special_select = NULL;
 	}
 
-	for (Special special : stocks) {
+	for (Special& special : stocks) {
 		if (special.contains(x, y)) {
 			int sx = special.getPos('x'), sy = special.getPos('y');
-			// Selects another special
-			if (sp_select && &special != Game_Manager::special_select) {
-				map_rects["inv_sp_cur_slot"].setPosition(sx - 5, sy - 5);
-				Game_Manager::special_select = &special;
-				map_txts["inv_sp_detail"].setString(special.desc);
-				return;
-			}
 			// Selects a special
-			else if (!sp_select) {
+			if (!Game_Manager::special_select) {
 				Game_Manager::special_select = &special;
 				map_txts["inv_sp_detail"].setString(special.desc);
 				map_rects["inv_sp_cur_slot"].setPosition(sx - 5, sy - 5);

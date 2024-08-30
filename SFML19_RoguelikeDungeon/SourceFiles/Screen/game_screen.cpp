@@ -64,17 +64,33 @@ Game_Screen::Game_Screen() : Screen(false, false) {
 	ranges[2] = Full_Rectangle(600.f, 440.f, 40.f, 40.f, false, true, sf::Color::Transparent, sf::Color(255, 0, 0, 100));
 	ranges[3] = Full_Rectangle(600.f, 400.f, 40.f, 40.f, false, true, sf::Color::Transparent, sf::Color(255, 0, 0, 100));
 
-	setupHoverableText("<", 985.f, 260.f, []() {
+	setupHoverableText("<", 985.f, 260.f, [this]() {
 		Game_Manager::itm_select_shortcut('l');
+		if (Game_Manager::inv_select) {
+			textboxes[2].text.setString(Game_Manager::inv_select->abbrev);
+			textboxes[2].recenterText();
+		}
 	});
-	setupHoverableText(">", 1145.f, 260.f, []() {
+	setupHoverableText(">", 1145.f, 260.f, [this]() {
 		Game_Manager::itm_select_shortcut('r');
+		if (Game_Manager::inv_select) {
+			textboxes[2].text.setString(Game_Manager::inv_select->abbrev);
+			textboxes[2].recenterText();
+		}
 	});
-	setupHoverableText("<", 985.f, 380.f, []() {
+	setupHoverableText("<", 985.f, 380.f, [this]() {
 		Game_Manager::sp_select_shortcut('l');
+		if (Game_Manager::spell_select) {
+			textboxes[3].text.setString(Game_Manager::spell_select->abbrev);
+			textboxes[3].recenterText();
+		}
 	});
-	setupHoverableText(">", 1145.f, 380.f, []() {
+	setupHoverableText(">", 1145.f, 380.f, [this]() {
 		Game_Manager::sp_select_shortcut('r');
+		if (Game_Manager::spell_select) {
+			textboxes[3].text.setString(Game_Manager::spell_select->abbrev);
+			textboxes[3].recenterText();
+		}
 	});
 
 	// level
@@ -88,18 +104,23 @@ Game_Screen::Game_Screen() : Screen(false, false) {
 	});
 
 	// use item shortcut
-	setupTextbox(NULL, 1045.f, 250.f, 50.f, 50.f, []() {
+	setupTextbox(NULL, 1045.f, 250.f, 50.f, 50.f, [this]() {
 		// Use item
-		if (Game_Manager::inv_select->id)
+		if (Game_Manager::inv_select)
 			Game_Manager::item_use();
 		// Selects new item
-		else
-			Game_Manager::itm_select_shortcut('s');
-		});
+		else {
+			Game_Manager::itm_select_shortcut('l');
+			if (Game_Manager::inv_select) {
+				textboxes[2].text.setString(Game_Manager::inv_select->abbrev);
+				textboxes[2].recenterText();
+			}
+		}
+	});
 	// use spell shortcut
-	setupTextbox(NULL, 1045.f, 370.f, 50.f, 50.f, []() {
+	setupTextbox(NULL, 1045.f, 370.f, 50.f, 50.f, [this]() {
 		// use spell in shortcut
-		if (Game_Manager::spell_select->id) {
+		if (Game_Manager::spell_select) {
 			if (Game_Manager::spell_select->type == Functional) {
 				std::string name = Game_Manager::spell_select->name;
 				bool success = Game_Manager::spell_use();
@@ -111,9 +132,14 @@ Game_Screen::Game_Screen() : Screen(false, false) {
 				show_dialog(GameScreen, SpellAttackScreen);
 		}
 		// select new spell
-		else
-			Game_Manager::sp_select_shortcut('s');
-		});
+		else {
+			Game_Manager::sp_select_shortcut('l');
+			if (Game_Manager::spell_select) {
+				textboxes[3].text.setString(Game_Manager::spell_select->abbrev);
+				textboxes[3].recenterText();
+			}
+		}
+	});
 
 	// grid
 	setupTextbox("G", 10.f, 730.f, 50.f, 50.f, []() {
@@ -275,12 +301,6 @@ void Game_Screen::draw() {
 	Screen::draw();
 	for (unsigned int i = logs.size() < 8 ? 0 : (logs.size() - 8); i < logs.size(); i++)
 		window.draw(logs[i]);
-
-	if (Game_Manager::spell_select)
-		Game_Manager::spell_select->draw();
-
-	if (Game_Manager::inv_select)
-		Game_Manager::inv_select->draw();
 }
 
 void Game_Screen::key_event_handler() {
@@ -321,6 +341,9 @@ void Game_Screen::key_event_handler() {
 	else if (event.key.code == sf::Keyboard::R)
 		change_range();
 	else if (event.key.code == sf::Keyboard::S && Game_Manager::floor.shop_intersect(Game_Manager::player.get_rect())) {
+		Game_Manager::inv_select = NULL;
+		Game_Manager::special_select = NULL;
+		Game_Manager::spell_select = NULL;
 		switch_screen(GameScreen, ShopScreen, false, true);
 	}
 }

@@ -33,7 +33,7 @@ bool Special::setup()
 			}
 		})));
 	specials.insert(std::make_pair(id++,
-		Special(id, 500, 0, "LP", "Move up a floor. Stay in the shop until you close the window.", "Ladder Perk", []() {
+		Special(id, 500, 0, "LP", "Move up a floor.\nStay in the shop\nuntil you close the\nwindow.", "Ladder Perk", []() {
 			Game_Manager::next_level(true);
 		})));
 	specials.insert(std::make_pair(id++,
