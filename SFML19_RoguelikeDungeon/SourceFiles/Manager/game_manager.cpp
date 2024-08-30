@@ -1115,7 +1115,7 @@ void Game_Manager::delete_selected_itm() {
     for (int i = items.size() - 1; i >= 0; i--)
         if (&items[i] == inv_select) {
             items.erase(items.begin() + i);
-            return;
+            break;
         }
 
     inv_select = NULL;
@@ -1126,7 +1126,7 @@ void Game_Manager::deleted_selected_sp() {
     for (int i = spells.size() - 1; i >= 0; i--)
         if (&spells[i] == spell_select) {
             spells.erase(spells.begin() + i);
-            return;
+            break;
         }
 
     spell_select = NULL;
