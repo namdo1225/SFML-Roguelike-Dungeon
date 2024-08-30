@@ -21,13 +21,15 @@ public:
 
 	const static unsigned int MAX_INV_SPELL_SLOTS = 32;
 	const static unsigned int NUM_NON_CUR_STATS = 6;
-	const static char* FULL_STATS[];
-	const static char* ABR_STATS[];
 
 	static sf::RenderWindow window;
 	static sf::View viewUI;
 	static sf::View viewWorld;
 	static sf::View viewLog;
+
+	/* min: 0, max(inclusive) : 3
+	*/
+	static unsigned int worldZoomLevel;
 
 	static sf::Event event;
 	static sf::Vector2i mouse_pos;

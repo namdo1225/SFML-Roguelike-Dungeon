@@ -9,17 +9,15 @@
 #define SPECIAL_H
 
 #include "tool.h"
-#include <memory>
+#include <functional>
+#include <map>
 
 class Special : public Tool {
-public:
-	const static unsigned int SPECIALS = 6;
+private:
+	std::function<void()> useSpecial = [](){};
 
-	/**
-	* A virtual method to be implemented by child class. This method is
-	* what a special would do.
-	*/
-	virtual void use() = 0;
+public:
+	static std::map<unsigned int, Special> specials;
 
 	/**
 	* Constructor for Special.
@@ -33,58 +31,11 @@ public:
 	*	name: a const char* for item's name.
 	*/
 	Special(unsigned int id, unsigned int buy, unsigned int sell,
-		const char abbre[3], const char* desc, const char* name);
+		const char abbre[3], const char* desc, const char* name, std::function<void()> useSpecial);
 
-	static std::shared_ptr<Special> create_special(unsigned int id);
-};
+	static bool setup();
 
-class PH_Special : public Special {
-public:
-	PH_Special();
-
-	virtual void use();
-};
-
-class Storage_Perk : public Special {
-public:
-	Storage_Perk();
-
-	virtual void use();
-};
-
-class Floor_Perk : public Special {
-public:
-	Floor_Perk();
-
-	virtual void use();
-};
-
-class Strength_Perk : public Special {
-public:
-	Strength_Perk();
-
-	virtual void use();
-};
-
-class Magic_Perk : public Special {
-public:
-	Magic_Perk();
-
-	virtual void use();
-};
-
-class Defense_Perk : public Special {
-public:
-	Defense_Perk();
-
-	virtual void use();
-};
-
-class Resistance_Perk : public Special {
-public:
-	Resistance_Perk();
-
-	virtual void use();
+	void use();
 };
 
 #endif

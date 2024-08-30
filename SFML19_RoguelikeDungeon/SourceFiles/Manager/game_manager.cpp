@@ -24,7 +24,6 @@
 #include <iomanip>
 #include <iosfwd>
 #include <malloc.h>
-#include <memory>
 #include <nlohmann/json.hpp>
 #include <ostream>
 #include <player.h>
@@ -38,10 +37,6 @@
 
 using json = nlohmann::json;
 
-std::shared_ptr<Item> Game_Manager::placeholder_item = std::make_shared<Place_Holder>();
-std::shared_ptr<Spell> Game_Manager::placeholder_spell = std::make_shared<PH_Spell>();
-std::shared_ptr<Special> Game_Manager::placeholder_special = std::make_shared<PH_Special>();
-
 unsigned int Game_Manager::enemy_respawn = 5;
 int Game_Manager::off_x = 0;
 int Game_Manager::off_y = 0;
@@ -53,45 +48,32 @@ Player Game_Manager::player;
 Floor Game_Manager::floor = NULL;
 std::vector<Enemy> Game_Manager::enemies;
 
-std::vector<std::shared_ptr<Item>> Game_Manager::items;
-std::vector<std::shared_ptr<Spell>> Game_Manager::spells;
+std::vector<Item> Game_Manager::items;
+std::vector<Spell> Game_Manager::spells;
 
-std::shared_ptr<Item> Game_Manager::pl_weapon = std::make_shared<Place_Holder>();
-std::shared_ptr<Item> Game_Manager::pl_armor = std::make_shared<Place_Holder>();
+Item* Game_Manager::pl_weapon = NULL;
+Item* Game_Manager::pl_armor = NULL;
 
-std::shared_ptr<Item> Game_Manager::inv_draw_desc = std::make_shared<Place_Holder>();
-std::shared_ptr<Item> Game_Manager::inv_select = std::make_shared<Place_Holder>();
-
-std::shared_ptr<Spell> Game_Manager::spell_select = std::make_shared<PH_Spell>();
-std::shared_ptr<Spell> Game_Manager::spell_desc = std::make_shared<PH_Spell>();
-
-std::shared_ptr<Special> Game_Manager::special_select = std::make_shared<PH_Special>();
-std::shared_ptr<Special> Game_Manager::special_desc = std::make_shared<PH_Special>();
+Item* Game_Manager::inv_select = NULL;
+Spell* Game_Manager::spell_select = NULL;
+Special* Game_Manager::special_select = NULL;
 
 bool Game_Manager::floor_copied = false;
 
-std::vector<std::shared_ptr<Item>> Game_Manager::item_stocks;
-std::vector<std::shared_ptr<Spell>> Game_Manager::spell_stocks;
-std::vector<std::shared_ptr<Special>> Game_Manager::special_stocks;
+std::vector<Item> Game_Manager::item_stocks;
+std::vector<Spell> Game_Manager::spell_stocks;
+std::vector<Special> Game_Manager::special_stocks;
 
 void Game_Manager::setup() {
-    for (unsigned int i{ 1 }; i < Item::ITEMS + 1; i++) {
-        unsigned int j = i - 1;
-        item_stocks.push_back(Item::create_itm(i));
-        item_stocks[j]->set_pos(200 + ((j % 6) * 80), 240 + ((j / 6) * 80));
-    }
-
-    for (unsigned int i{ 1 }; i < Spell::SPELLS + 1; i++) {
-        unsigned int j = i - 1;
-        spell_stocks.push_back(Spell::create_spell(i));
-        spell_stocks[j]->set_pos(200 + ((j % 6) * 80), 240 + ((j / 6) * 80));
-    }
-
-    for (unsigned int i{ 1 }; i < Special::SPECIALS + 1; i++) {
-        unsigned int j = i - 1;
-        special_stocks.push_back(Special::create_special(i));
-        special_stocks[j]->set_pos(200 + ((j % 6) * 80), 240 + ((j / 6) * 80));
-    }
+    unsigned int i = 0;
+    for (auto it = Item::items.begin(); it != Item::items.end(); it++, i++)
+        it->second.setPos(200 + ((i % 6) * 80), 240 + ((i / 6.0f) * 80));
+    i = 0;
+    for (auto it = Spell::spells.begin(); it != Spell::spells.end(); it++, i++)
+        it->second.setPos(200 + ((i % 6) * 80), 240 + ((i / 6.0f) * 80));
+    i = 0;
+    for (auto it = Special::specials.begin(); it != Special::specials.end(); it++, i++)
+        it->second.setPos(200 + ((i % 6) * 80), 240 + ((i / 6.0f) * 80));
 }
 
 void Game_Manager::reorganize_inv() {
@@ -104,49 +86,47 @@ void Game_Manager::reorganize_inv() {
         int x = 200 + ((i % 6) * 80), y = 240 + ((i / 6) * 80);
 
         for (; z < size; z++) {
-            if (items[z] == pl_weapon || items[z] == pl_armor)
+            if (&items[z] == pl_weapon || &items[z] == pl_armor)
                 continue;
-            if (items[z]->get_pos('x') == x && items[z]->get_pos('y') == y) {
+            if (items[z].getPos('x') == x && items[z].getPos('y') == y) {
                 z = -1;
                 break;
             }
         }
 
         if (z != -1)
-            items[--z]->set_pos(x, y);
+            items[--z].setPos(x, y);
     }
 }
 
 void Game_Manager::itm_select_shortcut(char place) {
     unsigned int size = items.size();
-    if (size == 2)
+    if (size <= 2)
         return;
 
     switch (place) {
     case 's':
         for (unsigned int i{ 0 }; i < size; i++)
-            if (items[i]->get_id() && items[i]->get_type() == 0) {
-                inv_select = items[i];
+            if (items[i].type != Weapon && items[i].type != Armor) {
+                inv_select = &items[i];
                 cur_it_shortcut = i;
-                break;
+                return;
             }
-        break;
+        return;
     case 'r':
-    case 'l': {
+    case 'l':
         int stop{ cur_it_shortcut };
 
         while (true) {
             cur_it_shortcut = (cur_it_shortcut + (place == 'l' ? -1 : 1)) % size;
-
-            if (items[cur_it_shortcut]->get_id() && items[cur_it_shortcut]->get_type() == 0) {
-                inv_select = items[cur_it_shortcut];
+            if (items[cur_it_shortcut].type != Weapon && items[cur_it_shortcut].type != Armor) {
+                inv_select = &items[cur_it_shortcut];
                 return;
             }
             else if (stop == cur_it_shortcut)
                 return;
         }
         break;
-    }
     }
 }
 
@@ -181,27 +161,14 @@ void Game_Manager::sp_select_shortcut(char place) {
 
     switch (place) {
     case 's':
-        for (unsigned int i{ 0 }; i < size; i++)
-            if (spells[i]->get_id()) {
-                spell_select = spells[i];
-                cur_sp_shortcut = i;
-                break;
-            }
-        break;
+        spell_select = &spells[0];
+        cur_sp_shortcut = 0;
+        return;
     case 'l':
-    case 'r': {
-        int stop{ cur_sp_shortcut };
-        while (true) {
-            cur_sp_shortcut = (cur_sp_shortcut + (place == 'l' ? -1 : 1)) % size;
-            if (spells[cur_sp_shortcut]->get_id()) {
-                spell_select = spells[cur_sp_shortcut];
-                return;
-            }
-            else if (stop == cur_sp_shortcut)
-                return;
-        }
-        break;
-    }
+    case 'r':
+        cur_sp_shortcut = (cur_sp_shortcut + (place == 'l' ? -1 : 1)) % size;
+        spell_select = &spells[cur_sp_shortcut];
+        return;
     }
 }
 
@@ -227,8 +194,8 @@ void Game_Manager::ene_atk(unsigned int v) {
         return;
 
     unsigned int enemy_type = enemies[v].stat.type;
-    int quantity = pl_armor->get_quantity();
-    Stat armor_stat = pl_armor->get_stat();
+    int quantity = pl_armor->quantity;
+    Stat armor_stat = pl_armor->stat;
     int armor = (enemy_type && armor_stat == Def) || (!enemy_type && armor_stat == Mgk) ? quantity : 0;
     int damage = player.attack_pl(enemy_type, enemies[v].stat.hp - armor);
 
@@ -372,10 +339,10 @@ void Game_Manager::ene_rand_move(unsigned int v) {
     }
 }
 
-void Game_Manager::pl_sp_atk(unsigned int en_i, std::array<int, 4> sp_inf) {
-    player.use_mp(sp_inf[3]);
+void Game_Manager::pl_sp_atk(unsigned int en_i, std::array<int, 3> sp_inf) {
+    player.use_mp(sp_inf[2]);
     enemies[en_i].stat.hp -= enemies[en_i].stat.res >= sp_inf[0] ? 1 : sp_inf[0] - enemies[en_i].stat.res;
-    spell_desc = spell_select = placeholder_spell;
+    spell_select = NULL;
     ene_action();
     log_add(std::format("Your spell did {} to {}.", sp_inf[0], enemies[en_i].constant->name).c_str());
 }
@@ -444,10 +411,9 @@ void Game_Manager::handle_move_pick_itm() {
     for (int i{ static_cast<int>(floor.collectibles.size()) - 1 }; i > -1; i--) {
         if (floor.collectibles[i].intersects(rect)) {
             Audio_Manager::play_sfx(0);
-            std::shared_ptr item = Item::create_itm(floor.collectibles[i].get_id());
-            add_item(item);
+            add_item(floor.collectibles[i].get_id());
             floor.collectibles.erase(floor.collectibles.begin() + i);
-            log_add(std::format("You picked up: {}.", item->get_name()).c_str());
+            log_add(std::format("You picked up: {}.", items[items.size() - 1].name).c_str());
             if (items.size() == player.get_max_itm())
                 log_add("You reached your items limit.");
             return;
@@ -534,7 +500,7 @@ void Game_Manager::handle_move_pick_interact() {
                 log_add("You will lose 2 MP for 5 turns.");
             }
             else if (effect >= 70 && effect < 75) {
-                add_item(Item::create_itm(10));
+                add_item(2);
                 log_add("You found a Rejuvenate Potion.");
             }
             else if (effect >= 75 && effect < 80) {
@@ -586,7 +552,7 @@ void Game_Manager::pl_atk() {
             return;
 
     int stat{ en->stat.type ? en->stat.def : en->stat.res };
-    const int amount = player.get_stat(pl_weapon->get_stat()) + pl_weapon->get_quantity();
+    const int amount = player.get_stat(pl_weapon->stat) + pl_weapon->quantity;
     int quantity{ stat >= amount ? 1 : amount - stat };
     en->stat.hp -= quantity;
 
@@ -681,16 +647,16 @@ void Game_Manager::ene_add() {
 }
 
 void Game_Manager::center_floor() {
-    viewWorld.setCenter(player.getPosition().x + 200, player.getPosition().y);
+    viewWorld.setCenter(player.getPosition().x, player.getPosition().y);
 }
 
-void Game_Manager::add_item(std::shared_ptr<Item> item) {
+void Game_Manager::add_item(unsigned int id) {
     if (items.size() == player.get_max_itm()) {
         log_add("You reached your items limit.");
         return;
     }
 
-    items.push_back(item);
+    items.push_back(Item(id));
 
     int x{ 0 }, y{ 0 };
 
@@ -699,13 +665,13 @@ void Game_Manager::add_item(std::shared_ptr<Item> item) {
         x = 200 + ((i % 6) * 80), y = 240 + ((i / 6) * 80);
 
         for (unsigned int j{ 0 }; j < items.size() - 1; j++)
-            if (items[j]->get_pos('x') == x && items[j]->get_pos('y') == y) {
+            if (items[j].getPos('x') == x && items[j].getPos('y') == y) {
                 spot_taken = true;
                 break;
             }
 
         if (!spot_taken)
-            item->set_pos(x, y);
+            items[items.size() - 1].setPos(x, y);
     }
     reorganize_inv();
 }
@@ -713,6 +679,7 @@ void Game_Manager::add_item(std::shared_ptr<Item> item) {
 void Game_Manager::reset_game(bool cheat) {
     viewUI.reset(sf::FloatRect(0, 0, 1200, 800));
     viewWorld.reset(sf::FloatRect(0, 0, 1200, 800));
+    worldZoomLevel = 0;
 
     player.reset(cheat);
 
@@ -724,72 +691,71 @@ void Game_Manager::reset_game(bool cheat) {
     floor.make_collectible(player.get_floor());
     floor.make_gold(player.get_floor());
     floor.make_interactible(player.get_floor());
-    center_floor();
 
     items.clear();
-    add_item(Item::create_itm(6));
-    add_item(Item::create_itm(4));
-    add_item(Item::create_itm(1));
-    add_item(Item::create_itm(2));
+    add_item(5);
+    add_item(8);
+    add_item(0);
+    add_item(1);
 
     spells.clear();
-    add_spell(Spell::create_spell(3));
-    add_spell(Spell::create_spell(1));
+    add_spell(0);
 
-    equip_weapon(items[0]);
-    equip_armor(items[1]);
+    equip_weapon(&items[0]);
+    equip_armor(&items[1]);
     reorganize_inv();
     itm_select_shortcut('n');
 
+    center_floor();
     logs.clear();
 }
 
-void Game_Manager::add_spell(std::shared_ptr<Spell> spell) {
+void Game_Manager::add_spell(unsigned int id) {
     if (spells.size() == MAX_INV_SPELL_SLOTS)
         return;
 
-    spells.push_back(spell);
+    spells.push_back(Spell(id));
 
     int x{ 0 }, y{ 0 };
 
-    for (unsigned int i{ 0 }; i < 10; i++) {
+    for (unsigned int i{ 0 }; i < MAX_INV_SPELL_SLOTS; i++) {
         bool spot_taken{ false };
         x = 200 + ((i % 6) * 80), y = 240 + ((i / 6) * 80);
 
         for (unsigned int j{ 0 }; j < spells.size() - 1; j++) {
-            if (spells[j]->get_pos('x') == x && spells[j]->get_pos('y') == y) {
+            if (spells[j].getPos('x') == x && spells[j].getPos('y') == y) {
                 spot_taken = true;
                 break;
             }
         }
 
         if (!spot_taken) {
-            spell->set_pos(x, y);
+            spells[spells.size() - 1].setPos(x, y);
             break;
         }
     }
 }
 
-void Game_Manager::equip_weapon(std::shared_ptr<Item> weapon) {
-    if (weapon->get_type() != 1)
+void Game_Manager::equip_weapon(Item* weapon) {
+    if (weapon->type != Weapon)
         return;
-
-    if (pl_weapon->get_type() != 3)
-        pl_weapon->set_pos(weapon->get_pos('x'), weapon->get_pos('y'));
+    
+    if (pl_weapon != NULL)
+        pl_weapon->setPos(weapon->getPos('x'), weapon->getPos('y'));
 
     pl_weapon = weapon;
-    pl_weapon->set_pos(200, 140);
+    pl_weapon->setPos(200, 140);
 }
 
-void Game_Manager::equip_armor(std::shared_ptr<Item> armor) {
-    if (armor->get_type() != 2)
+void Game_Manager::equip_armor(Item* armor) {
+    if (armor->type != Armor)
         return;
 
-    if (pl_armor->get_type() != 3)
-        pl_armor->set_pos(armor->get_pos('x'), armor->get_pos('y'));
+    if (pl_armor != NULL)
+        pl_armor->setPos(armor->getPos('x'), armor->getPos('y'));
 
     pl_armor = armor;
-    pl_armor->set_pos(600, 140);
+    pl_armor->setPos(600, 140);
 }
 
 bool Game_Manager::game_over() {
@@ -875,15 +841,24 @@ void Game_Manager::save() {
         };
 
         if (!items.empty())
-            for (std::shared_ptr<Item> itm : items)
-                j["inventory"].push_back(itm->get_id());
+            for (Item itm : items)
+                j["inventory"].push_back(itm.id);
 
-        j["weaponSlot"] = std::find(items.begin(), items.end(), pl_weapon) - items.begin();
-        j["armorSlot"] = std::find(items.begin(), items.end(), pl_armor) - items.begin();
+
+        for (int i = items.size() - 1; i >= 0; i--)
+            if (&items[i] == pl_weapon) {
+                j["weaponSlot"] = i;
+                break;
+            }
+        for (int i = items.size() - 1; i >= 0; i--)
+            if (&items[i] == pl_armor) {
+                j["armorSlot"] = i;
+                break;
+            }
 
         if (!spells.empty())
-            for (std::shared_ptr<Spell> sp : spells)
-                j["spell"].push_back(sp->get_id());
+            for (Spell sp : spells)
+                j["spell"].push_back(sp.id);
 
         for (unsigned int i{ 0 }; i < floor.rooms.size(); i++) {
             j["floor"].push_back(json::object());
@@ -1052,14 +1027,14 @@ bool Game_Manager::read_save() {
 
         items.clear();
         for (auto& element : j.at("inventory")) {
-            add_item(Item::create_itm(element));
+            add_item(element);
         }
-        equip_weapon(items[j.at("weaponSlot")]);
-        equip_armor(items[j.at("armorSlot")]);
+        equip_weapon(&items[j.at("weaponSlot")]);
+        equip_armor(&items[j.at("armorSlot")]);
 
         spells.clear();
         for (auto& element : j.at("spell")) {
-            add_spell(Spell::create_spell(element));
+            add_spell(element);
         }
 
         floor = Floor(true);
@@ -1124,57 +1099,42 @@ void Game_Manager::reorganize_spell() {
         int x = 200 + ((i % 6) * 80), y = 240 + ((i / 6) * 80);
 
         for (; z < size; z++) {
-            if (spells[z]->get_pos('x') == x && spells[z]->get_pos('y') == y) {
+            if (spells[z].getPos('x') == x && spells[z].getPos('y') == y) {
                 z = -1;
                 break;
             }
         }
 
         if (z != -1) {
-            spells[--z]->set_pos(x, y);
+            spells[--z].setPos(x, y);
         }
     }
 }
 
-void Game_Manager::delete_selected_itm() {
-    std::vector<std::shared_ptr<Item>>::iterator itr =
-        std::find(items.begin(), items.end(), inv_select);
-    items.erase(itr);
-    inv_select = inv_draw_desc = placeholder_item;
+void Game_Manager::delete_selected_itm() {    
+    for (int i = items.size() - 1; i >= 0; i--)
+        if (&items[i] == inv_select) {
+            items.erase(items.begin() + i);
+            return;
+        }
+
+    inv_select = NULL;
     reorganize_inv();
 }
 
 void Game_Manager::deleted_selected_sp() {
-    std::vector<std::shared_ptr<Spell>>::iterator itr = std::find(spells.begin(), spells.end(), spell_select);
-    spells.erase(itr);
-    sp_reorganize();
-    spell_select = spell_desc = placeholder_spell;
-}
-
-void Game_Manager::sp_reorganize() {
-    int x{ 0 }, y{ 0 }, z{ 0 };
-
-    for (unsigned int i{ 0 }; i < 10; i++) {
-        bool spot_taken{ false };
-        x = 200 + ((i % 6) * 80), y = 240 + ((i / 6) * 80);
-
-        for (unsigned int j{ 0 }; j < spells.size(); j++) {
-            if (spells[j]->get_pos('x') == x && spells[j]->get_pos('y') == y) {
-                spot_taken = true;
-                break;
-            }
+    for (int i = spells.size() - 1; i >= 0; i--)
+        if (&spells[i] == spell_select) {
+            spells.erase(spells.begin() + i);
+            return;
         }
 
-        if (!spot_taken) {
-            spells[z]->set_pos(x, y);
-            break;
-        }
-        z++;
-    }
+    spell_select = NULL;
+    reorganize_spell();
 }
 
 void Game_Manager::item_use() {
-    if (!inv_select->get_hp_mp_other())
+    if (inv_select->type != Weapon && inv_select->type != Armor)
         inv_select->use();
 
     delete_selected_itm();
@@ -1182,9 +1142,9 @@ void Game_Manager::item_use() {
 }
 
 bool Game_Manager::spell_use() {
-    if (spell_select->get_use() != 4) {
+    if (spell_select->type != Offensive) {
         bool success = spell_select->use();
-        spell_select = spell_desc = placeholder_spell;
+        spell_select = NULL;
         handle_turn();
         return success;
     }

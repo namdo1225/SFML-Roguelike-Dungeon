@@ -6,6 +6,7 @@
 */
 
 #include "effect.h"
+#include <stat.h>
 
 Effect::Effect(Stat change, int difference, unsigned int turn) :
 	stat_changed(change), stat_difference(difference), change_turns(turn),

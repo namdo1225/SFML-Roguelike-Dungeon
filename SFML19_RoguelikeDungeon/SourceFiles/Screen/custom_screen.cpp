@@ -92,6 +92,8 @@ Full_Textbox Custom_Screen::create = Full_Textbox("Finish", 800.f, 700.f, 100.f,
 			).c_str());
 		}
 
+		for (Full_TextInput& input : enemyInputs)
+			input.text.setString("");
 		break;
 	case ItemMod:
 		break;
@@ -99,6 +101,7 @@ Full_Textbox Custom_Screen::create = Full_Textbox("Finish", 800.f, 700.f, 100.f,
 		break;
 	}
 	showMessage(CustomScreen, "Successfully created entity.\nReset game to see changes.", SuccessMsg);
+	addContent = updateContent = false;
 });
 Full_Textbox Custom_Screen::delContent = Full_Textbox("Delete", 1000.f, 700.f, 100.f, 50.f, []() {
 	std::string delTable = "enemies";
@@ -112,6 +115,7 @@ Full_Textbox Custom_Screen::delContent = Full_Textbox("Delete", 1000.f, 700.f, 1
 	}
 	Database_Manager::executeNonSelectStatement(std::format("DELETE FROM {} WHERE id = {}", delTable, updateID).c_str());
 	showMessage(CustomScreen, "Successfully deleted entity.\nReset game to see changes.", SuccessMsg);
+	addContent = updateContent = false;
 });
 
 unsigned int Custom_Screen::idOffset = 0;
@@ -326,10 +330,6 @@ void Custom_Screen::change_theme() {
 		boxes[i].text.flip_theme();
 		boxes[i].rect.flip_theme();
 	}
-}
-
-void Custom_Screen::executeSQL()
-{
 }
 
 void Custom_Screen::handleTextEvent() {

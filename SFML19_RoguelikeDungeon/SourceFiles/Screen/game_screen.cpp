@@ -51,7 +51,7 @@ Game_Screen::Game_Screen() : Screen(false, false) {
 	fog.setAreaColor(sf::Color::Black);
 	light.setRange(300);
 	light.setFade(true);
-	light.setPosition(sf::Vector2f(420.f, 420.f));
+	light.setPosition(sf::Vector2f(620.f, 420.f));
 
 	for (unsigned int i = 0; i < 50; i++) {
 		grids[i] = i < 20 ? Full_Rectangle(i * 40.f, -10.f, 0.f, 900.f, false, true, sf::Color::Black, sf::Color::Black)
@@ -59,22 +59,21 @@ Game_Screen::Game_Screen() : Screen(false, false) {
 		grids[i].setOutlineThickness(1.f);
 	}
 	// top, right, bottom, left
-	unsigned int weaponRange = Game_Manager::pl_weapon->get_range();
-	ranges[0] = Full_Rectangle(400.f, 400.f - (40.f * weaponRange), 40.f, 40.f * weaponRange, false, true, sf::Color::Transparent, sf::Color(255, 0, 0, 100));
-	ranges[1] = Full_Rectangle(440.f, 400.f, 40.f * weaponRange, 40.f, false, true, sf::Color::Transparent, sf::Color(255, 0, 0, 100));
-	ranges[2] = Full_Rectangle(400.f, 440.f, 40.f, 40.f * weaponRange, false, true, sf::Color::Transparent, sf::Color(255, 0, 0, 100));
-	ranges[3] = Full_Rectangle(400.f - (40.f * weaponRange), 400.f, 40.f * weaponRange, 40.f, false, true, sf::Color::Transparent, sf::Color(255, 0, 0, 100));
+	ranges[0] = Full_Rectangle(600.f, 400.f, 40.f, 40.f, false, true, sf::Color::Transparent, sf::Color(255, 0, 0, 100));
+	ranges[1] = Full_Rectangle(640.f, 400.f, 40.f, 40.f, false, true, sf::Color::Transparent, sf::Color(255, 0, 0, 100));
+	ranges[2] = Full_Rectangle(600.f, 440.f, 40.f, 40.f, false, true, sf::Color::Transparent, sf::Color(255, 0, 0, 100));
+	ranges[3] = Full_Rectangle(600.f, 400.f, 40.f, 40.f, false, true, sf::Color::Transparent, sf::Color(255, 0, 0, 100));
 
-	setupHoverableText("<", 765.f, 335.f, []() {
+	setupHoverableText("<", 985.f, 260.f, []() {
 		Game_Manager::itm_select_shortcut('l');
 	});
-	setupHoverableText(">", 925.f, 335.f, []() {
+	setupHoverableText(">", 1145.f, 260.f, []() {
 		Game_Manager::itm_select_shortcut('r');
 	});
-	setupHoverableText("<", 985.f, 335.f, []() {
+	setupHoverableText("<", 985.f, 380.f, []() {
 		Game_Manager::sp_select_shortcut('l');
 	});
-	setupHoverableText(">", 1145.f, 335.f, []() {
+	setupHoverableText(">", 1145.f, 380.f, []() {
 		Game_Manager::sp_select_shortcut('r');
 	});
 
@@ -89,23 +88,23 @@ Game_Screen::Game_Screen() : Screen(false, false) {
 	});
 
 	// use item shortcut
-	setupTextbox(NULL, 825.f, 320.f, 50.f, 50.f, []() {
+	setupTextbox(NULL, 1045.f, 250.f, 50.f, 50.f, []() {
 		// Use item
-		if (Game_Manager::inv_select->get_id())
+		if (Game_Manager::inv_select->id)
 			Game_Manager::item_use();
 		// Selects new item
 		else
 			Game_Manager::itm_select_shortcut('s');
 		});
 	// use spell shortcut
-	setupTextbox(NULL, 1045.f, 320.f, 50.f, 50.f, []() {
+	setupTextbox(NULL, 1045.f, 370.f, 50.f, 50.f, []() {
 		// use spell in shortcut
-		if (Game_Manager::spell_select->get_id()) {
-			if (Game_Manager::spell_select->get_use() != 4) {
-				const char* spell_name = Game_Manager::spell_select->get_name();
+		if (Game_Manager::spell_select->id) {
+			if (Game_Manager::spell_select->type == Functional) {
+				std::string name = Game_Manager::spell_select->name;
 				bool success = Game_Manager::spell_use();
-				Game_Manager::log_add(success ? std::format("You used {}.", spell_name).c_str() :
-					std::format("You failed to cast {}.", spell_name).c_str()
+				Game_Manager::log_add(success ? std::format("You used {}.", name).c_str() :
+					std::format("You failed to cast {}.", name).c_str()
 				);
 			}
 			else
@@ -133,70 +132,90 @@ Game_Screen::Game_Screen() : Screen(false, false) {
 	setupTextbox("S", 220.f, 730.f, 50.f, 50.f, []() {
 		scan = !scan;
 	});
-
+	// zoom options
+	setupTextbox("+", 290.f, 730.f, 50.f, 50.f, []() {
+		if (worldZoomLevel < 3) {
+			worldZoomLevel++;
+			viewWorld.zoom(0.5f);
+			Game_Manager::center_floor();
+		}
+	});
+	setupTextbox("-", 360.f, 730.f, 50.f, 50.f, []() {
+		if (worldZoomLevel > 0) {
+			worldZoomLevel--;
+			viewWorld.zoom(2.f);
+			Game_Manager::center_floor();
+		}
+	});
 	// menu
-	setupTextbox("...", 1145.f, 745.f, 50.f, 50.f, []() {
+	setupTextbox("...", 430.f, 730.f, 50.f, 50.f, []() {
 		show_dialog(Screen::display, MenuScreen);
 	}, 26.0f);
+
 	// log button
 	setupTextbox("...", 1150.f, 500.f, 25.f, 25.f, []() {
 		log_view(true);
 		show_dialog(Screen::display, LogScreen);
 	}, 5.0f);
+	setupTextbox("O", 1150.f, 525.f, 25.f, 25.f, [this]() {
+		sf::Color fill = rects[0].getFillColor();
+		sf::Color outline = rects[0].getOutlineColor();
 
-	// items
-	setup_helper(NULL, 750.f, 250.f, 200.f, 200.f, false, true);
-	// spells
-	setup_helper(NULL, 970.f, 250.f, 200.f, 200.f, false, true);
+
+		rects[0].setFillColor(sf::Color(fill.r, fill.g, fill.b, fill.a ? 0 : 255));
+		rects[0].setOutlineColor(sf::Color(outline.r, outline.g, outline.b, outline.a ? 0 : 255));
+	}, 5.0f);
+
 	// history
 	setup_helper(NULL, 750.f, 500.f, 425.f, 275.f, false, true);
 
-	setup_helper("Items:", 740.f, 210.f, NULL, 3.f, false, true);
-	setup_helper("Spells:", 950.f, 210.f, NULL, 3.f, false, true);
-	setup_helper("History:", 740.f, 455.f, NULL, 3.f, false, true);
-	setup_helper("Floor:", 10.f, 10.f, NULL, 3.f, false, true);
-	setup_helper("Gold:", 10.f, 50.f, NULL, 3.f, false, true);
+	setup_helper("Items:", 950.f, 210.f, NULL, 3.f, false, true);
+	setup_helper("Spells:", 950.f, 330.f, NULL, 3.f, false, true);
+	setup_helper("History:", 950.f, 455.f, NULL, 3.f, false, true);
+	setup_helper("Floor:", 10.f, 50.f, NULL, 3.f, false, true);
+	setup_helper("Gold:", 10.f, 90.f, NULL, 3.f, false, true);
 
-	setup_helper(ABR_STATS[2], 750.f, 80.f, 18, 3.f, false, true);
-	setup_helper(ABR_STATS[3], 750.f, 110.f, 18, 3.f, false, true);
-	setup_helper(ABR_STATS[4], 750.f, 140.f, 18, 3.f, false, true);
-	setup_helper(ABR_STATS[5], 750.f, 170.f, 18, 3.f, false, true);
+	for (unsigned int i = 0; i < 4; i++)
+		setup_helper(StatConst::ABR_STATS[i + 2], 10.f, 130 + (30 * i), 18, 3.f, false, true);
 
 	// texts that can be changed:
 	// floor num
-	setup_helper("1", 100.f, 10.f, NULL, 3.f, false, true);
+	setup_helper("1", 100.f, 50.f, NULL, 3.f, false, true);
 	// gold num
-	setup_helper("0", 100.f, 50.f, NULL, 3.f, false, true);
+	setup_helper("0", 100.f, 90.f, NULL, 3.f, false, true);
 	// name
-	setup_helper("Player", 740.f, 10.f, 16.f, 3.f, false, true);
+	setup_helper("Player", 10.f, 10.f, NULL, 3.f, false, true);
 	// log limit
-	setup_helper("0 / 50", 850.f, 455.f, NULL, 3.f, false, true);
+	setup_helper("0 / 50", 1060.f, 455.f, NULL, 3.f, false, true);
 	// other stats
-	setup_helper("0", 820.f,  75.f, 18.f, 3.f, false, true);
-	setup_helper("0", 820.f, 105.f, 18.f, 3.f, false, true);
-	setup_helper("0", 820.f, 135.f, 18.f, 3.f, false, true);
-	setup_helper("0", 820.f, 165.f, 18.f, 3.f, false, true);
+	for (unsigned int i = 0; i < 4; i++)
+		setup_helper("0", 90.f, 130 + (30 * i), 18.f, 3.f, false, true);
 
 	for (unsigned int i = 0; i < textboxes.size(); i++) {
 		textboxes[i].text.setThemeAndHover(true, true);
 		textboxes[i].rect.setThemeAndHover(true, true);
 	}
+
+	for (unsigned int i = 0; i < hoverableTexts.size(); i++) {
+		hoverableTexts[i].setThemeAndHover(true, true);
+	}
 }
 
 bool Game_Screen::click_event_handler() {
-	if (x >= 400 && x <= 440 && y >= 360 - ((Game_Manager::pl_weapon->get_range() - 1) * 40) && y <= 400) {
+	unsigned int rgn = Game_Manager::pl_weapon->range;
+	if (x >= 600 && x <= 640 && y >= 360 - ((rgn - 1) * 40) && y <= 400) {
 		Game_Manager::handle_player_action('u', 1);
 		return true;
 	}
-	else if (x >= 440 && x <= 480 + ((Game_Manager::pl_weapon->get_range() - 1) * 40) && y >= 400 && y <= 440) {
+	else if (x >= 640 && x <= 680 + ((rgn - 1) * 40) && y >= 400 && y <= 440) {
 		Game_Manager::handle_player_action('r', 1);
 		return true;
 	}
-	else if (x >= 400 && x <= 440 && y >= 440 && y <= 480 + ((Game_Manager::pl_weapon->get_range() - 1) * 40)) {
+	else if (x >= 600 && x <= 640 && y >= 440 && y <= 480 + ((rgn - 1) * 40)) {
 		Game_Manager::handle_player_action('d', 1);
 		return true;
 	}
-	else if (x >= 360 - ((Game_Manager::pl_weapon->get_range() - 1) * 40) && x <= 400 && y >= 400 && y <= 440) {
+	else if (x >= 560 - ((rgn - 1) * 40) && x <= 400 && y >= 400 && y <= 440) {
 		return true;
 		Game_Manager::handle_player_action('l', 1);
 	}
@@ -257,11 +276,11 @@ void Game_Screen::draw() {
 	for (unsigned int i = logs.size() < 8 ? 0 : (logs.size() - 8); i < logs.size(); i++)
 		window.draw(logs[i]);
 
-	if (Game_Manager::spell_select->get_id())
-		Game_Manager::spell_select->draw('s');
+	if (Game_Manager::spell_select)
+		Game_Manager::spell_select->draw();
 
-	if (Game_Manager::inv_select->get_id())
-		Game_Manager::inv_select->draw('s');
+	if (Game_Manager::inv_select)
+		Game_Manager::inv_select->draw();
 }
 
 void Game_Screen::key_event_handler() {
@@ -312,7 +331,7 @@ void Game_Screen::update_draw() {
 		return;
 	}
 
-	textboxes[0].text.setString(std::format("LVL: {}\nEXP: {} / {}",
+	textboxes[0].text.setString(std::format("LVL: {}\nCUR: {}\nNEED: {}",
 		Game_Manager::player.get_lvl(), Game_Manager::player.get_cur_exp(), Game_Manager::player.get_lvl_up()));
 	textboxes[0].recenterText();
 
@@ -332,9 +351,6 @@ void Game_Screen::update_draw() {
 	texts[14].setString(std::to_string(Game_Manager::player.get_stat(Def)));
 	texts[15].setString(std::to_string(Game_Manager::player.get_stat(Mgk)));
 	texts[16].setString(std::to_string(Game_Manager::player.get_stat(Res)));
-
-	if (range)
-		change_range();
 }
 
 void Game_Screen::change_theme() {
@@ -343,18 +359,18 @@ void Game_Screen::change_theme() {
 
 	fog.setAreaColor(Setting_Manager::light ? Full_Rectangle::light_bg[theme] : Full_Rectangle::dark_bg[theme]);
 
-	for (std::shared_ptr<Item> item : Game_Manager::items)
-		item->change_theme();
-	for (std::shared_ptr<Item> item : Game_Manager::item_stocks)
-		item->change_theme();
+	for (Item& item : Game_Manager::items)
+		item.changeTheme();
+	for (Item& item : Game_Manager::item_stocks)
+		item.changeTheme();
 
-	for (std::shared_ptr<Spell> spell : Game_Manager::spells)
-		spell->change_theme();
-	for (std::shared_ptr<Spell> spell : Game_Manager::spell_stocks)
-		spell->change_theme();
+	for (Spell& spell : Game_Manager::spells)
+		spell.changeTheme();
+	for (Spell& spell : Game_Manager::spell_stocks)
+		spell.changeTheme();
 
-	for (std::shared_ptr<Special> special : Game_Manager::special_stocks)
-		special->change_theme();
+	for (Special& special : Game_Manager::special_stocks)
+		special.changeTheme();
 }
 
 void Game_Screen::change_opacity() {
@@ -384,6 +400,14 @@ void Game_Screen::change_opacity() {
 		rect.setOutlineColor(sf::Color(outline.r, outline.g, outline.b, opacity));
 	}
 
+	for (Full_Text& text : hoverableTexts) {
+		sf::Color fill = text.getFillColor();
+		sf::Color outline = text.getOutlineColor();
+
+		text.setFillColor(sf::Color(fill.r, fill.g, fill.b, opacity));
+		text.setOutlineColor(sf::Color(outline.r, outline.g, outline.b, opacity));
+	}
+
 	for (Full_Text& text : texts) {
 		sf::Color fill = text.getFillColor();
 		sf::Color outline = text.getOutlineColor();
@@ -394,16 +418,16 @@ void Game_Screen::change_opacity() {
 }
 
 void Game_Screen::change_range() {
-	unsigned int range = Game_Manager::pl_weapon->get_range();
-	ranges[0].setPosition(400.f, 400.f - (40.f * range));
+	unsigned int range = Game_Manager::pl_weapon->range;
+	ranges[0].setPosition(600.f, 400.f - (40.f * range));
 	ranges[0].setSize(sf::Vector2f(40.f, 40.f * range));
 
-	ranges[1].setPosition(440.f, 400.f);
+	ranges[1].setPosition(640.f, 400.f);
 	ranges[1].setSize(sf::Vector2f(40.f * range, 40.f));
 
-	ranges[2].setPosition(400.f, 440.f);
+	ranges[2].setPosition(600.f, 440.f);
 	ranges[2].setSize(sf::Vector2f(40.f, 40.f * range));
 
-	ranges[3].setPosition(400.f - (40.f * range), 400.f);
+	ranges[3].setPosition(600.f - (40.f * range), 400.f);
 	ranges[3].setSize(sf::Vector2f(40.f * range, 40.f));
 }

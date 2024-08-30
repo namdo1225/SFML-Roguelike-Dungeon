@@ -8,7 +8,6 @@
 #include "Screen/inventory_screen.h"
 #include <format>
 #include <Manager/audio_manager.h>
-#include <memory>
 #include <Screen/screen.h>
 #include <string>
 #include <Tool/item.h>
@@ -27,72 +26,70 @@ Inventory_Screen::Inventory_Screen() : Screen(true, false) {
 
 bool Inventory_Screen::click_event_handler() {
 	if (mouse_in_button(ExitButton)) {
-		Game_Manager::inv_select = Game_Manager::inv_draw_desc = Game_Manager::placeholder_item;
+		Game_Manager::inv_select = NULL;
 		switch_screen(InventoryScreen, GameScreen, false, true);
 		texts[4].setString("");
 		return true;
 	}
-	else if (mouse_in_button(UseButton) && Game_Manager::inv_select->get_type() == 0) {
-		texts[4].setString(std::format("You used a {}.", Game_Manager::inv_select->get_name()));
+	else if (mouse_in_button(UseButton) && Game_Manager::inv_select->type != Weapon && Game_Manager::inv_select->type != Armor) {
+		texts[4].setString(std::format("You used a {}.", Game_Manager::inv_select->name));
 		Game_Manager::item_use();
 		return true;
 	}
 	else if (mouse_in_button(DiscardButton) &&
-		Game_Manager::inv_select->get_id() != 0 &&
 		Game_Manager::inv_select != Game_Manager::pl_weapon &&
-		Game_Manager::inv_select != Game_Manager::pl_weapon) {
+		Game_Manager::inv_select != Game_Manager::pl_armor) {
 		Game_Manager::delete_selected_itm();
 		return true;
 	}
 
-	for (std::shared_ptr<Item> item : Game_Manager::items) {
-		if (item->contains(x, y)) {
-			bool inv_select_contain = Game_Manager::inv_select->contains(x, y);
-			unsigned int select_type = Game_Manager::inv_select->get_type();
+	for (Item& item : Game_Manager::items) {
+		if (item.contains(x, y)) {
+			bool inv_select_contain = Game_Manager::inv_select && Game_Manager::inv_select->contains(x, y);
+			unsigned int type = Game_Manager::inv_select ? Game_Manager::inv_select->type : -1;
 
 			// Unselects
-			if (select_type != 3 && inv_select_contain) {
-				Game_Manager::inv_select = Game_Manager::inv_draw_desc =
-					Game_Manager::placeholder_item;
+			if (type != -1 && inv_select_contain) {
+				Game_Manager::inv_select = NULL;
 				return true;
 			}
 			// Equips another weapon
-			else if ((Game_Manager::inv_select == Game_Manager::pl_weapon && item->get_type() == 1) ||
-				(select_type == 1 && mouse_in_helper(true, 0))) {
+			else if ((Game_Manager::inv_select == Game_Manager::pl_weapon && item.type == Weapon) ||
+				(type == Weapon && mouse_in_helper(true, 0))) {
 				Game_Manager::inv_select == Game_Manager::pl_weapon 
-					? Game_Manager::equip_weapon(item) 
+					? Game_Manager::equip_weapon(&item) 
 					: Game_Manager::equip_weapon(Game_Manager::inv_select);
 
-				Game_Manager::inv_select = Game_Manager::inv_draw_desc = Game_Manager::placeholder_item;
+				Game_Manager::inv_select = NULL;
 				return true;
 			}
 			// Equips another armor
-			else if ((Game_Manager::inv_select == Game_Manager::pl_armor && item->get_type() == 2) ||
-				(select_type == 2 && mouse_in_helper(true, 1))) {
+			else if ((Game_Manager::inv_select == Game_Manager::pl_armor && item.type == Armor) ||
+				(type == Armor && mouse_in_helper(true, 1))) {
 				Game_Manager::inv_select == Game_Manager::pl_armor
-					? Game_Manager::equip_armor(item)
+					? Game_Manager::equip_armor(&item)
 					: Game_Manager::equip_armor(Game_Manager::inv_select);
 
-				Game_Manager::inv_select = Game_Manager::inv_draw_desc = Game_Manager::placeholder_item;
+				Game_Manager::inv_select = NULL;
 				return true;
 			}
 			// Swaps 2 item placement for non-weapon and non-armor slots
-			else if (select_type != 3 && Game_Manager::inv_select != Game_Manager::pl_weapon &&
+			else if (type != -1 && Game_Manager::inv_select != Game_Manager::pl_weapon &&
 				Game_Manager::inv_select != Game_Manager::pl_armor &&
 				!mouse_in_helper(true, 0) && !mouse_in_helper(true, 1)) {
-				int i2x = Game_Manager::inv_select->get_pos('x'), i2y = Game_Manager::inv_select->get_pos('y');
-				Game_Manager::inv_select->set_pos(item->get_pos('x'), item->get_pos('y'));
-				item->set_pos(i2x, i2y);
-				Game_Manager::inv_select = Game_Manager::inv_draw_desc =
-					Game_Manager::placeholder_item;
+				int i2x = Game_Manager::inv_select->getPos('x'), i2y = Game_Manager::inv_select->getPos('y');
+				Game_Manager::inv_select->setPos(item.getPos('x'), item.getPos('y'));
+				item.setPos(i2x, i2y);
+				Game_Manager::inv_select = NULL;
 				return true;
 			}
 			// Selects new item
-			else if (select_type == 3) {
-				int i1x = item->get_pos('x'), i1y = item->get_pos('y');
+			else if (type == -1) {
+				int i1x = item.getPos('x'), i1y = item.getPos('y');
 				Audio_Manager::play_sfx(4);
-				Game_Manager::inv_draw_desc = Game_Manager::inv_select = item;
+				Game_Manager::inv_select = &item;
 				map_rects["inv_sp_cur_slot"].setPosition(i1x - 5, i1y - 5);
+				map_txts["inv_sp_detail"].setString(item.desc.c_str());
 				return true;
 			}
 		}
@@ -113,30 +110,30 @@ void Inventory_Screen::hover_event_handler() {
 
 void Inventory_Screen::draw() {
 	window.draw(map_rects["background"]);
-	if (Game_Manager::inv_select->get_id())
+	if (Game_Manager::inv_select)
 		window.draw(map_rects["inv_sp_cur_slot"]);
 	Screen::draw();
 
 	for (unsigned int i = 0; i < Game_Manager::player.get_max_itm(); i++)
 		window.draw(inv_sp_slots[i]);
 
-	for (std::shared_ptr<Item> itm : Game_Manager::items)
-		itm->draw('t');
+	for (Item& itm : Game_Manager::items)
+		itm.draw();
 
-	if (Game_Manager::inv_select->get_type() == 0) {
+	if (Game_Manager::inv_select && Game_Manager::inv_select->type > Armor) {
 		window.draw(map_rects["inv_sp_use"]);
 		window.draw(map_txts["inv_sp_use"]);
 	}
 
-	window.draw(map_rects["inv_sp_desc"]);
-	window.draw(map_txts["inv_sp_desc"]);
-
-	if (Game_Manager::inv_draw_desc->get_id())
-		Game_Manager::inv_draw_desc->draw('d');
+	if (Game_Manager::inv_select) {
+		window.draw(map_rects["inv_sp_desc"]);
+		window.draw(map_txts["inv_sp_desc"]);
+		window.draw(map_txts["inv_sp_detail"]);
+	}
 
 	if (Game_Manager::inv_select != Game_Manager::pl_weapon &&
 		Game_Manager::inv_select != Game_Manager::pl_armor &&
-		Game_Manager::inv_select->get_id()) {
+		Game_Manager::inv_select) {
 		window.draw(map_rects["inv_sp_discard"]);
 		window.draw(map_txts["inv_sp_discard"]);
 	}

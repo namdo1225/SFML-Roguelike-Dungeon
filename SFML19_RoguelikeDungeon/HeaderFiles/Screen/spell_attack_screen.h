@@ -14,8 +14,8 @@
 
 class Spell_Attack_Screen : public Screen {
 private:
-	std::array<int, 4> sp_inf = { {0, 0, 0, 0} };
-	Full_Rectangle ranges[4];
+	static std::array<int, 3> sp_inf;
+	static Full_Rectangle ranges[4];
 
 	/*
 	* Change range display of spell.

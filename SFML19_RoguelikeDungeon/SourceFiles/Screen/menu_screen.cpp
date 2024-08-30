@@ -35,11 +35,11 @@ Menu_Screen::Menu_Screen() : Screen(true, false) {
 		switch_screen(MenuScreen, MapScreen, false, true);
 	});
 	setupTextbox("Inventory", 1000.f, 500.f, 197.f, 99.f, []() {
-		Game_Manager::inv_select = Game_Manager::inv_draw_desc = Game_Manager::placeholder_item;
+		Game_Manager::inv_select = NULL;
 		switch_screen(MenuScreen, InventoryScreen, false, true);
 	});
 	setupTextbox("Spells", 1000.f, 600.f, 197.f, 99.f, []() {
-		Game_Manager::spell_select = Game_Manager::spell_desc = Game_Manager::placeholder_spell;
+		Game_Manager::spell_select = NULL;
 		switch_screen(MenuScreen, SpellScreen, false, true);
 	});
 	setupTextbox("Load", 800.f, 700.f, 197.f, 99.f, []() {

@@ -21,6 +21,7 @@
 #include <Shape/full_textinput.h>
 #include <string>
 #include <vector>
+#include <stat.h>
 
 Display Screen::display = TitleScreen;
 std::vector<Display> Screen::prev_displays = {};
@@ -35,12 +36,12 @@ std::unique_ptr<Screen> Screen::screens[num_screens];
 bool Screen::loaded = false;
 
 Full_Text Screen::stat_full_txts[NUM_NON_CUR_STATS] = {
-	Full_Text(280.f, 250.f, 24.f, FULL_STATS[0]),
-	Full_Text(280.f, 300.f, 24.f, FULL_STATS[1]),
-	Full_Text(280.f, 350.f, 24.f, FULL_STATS[2]),
-	Full_Text(280.f, 400.f, 24.f, FULL_STATS[3]),
-	Full_Text(280.f, 450.f, 24.f, FULL_STATS[4]),
-	Full_Text(280.f, 500.f, 24.f, FULL_STATS[5]),
+	Full_Text(280.f, 250.f, 24.f, StatConst::FULL_STATS[0]),
+	Full_Text(280.f, 300.f, 24.f, StatConst::FULL_STATS[1]),
+	Full_Text(280.f, 350.f, 24.f, StatConst::FULL_STATS[2]),
+	Full_Text(280.f, 400.f, 24.f, StatConst::FULL_STATS[3]),
+	Full_Text(280.f, 450.f, 24.f, StatConst::FULL_STATS[4]),
+	Full_Text(280.f, 500.f, 24.f, StatConst::FULL_STATS[5]),
 };
 Full_Text Screen::stat_curr_txts[NUM_NON_CUR_STATS] = {
 	Full_Text(590.f, 250.f, 24.f, "10"),
@@ -111,6 +112,7 @@ void Screen::setup() {
 
 	map_rects["inv_sp_desc"] = Full_Rectangle(750.f, 140.f, 400.f, 600.f);
 	map_txts["inv_sp_desc"] = Full_Text(875.f, 100.f, 24.f, "Description");
+	map_txts["inv_sp_detail"] = Full_Text(760.f, 150.f, 20.f, "");
 
 	map_rects["inv_sp_discard"] = Full_Rectangle(420.f, 660.f, 160.f, 80.f);
 	map_txts["inv_sp_discard"] = Full_Text(430.f, 670.f, 36.f, "Discard");

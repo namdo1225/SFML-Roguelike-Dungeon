@@ -296,7 +296,7 @@ void Floor::make_collectible(unsigned int floor) {
 				unsigned int item{ static_cast<unsigned int>(rand() % 3 + 1) };
 
 				if (item > 2)
-					item = static_cast<unsigned int>(rand() % Item::ITEMS + 1);
+					item = Item::items.size() ? static_cast<unsigned int>(rand() % Item::items.size() + 1) : 0;
 				loop = false;
 				collectibles.push_back(Collectible(temp_x, temp_y, item));
 			}

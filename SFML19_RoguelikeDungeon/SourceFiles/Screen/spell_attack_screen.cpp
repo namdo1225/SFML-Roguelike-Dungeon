@@ -6,6 +6,7 @@
 
 #include "Manager/game_manager.h"
 #include "Screen/spell_attack_screen.h"
+#include <array>
 #include <format>
 #include <Screen/screen.h>
 #include <SFML/Graphics/Color.hpp>
@@ -13,6 +14,9 @@
 #include <Shape/full_rectangle.h>
 #include <stat.h>
 #include <string>
+
+std::array<int, 3> Spell_Attack_Screen::sp_inf = {{0, 0, 0}};
+Full_Rectangle Spell_Attack_Screen::ranges[4];
 
 Spell_Attack_Screen::Spell_Attack_Screen() : Screen(true, false) {
 	setup_helper("Spell range: ", 200.f, 10.f, NULL, 3.f);
@@ -30,7 +34,7 @@ bool Spell_Attack_Screen::click_event_handler() {
 		reset_spell();
 		return true;
 	}
-	else if (sp_inf[3] > Game_Manager::player.get_stat(Mp)) {
+	else if (sp_inf[2] > Game_Manager::player.get_stat(Mp)) {
 		log_add(std::format("Insufficient MP for spell: requires {}.", sp_inf[3]).c_str());
 		reset_spell();
 		return true;
@@ -46,7 +50,7 @@ bool Spell_Attack_Screen::click_event_handler() {
 }
 
 void Spell_Attack_Screen::hover_event_handler() {
-	if (Game_Manager::spell_select->get_id() && sp_inf[1] == 0) {
+	if (Game_Manager::spell_select != NULL && sp_inf[1] == 0) {
 		sp_inf = Game_Manager::spell_select->atk();
 		change_range();
 	}
@@ -78,7 +82,7 @@ void Spell_Attack_Screen::change_range() {
 }
 
 void Spell_Attack_Screen::reset_spell() {
-	Game_Manager::spell_desc = Game_Manager::spell_select = Game_Manager::placeholder_spell;
-	sp_inf = { 0, 0, 0, 0 };
+	Game_Manager::spell_select = NULL;
+	sp_inf = { 0, 0, 0 };
 	return_to_prev_screen(SpellAttackScreen);
 }

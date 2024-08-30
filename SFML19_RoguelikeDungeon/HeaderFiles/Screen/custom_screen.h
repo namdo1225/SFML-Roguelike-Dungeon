@@ -63,8 +63,6 @@ public:
 
 	void change_theme();
 
-	void executeSQL();
-
 	void handleTextEvent();
 };
 

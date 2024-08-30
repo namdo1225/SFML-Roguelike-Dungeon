@@ -5,102 +5,45 @@
 *
 */
 
-#include "Tool/tool.h"
 #include "Manager/font_manager.h"
 #include "Manager/game_manager.h"
-#include "Manager/setting_manager.h"
+#include "Tool/tool.h"
+#include <SFML/Graphics/Color.hpp>
+#include <SFML/Graphics/Text.hpp>
 
-const char* Tool::STAT_STRINGS[] = { "HP", "MP", "STR", "MGK", "DEF", "RES", "HP", "MP" };
-
-Tool::Tool() {
-	desc.setFillColor(sf::Color::White);
-	desc.setCharacterSize(24);
-	desc.setPosition(760, 150);
-
+Tool::Tool(const char* name, const char* desc, const char* abbrev,
+	unsigned int id, unsigned int buy, unsigned int sell, int quantity,
+	unsigned int range) :
+	name(name), desc(desc), abbrev(abbrev), range(range), buy(buy), sell(sell),
+	quantity(quantity) {
 	icon.setFillColor(sf::Color::White);
 	icon.setStyle(sf::Text::Bold);
 	icon.setCharacterSize(30);
 
-	txt.setOutlineColor(sf::Color::White);
-	txt.setFillColor(sf::Color::White);
-	txt.setPosition(825, 310);
-	txt.setCharacterSize(30);
-
 	icon.setFont(Font_Manager::get_selected());
-	txt.setFont(Font_Manager::get_selected());
-	desc.setFont(Font_Manager::get_selected());
+	icon.setString(abbrev);
 
-	change_theme();
+	changeTheme();
 }
 
-void Tool::draw(char type) {
-	switch (type) {
-	case 't':
-		Game_Manager::window.draw(invisible_rect);
-		Game_Manager::window.draw(icon);
-		break;
-	case 'd':
-		Game_Manager::window.draw(desc);
-		break;
-	default:
-		Game_Manager::window.draw(txt);
-		break;
-	}
+void Tool::draw() const {
+	Game_Manager::window.draw(boundRect);
+	Game_Manager::window.draw(icon);
 }
 
-int Tool::get_pos(char z) {
-	return z == 'x' ? invisible_rect.getPosition().x : invisible_rect.getPosition().y;;
+int Tool::getPos(char z) {
+	return z == 'x' ? boundRect.getPosition().x : boundRect.getPosition().y;;
 }
 
-unsigned int Tool::get_sell_gd() {
-	return sell_gd;
-}
-
-unsigned int Tool::get_buy_gd() {
-	return buy_gd;
-}
-
-unsigned int Tool::get_id() {
-	return id;
-}
-
-void Tool::set_pos(int x, int y) {
-	icon.setPosition(x, y);
-	invisible_rect.setPosition(x, y);
-}
-
-std::string Tool::get_letter() {
-	return icon.getString();
+void Tool::setPos(float x, float y) {
+	icon.setPosition(x + 5, y + 5);
+	boundRect.setPosition(x, y);
 }
 
 bool Tool::contains(float x, float y) {
-	return invisible_rect.getGlobalBounds().contains(sf::Vector2f(x, y));
+	return boundRect.getGlobalBounds().contains(x, y);
 }
 
-void Tool::change_theme() {
+void Tool::changeTheme() {
 	icon.flip_theme();
-	desc.flip_theme();
-	txt.flip_theme();
-
-	icon.setFont(Font_Manager::get_selected());
-	desc.setFont(Font_Manager::get_selected());
-	txt.setFont(Font_Manager::get_selected());
-}
-
-unsigned int Tool::get_range() {
-	return range;
-}
-
-unsigned int Tool::get_type() {
-	return type;
-}
-
-const char* Tool::get_name()
-{
-	return name;
-}
-
-int Tool::get_quantity()
-{
-	return quantity;
 }

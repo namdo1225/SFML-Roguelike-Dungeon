@@ -6,27 +6,24 @@
 *
 */
 
-#include "Shape/full_text.h"
-#include "Shape/full_rectangle.h"
-#include "player.h"
 #include "stat.h"
 #include "tool.h"
+#include <functional>
+#include <map>
 
 #ifndef ITEM_H
 #define ITEM_H
 
+enum ItemType { Weapon, Armor, StatConsumable, UtilityConsumable };
+
 class Item : public Tool {
 protected:
-	// for member type: 0 = non-equipable, 1 = weapon, 2 = armor, 3 = item does not exist
-
-	Stat stat{ Max_Hp };
-
-	// modify_or_act, true: modify player's stats or hp/mp, false: this is an item that doesn't modify stats
-	// hp_mp_other, true: modify player's stats, false: modify player's hp or mp
-	bool modify_or_act{}, hp_mp_other{};
+	std::function<void()> utilityUse = NULL;
 
 public:
-	const static unsigned int ITEMS = 10;
+	static std::map<unsigned int, Item> items;
+	Stat stat{ Max_Hp };
+	ItemType type{ Weapon };
 
 	/**
 	* Constructor for Item.
@@ -46,109 +43,20 @@ public:
 	*	desc: a const char* for the item's description.
 	*	name: a const char* for item's name.
 	*/
-	Item(int id, int type, bool modify_act,
-		bool hp_mp_other, Stat stat, int quantity,
-		int range, int buy, int sell, const char abbre[3], const char* desc,
-		const char* name);
+	Item(unsigned int id, ItemType type, Stat stat, int quantity,
+		unsigned int range, unsigned int buy, unsigned int sell,
+		const char abbre[3], const char* desc, const char* name, std::function<void()> utilityUse = NULL);
+
+	Item();
+
+	Item(unsigned int id);
+
+	static bool setup();
 
 	/**
-	* A virtual method to be implemented by child class. This method is
-	* what an item would do.
-	*
-	* Parameter:
-	*	id: an int for item's id.
-	* 
-	* Return:
-	*	An std::shared_ptr<Item> object for the new item.
+	* Use the item.
 	*/
-	static std::shared_ptr<Item> create_itm(unsigned int id);
-
-	/**
-	* Getter for item's stat type.
-	*
-	* Return:
-	*	A Stat enum for item's stat type.
-	*/
-	Stat get_stat();
-
-	/**
-	* Getter for whether item modifies hp/mp or other stats.
-	*
-	* Return:
-	*	An bool. true if item modifies other stats. false otherwise.
-	*/
-	bool get_hp_mp_other();
-
-	/**
-	* A virtual method to be implemented by child class. This method is
-	* what an item would do.
-	*
-	* Parameter:
-	*	player: Pass in the Player object for item to modify.
-	*/
-	virtual void use();
-};
-
-class Place_Holder : public Item {
-public:
-	Place_Holder();
-};
-
-class Iron_Sword : public Item {
-public:
-	Iron_Sword();
-};
-
-class Iron_Armor : public Item {
-public:
-	Iron_Armor();
-};
-
-class Health_Potion : public Item {
-public:
-	Health_Potion();
-
-	virtual void use();
-};
-
-class Magic_Armor : public Item {
-public:
-	Magic_Armor();
-};
-
-class Mana_Potion : public Item {
-public:
-	Mana_Potion();
-
-	virtual void use();
-};
-
-class Wooden_Staff : public Item {
-public:
-	Wooden_Staff();
-};
-
-class Steel_Sword : public Item {
-public:
-	Steel_Sword();
-};
-
-class Mage_Staff : public Item {
-public:
-	Mage_Staff();
-};
-
-
-class Steel_Armor : public Item {
-public:
-	Steel_Armor();
-};
-
-class Rejuvenate_Potion : public Item {
-public:
-	Rejuvenate_Potion();
-
-	virtual void use();
+	void use();
 };
 
 #endif

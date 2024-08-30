@@ -1,4 +1,6 @@
 #include "Manager/log_manager.h"
+#include <Shape/full_text.h>
+#include <vector>
 
 const unsigned int Log_Manager::LOG_SIZE;
 const unsigned int Log_Manager::MAX_INV_SPELL_SLOTS;
@@ -13,7 +15,7 @@ void Log_Manager::log_add(const char* log) {
             logs[i].setPosition(755, logs[i].getPosition().y - 30);
         }
     }
-    logs.push_back(Full_Text(755.f, 465 + size * 30, 24.f, log, false));
+    logs.push_back(Full_Text(755.f, 465 + size * 30, 20.f, log, false));
     logs.back().setThemeAndHover(false, true);
 
     bool less_eight = logs.size() < 8;

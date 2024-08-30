@@ -38,11 +38,15 @@
 #include <SFML/Window/Event.hpp>
 #include <SFML/Window/Keyboard.hpp>
 #include <SFML/Window/Mouse.hpp>
+#include <Tool/item.h>
+#include <Tool/special.h>
+#include <Tool/spell.h>
 
 Interface* Interface::singleton;
 
 Interface::Interface() {
-    if (!Texture_Manager::load() || !Audio_Manager::load() || !Enemy::setup() ||
+    if (!Spell::setup() || !Item::setup() || !Special::setup() ||
+        !Texture_Manager::load() || !Audio_Manager::load() || !Enemy::setup() ||
         !Setting_Manager::load())
         return;
     Screen::setup();

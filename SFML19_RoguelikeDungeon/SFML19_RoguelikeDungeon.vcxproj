@@ -152,6 +152,7 @@
     <ClCompile Include="SourceFiles\Screen\spell_attack_screen.cpp" />
     <ClCompile Include="SourceFiles\Screen\status_screen.cpp" />
     <ClCompile Include="SourceFiles\Shape\full_textinput.cpp" />
+    <ClCompile Include="SourceFiles\stat.cpp" />
     <ClCompile Include="SourceFiles\Tool\item.cpp" />
     <ClCompile Include="SourceFiles\Floor\map.cpp" />
     <ClCompile Include="SourceFiles\Manager\game_manager.cpp" />

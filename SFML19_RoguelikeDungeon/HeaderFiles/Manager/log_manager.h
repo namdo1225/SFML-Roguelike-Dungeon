@@ -1,5 +1,6 @@
 #include "Manager/sf_manager.h"
 #include "Shape/full_text.h"
+#include <vector>
 
 #ifndef LOG_MANAGER_H
 #define LOG_MANAGER_H

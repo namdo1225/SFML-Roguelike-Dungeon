@@ -14,7 +14,7 @@
 #include <stat.h>
 #include <string>
 
-Level_Screen::Level_Screen() : Screen(true, true, true) {
+Level_Screen::Level_Screen() : Screen(true, true, true, true) {
 	update = true;
 	setup_helper(          "Level:", 800.f, 190.f, NULL, NULL);
 	setup_helper(    "Current EXP:", 800.f, 240.f, NULL, NULL);
@@ -83,9 +83,6 @@ void Level_Screen::draw() {
 	window.draw(map_txts["stat_guide"]);
 	window.draw(map_txts["stat_left_guide"]);
 	window.draw(map_txts["stat_left"]);
-
-	window.draw(map_rects["clear"]);
-	window.draw(map_txts["clear"]);
 
 	for (Full_Text& text : stat_full_txts)
 		window.draw(text);

@@ -10,7 +10,6 @@
 #include <array>
 #include <Floor/enemy.h>
 #include <Floor/floor.h>
-#include <memory>
 #include <player.h>
 #include <Tool/item.h>
 #include <Tool/spell.h>
@@ -71,9 +70,6 @@ private:
 	static void ene_rand_move(unsigned int v);
 
 public:
-	static std::shared_ptr<Item> placeholder_item;
-	static std::shared_ptr<Spell> placeholder_spell;
-	static std::shared_ptr<Special> placeholder_special;
 	static unsigned int enemy_respawn;
 	static int off_x, off_y;
 	static bool floor_copied;
@@ -86,24 +82,20 @@ public:
 	static Floor floor;
 	static std::vector<Enemy> enemies;
 
-	static std::vector<std::shared_ptr<Item>> items;
-	static std::vector<std::shared_ptr<Spell>> spells;
-	static std::shared_ptr<Item> pl_weapon;
-	static std::shared_ptr<Item> pl_armor;
+	static std::vector<Item> items;
+	static std::vector<Spell> spells;
 
-	static std::shared_ptr<Item> inv_draw_desc;
-	static std::shared_ptr<Item> inv_select;
+	static Item* pl_weapon;
+	static Item* pl_armor;
 
-	static std::shared_ptr<Spell> spell_select;
-	static std::shared_ptr<Spell> spell_desc;
-
-	static std::shared_ptr<Special> special_select;
-	static std::shared_ptr<Special> special_desc;
+	static Item* inv_select;
+	static Spell* spell_select;
+	static Special* special_select;
 
 	// shop
-	static std::vector<std::shared_ptr<Item>> item_stocks;
-	static std::vector<std::shared_ptr<Spell>> spell_stocks;
-	static std::vector<std::shared_ptr<Special>> special_stocks;
+	static std::vector<Item> item_stocks;
+	static std::vector<Spell> spell_stocks;
+	static std::vector<Special> special_stocks;
 
 	static void setup();
 
@@ -140,7 +132,7 @@ public:
 	/**
 	* Handles player attacking with a spell.
 	*/
-	static void pl_sp_atk(unsigned int en_i, std::array<int, 4> sp_inf);
+	static void pl_sp_atk(unsigned int en_i, std::array<int, 3> sp_inf);
 
 	/**
 	* Handles player moving or attacking.
@@ -197,7 +189,7 @@ public:
 	* Parameter:
 	*	item: An Item* for the item to be added.
 	*/
-	static void add_item(std::shared_ptr<Item> item);
+	static void add_item(unsigned int id);
 
 	/**
 	* Reset the game in preparation for a new playthrough.
@@ -213,7 +205,7 @@ public:
 	* Parameter:
 	*	spell: A std::shared_ptr<Spell> object for the spell to be added.
 	*/
-	static void add_spell(std::shared_ptr<Spell> spell);
+	static void add_spell(unsigned int id);
 
 	/**
 	* Equip a weapon.
@@ -221,7 +213,7 @@ public:
 	* Parameter:
 	*	weapon: An std::shared_ptr<Item> object for the weapon to be equipped.
 	*/
-	static void equip_weapon(std::shared_ptr<Item> weapon);
+	static void equip_weapon(Item* weapon);
 
 	/**
 	* Equip an armor.
@@ -229,7 +221,7 @@ public:
 	* Parameter:
 	*	armor: An std::shared_ptr<Item> object for the armor to be equipped.
 	*/
-	static void equip_armor(std::shared_ptr<Item> armor);
+	static void equip_armor(Item* armor);
 
 	/**
 	* Handles player dying and resetting the game. The title screen is loaded again.
@@ -265,11 +257,6 @@ public:
 	* Delete selected spell.
 	*/
 	static void deleted_selected_sp();
-
-	/*
-	* Reorganize spells.
-	*/
-	static void sp_reorganize();
 
 	/*
 	* Use an item.

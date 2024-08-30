@@ -39,7 +39,7 @@ Status_Screen::Status_Screen() : Screen(true, false) {
 
 	// Stats
 	for (unsigned int i = 0; i < NUM_NON_CUR_STATS; i++) {
-		setup_helper(FULL_STATS[i], 400.f, 150.f + i * 50.f, NULL, NULL);
+		setup_helper(StatConst::FULL_STATS[i], 400.f, 150.f + i * 50.f, NULL, NULL);
 	}
 
 	// changing stats:
@@ -97,16 +97,16 @@ void Status_Screen::update_draw() {
 	// stat points
 	texts[27].setString(std::to_string(Game_Manager::player.get_pts()));
 	// weapon
-	texts[28].setString(Game_Manager::pl_weapon->get_name());
+	texts[28].setString(Game_Manager::pl_weapon->name);
 	// armor
-	texts[29].setString(Game_Manager::pl_armor->get_name());
+	texts[29].setString(Game_Manager::pl_armor->name);
 	// effects
 	std::string effects_str = "";
 	const std::vector<Effect> effects = Game_Manager::player.get_effects();
 	for (const Effect& effect : Game_Manager::player.get_effects()) {
 		effects_str.append(std::to_string(effect.stat_difference) +
 			" to " +
-			Game_Manager::FULL_STATS[effect.stat_changed % NUM_NON_CUR_STATS] +
+			StatConst::FULL_STATS[effect.stat_changed % NUM_NON_CUR_STATS] +
 			" for " +
 			std::to_string(effect.change_turns) +
 			" turns.\n");
