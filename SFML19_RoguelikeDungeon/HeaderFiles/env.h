@@ -25,10 +25,11 @@ constexpr bool PLACE_SHOP_ON_PLAYER = false;
 constexpr bool SKIP_SPAWN_ENEMY = false;
 constexpr bool MODIFY_START_STATS = false;
 
+constexpr int STARTING_INTERACTIBLES = 0;
+
 constexpr unsigned int INTERACTIBLE_CHANCE = 0;
 constexpr unsigned int STARTING_FLOOR = 0;
 constexpr unsigned int STARTING_GOLD = 0;
-constexpr unsigned int STARTING_INTERACTIBLES = 0;
 constexpr unsigned int STARTING_STAT_PTS = 0;
 
 #endif
