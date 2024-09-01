@@ -10,8 +10,9 @@
 #include "Tool/tool.h"
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/Text.hpp>
+#include <string>
 
-Tool::Tool(const char* name, const char* desc, const char* abbrev,
+Tool::Tool(std::string name, std::string desc, std::string abbrev,
 	unsigned int id, unsigned int buy, unsigned int sell, int quantity,
 	unsigned int range) : id(id),
 	name(name), desc(desc), abbrev(abbrev), range(range), buy(buy), sell(sell),

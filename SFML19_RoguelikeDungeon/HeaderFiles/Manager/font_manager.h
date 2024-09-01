@@ -8,13 +8,14 @@
 #ifndef FONT_H
 #define FONT_H
 
-#include <SFML/Graphics.hpp>
+#include <SFML/Graphics/Font.hpp>
+#include <string>
+#include <vector>
 
 class Font_Manager {
 private:
-	const static unsigned int fonts = 3;
 	static unsigned int selected_font;
-	static sf::Font buffers[fonts];
+	static std::vector<sf::Font> buffers;
 	static bool assets_loaded;
 
 protected:
@@ -59,6 +60,10 @@ public:
 	*	the sf::Font object.
 	*/
 	static sf::Font& get_selected();
+
+	static unsigned int getNumFonts();
+
+	static std::string getFontName(unsigned int i);
 };
 
 

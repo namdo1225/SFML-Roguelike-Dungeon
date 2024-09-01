@@ -41,6 +41,7 @@ void Full_TextInput::handleTextEvent() {
 		{
 			if (validation == AllValidation ||
 				(validation == AlphanumericValidation && isalnum(letter)) ||
+				(validation == AlphanumspaceValidation && (isalnum(letter) || letter == ' ')) ||
 				(validation == AlphabetValidation && isalpha(letter)) ||
 				(validation == NumberValidation && '0' <= letter && letter <= '9') ||
 				(validation == TrueFalseValidation && '0' <= letter && letter <= '1'))

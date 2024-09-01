@@ -37,7 +37,7 @@ bool Database_Manager::migrate() {
         switch (version) {
         case 0:
             executeNonSelectStatement("CREATE TABLE enemies ( \
-                                  id INTEGER PRIMARY KEY, \
+                                  id INTEGER PRIMARY KEY AUTOINCREMENT, \
                                   name TEXT NOT NULL, \
                                   health INTEGER NOT NULL, \
                                   health_growth REAL DEFAULT 0.5, \
@@ -61,25 +61,57 @@ bool Database_Manager::migrate() {
             executeNonSelectStatement("INSERT INTO enemies VALUES(4, 'Mimic',    9, 0.7, 10,  0.7, 2,   0.4, 2,  0.4, 1, 10,    1,  1, 5);");
             executeNonSelectStatement("INSERT INTO enemies VALUES(5, 'Warrior', 20, 0.7,  8,  0.5, 7,   0.5, 4,  0.4, 1,  8,  0.8,  1, 10);");
             executeNonSelectStatement("INSERT INTO enemies VALUES(6, 'Priest',   8, 0.3,  8,  0.5, 3, 0.125, 7,  0.5, 5,  9,  0.8,  0, 10);");
-            version++;
-        
+
+            executeNonSelectStatement("UPDATE SQLITE_SEQUENCE SET seq = 999 WHERE name = 'enemies'");
+
+
             executeNonSelectStatement("CREATE TABLE spells ( \
-                                  id INTEGER PRIMARY KEY, \
+                                  id INTEGER PRIMARY KEY AUTOINCREMENT, \
                                   name TEXT NOT NULL, \
-                                  health INTEGER NOT NULL, \
-                                  health_growth REAL DEFAULT 0.5, \
-                                  attack INTEGER NOT NULL, \
-                                  attack_growth REAL DEFAULT 0.5, \
-                                  defense INTEGER NOT NULL, \
-                                  defense_growth REAL DEFAULT 0.5, \
-                                  resistance INTEGER NOT NULL, \
-                                  resistance_growth REAL DEFAULT 0.5, \
+                                  description TEXT NOT NULL, \
+                                  abbreviation TEXT NOT NULL, \
+                                  buy INTEGER NOT NULL, \
+                                  sell INTEGER NOT NULL, \
                                   range INTEGER NOT NULL, \
-                                  experience INTEGER NOT NULL, \
-                                  experience_growth REAL DEFAULT 0.5, \
-                                  attack_type INTEGER NOT NULL, \
-                                  floor INTEGER DEFAULT 1 \
+                                  quantity INTEGER NOT NULL, \
+                                  mp INTEGER NOT NULL, \
+                                  percentage REAL DEFAULT 0.5 \
             );");
+
+            executeNonSelectStatement(std::format("INSERT INTO spells VALUES(4, 'Fire', 'A fiery ball spell.', 'FI', 10, 4, 3, 4, 4, 0.5);").c_str());
+            executeNonSelectStatement(std::format("INSERT INTO spells VALUES(5, 'Water', 'Drown your enemy.', 'WA', 15, 5, 5, 3, 4, 0.5);").c_str());
+            executeNonSelectStatement(std::format("INSERT INTO spells VALUES(6, 'Earth', 'Smack enemies with rocks.', 'EA', 40, 10, 4, 5, 4, 0.75);").c_str());
+            executeNonSelectStatement(std::format("INSERT INTO spells VALUES(7, 'Lightning', 'Strike enemies with static energy.', 'LI', 30, 2, 7, 7, 4, 0.5);").c_str());
+            executeNonSelectStatement(std::format("INSERT INTO spells VALUES(8, 'Light', 'Smite your foes with might.', 'LT', 40, 10, 7, 3, 4, 0.75);").c_str());
+            executeNonSelectStatement(std::format("INSERT INTO spells VALUES(9, 'Dark', 'Destroy enemies with the\ndark force.', 'DK', 50, 15, 1, 2, 4, 1);").c_str());
+
+            executeNonSelectStatement("UPDATE SQLITE_SEQUENCE SET seq = 999 WHERE name = 'spells'");
+
+
+            executeNonSelectStatement("CREATE TABLE items ( \
+                                  id INTEGER PRIMARY KEY AUTOINCREMENT, \
+                                  name TEXT NOT NULL, \
+                                  description TEXT NOT NULL, \
+                                  abbreviation TEXT NOT NULL, \
+                                  buy INTEGER NOT NULL, \
+                                  sell INTEGER NOT NULL, \
+                                  range INTEGER NOT NULL, \
+                                  quantity INTEGER NOT NULL, \
+                                  type INTEGER NOT NULL, \
+                                  stat INTEGER NOT NULL \
+            );");
+
+            executeNonSelectStatement(std::format("INSERT INTO items VALUES(4, 'Wooden Staff', 'A common staff allowing the use\nof magical attacks.', 'WS', 50, 20, 2, 2, 0, 3);").c_str());
+            executeNonSelectStatement(std::format("INSERT INTO items VALUES(5, 'Iron Sword', 'A common sword.', 'IS', 40, 10, 1, 3, 0, 2);").c_str());
+            executeNonSelectStatement(std::format("INSERT INTO items VALUES(6, 'Mage Staff', 'A staff used by common mages.', 'MS', 80, 20, 3, 4, 0, 3);").c_str());
+            executeNonSelectStatement(std::format("INSERT INTO items VALUES(7, 'Steel Sword', 'A refined sword for warriors.', 'SS', 40, 10, 1, 6, 0, 2);").c_str());
+            executeNonSelectStatement(std::format("INSERT INTO items VALUES(8, 'Iron Armor', 'A common armor.', 'IA', 50, 20, 0, 3, 1, 4);").c_str());
+            executeNonSelectStatement(std::format("INSERT INTO items VALUES(9, 'Magic Armor', 'A common, magical armor.', 'MA', 50, 20, 0, 2, 1, 5);").c_str());
+            executeNonSelectStatement(std::format("INSERT INTO items VALUES(10, 'Steel Armor', 'A basic but stable armor.', 'SA', 80, 20, 0, 5, 1, 4);").c_str());
+
+            executeNonSelectStatement("UPDATE SQLITE_SEQUENCE SET seq = 999 WHERE name = 'items'");
+
+            version++;
         }
 
         executeNonSelectStatement(std::format("PRAGMA user_version = {};", version).c_str());
@@ -94,6 +126,7 @@ bool Database_Manager::reverse(unsigned int target) {
         case 1:
             executeNonSelectStatement("DROP TABLE enemies;");
             executeNonSelectStatement("DROP TABLE spells;");
+            executeNonSelectStatement("DROP TABLE items;");
             version--;
         }
 

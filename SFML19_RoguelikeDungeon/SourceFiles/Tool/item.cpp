@@ -10,24 +10,42 @@
 #include <functional>
 #include <map>
 #include <stat.h>
+#include <string>
 #include <Tool/tool.h>
 #include <utility>
+#include <Manager/database_manager.h>
+#include <format>
 
 std::map<unsigned int, Item> Item::items;
 
 Item::Item(unsigned int id, ItemType type, Stat stat, int quantity,
-	unsigned int range, unsigned int buy, unsigned int sell, const char abbre[3],
-	const char* desc, const char* name, std::function<void()> utilityUse):
-	Tool(name, desc, abbre, id, buy, sell, quantity, range), type(type), stat(stat), utilityUse(utilityUse)
-{}
+	unsigned int range, unsigned int buy, unsigned int sell, std::string abbre,
+	std::string desc, std::string name, std::function<void()> utilityUse):
+	Tool(name, std::format("{}\n\n{}\n\nBUY: {}G\nSELL: {}G\n\nRANGE: {}\n\nQUANTITY: {}", name, desc, buy, sell, range, quantity
+	), abbre, id, buy, sell, quantity, range), type(type), stat(stat), utilityUse(utilityUse) {
+	originalDesc = desc;
+}
 
 Item::Item() : Tool("", "", "", 0, 0, 0, 0, 0) {}
 
 Item::Item(unsigned int id) : Item(id, items[id].type, items[id].stat, items[id].quantity,
-	items[id].range, items[id].buy, items[id].sell, items[id].abbrev, items[id].desc.c_str(), items[id].name, items[id].utilityUse) {}
+	items[id].range, items[id].buy, items[id].sell, items[id].abbrev, items[id].desc, items[id].name, items[id].utilityUse) {}
 
 bool Item::setup()
 {
+	items.clear();
+	Database_Manager::executeSelect("SELECT * FROM items;", [](void* data, int argc, char** argv, char** azColName) -> int {
+		unsigned int i = std::stoi(argv[0]);
+
+		items.insert(std::make_pair(i, Item(i, (ItemType)std::stoi(argv[8]), (Stat)std::stoi(argv[9]),
+			std::stoi(argv[7]), std::stoi(argv[6]), std::stoi(argv[4]), std::stoi(argv[5]),
+			argv[3], argv[2], argv[1])
+		));
+
+		return 0;
+		});
+
+
 	unsigned int id = 0;
 	items.insert(std::make_pair(id++, Item(id, StatConsumable, Hp, 5, 0, 15, 3,
 		"HI", "A potion that restore 5 HP.", "Health Potion")));
@@ -37,29 +55,6 @@ bool Item::setup()
 		"RP", "A potion that restore 10 HP.", "Rejuvenate Potion")));
 	items.insert(std::make_pair(id++, Item(id, StatConsumable, Mp, 10, 0, 15, 3,
 		"MP", "A potion that restore 10 MP.", "Magical Potion")));
-
-	items.insert(std::make_pair(id++, Item(id, Weapon, Mgk, 2, 2, 50, 20,
-		"WS", "A common staff allowing the use\nof magical attacks.\n\n2 RANGE",
-		"Wooden Staff")));
-	items.insert(std::make_pair(id++, Item(id, Weapon, Str, 3, 1, 40, 10,
-		"IS", "A common sword.\n\n1 RANGE",
-		"Iron Sword")));
-	items.insert(std::make_pair(id++, Item(id, Weapon, Mgk, 4, 3, 100, 25,
-		"MS", "A staff used by common mages.\n\n3 RANGE",
-		"Mage Staff")));
-	items.insert(std::make_pair(id++, Item(id, Weapon, Str, 6, 1, 80, 20,
-		"SS", "A refined sword for warriors.\n\n1 RANGE",
-		"Steel Sword")));
-
-	items.insert(std::make_pair(id++, Item(id, Armor, Def, 3, 0, 40, 10,
-		"IA", "A common armor.",
-		"Iron Armor")));
-	items.insert(std::make_pair(id++, Item(id, Armor, Res, 2, 0, 50, 20,
-		"MA", "A common, magical armor.",
-		"Magic Armor")));
-	items.insert(std::make_pair(id++, Item(id, Armor, Def, 6, 0, 80, 20,
-		"SA", "A basic but stable armor.",
-		"Steel Armor")));
 
 	return true;
 }

@@ -11,6 +11,8 @@
 #include <Shape/full_text.h>
 #include <Shape/full_textbox.h>
 #include <Shape/full_textinput.h>
+#include <Tool/item.h>
+#include <Tool/spell.h>
 #include <vector>
 
 #ifndef CUSTOM_SCREEN_H
@@ -23,6 +25,10 @@ private:
 	static char* category;
 
 	static std::map<unsigned int, EnemyFull>::iterator enemyIter;
+
+	static std::map<unsigned int, Spell>::iterator spellIter;
+
+	static std::map<unsigned int, Item>::iterator itemIter;
 
 	static Full_Rectangle line;
 
@@ -51,6 +57,12 @@ private:
 
 	static unsigned int idOffset;
 	static unsigned int boxIndex;
+
+	static void getEnemies();
+
+	static void getSpells();
+
+	static void getItems();
 
 public:
 	Custom_Screen();

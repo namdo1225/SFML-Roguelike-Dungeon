@@ -10,6 +10,7 @@
 #include <functional>
 #include <map>
 #include <stat.h>
+#include <string>
 #include <Tool/tool.h>
 #include <utility>
 
@@ -19,7 +20,7 @@ void Special::use() {
 	useSpecial();
 }
 
-Special::Special(unsigned int id, unsigned int buy, unsigned int sell, const char abbre[3], const char* desc, const char* name, std::function<void()> useSpecial) :
+Special::Special(unsigned int id, unsigned int buy, unsigned int sell, std::string abbre, std::string desc, std::string name, std::function<void()> useSpecial) :
 	Tool(name, desc, abbre, id, buy, sell, 0, 0), useSpecial(useSpecial) {}
 
 bool Special::setup()

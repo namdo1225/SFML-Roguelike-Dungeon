@@ -17,8 +17,6 @@ public:
 
 	bool click_event_handler();
 
-	void hover_event_handler();
-
 	virtual void draw();
 
 	static bool light_mode;

@@ -11,6 +11,7 @@ enum InputValidation {
 	AlphabetValidation,
 	NumberValidation,
 	TrueFalseValidation,
+	AlphanumspaceValidation,
 };
 
 class Full_TextInput : protected SF_Manager {

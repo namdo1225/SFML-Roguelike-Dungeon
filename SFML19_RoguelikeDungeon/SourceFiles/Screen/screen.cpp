@@ -323,6 +323,10 @@ void Screen::change_settings() {
 				text.flip_theme();
 				text.setFont(Font_Manager::get_selected());
 			}
+			for (Full_Text& text : screens[i]->hoverableTexts) {
+				text.flip_theme();
+				text.setFont(Font_Manager::get_selected());
+			}
 			for (Full_Textbox& textbox : screens[i]->textboxes) {
 				textbox.text.flip_theme();
 				textbox.text.setFont(Font_Manager::get_selected());

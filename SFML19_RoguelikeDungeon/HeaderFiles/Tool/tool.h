@@ -22,15 +22,13 @@ protected:
 	/**
 	* Constructor for Tool.
 	*/
-	Tool(const char* name, const char* desc, const char* abbrev,
+	Tool(std::string name, std::string desc, std::string abbrev,
 		unsigned int id, unsigned int buy, unsigned int sell, int quantity,
 		unsigned int range = 0);
 
 public:
 	unsigned int id = 0, range = 0, buy = 0, sell = 0;
-	const char* name = "";
-	std::string desc = "";
-	const char* abbrev = "";
+	std::string name = "", originalDesc = "", desc = "", abbrev = "";
 
 	/**
 	* Represents tool's value (eg. spell attack damage against enemy).

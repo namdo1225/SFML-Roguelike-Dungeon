@@ -10,19 +10,25 @@
 #include <array>
 #include <format>
 #include <functional>
+#include <Manager/database_manager.h>
 #include <map>
 #include <stat.h>
+#include <string>
 #include <Tool/tool.h>
 #include <utility>
 
 std::map<unsigned int, Spell> Spell::spells;
 
-Spell::Spell(const char abbre[3],
+Spell::Spell(std::string abbre,
 	unsigned int id, unsigned int buy, unsigned int sell, SpellType type,
 	unsigned int range, unsigned int mp, int quantity,
-	const char* desc, const char* name, double percent, std::function<void(int, double)> functionalUse):
-	Tool(name, std::format("{}\n\n{}\n\nBUY: {}G\nSELL: {}G\n\n-{}MP", name, desc, buy, sell, mp).c_str(),
-		abbre, id, buy, sell, quantity, range), type(type), mp(mp), functionalUse(functionalUse), percentage(percent) {}
+	std::string desc, std::string name, double percent, std::function<void(int, double)> functionalUse):
+	Tool(name, std::format("{}\n\n{}\n\nBUY: {}G\nSELL: {}G\n\n-{}MP\n\nRANGE: {}\n\n{}", name, desc, buy, sell, mp, range, type == Offensive ?
+		std::format("ENEMY HP-: {} + (MGK * {})\n- ENEMY RES", quantity, percent)
+		: "").c_str(),
+		abbre, id, buy, sell, quantity, range), type(type), mp(mp), functionalUse(functionalUse), percentage(percent) {
+	originalDesc = desc;
+}
 
 Spell::Spell() : Tool("", "", "", 0, 0, 0, 0, 0) {}
 
@@ -31,6 +37,21 @@ Spell::Spell(unsigned int id) : Spell(spells[id].abbrev, id, spells[id].buy, spe
 }
 
 bool Spell::setup() {
+	spells.clear();
+	Database_Manager::executeSelect("SELECT * FROM spells;", [](void* data, int argc, char** argv, char** azColName) -> int {
+		unsigned int i = std::stoi(argv[0]);
+
+		spells.insert(std::make_pair(i, Spell(argv[3], i, std::stoi(argv[4]), std::stoi(argv[5]),
+			Offensive, std::stoi(argv[6]), std::stoi(argv[8]), std::stoi(argv[7]),
+			argv[2], argv[1], std::stod(argv[9])
+		)));
+
+
+		return 0;
+	});
+
+
+
 	unsigned int id = 0;
 	spells.insert(std::make_pair(id++, Spell("HE", id, 50, 20, Functional, 0, 3, 5,
 		"Heal the player.\n\nPLAYER HP+: 5 + (MGK * 0.5)", "Heal", 0.5f,
@@ -44,7 +65,7 @@ bool Spell::setup() {
 	})));
 
 	spells.insert(std::make_pair(id++, Spell("DA", id, 100, 40, Functional, 0, 8, 4,
-		"Damage all enemies in the \nroom (ignore defense \nand resistance).\n\nENEMY HP-: 4 + (MGK * 0.10)",
+		"Damage all enemies while\n ignoring DEF/RES.\n\nENEMY HP-: 4 + (MGK * 0.10)",
 		"Damage All", 0.1f,
 		[](int quantity, double percent) {
 			const unsigned int mgk = Game_Manager::player.get_stat(Mgk);
@@ -62,25 +83,6 @@ bool Spell::setup() {
 		[](int quantity, double percent) {
 			Game_Manager::player.set_effect(Def, quantity + Game_Manager::player.get_stat(Mgk) * percent, 8);
 	})));
-	spells.insert(std::make_pair(id++, Spell("FI", id, 10, 4, Offensive, 3, 4, 4,
-		"Hit an enemy with fire 3 \nspaces away.\n\nENEMY HP-: 4 + (MGK * \n0.5) - ENEMY RES",
-		"Fire", 0.5f)
-	));
-	spells.insert(std::make_pair(id++, Spell("WA", id, 15, 5, Offensive, 5, 4, 3,
-		"Hit an enemy with water 5 \nspaces away.\n\nENEMY HP-: 3 + (MGK * \n0.5) - ENEMY RES", "Water", 0.5f)
-	));
-	spells.insert(std::make_pair(id++, Spell("EA", id, 40, 10, Offensive, 4, 4, 5,
-		"Hit an enemy with earth 4 \nspaces away.\n\nENEMY HP-: 5 + (MGK * \n0.75) - ENEMY RES", "Earth", 0.75f)
-	));
-	spells.insert(std::make_pair(id++, Spell("LI", id, 30, 7, Offensive, 2, 4, 7,
-		"Hit an enemy with lightning 2 \nspaces away.\n\nENEMY HP-: 7 + (MGK * \n0.5) - ENEMY RES", "Lightning", 0.5f)
-	));
-	spells.insert(std::make_pair(id++, Spell("LT", id, 40, 10, Offensive, 7, 4, 3,
-		"Hit an enemy with light 7 \nspaces away.\n\nENEMY HP-: 3 + (MGK * \n0.75) - ENEMY RES", "Light", 0.75f)
-	));
-	spells.insert(std::make_pair(id++, Spell("DK", id, 50, 15, Offensive, 2, 4, 2,
-		"Hit an enemy with dark 1 \nspace away.\n\nENEMY HP-: 2 + MGK -\nENEMY RES", "Dark", 1)
-	));
 	return true;
 }
 

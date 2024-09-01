@@ -10,6 +10,7 @@
 #include "tool.h"
 #include <functional>
 #include <map>
+#include <string>
 
 #ifndef ITEM_H
 #define ITEM_H
@@ -45,7 +46,7 @@ public:
 	*/
 	Item(unsigned int id, ItemType type, Stat stat, int quantity,
 		unsigned int range, unsigned int buy, unsigned int sell,
-		const char abbre[3], const char* desc, const char* name, std::function<void()> utilityUse = NULL);
+		std::string abbre, std::string desc, std::string name, std::function<void()> utilityUse = NULL);
 
 	Item();
 

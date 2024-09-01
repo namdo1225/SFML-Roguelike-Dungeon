@@ -11,6 +11,7 @@
 #include "tool.h"
 #include <functional>
 #include <map>
+#include <string>
 
 class Special : public Tool {
 private:
@@ -31,7 +32,7 @@ public:
 	*	name: a const char* for item's name.
 	*/
 	Special(unsigned int id, unsigned int buy, unsigned int sell,
-		const char abbre[3], const char* desc, const char* name, std::function<void()> useSpecial);
+		std::string abbre, std::string desc, std::string name, std::function<void()> useSpecial);
 
 	static bool setup();
 

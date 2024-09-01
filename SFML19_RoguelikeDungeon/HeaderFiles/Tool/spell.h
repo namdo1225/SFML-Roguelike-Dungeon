@@ -13,6 +13,7 @@
 #include <array>
 #include <functional>
 #include <map>
+#include <string>
 
 enum SpellType{Functional, Offensive};
 
@@ -21,11 +22,6 @@ private:
 	bool usePlayerMP() const;
 
 protected:
-	/*
-	* Scaling for the stats for attack spells;
-	*/
-	double percentage = 0.5;
-
 	std::function<void(int, double)> functionalUse = NULL;
 
 public:
@@ -33,6 +29,11 @@ public:
 
 	SpellType type{ Functional };
 	unsigned int mp{ 0 };
+
+	/*
+	* Scaling for the stats for attack spells;
+	*/
+	double percentage = 0.5;
 
 	/**
 	* Constructor for Spell.
@@ -49,10 +50,10 @@ public:
 	*	desc: Spell's description.
 	*	name: Spell's name.
 	*/
-	Spell(const char abbre[3],
+	Spell(std::string abbre,
 		unsigned int id, unsigned int buy, unsigned int sell, SpellType use,
 		unsigned int range, unsigned int mp, int quantity,
-		const char* desc, const char* name, double percent = 0.5f, std::function<void(int, double)> functionalUse = NULL);
+		std::string desc, std::string name, double percent = 0.5f, std::function<void(int, double)> functionalUse = NULL);
 
 	Spell();
 
