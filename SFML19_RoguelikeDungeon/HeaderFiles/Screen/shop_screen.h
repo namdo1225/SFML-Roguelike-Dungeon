@@ -1,16 +1,16 @@
-/**
-*
-* File: shop_screen.h
-* Description: Contain the declaration of the Shop_Screen class, which represents the shop creen.
-*/
-
 #ifndef SHOP_SCREEN_H
 #define SHOP_SCREEN_H
 
 #include "screen.h"
 
+/**
+* Available stock types in the shop.
+*/
 enum Stock {ItemStock, SpellStock, SpecialStock};
 
+/**
+* Represents the shop creen.
+*/
 class Shop_Screen : public Screen {
 private:
 	static bool buy;
@@ -23,7 +23,7 @@ private:
 	* Parameter:
 	*	buy: true if buying. false if selling.
 	*/
-	void item_shop(bool buy);
+	void shopItem(bool buy);
 
 	/*
 	* Handle spell shop.
@@ -31,7 +31,7 @@ private:
 	* Parameter:
 	*	buy: true if buying. false if selling.
 	*/
-	void spell_shop(bool buy);
+	void shopSpell(bool buy);
 
 	/*
 	* Handle special shop.
@@ -39,25 +39,25 @@ private:
 	* Parameter:
 	*	buy: true if buying. false if selling.
 	*/
-	void special_shop(bool buy);
+	void shopSpecial(bool buy);
 
 	/*
 	* Resets item, spell, and special select.
 	*/
-	static void reset_select();
+	static void resetSelect();
 
 public:
 	Shop_Screen();
 
-	bool click_event_handler();
+	bool handleClickEvent();
 
-	void hover_event_handler();
+	void handleHoverEvent();
 
-	void mouse_event_handler();
+	void handleMouseEvent();
 
 	void draw();
 
-	void update_draw();
+	void updateDraw();
 };
 
 #endif

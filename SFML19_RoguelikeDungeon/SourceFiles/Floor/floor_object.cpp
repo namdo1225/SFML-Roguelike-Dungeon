@@ -23,12 +23,10 @@ Floor_Object::Floor_Object(float x, float y, const sf::Texture& texture) : Floor
 	setPosition(x, y);
 }
 
-bool Floor_Object::contains(float x, float y)
-{
+bool Floor_Object::contains(float x, float y) {
 	return getGlobalBounds().contains(sf::Vector2f(x, y));
 }
 
-bool Floor_Object::intersects(const sf::FloatRect& rect)
-{
+bool Floor_Object::intersects(const sf::FloatRect& rect) {
 	return getGlobalBounds().intersects(rect);
 }

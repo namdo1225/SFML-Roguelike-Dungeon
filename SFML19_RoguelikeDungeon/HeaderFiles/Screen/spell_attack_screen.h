@@ -1,38 +1,34 @@
-/**
-*
-* File: spell_attack_screen.h
-* Description: Contain the declaration of the Spell_Attack_Screen class,
-* which represents the spell attack dialog scene.
-*/
-
-#ifndef SPELL_ATTACK_SCREEN_H
-#define SPELL_ATTACK_SCREEN_H
-
 #include "screen.h"
 #include <array>
 #include <Shape/full_rectangle.h>
 
+#ifndef SPELL_ATTACK_SCREEN_H
+#define SPELL_ATTACK_SCREEN_H
+
+/**
+* Represents the spell attack dialog scene.
+*/
 class Spell_Attack_Screen : public Screen {
 private:
-	static std::array<int, 3> sp_inf;
+	static std::array<int, 3> atkSpInfo;
 	static Full_Rectangle ranges[4];
 
 	/*
 	* Change range display of spell.
 	*/
-	void change_range();
+	void changeRange();
 
 	/*
 	* Reset spell select.
 	*/
-	void reset_spell();
+	void resetSpell();
 
 public:
 	Spell_Attack_Screen();
 
-	bool click_event_handler();
+	bool handleClickEvent();
 
-	void hover_event_handler();
+	void handleHoverEvent();
 
 	void draw();
 };

@@ -14,7 +14,6 @@
 #include <Manager/game_manager.h>
 #include <Manager/setting_manager.h>
 #include <Screen/screen.h>
-#include <string>
 
 // https://stackoverflow.com/questions/3037088/how-to-open-the-default-web-browser-in-windows-in-c
 #if defined(_WIN32)
@@ -35,46 +34,46 @@ const char* OPEN_BROWSER = "";
 #endif
 
 Title_Screen::Title_Screen() : Screen() {
-	setup_helper(NULL, 700.f,  10.f, 470.f, 780.f);
+	textRectH(NULL, 700.f,  10.f, 470.f, 780.f);
 
-	setupTextbox(std::format("Music: {}",
-		Audio_Manager::get_music_volume() ? "ON" : "OFF").c_str(),
+	textboxH(std::format("Music: {}",
+		Audio_Manager::getMusicVolume() ? "ON" : "OFF").c_str(),
 		410.f, 475.f, 150.f, 65.f, [this]() {
-		Audio_Manager::set_music_volume(Audio_Manager::get_music_volume() ? 0 : 100);
-		const float new_volume = Audio_Manager::get_music_volume();
+		Audio_Manager::setMusicVolume(Audio_Manager::getMusicVolume() ? 0 : 100);
+		const float new_volume = Audio_Manager::getMusicVolume();
 		Setting_Manager::music_volume = new_volume;
 		Setting_Manager::save();
 		textboxes[0].text.setString(std::format("Music: {}", new_volume == 0 ? "OFF" : "ON"));
 		Screen::screens[SettingScreen]->update = true;
 	});
-	setupTextbox("New Game", 250.f, 325.f, 150.f, 65.f, []() {
-		Game_Manager::reset_game();
-		switch_screen(TitleScreen, NameScreen, false);
+	textboxH("New Game", 250.f, 325.f, 150.f, 65.f, []() {
+		Game_Manager::resetGame();
+		switchScreen(TitleScreen, NameScreen, false);
 	});
-	setupTextbox("Cheat Mode", 410.f, 325.f, 150.f, 65.f, []() {
-		Game_Manager::reset_game(true);
-		switch_screen(TitleScreen, NameScreen, false);
+	textboxH("Cheat Mode", 410.f, 325.f, 150.f, 65.f, []() {
+		Game_Manager::resetGame(true);
+		switchScreen(TitleScreen, NameScreen, false);
 	});
-	setupTextbox("Load Game", 330.f, 400.f, 150.f, 65.f, []() {
-		switch_screen(TitleScreen, LoadScreen, true);
+	textboxH("Load Game", 330.f, 400.f, 150.f, 65.f, []() {
+		switchScreen(TitleScreen, LoadScreen, true);
 	});
-	setupTextbox("Settings", 250.f, 475.f, 150.f, 65.f, []() {
-		switch_screen(TitleScreen, SettingScreen, true);
+	textboxH("Settings", 250.f, 475.f, 150.f, 65.f, []() {
+		switchScreen(TitleScreen, SettingScreen, true);
 	});
-	setupTextbox("Mod Game", 330.f, 550.f, 150.f, 65.f, []() { switch_screen(TitleScreen, CustomScreen, true); });
-	setupTextbox("Repository", 330.f, 625.f, 150.f, 65.f, []() {
+	textboxH("Mod Game", 330.f, 550.f, 150.f, 65.f, []() { switchScreen(TitleScreen, CustomScreen, true); });
+	textboxH("Repository", 330.f, 625.f, 150.f, 65.f, []() {
 		if (OS != "Other")
 			system(std::format("{} https://github.com/namdo1225/SFML-Roguelike-Dungeon", OPEN_BROWSER).c_str());
 		else
 			printf("We cannot open the repository with your OS.");
 	});
-	setupTextbox("Quit Game", 330.f, 700.f, 150.f, 65.f, []() {
+	textboxH("Quit Game", 330.f, 700.f, 150.f, 65.f, []() {
 		window.close();
 	});
 
-	setup_helper("Roguelike\nDungeon", 170.f, 40.f, 96.f, NULL);
+	textRectH("Roguelike\nDungeon", 170.f, 40.f, 96.f, NULL);
 
-	setup_helper(
+	textRectH(
 		"Developed with the help of internet forums\nand SFML Graphics, zlib/png license."
 		"\n\nFonts: fontsource.org, Google Fonts\n\nInstructions: use the arrow keys to "
 		"move the\nplayers. Tap on the level up button\nto upgrade your stats."

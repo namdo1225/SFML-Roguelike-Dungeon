@@ -1,9 +1,3 @@
-/**
-*
-* File: game_screen.h
-* Description: Contain the declaration of the Game_Screen class, which represents the main gameplay screen.
-*/
-
 #ifndef GAME_SCREEN_H
 #define GAME_SCREEN_H
 
@@ -14,9 +8,12 @@
 #include <Shape/full_rectangle.h>
 #include <Shape/full_text.h>
 
+/**
+* Represents the main gameplay screen.
+*/
 class Game_Screen : public Screen {
 protected:
-	virtual void change_theme();
+	void changeTheme();
 
 private:
 	static bool grid;
@@ -38,25 +35,25 @@ private:
 	/*
 	* Change opacity of the UI.
 	*/
-	void change_opacity();
+	void changeOpacity();
 
 	/*
 	* Change range display due to the player's weapon.
 	*/
-	static void change_range();
+	static void changeRange();
 
 public:
 	Game_Screen();
 
-	bool click_event_handler();
+	bool handleClickEvent();
 
-	void hover_event_handler();
+	void handleHoverEvent();
 
 	void draw();
 
-	void key_event_handler();
+	void handleKeyEvent();
 
-	void update_draw();
+	void updateDraw();
 };
 
 #endif

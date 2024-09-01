@@ -9,22 +9,22 @@
 #include <SFML/Graphics/Color.hpp>
 
 Exit_Screen::Exit_Screen() : Screen(false, false) {
-	setup_helper(NULL, 0.f, 0.f, 1200.f, 800.f, false, true);
+	textRectH(NULL, 0.f, 0.f, 1200.f, 800.f, false, true);
 	rects[0].setFillColor(sf::Color(0, 0, 0, 128));
 	rects[0].setOutlineThickness(0.f);
 
-	setup_helper(NULL, 200.f, 200.f, 800.f, 400.f);
-	setup_helper("Unsaved changes will be lost.\nDo you still want to quit?", 450, 220, NULL, NULL);
+	textRectH(NULL, 200.f, 200.f, 800.f, 400.f);
+	textRectH("Unsaved changes will be lost.\nDo you still want to quit?", 450, 220, NULL, NULL);
 
-	setupTextbox("Back", 470.f, 340.f, 280.f, 40.f, []() {
-		return_to_prev_screen(ExitScreen);
+	textboxH("Back", 470.f, 340.f, 280.f, 40.f, []() {
+		goToPrevScreen(ExitScreen);
 	});
-	setupTextbox("Title", 470.f, 420.f, 280.f, 40.f, []() {
-		switch_screen(ExitScreen, TitleScreen, false, true);
+	textboxH("Title", 470.f, 420.f, 280.f, 40.f, []() {
+		switchScreen(ExitScreen, TitleScreen, false, true);
 		for (unsigned int i = NameScreen; i < num_screens; i++)
 			visibilities[i] = false;
 	});
-	setupTextbox("Quit", 470.f, 500.f, 280.f, 40.f, []() {
+	textboxH("Quit", 470.f, 500.f, 280.f, 40.f, []() {
 		window.close();
 	});
 

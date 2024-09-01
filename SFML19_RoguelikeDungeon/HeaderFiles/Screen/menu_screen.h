@@ -1,14 +1,11 @@
-/**
-*
-* File: menu_screen.h
-* Description: Contain the declaration of the Menu_Screen class, which represents the menu dialog.
-*/
+#include "screen.h"
 
 #ifndef MENU_SCREEN_H
 #define MENU_SCREEN_H
 
-#include "screen.h"
-
+/**
+* Represents the menu dialog.
+*/
 class Menu_Screen : public Screen {
 private:
 	static bool help;
@@ -16,7 +13,7 @@ private:
 public:
 	Menu_Screen();
 
-	bool click_event_handler();
+	bool handleClickEvent();
 
 	void draw();
 };

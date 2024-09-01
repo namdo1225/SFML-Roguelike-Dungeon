@@ -4,7 +4,7 @@
 #include "Floor/floor_object.h"
 
 /**
-* Contain the declaration of the Collectible class, which represents a collectible which player could
+* Represents a collectible which player could
 * collect into their inventory.
 */
 class Collectible : public Floor_Object {
@@ -21,9 +21,9 @@ public:
 	* Constructor for Collectible.
 	*
 	* Parameter:
-	*	x: a float for the item's x position.
-	* 	y: a float for the item's x position.
-	*	id: an unsigned int for the item's id.
+	*	x: Item's x position.
+	* 	y: Item's x position.
+	*	id: Item's id.
 	*/
 	Collectible(float x, float y, unsigned int id);
 
@@ -31,7 +31,7 @@ public:
 	* Getter for item's id.
 	*
 	* Return:
-	*	an unsigned int for the item's id.
+	*	Item's id.
 	*/
 	unsigned int getID();
 };

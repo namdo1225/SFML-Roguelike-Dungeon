@@ -1,3 +1,10 @@
+/**
+*
+* File: full_textinput.cpp
+* Description: Contain the implementation of the Full_TextInput class.
+*
+*/
+
 #include "Shape/full_textinput.h"
 #include <SFML/System/String.hpp>
 #include <SFML/System/Vector2.hpp>

@@ -1,10 +1,3 @@
-/**
-* 
-* File: player.h
-* Description: This class abstracts Player information. It contains information like player's hp && mp.
-*
-*/
-
 #ifndef PLAYER_H
 #define PLAYER_H
 
@@ -16,17 +9,21 @@
 #include <string>
 #include <vector>
 
+/**
+* Class to contain player's information and helps process the player's actions.
+*/
 class Player : public sf::RectangleShape {
 private:
 	std::vector<Effect> effects;
 
 	std::string name = "Player";
 
-	// value: false = free, true = stuck, can't move
-	// index: 0 = up, 1 = left, 2 = down, 3 = right
+	/** value: false = free, true = stuck, can't move
+	* index: 0 = up, 1 = left, 2 = down, 3 = right
+	*/
 	std::array<bool, 4> stuck{ false, false, false, false };
 
-	unsigned int points{ 10 }, level{ 1 }, cur_exp{ 0 }, lvl_up{ 10 }, floor{ 1 }, gold{ 0 }, max_item{ 10 };
+	unsigned int points{ 10 }, level{ 1 }, curEXP{ 0 }, lvlUpEXP{ 10 }, floor{ 1 }, gold{ 0 }, maxItem{ 10 };
 
 	// MAX_HP, MAX_MP, STR, MAG, DEF, RES, HP, MP
 	std::array<long, 8> stat = { 10, 5, 0, 0, 0, 0, 10, 5};
@@ -42,232 +39,230 @@ public:
 	* Getter for player's level.
 	*
 	* Return:
-	*	an unsigned int for player's level.
+	*	Player's level.
 	*/
-	unsigned int get_lvl();
+	unsigned int getLVL();
 
 	/**
 	* Getter for player's level.
 	*
 	* Return:
-	*	an unsigned int for player's level.
+	*	Player's level.
 	*/
-	unsigned int get_cur_exp();
+	unsigned int getCurEXP();
 
 	/**
 	* Getter for player's exp needed for level up.
 	*
 	* Return:
-	*	an unsigned int for player's level-up exp.
+	*	Player's level-up exp.
 	*/
-	unsigned int get_lvl_up();
+	unsigned int getLVLUpEXP();
 
 	/**
 	* Getter for player's gold amount.
 	*
 	* Return:
-	*	an unsigned int for player's gold amount.
+	*	Player's gold amount.
 	*/
-	unsigned int get_gold();
+	unsigned int getGold();
 
 	/**
 	* Getter for player's stat points.
 	*
 	* Return:
-	*	an unsigned int for player's stat points.
+	*	Player's stat points.
 	*/
-	unsigned int get_pts();
+	unsigned int getStatPts();
 
 	/**
 	* Getter for player's max item slots.
 	*
 	* Return:
-	*	an unsigned int for player's max item slots.
+	*	Player's max item slots.
 	*/
-	unsigned int get_max_itm();
+	unsigned int getMaxItems();
 
 	/**
 	* Getter for player's current floor.
 	*
 	* Return:
-	*	an unsigned int for player's floor.
+	*	Player's current floor.
 	*/
-	unsigned int get_floor();
+	unsigned int getFloor();
 
 	/**
 	* Getter for player's stat.
 	*
 	* Parameter:
-	*	stat: a Stat enum to index the stat type.
+	*	stat: The stat type.
 	* 
 	* Return:
-	*	an unsigned int for the value of stat type.
+	*	The value of stat type.
 	*/
-	long get_stat(Stat stat);
+	long getStat(Stat stat);
 
 	/**
 	* Getter for player's position.
 	*
 	* Parameter:
-	*	z: a char to get either player's x ('x') or y ('y') position.
+	*	z: 'x' for player x position. 'y' for y position.
 	* 
 	* Return:
-	*	an unsigned int for player's floor.
+	*	the player's position.
 	*/
-	int get_pos(char z);
+	int getPos(char z);
 
 	/**
 	* Getter for player's name
 	*
 	* Return:
-	*	an std::string for player's name.
+	*	the player's name.
 	*/
-	std::string get_name();
+	std::string getName();
 
 	/**
 	* Check if player is stuck.
 	*
 	* Parameter:
-	*	i: an unsigned int to check if the player is stuck in a certain direction.
+	*	i: index for player's mobility in a certain direction.
 	* 
 	* Return:
-	*	a bool. true if player is dead. false if player is alive.
+	*	true if player is dead.
 	*/
-	bool is_stuck(unsigned int i);
+	bool isStuck(unsigned int i);
 
 	/**
-	* Check if player is dead (hp is 0 or smaller)
+	* Check if player is dead (hp is 0 or smaller).
 	*
 	* Return:
-	*	a bool. true if player is dead. false if player is alive.
+	*	true if player is dead.
 	*/
-	bool is_dead();
+	bool isDead();
 
 	/**
 	* Method to set player's status effect.
 	*
 	* Parameter:
-	*	stat: an unsigned int for which stat to affect.
-	*	quantity: an int for how much to affect that stat.
-	*	longevity: an unsigned int for how many turns the effect will apply for.
-	*	current: an unsigned int for how many turns the effect has left (useful for loading from saves).
+	*	stat: Stat type to affect.
+	*	quantity:How much to affect that stat.
+	*	longevity: How many turns the effect will apply for.
+	*	current: How many turns the effect has left (useful for loading from saves).
 	*/
-	void set_effect(Stat stat, int quantity, unsigned int longevity, unsigned int current = 0);
+	void setEffect(Stat stat, int quantity, unsigned int longevity, unsigned int current = 0);
 
 	/**
 	* Setter for player's name.
 	*
 	* Parameter:
-	*	name: std::string for player's new name.
+	*	name: the player's new name.
 	*/
-	void set_name(std::string name);
+	void setName(std::string name);
 
 	/**
 	* Setter for player's current floor.
 	*
 	* Parameter:
-	*	fl_num: an unsigned int for player's new current floor.
+	*	num: the player's new floor.
 	*/
-	void set_floor(unsigned int fl_num);
+	void setFloor(unsigned int num);
 
 	/**
 	* Setter for player's current level.
 	*
 	* Parameter:
-	*	t_lvl: an unsigned int for player's new level.
+	*	lvl: the player's new level.
 	*/
-	void set_level(unsigned int t_lvl);
+	void setLVL(unsigned int lvl);
 
 	/**
 	* Setter for player's gold amount.
 	*
 	* Parameter:
-	*	t_gold: an unsigned int for player's new gold amount.
+	*	gd: the player's new gold amount.
 	*/
-	void set_gold(unsigned int t_gold);
+	void setGold(unsigned int gd);
 
 	/**
 	* Setter for player's stat points.
 	*
 	* Parameter:
-	*	pts: an unsigned int for player's new stat points.
+	*	pts: the player's new stat points.
 	*/
-	void set_point(unsigned int pts);
+	void setStatPoint(unsigned int pts);
 
 	/**
 	* Setter for player's current exp.
 	*
 	* Parameter:
-	*	curr_exp: an unsigned int for player's new exp.
+	*	curr_exp: the player's new exp.
 	*/
-	void set_cur_exp(unsigned int curr_exp);
+	void setCurEXP(unsigned int curr_exp);
 
 	/**
 	* Setter for player's exp needed to level up.
 	*
 	* Parameter:
-	*	lvl_exp: an unsigned int for the new level up exp.
+	*	lvl_exp: the new level up exp.
 	*/
-	void set_lvl_up(unsigned int lvl_exp);
+	void setLVLUpEXP(unsigned int lvl_exp);
 
 	/**
 	* Setter for player's max item slots.
 	*
 	* Parameter:
-	*	slots: an unsigned int for player's new max item slots.
+	*	slots: player's new max item slots.
 	*/
-	void set_max_item(unsigned int slots);
+	void setMaxItem(unsigned int slots);
 
 	/**
 	* Setter for player's stat.
 	*
 	* Parameter:
-	*	t_stat: a Stat enum to pick the stat type.
-	*	num: an unsigned int for the new value for the stat type.
+	*	type: Stat type.
+	*	num: the new value for the stat type.
 	*/
-	void set_stat(Stat t_stat, unsigned int num);
+	void setStat(Stat type, unsigned int num);
 
 	/**
 	* Setter for player's position.
-	* 
-	* Default position is 400,400.
-	* 
+	*
 	* Parameter:
-	*	x: an int for player's x position.
-	* 	y: an int for player's y position.
+	*	x: player's x position.
+	* 	y: player's y position.
 	*/
-	void set_pos(int x, int y);
+	void setPos(int x, int y);
 
 	/**
 	* Setter for player's stuck direction (they cannot move that way if stuck 
 	* in that direction).
 	*
 	* Parameter:
-	*	i: an unsigned int to for indexing of direction.
+	*	i: indexing of direction.
 	*		0 = up, 1 = left, 2 = down, 3 = right
-	*	j: a bool. true if stuck. false if not.
+	*	j: true if stuck.
 	*/
-	void set_stuck(unsigned int i, bool j);
+	void setStuck(unsigned int i, bool j);
 
 	/**
-	* Use player's mp && calculate remaining mp.
+	* Use player's mp & calculate remaining mp.
 	* 
 	* Parameter:
 	*	quantity: an int for the amount of mp that will be used.
 	*/
-	void use_mp(int quantity);
+	void useMP(int quantity);
 
 	/**
-	* Attack player && calculate remaining hp.
+	* Attack player & calculate remaining hp.
 	*
 	* Parameter:
-	*	atk_type: a bool for the attack type. true if physical. false if magical.
-	*	uncalculated_quantity: an int for the damage amount.
+	*	type: The attack type.
+	*	quantity: The damage amount.
 	* 
 	* Return:
-	*	an int for the how much the player is actually damaged by.
+	*	How much the player is actually damaged by.
 	*/
-	int attack_pl(bool atk_type, int uncalculated_quantity);
+	int hurtPlayer(Attack type, int quantity);
 	
 	/**
 	* Spend player's gold.
@@ -276,15 +271,16 @@ public:
 	*	quantity: How much money to spend.
 	*
 	* Return:
-	*	a bool. True if the player has that amount to spend. False if not.
+	*	true if the player has that amount to spend/
 	*/
-	bool use_gold(unsigned int quantity);
+	bool useGold(unsigned int quantity);
 
 	/**
 	* Method to reset object's members to default value.
 	* 
 	* Parameter:
 	*	cheat: true if player is powerful upon start.
+	*	replaceName: true to replace name with default option.
 	*/
 	void reset(bool cheat = false, bool replaceName = true);
 
@@ -292,35 +288,35 @@ public:
 	* Copy player's stat for general usage.
 	*
 	* Parameter:
-	*	stats: an std::array<unsigned int, 6> object to copy the stats to.
+	*	stats: The stats to copy.
 	*/
-	void copy_stat(std::array<long, 8>& stats);
+	void copyStat(std::array<long, 8>& stats);
 
 	/**
 	* Handles effects on player.
 	*/
-	void use_effect();
+	void useEffect();
 
 	/**
 	* Resets effects on player.
 	*/
-	void reset_effect();
+	void resetEffect();
 
 	/**
-	* Returns effects.
+	* Getter for effects.
 	* 
 	* Return:
-	*	A vector of Effects.
+	*	list of effects
 	*/
-	std::vector<Effect> get_effects();
+	std::vector<Effect> getEffect();
 
 	/**
 	* Gets player's rectangle.
 	*
 	* Return:
-	*	A sf::FloatRect for the player's rectangle.
+	*	Player's rectangle.
 	*/
-	sf::FloatRect get_rect();
+	sf::FloatRect getRect();
 };
 
 #endif

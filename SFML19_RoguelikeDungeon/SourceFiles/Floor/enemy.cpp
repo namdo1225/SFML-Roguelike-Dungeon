@@ -11,8 +11,10 @@
 #include <Floor/floor_object.h>
 #include <Manager/database_manager.h>
 #include <map>
+#include <stat.h>
 #include <string>
 #include <utility>
+#include <Manager/game_manager.h>
 
 std::map<unsigned int, EnemyFull> Enemy::enemies;
 
@@ -39,7 +41,7 @@ bool Enemy::setup() {
 				std::stof(argv[9]),
 				std::stof(argv[12]),
 				strtol(argv[14], NULL, 10),
-				strtol(argv[13], NULL, 10)
+				(Attack)strtol(argv[13], NULL, 10)
 			}
 		);
 
@@ -49,10 +51,12 @@ bool Enemy::setup() {
 	return true;
 }
 
-Enemy::Enemy(int floor, unsigned int id, float x, float y, int hp) : 
+Enemy::Enemy(unsigned int id, float x, float y, int hp) : 
 	Floor_Object(x, y,
 		Texture_Manager::tex_enemies.contains(id) ? Texture_Manager::tex_enemies[id] : Texture_Manager::tex_enemies[0]) {
 	EnemyFull& info = enemies[id];
+
+	unsigned int floor = Game_Manager::player.getFloor();
 
 	stat = info.stat;
 
@@ -65,7 +69,7 @@ Enemy::Enemy(int floor, unsigned int id, float x, float y, int hp) :
 	constant = &info.growth;
 }
 
-int Enemy::damageEnemy(bool type, int amount) {
+int Enemy::damageEnemy(Attack type, int amount) {
 	int protect{ type ? stat.def : stat.res };
 	int quantity = std::max(1, amount - protect);
 	stat.hp -= quantity;

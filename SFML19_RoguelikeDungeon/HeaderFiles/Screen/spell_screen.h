@@ -1,27 +1,22 @@
-/**
-*
-* File: spell_screen.h
-* Description: Contain the declaration of the Spell_Screen class, which represents the spell screen.
-*/
+#include "screen.h"
 
 #ifndef SPELL_SCREEN_H
 #define SPELL_SCREEN_H
 
-#include "screen.h"
-
+/**
+* Represents the spell screen.
+*/
 class Spell_Screen : public Screen {
-private:
-
 public:
 	Spell_Screen();
 
-	bool click_event_handler();
+	bool handleClickEvent();
 
-	void hover_event_handler();
+	void handleHoverEvent();
 
 	void draw();
 
-	void update_draw();
+	void updateDraw();
 };
 
 #endif

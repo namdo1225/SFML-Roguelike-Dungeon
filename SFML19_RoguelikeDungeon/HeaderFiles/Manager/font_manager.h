@@ -1,10 +1,3 @@
-/**
-*
-* File: font_manager.h
-* Description: Contain the declaration of the Font_Manager class, which represents a class that manages the game's fonts.
-*
-*/
-
 #ifndef FONT_H
 #define FONT_H
 
@@ -12,11 +5,14 @@
 #include <string>
 #include <vector>
 
+/**
+* A class that manages the game's fonts.
+*/
 class Font_Manager {
 private:
 	static unsigned int selected_font;
 	static std::vector<sf::Font> buffers;
-	static bool assets_loaded;
+	static bool loaded;
 
 protected:
 	/**

@@ -1,24 +1,22 @@
-/**
-*
-* File: audio_manager.h
-* Description: Contain the declaration of the Audio_Manager class, which represents a class that manages the game's sounds and music.
-*
-*/
+#include <array>
+#include <SFML/Audio/Music.hpp>
+#include <SFML/Audio/Sound.hpp>
+#include <SFML/Audio/SoundBuffer.hpp>
 
 #ifndef AUDIO_H
 #define AUDIO_H
 
-#include <SFML/Audio.hpp>
-#include <array>
-
+/**
+* Manages the game's sounds and music.
+*/
 class Audio_Manager {
 private:
 	static std::array<sf::SoundBuffer, 30> buffers;
 	static std::array<sf::Sound, 30> sounds;
 	static sf::Music music;
 
-	static bool assets_loaded;
-	static float sfx_volume;
+	static bool loaded;
+	static float sfxVolume;
 
 	/**
 	* Constructor for Audio_Manager.
@@ -39,49 +37,49 @@ public:
 	* Set SFXs' volume.
 	*
 	* Parameter:
-	*	volume: a float for the SFX's new volume.
+	*	volume: the SFXs' new volume.
 	*/
-	static void set_sfx_volume(float volume);
+	static void setSFXVolume(float volume);
 
 	/**
 	* Set all musics' volume.
 	*
 	* Parameter:
-	*	volume: a float for the musics' new volume.
+	*	volume: the musics' new volume.
 	*/
-	static void set_music_volume(float volume);
+	static void setMusicVolume(float volume);
 
 	/**
 	* Getter for SFXs' volume.
 	*
 	* Return:
-	*	a float for the SFXs' volume.
+	*	the SFXs' volume.
 	*/
-	static float get_sfx_volume();
+	static float getSFXVolume();
 
 	/**
 	* Getter for musics' volume.
 	*
 	* Return:
-	*	a float for the musics' volume.
+	*	the musics' volume.
 	*/
-	static float get_music_volume();
+	static float getMusicVolume();
 
 	/**
 	* Plays an SFX.
 	*
 	* Parameter:
-	*	id: an unsigned int for which SFX to play.
+	*	id: the id of the SFX to play.
 	*/
-	static void play_sfx(unsigned int id);
+	static void playSFX(unsigned int id);
 
 	/**
 	* Plays music.
 	*
 	* Parameter:
-	*	id: an unsigned int for which SFX to play.
+	*	id: the id of the music to play.
 	*/
-	static void play_music(unsigned int id);
+	static void playMusic(unsigned int id);
 };
 
 

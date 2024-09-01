@@ -1,19 +1,14 @@
-/**
-*
-* File: sf_manager.h
-* Description: Contain the declaration of the SF_Manager class, which represents a parent class
-* containing common SFML objects to keep track of.
-*
-*/
-
-#ifndef SF_MANAGER_H
-#define SF_MANAGER_H
-
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/View.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Window/Event.hpp>
 
+#ifndef SF_MANAGER_H
+#define SF_MANAGER_H
+
+/**
+* A class containing common SFML objects to keep track of.
+*/
 class SF_Manager {
 public:
 	const static float DEFAULT_SCREEN_X;
@@ -33,17 +28,17 @@ public:
 	static unsigned int worldZoomLevel;
 
 	static sf::Event event;
-	static sf::Vector2i mouse_pos;
-	static sf::Vector2f mouse_world;
+	static sf::Vector2i mousePos;
+	static sf::Vector2f mouseWorld;
 
 	static float x;
 	static float y;
 
-	static float world_x;
-	static float world_y;
+	static float worldX;
+	static float worldY;
 
-	static float slot_x;
-	static float slot_y;
+	static float slotX;
+	static float slotY;
 };
 
 #endif

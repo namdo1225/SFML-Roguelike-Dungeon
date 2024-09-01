@@ -1,18 +1,14 @@
-/**
-*
-* File: stair.h
-* Description: Contain the declaration of the Stair class, which represents a stair which player could
-* use to get to the next floor.
-*
-*/
+#include "Floor/floor_object.h"
 
 #ifndef STAIR_H
 #define STAIR_H
 
-#include "Floor/floor_object.h"
-
+/**
+* Represents a stair which player could use to get to the next floor.
+*/
 class Stair : public Floor_Object {
 public:
+
 	/**
 	* Constructor for Stair.
 	*/
@@ -22,10 +18,10 @@ public:
 	* Constructor for Stair.
 	*
 	* Parameter:
-	*	x: a float for the stair's x position.
-	* 	y: a float for the stair's x position.
+	*	x: the stair's x position.
+	* 	y: the stair's y position.
 	*/
-	Stair(int x, int y);
+	Stair(float x, float y);
 };
 
 #endif

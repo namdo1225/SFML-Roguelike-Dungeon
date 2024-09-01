@@ -1,27 +1,22 @@
-/**
-*
-* File: inventory_screen.h
-* Description: Contain the declaration of the Inventory_Screen class, which represents the inventory screen.
-*/
-
 #ifndef INVENTORY_SCREEN_H
 #define INVENTORY_SCREEN_H
 
 #include "screen.h"
 
+/**
+* Represents the inventory screen.
+*/
 class Inventory_Screen : public Screen {
-private:
-
 public:
 	Inventory_Screen();
 
-	virtual bool click_event_handler();
+	bool handleClickEvent();
 
-	virtual void hover_event_handler();
+	void handleHoverEvent();
 
-	virtual void draw();
+	void draw();
 
-	virtual void update_draw();
+	void updateDraw();
 };
 
 #endif

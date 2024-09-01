@@ -12,8 +12,8 @@
 bool Menu_Screen::help = false;
 
 Menu_Screen::Menu_Screen() : Screen(true, false) {
-	setup_helper(NULL,  100.f, 100.f, 630.f, 550.f);
-	setup_helper(
+	textRectH(NULL,  100.f, 100.f, 630.f, 550.f);
+	textRectH(
 		"Arrow keys: Move player."
 		"\nW: Wait. Skip turn."
 		"\nQ: Move up a floor if you are standing on a stair."
@@ -28,41 +28,41 @@ Menu_Screen::Menu_Screen() : Screen(true, false) {
 		"\nClick on 'S' button and hover on enemies to scan\ntheir stat.",
 		110.f, 110.f, NULL, NULL);
 
-	setupTextbox("Help", 1000.f, 700.f, 197.f, 99.f, []() {
+	textboxH("Help", 1000.f, 700.f, 197.f, 99.f, []() {
 		help = !help;
 	});
-	setupTextbox( "Map", 1000.f, 400.f, 197.f, 99.f, []() {
-		switch_screen(MenuScreen, MapScreen, false, true);
+	textboxH( "Map", 1000.f, 400.f, 197.f, 99.f, []() {
+		switchScreen(MenuScreen, MapScreen, false, true);
 	});
-	setupTextbox("Inventory", 1000.f, 500.f, 197.f, 99.f, []() {
-		Game_Manager::inv_select = NULL;
-		switch_screen(MenuScreen, InventoryScreen, false, true);
+	textboxH("Inventory", 1000.f, 500.f, 197.f, 99.f, []() {
+		Game_Manager::selectedInv = NULL;
+		switchScreen(MenuScreen, InventoryScreen, false, true);
 	});
-	setupTextbox("Spells", 1000.f, 600.f, 197.f, 99.f, []() {
-		Game_Manager::spell_select = NULL;
-		switch_screen(MenuScreen, SpellScreen, false, true);
+	textboxH("Spells", 1000.f, 600.f, 197.f, 99.f, []() {
+		Game_Manager::selectedSpell = NULL;
+		switchScreen(MenuScreen, SpellScreen, false, true);
 	});
-	setupTextbox("Load", 800.f, 700.f, 197.f, 99.f, []() {
-		switch_screen(MenuScreen, LoadScreen, true);
+	textboxH("Load", 800.f, 700.f, 197.f, 99.f, []() {
+		switchScreen(MenuScreen, LoadScreen, true);
 	});
-	setupTextbox("Settings", 600.f, 700.f, 197.f, 99.f, []() {
-		switch_screen(MenuScreen, SettingScreen, true);
+	textboxH("Settings", 600.f, 700.f, 197.f, 99.f, []() {
+		switchScreen(MenuScreen, SettingScreen, true);
 	});
-	setupTextbox("Status", 400.f, 700.f, 197.f, 99.f, []() {
-		switch_screen(MenuScreen, StatusScreen, true);
+	textboxH("Status", 400.f, 700.f, 197.f, 99.f, []() {
+		switchScreen(MenuScreen, StatusScreen, true);
 	});
-	setupTextbox("Level", 200.f, 700.f, 197.f, 99.f, []() {
-		map_txts["stat_left"].setString(std::to_string(Game_Manager::player.get_pts()));
-		switch_screen(MenuScreen, LevelScreen, false, true);
+	textboxH("Level", 200.f, 700.f, 197.f, 99.f, []() {
+		map_txts["stat_left"].setString(std::to_string(Game_Manager::player.getStatPts()));
+		switchScreen(MenuScreen, LevelScreen, false, true);
 	});
-	setupTextbox("Save", 0.f, 700.f, 197.f, 99.f, []() {
+	textboxH("Save", 0.f, 700.f, 197.f, 99.f, []() {
 		Game_Manager::save();
 	});
 }
 
-bool Menu_Screen::click_event_handler() {
-	if (mouse_in_button(ExitButton)) {
-		return_to_prev_screen(MenuScreen);
+bool Menu_Screen::handleClickEvent() {
+	if (mouseInButton(ExitButton)) {
+		goToPrevScreen(MenuScreen);
 		return true;
 	}
 }

@@ -1,22 +1,19 @@
-/**
-*
-* File: map.h
-* Description: Contain the declaration of the Map class, which represents a map which player could
-* use to view the current floor's layout.
-*
-*/
+#include "room.h"
+#include <vector>
 
 #ifndef MAP_H
 #define MAP_H
 
-#include <SFML/Graphics.hpp>
-#include "room.h"
-#include <array>
-
+/**
+* Represents a map which player could
+* use to view the current floor's layout.
+*/
 class Map {
 private:
 	std::vector<Room> map;
+
 public:
+
 	/**
 	* Constructor for Map.
 	*/
@@ -24,14 +21,14 @@ public:
 
 	/**
 	* Constructor for Map.
+	* 
+	* Parameter:
+	*	rooms: list of rooms for the map to be created
 	*/
 	Map(std::vector<Room> &rooms);
 
 	/**
 	* Draw the map on the game's window.
-	*
-	* Parameter:
-	*	window: a sf::RenderWindow object where the map will be drawn on.
 	*/
 	void draw();
 };

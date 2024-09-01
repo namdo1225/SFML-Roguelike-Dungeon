@@ -1,15 +1,11 @@
-/**
-*
-* File: effect.h
-* Description: Defines a struct that represents an effect which modifies player's stat for a specified amount of turns.
-*
-*/
+#include "stat.h"
 
 #ifndef EFFECT_H
 #define EFFECT_H
 
-#include "stat.h"
-
+/**
+* A struct that represents an effect which modifies player's stat for a specified amount of turns.
+*/
 struct Effect {
 	Stat stat_changed;
 	int stat_difference;

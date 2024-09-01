@@ -1,33 +1,31 @@
-/**
-*
-* File: status_screen.h
-* Description: Contain the declaration of the Status_Screen class,
-* which represents a screen to view player's stats.
-*/
+#include "screen.h"
+#include <SFML/Graphics/View.hpp>
+#include <Shape/full_text.h>
 
 #ifndef STATUS_SCREEN_H
 #define STATUS_SCREEN_H
 
-#include "screen.h"
-
+/**
+* Represents a screen to view player's stats.
+*/
 class Status_Screen : public Screen {
 private:
 	static sf::View viewEffect;
-	Full_Text effect_txt = Full_Text(800.f, 150.f, 20.f, "");
+	static Full_Text effect_txt;
 
 protected:
-	virtual void change_theme();
+	void changeTheme();
 
 public:
 	Status_Screen();
 
-	bool click_event_handler();
+	bool handleClickEvent();
 
-	virtual void update_draw();
+	void updateDraw();
 
-	virtual void mouse_event_handler();
+	void handleMouseEvent();
 
-	virtual void draw();
+	void draw();
 };
 
 #endif

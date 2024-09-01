@@ -17,7 +17,7 @@ int main() {
         if (success) {
             std::srand(static_cast<unsigned int>(std::time(nullptr) * std::time(nullptr) / 2 + 3 * 5));
             srand(time(NULL));
-            Interface::get().window_loop();
+            Interface::get().loopWindow();
         }
 
         // Database_Manager::reverse(0);

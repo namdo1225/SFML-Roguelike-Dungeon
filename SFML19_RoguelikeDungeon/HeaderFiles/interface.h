@@ -1,17 +1,13 @@
-/**
-* 
-* File: interface.h
-* Description: This class controls the entire game essentially, creating the interface
-* and connect all other classes together. This class uses the Singleton pattern.
-*
-*/
+#include "Screen/screen.h"
+#include <SFML/Graphics/RenderWindow.hpp>
 
 #ifndef INTERFACE_H
 #define INTERFACE_H
 
-#include "Screen/screen.h"
-#include <SFML/Graphics/RenderWindow.hpp>
-
+/**
+* This class controls the entire game essentially, creating the interface
+* and connect all other classes together. This class uses the Singleton pattern.
+*/
 class Interface {
 protected:
 	/**
@@ -42,21 +38,20 @@ public:
 
 	static Interface& get();
 
-	// handle actual events
 	/**
 	* The main method which contains the main loop for the game.
 	*/
-	void window_loop();
+	void loopWindow();
 
 	/**
 	* Draw the UI of the game.
 	*/
-	void draw_interface();
+	void draw();
 
 	/**
 	* Has a loop to handle the events of the game.
 	*/
-	void handle_event();
+	void handleEvent();
 };
 
 #endif

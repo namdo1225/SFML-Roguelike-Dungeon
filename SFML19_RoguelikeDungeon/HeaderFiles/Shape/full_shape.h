@@ -1,17 +1,13 @@
-/**
-*
-* File: full_shape.h
-* Description: Contain the declaration of the Full_Shape to allow children
-* wrapper classes to maintain a common interface.
-*
-*/
-
-#include <SFML/Graphics.hpp>
 #include "Manager/setting_manager.h"
+#include <SFML/Graphics/Color.hpp>
 
 #ifndef FULL_SHAPE_H
 #define FULL_SHAPE_H
 
+/**
+* A wrapper, parent classes to maintain a common interface for
+* all "Full" subclasses.
+*/
 class Full_Shape : protected Setting_Manager {
 protected:
 	bool hovered = false;
@@ -30,9 +26,9 @@ public:
 	Full_Shape(bool hoverable = true, bool override_theme = false);
 
 	/*
-	* Flip shape's light mode and theme.
+	* Change shape's theme.
 	*/
-	virtual void flip_theme() = 0;
+	virtual void changeTheme() = 0;
 
 	/*
 	* Highlights shape.
@@ -46,7 +42,7 @@ public:
 	* Sets shape's fill color.
 	*
 	* Parameter:
-	*	color: a const sf::Color& for the new fill's color.
+	*	color: The new fill's color.
 	*/
 	virtual void setFillColor(const sf::Color& color) = 0;
 
@@ -54,7 +50,7 @@ public:
 	* Sets shape's outline color.
 	*
 	* Parameter:
-	*	color: a const sf::Color& for the new outline's color.
+	*	color: The new outline's color.
 	*/
 	virtual void setOutlineColor(const sf::Color& color) = 0;
 

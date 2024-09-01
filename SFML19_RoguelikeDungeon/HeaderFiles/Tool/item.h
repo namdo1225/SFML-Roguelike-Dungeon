@@ -1,11 +1,3 @@
-/**
-*
-* File: item.h
-* Description: This class abstracts an item which player can use to provide special effects in the game world.
-* Also contains child classes from the Spell class to contain individual items.
-*
-*/
-
 #include "stat.h"
 #include "tool.h"
 #include <functional>
@@ -15,8 +7,16 @@
 #ifndef ITEM_H
 #define ITEM_H
 
+/**
+* StatConsumable are consumables that modify a stat.
+* UtilityConsumable are non-Stat consumables.
+*/
 enum ItemType { Weapon, Armor, StatConsumable, UtilityConsumable };
 
+/**
+* This class abstracts an item which player can use to provide special effects in the game world.
+* Also contains child classes from the Spell class to contain individual items.
+*/
 class Item : public Tool {
 protected:
 	std::function<void()> utilityUse = NULL;
@@ -30,28 +30,42 @@ public:
 	* Constructor for Item.
 	* 
 	* Parameter:
-	*	id: an int for the item's id.
-	* 	type: an int for the item's type.
-	* 	modify_act: a bool. true for item that modify a stat. false for item that can be used without modifying stat.
-	* 	hp_mp_other: a bool. false for modifying hp/mp. true for other stat.
-	* 	stat: a Stat enum for the type of stat modified.
-	* 	quantity: an int for the number that the item is supposed to have. 
-	*					Ex: if it's a health potion, the number is the amount the potion heals.
-	* 	range: an int for the item's range.
-	* 	buy: an int for the item's buy gold.
-	* 	sell: an int for the item's sell gold.
+	*	id: item's id.
+	* 	type: item's type.
+	* 	stat: Stat that will be modified.
+	* 	quantity: an int for the number that the item is supposed to have.
+	*		Ex: if it's a health potion, the number is the amount the potion heals.
+	* 	range: item's range.
+	* 	buy: item's buy gold.
+	* 	sell: item's sell gold.
 	*	abbre: a const char[3] for the items' name abbreviation.
 	*	desc: a const char* for the item's description.
 	*	name: a const char* for item's name.
+	*	utilityUse: a function that can be called when utility consumable is used.
 	*/
 	Item(unsigned int id, ItemType type, Stat stat, int quantity,
 		unsigned int range, unsigned int buy, unsigned int sell,
 		std::string abbre, std::string desc, std::string name, std::function<void()> utilityUse = NULL);
 
+	/**
+	* Constructor for Item.
+	*/
 	Item();
 
+	/**
+	* Constructor for Item.
+	* 
+	* Parameter:
+	*	id: an id to fill item with information.
+	*/
 	Item(unsigned int id);
 
+	/**
+	* Get items from the database.
+	*
+	* Return:
+	*	true if setup is successful.
+	*/
 	static bool setup();
 
 	/**

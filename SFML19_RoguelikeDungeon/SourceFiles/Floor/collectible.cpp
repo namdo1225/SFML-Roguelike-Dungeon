@@ -11,8 +11,6 @@
 
 Collectible::Collectible() : Floor_Object(Texture_Manager::collectible) {}
 
-Collectible::Collectible(float x, float y, unsigned int id) : Floor_Object(x, y, Texture_Manager::collectible) {
-	this->id = id;
-}
+Collectible::Collectible(float x, float y, unsigned int id) : Floor_Object(x, y, Texture_Manager::collectible), id(id) {}
 
 unsigned int Collectible::getID() { return id; }

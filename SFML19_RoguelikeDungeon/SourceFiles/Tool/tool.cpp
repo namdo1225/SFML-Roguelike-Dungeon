@@ -46,5 +46,5 @@ bool Tool::contains(float x, float y) {
 }
 
 void Tool::changeTheme() {
-	icon.flip_theme();
+	icon.changeTheme();
 }

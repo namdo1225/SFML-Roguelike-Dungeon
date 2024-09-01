@@ -6,21 +6,26 @@
 */
 
 #include "Manager/audio_manager.h"
+#include <array>
+#include <SFML/Audio/Music.hpp>
+#include <SFML/Audio/Sound.hpp>
+#include <SFML/Audio/SoundBuffer.hpp>
+#include <SFML/Audio/SoundSource.hpp>
 
-bool Audio_Manager::assets_loaded = false;
-float Audio_Manager::sfx_volume = 100.f;
+bool Audio_Manager::loaded = false;
+float Audio_Manager::sfxVolume = 100.f;
 
 std::array<sf::SoundBuffer, 30> Audio_Manager::buffers;
 std::array<sf::Sound, 30> Audio_Manager::sounds;
 sf::Music Audio_Manager::music;
 
 Audio_Manager::Audio_Manager() {
-	if (!assets_loaded)
+	if (!loaded)
 		load();
 }
 
 bool Audio_Manager::load() {
-	if (assets_loaded)
+	if (loaded)
 		return true;
 
 	if (music.openFromFile("Sound\\05_music.wav") &&
@@ -32,45 +37,45 @@ bool Audio_Manager::load() {
 		) {
 		for (unsigned int i = 0; i < 5; i++)
 			sounds[i].setBuffer(buffers[i]);
-		assets_loaded = true;
-		return assets_loaded;
+		loaded = true;
+		return loaded;
 	}
 
-	assets_loaded = false;
-	return assets_loaded;
+	loaded = false;
+	return loaded;
 }
 
-void Audio_Manager::set_sfx_volume(float volume) {
+void Audio_Manager::setSFXVolume(float volume) {
 	if (volume >= 0 && volume <= 100) {
-		sfx_volume = volume;
+		sfxVolume = volume;
 		for (unsigned int i = 0; i < 5; i++)
 			sounds[i].setVolume(volume);
 	}
 }
 
-void Audio_Manager::set_music_volume(float volume) {
+void Audio_Manager::setMusicVolume(float volume) {
 	if (volume >= 0 && volume <= 100)
 		music.setVolume(volume);
 }
 
-float Audio_Manager::get_sfx_volume() {
-	return sfx_volume;
+float Audio_Manager::getSFXVolume() {
+	return sfxVolume;
 }
 
-float Audio_Manager::get_music_volume() {
+float Audio_Manager::getMusicVolume() {
 	return music.getVolume();
 }
 
-void Audio_Manager::play_sfx(unsigned int id) {
-	if (!assets_loaded)
+void Audio_Manager::playSFX(unsigned int id) {
+	if (!loaded)
 		load();
 
 	if (id <= 0 && id<= 30)
 		sounds[id].play();
 }
 
-void Audio_Manager::play_music(unsigned int id) {
-	if (!assets_loaded)
+void Audio_Manager::playMusic(unsigned int id) {
+	if (!loaded)
 		load();
 
 	if (music.Stopped || music.Paused)

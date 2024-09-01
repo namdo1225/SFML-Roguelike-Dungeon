@@ -1,15 +1,9 @@
-/**
-*
-* File: setting_manager.h
-* Description: Contain the declaration of the Setting_Manager class, which represents a class that manages the game's settings.
-*
-*/
-
 #ifndef SETTING_H
 #define SETTING_H
 
-#include <string>
-
+/**
+* A class that manages the game's settings.
+*/
 class Setting_Manager {
 protected:
 	/**
@@ -18,9 +12,9 @@ protected:
 	Setting_Manager();
 
 public:
-	const static unsigned int themes = 2;
+	const static unsigned int THEMES = 2;
 	static unsigned int theme;
-	static unsigned int sfx_volume;
+	static unsigned int sfxVolume;
 	static unsigned int music_volume;
 	static unsigned int font;
 	static bool light;
@@ -29,7 +23,7 @@ public:
 	* Method to load settings from settings.json.
 	*
 	* Return:
-	*	a bool. true if all settings are successfully loaded.
+	*	true if all settings are successfully loaded.
 	*/
 	static bool load();
 
@@ -38,6 +32,9 @@ public:
 	*
 	* Parameter:
 	*	create: true if a new setting file needs to be created.
+	* 
+	* Return:
+	*	true if all settings are successfully saved.
 	*/
 	static bool save(bool create = false);
 

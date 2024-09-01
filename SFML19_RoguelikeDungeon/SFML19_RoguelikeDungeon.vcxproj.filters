@@ -191,9 +191,6 @@
     <ClInclude Include="HeaderFiles\Floor\gold_collectible.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="HeaderFiles\include.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="HeaderFiles\Floor\interactible.h">
       <Filter>Header Files</Filter>
     </ClInclude>

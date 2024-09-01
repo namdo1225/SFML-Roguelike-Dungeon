@@ -1,10 +1,3 @@
-/**
-*
-* File: floor.h
-* Description: Contain Floor class, which represents a dungeon floor.
-*
-*/
-
 #ifndef FLOOR_H
 #define FLOOR_H
 
@@ -18,16 +11,19 @@
 #include <SFML/Graphics/Rect.hpp>
 #include <vector>
 
+/**
+* Represents a dungeon floor.
+*/
 class Floor {
 private:
-	bool fl_shop{ false };
+	bool shopExist{ false };
 	Shop shop;
 	Stair stair;
 
 	/**
 	* Constructs rooms and doors for a new floor.
 	*/
-	void make_room_door();
+	void createRoomDoor();
 
 public:
 	Map map;
@@ -41,7 +37,7 @@ public:
 	* Constructor for Floor.
 	* 
 	* Parameter:
-	*	load: a bool for whether the floor is being loaded from a save file.
+	*	load: true if the floor is being loaded from a save file.
 	*/
 	Floor(bool load = false);
 
@@ -49,103 +45,103 @@ public:
 	* Helper method to set a room's position && size.
 	*
 	* Parameter:
-	*	rand_door: an int for the rotation of the door.
-	*	rand_coord: an int&. The x coordinate of the room.
-	*	rand_size: an int&. The x size of the room.
-	*	rand_coord_2: an int&. The y coordinate of the room.
-	*	rand_size_2: an int&. The y size of the room.
-	*	rand_room_coord: an int. The x position of another room.
-	*	rand_room_size: an int. The x size position of another room.
-	*	rand_room_coord_2: an int. The y position of another room.
-	*	rand_room_size_2: an int. The y size of another room.
-	*	conflict_room: a bool&. Indicate whether the room being made has a conflict with another room.
-	*	k: an int&.
+	*	rand_door: the rotation of the door.
+	*	rand_coord: x coordinate of the room.
+	*	rand_size: x size of the room.
+	*	rand_coord_2:  y coordinate of the room.
+	*	rand_size_2: y size of the room.
+	*	rand_room_coord: x position of another room.
+	*	rand_room_size: x size position of another room.
+	*	rand_room_coord_2: y position of another room.
+	*	rand_room_size_2:y size of another room.
+	*	conflict_room: true if the room being made has a conflict with another room.
+	*	k: for indexing purpose.
 	*/
-	void set_rm_pos_size(int rand_door, int& rand_coord, int& rand_size, int& rand_coord_2, int& rand_size_2, int rand_room_coord,
+	void setRmPosSize(int rand_door, int& rand_coord, int& rand_size, int& rand_coord_2, int& rand_size_2, int rand_room_coord,
 		int rand_room_size, int rand_room_coord_2, int rand_room_size_2, bool& conflict_room, int& k);
 
 	/**
-	* Helper method to set door's position (can be either x || y).
+	* Helper method to set door's position (can be either x or y).
 	* 
 	* Parameter:
-	*	rand_door_coord: an int& for the coordinate that will be set as the door's coordinate (can be either x or y).
-	*	rand_coord: an int for the position of rand_door_coord.
-	*	rand_size: an int for the size of rand_door_coord.
+	*	rand_door_coord: the coordinate that will be set as the door's coordinate (can be either x or y).
+	*	rand_coord: the position of rand_door_coord.
+	*	rand_size: the size of rand_door_coord.
 	*/
-	void set_door_pos_1(int& rand_door_coord, int rand_coord, int rand_size);
+	void setDoorPos1(int& rand_door_coord, int rand_coord, int rand_size);
 
 	/**
 	* Helper method to set door's position (can be either x || y).
 	* 
 	* Parameter:
-	*	rand_door_coord: an int& for the coordinate that will be set as the door's coordinate (can be either x or y).
-	*	rand_coord: an int for the position of rand_door_coord.
-	*	rand_size: an int for the size of rand_door_coord.
-	*	rand_room_coord: an int for the room's position. Useful to calculate door's position.
-	*	rand_room_size: an int for the room's size. Useful to calculate door's position.
+	*	rand_door_coord:the coordinate that will be set as the door's coordinate (can be either x or y).
+	*	rand_coord: the position of rand_door_coord.
+	*	rand_size:the size of rand_door_coord.
+	*	rand_room_coord: the room's position. Useful to calculate door's position.
+	*	rand_room_size: the room's size. Useful to calculate door's position.
 	*/
-	void set_door_pos_2(int& rand_door_coord, int rand_coord, int rand_size, int rand_room_coord, int rand_room_size);
+	void setDoorPos2(int& rand_door_coord, int rand_coord, int rand_size, int rand_room_coord, int rand_room_size);
 
 	/**
 	* Make the stair for the current floor.
 	*/
-	void make_stair();
+	void createStair();
 
 	/**
 	* Make the shop for the current floor.
 	*/
-	void make_shop();
+	void createShop();
 
 	/**
-	* Check if shop exist.
+	* Getter for shopExist.
 	* 
 	* Return:
-	*	a bool. true if shop exists. false if not.
+	*	true if shop exists.
 	*/
-	bool shop_exist();
+	bool isShopExist();
 
 	/**
 	* Setter for shop's position.
 	*
 	* Parameter:
-	*	x: an int for shop's new x position.
-	* 	y: an int for shop's new y position.
+	*	x: shop's new x position.
+	* 	y: shop's new y position.
 	*/
-	void set_shop_pos(int x, int y);
+	void setShopPos(int x, int y);
 
 	/**
 	* Setter for stair's position.
 	*
 	* Parameter:
-	*	x: an int for stair's new x position.
-	* 	y: an int for stair's new y position.
+	*	x: stair's new x position.
+	* 	y: stair's new y position.
 	*/
-	void set_stair_pos(int x, int y);
+	void setStairPos(int x, int y);
 
 	/**
 	* Getter for shop's position.
 	*
 	* Parameter:
-	*	z: a char. 'x' for the shop's x position. 'y' for the shop's y position.
+	*	z: 'x' for the shop's x. 'y' for the shop's y.
 	*
 	* Return:
-	*	an int for the shop's x || y position.
+	*	shop's x or y position.
 	*/
-	int get_shop_pos(char z);
+	int getShopPos(char z);
 
 	/**
 	* Getter for stair's position.
 	*
 	* Parameter:
-	*	z: a char. 'x' for the stair's x position. 'y' for the stair's y position.
+	*	z: 'x' for the stair's x. 'y' for the stair's y.
 	*
 	* Return:
-	*	an int for the stair's x || y position.
+	*	the stair's x or y position.
 	*/
-	int get_stair_pos(char z);
+	int getStairPos(char z);
 
 	/**
-	* Draw the golds, collectibles, rooms, && doors on the game's window.
+	* Draw the golds, collectibles, rooms, doors, etc. on the game's window.
 	*/
 	void draw();
 
@@ -153,125 +149,125 @@ public:
 	* Load/Create room for the current floor from existing data.
 	*
 	* Parameter:
-	*	x: an int for the room's x position.
-	*	y: an int for the room's y position.
-	*	sx: an int for the room's width.
-	*	sy: an int for the room's height.
+	*	x: the room's x position.
+	*	y: the room's y position.
+	*	sx: the room's width.
+	*	sy: the room's height.
 	*/
-	void load_room(int x, int y, int sx, int sy);
+	void loadRoom(int x, int y, int sx, int sy);
 
 	/**
-	* Load/Create door for the current floor from existing data.
+	* Load door for the current floor from existing data.
 	*
 	* Parameter:
-	*	x: an int for the door's x position.
-	*	y: an int for the door's y position.
-	*	rot: an int for the door's rotation.
-	*	slot0: an int for the door's filled slot 0.
-	*	slot1: an int for the door's filled slot 1.
-	*	slot2: an int for the door's filled slot 2.
-	*	slot3: an int for the door's filled slot 3.
+	*	x: the door's x position.
+	*	y: the door's y position.
+	*	rot: the door's rotation.
+	*	slot0: the door's filled slot 0.
+	*	slot1: the door's filled slot 1.
+	*	slot2: the door's filled slot 2.
+	*	slot3: the door's filled slot 3.
 	*/
-	void load_door(int x, int y, int rot, int slot0, int slot1, int slot2, int slot3);
+	void loadDoor(int x, int y, int rot, int slot0, int slot1, int slot2, int slot3);
 
 	/**
-	* Load/Create stair for the current floor from existing data.
+	* Load stair for the current floor from existing data.
 	*
 	* Parameter:
-	*	x: an int for the stair's x position.
-	*	y: an int for the stair's y position.
+	*	x: the stair's x position.
+	*	y: the stair's y position.
 	*/
-	void load_stair(int x, int y);
+	void loadStair(int x, int y);
 
 	/**
-	* Load/Create item for the current floor from existing data.
+	* Load item for the current floor from existing data.
 	*
 	* Parameter:
-	*	x: an int for the item's x position.
-	*	y: an int for the item's y position.
-	*	id: an unsigned int for the item's id.
+	*	x: the item's x position.
+	*	y: the item's y position.
+	*	id: the item's id.
 	*/
-	void load_collectible(int x, int y, unsigned int id);
+	void loadCollectible(int x, int y, unsigned int id);
 
 	/**
-	* Load/Create gold collectible for the current floor from existing data.
+	* Load gold collectible for the current floor from existing data.
 	*
 	* Parameter:
-	*	x: an int for the gold's x position.
-	*	y: an int for the gold's y position.
-	*	amount: an unsigned int for the gold's amount.
+	*	x: the gold's x position.
+	*	y: the gold's y position.
+	*	amount: the gold's amount.
 	*/
-	void load_gold(int x, int y, unsigned int amount);
+	void loadGold(int x, int y, unsigned int amount);
 
 	/**
-	* Load/Create shop for the current floor from existing data.
+	* Load shop for the current floor from existing data.
 	*
 	* Parameter:
-	*	x: an int for the shop's x position.
-	*	y: an int for the shop's y position.
+	*	x: the shop's x position.
+	*	y: the shop's y position.
 	*/
-	void load_shop(int x, int y);
+	void loadShop(int x, int y);
 
 	/**
-	* Load/Create interactible for the current floor from existing data.
+	* Load interactible for the current floor from existing data.
 	*
 	* Parameter:
-	*	x: an int for the interactible's x position.
-	*	y: an int for the interactible's y position.
-	*	hidden: a bool. Whether the interactible is hidden from player.
+	*	x: the interactible's x position.
+	*	y: the interactible's y position.
+	*	hidden: True if interactible is hidden from player.
 	*/
-	void load_interactible(int x, int y, bool hidden);
+	void loadInteractible(int x, int y, bool hidden);
 
 	/**
 	* Make item collectibles for the current floor.
 	*
 	* Parameter:
-	*	floor: an unsigned int for the current floor number.
+	*	floor: the current floor number.
 	*/
-	void make_collectible(unsigned int floor);
+	void makeCollectible(unsigned int floor);
 
 	/**
 	* Make gold collectibles for the current floor.
 	*
 	* Parameter:
-	*	floor: an unsigned int for the current floor number.
+	*	floor: the current floor number.
 	*/
-	void make_gold(unsigned int floor);
+	void makeGold(unsigned int floor);
 
 	/**
 	* Make interactibles for the current floor.
 	*
 	* Parameter:
-	*	floor: an unsigned int for the current floor number.
+	*	floor: the current floor number.
 	*/
-	void make_interactible(unsigned int floor);
+	void makeInteractible(unsigned int floor);
 
 	/**
 	* Make the map for the current floor.
 	*/
-	void make_map();
+	void makeMap();
 
 	/**
 	* Checks if the stair intersect with a rectangle.
 	* 
 	* Parameter:
-	*	rect: a sf::FloatRect for the rectangle.
+	*	rect: The rectangle for interseciton check.
 	* 
 	* Return:
 	*	true if an intersection exists.
 	*/
-	bool stair_intersect(const sf::FloatRect& rect);
+	bool intersectStair(const sf::FloatRect& rect);
 
 	/**
 	* Checks if the shop intersect with a rectangle.
 	* 
 	* Parameter:
-	*	rect: a sf::FloatRect for the rectangle.
+	*	rect: The rectangle for interseciton check.
 	* 
 	* Return:
 	*	true if an intersection exists.
 	*/
-	bool shop_intersect(const sf::FloatRect& rect);
+	bool intersectShop(const sf::FloatRect& rect);
 };
 
 #endif

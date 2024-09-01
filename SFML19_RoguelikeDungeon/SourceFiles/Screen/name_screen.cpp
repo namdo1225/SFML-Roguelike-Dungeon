@@ -2,6 +2,7 @@
 *
 * File: name_screen.cpp
 * Description: Contain the implementation of the Name_Screen class.
+* 
 */
 
 
@@ -12,36 +13,36 @@
 #include <Shape/full_textinput.h>
 
 Name_Screen::Name_Screen() : Screen(true, true, true, true) {
-	setup_helper(
+	textRectH(
 		"Enter your name (<= 20 chars, ASCII). Press 'Enter' or click 'Confirm' when finished."
 		"\n\nAlphanumeric Only.",
 		20.f, 20.f, false, NULL);
-	setupTextInput("Player", 20, 300.f, 300.f, 500.f, 50.f, AlphanumericValidation);
+	textInputH("Player", 20, 300.f, 300.f, 500.f, 50.f, AlphanumericValidation);
 }
 
-bool Name_Screen::click_event_handler() {
-	if (mouse_in_button(ExitButton)) {
-		switch_screen(NameScreen, TitleScreen, false, true);
+bool Name_Screen::handleClickEvent() {
+	if (mouseInButton(ExitButton)) {
+		switchScreen(NameScreen, TitleScreen, false, true);
 		textInputs[0].text.setString("Player");
 		return true;
 	}
-	else if (mouse_in_button(ConfirmButton)) {
-		switch_screen(NameScreen, StatScreen, false);
-		Game_Manager::player.set_name(textInputs[0].text.getString().toAnsiString().c_str());
+	else if (mouseInButton(ConfirmButton)) {
+		switchScreen(NameScreen, StatScreen, false);
+		Game_Manager::player.setName(textInputs[0].text.getString().toAnsiString().c_str());
 		textInputs[0].text.setString("Player");
 		return true;
 	}
-	else if (mouse_in_button(ClearButton)) {
+	else if (mouseInButton(ClearButton)) {
 		textInputs[0].text.setString("");
 		return true;
 	}
 	return false;
 }
 
-void Name_Screen::key_event_handler() {
+void Name_Screen::handleKeyEvent() {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {
-		switch_screen(NameScreen, StatScreen, false, true);
-		Game_Manager::player.set_name(textInputs[0].text.getString().toAnsiString().c_str());
+		switchScreen(NameScreen, StatScreen, false, true);
+		Game_Manager::player.setName(textInputs[0].text.getString().toAnsiString().c_str());
 		textInputs[0].text.setString("Player");
 	}
 }

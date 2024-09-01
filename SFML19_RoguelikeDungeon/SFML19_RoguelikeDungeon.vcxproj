@@ -198,7 +198,6 @@
     <ClInclude Include="HeaderFiles\Manager\database_manager.h" />
     <ClInclude Include="HeaderFiles\Manager\font_manager.h" />
     <ClInclude Include="HeaderFiles\Floor\gold_collectible.h" />
-    <ClInclude Include="HeaderFiles\include.h" />
     <ClInclude Include="HeaderFiles\Floor\interactible.h" />
     <ClInclude Include="HeaderFiles\interface.h" />
     <ClInclude Include="HeaderFiles\Manager\log_manager.h" />

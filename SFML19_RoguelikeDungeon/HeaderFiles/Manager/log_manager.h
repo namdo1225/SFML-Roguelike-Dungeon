@@ -1,11 +1,13 @@
-#include "Manager/sf_manager.h"
 #include "Shape/full_text.h"
 #include <vector>
 
 #ifndef LOG_MANAGER_H
 #define LOG_MANAGER_H
 
-class Log_Manager : public SF_Manager {
+/**
+* A class to manage the game's log.
+*/
+class Log_Manager {
 public:
 	const static unsigned int LOG_SIZE = 50;
 
@@ -24,7 +26,7 @@ public:
 	* Add a log.
 	*
 	* Parameter:
-	*	log: a const char* for the log's content
+	*	log: Log's content.
 	*/
 	static void log_add(const char* log);
 };

@@ -13,7 +13,7 @@
 #include <string>
 #include <vector>
 
-bool Texture_Manager::assets_loaded = false;
+bool Texture_Manager::loaded = false;
 
 std::map<unsigned int, sf::Texture> Texture_Manager::tex_enemies;
 std::vector<sf::Texture> Texture_Manager::tex_rooms;
@@ -27,12 +27,12 @@ sf::Texture Texture_Manager::interactible;
 sf::Texture Texture_Manager::interactibleInactive;
 
 Texture_Manager::Texture_Manager() {
-	if (!assets_loaded)
+	if (!loaded)
 		load();
 }
 
 bool Texture_Manager::load() {
-	if (assets_loaded)
+	if (loaded)
 		return true;
 
 
@@ -63,10 +63,10 @@ bool Texture_Manager::load() {
 		shop.loadFromFile("Texture\\GG_06_Shop.jpg") &&
 		interactible.loadFromFile("Texture\\GG_10_Interactible.jpg") &&
 		interactibleInactive.loadFromFile("Texture\\GG_11_Interactible_Inactive.jpg")) {
-		assets_loaded = true;
-		return assets_loaded;
+		loaded = true;
+		return loaded;
 	}
 
-	assets_loaded = false;
-	return assets_loaded;
+	loaded = false;
+	return loaded;
 }

@@ -1,34 +1,31 @@
-/**
-*
-* File: level_screen.h
-* Description: Contain the declaration of the Level_Screen class,
-* which represents the new game's stat selection screen.
-*/
+#include "screen.h"
+#include <array>
+#include <stat.h>
 
 #ifndef LEVEL_SCREEN_H
 #define LEVEL_SCREEN_H
 
-#include "screen.h"
-#include <array>
-
+/**
+* Represents the new game's stat selection screen.
+*/
 class Level_Screen : public Screen {
 private:
-	std::array<long, 8> backup_stats = {0, 0, 0, 0, 0, 0, 0, 0};
-	unsigned int backup_pts = 0;
-	bool reset = true;
+	static std::array<long, StatConst::NUM_STATS> backup_stats;
+	static unsigned int backup_pts;
+	static bool reset;
 
 public:
 	Level_Screen();
 
-	bool click_event_handler();
+	bool handleClickEvent();
 
-	void hover_event_handler();
+	void handleHoverEvent();
 
 	void draw();
 
-	void update_draw();
+	void updateDraw();
 
-	void key_event_handler();
+	void handleKeyEvent();
 };
 
 #endif

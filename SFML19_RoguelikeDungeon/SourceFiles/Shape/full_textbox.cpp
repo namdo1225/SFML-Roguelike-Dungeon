@@ -1,3 +1,10 @@
+/**
+*
+* File: full_textbox.cpp
+* Description: Contain the implementation of the Full_Textbox class.
+*
+*/
+
 #include "Shape/full_textbox.h"
 #include <functional>
 #include <SFML/Graphics/Rect.hpp>

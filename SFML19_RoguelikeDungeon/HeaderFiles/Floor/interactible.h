@@ -1,21 +1,17 @@
-/**
-*
-* File: interactible.h
-* Description: This class abstracts an interactible, an object that can be interacted with in the
-* overworld of the game.
-*
-*/
+#include "Floor/floor_object.h"
 
 #ifndef INTERACTIBLE_H
 #define INTERACTIBLE_H
 
-#include <SFML/Graphics.hpp>
-#include "player.h"
-#include "Floor/floor_object.h"
-
+/**
+* An object that can be interacted with in the
+* overworld of the game.
+*/
 class Interactible : public Floor_Object {
-public:
+private:
 	bool hidden = false;
+
+public:
 	bool inactive = false;
 
 	/**
@@ -33,7 +29,18 @@ public:
 	*/
 	Interactible(float x, float y, bool hidden);
 
+	/**
+	* Sets an interactible to inactive.
+	*/
 	void setInactive();
+
+	/**
+	* Getter for hidden.
+	* 
+	* Return:
+	*	true if interactible is hidden.
+	*/
+	bool getHidden();
 };
 
 

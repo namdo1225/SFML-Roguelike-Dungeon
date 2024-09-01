@@ -49,7 +49,7 @@ Full_Textbox Custom_Screen::create = Full_Textbox("Finish", 800.f, 700.f, 100.f,
 	case EnemyMod:
 		for (Full_TextInput& input : enemyInputs) {
 			if (input.text.getString().getSize() == 0) {
-				showMessage(CustomScreen, "Please fill out all fields.", ErrorMsg);
+				openMessage(CustomScreen, "Please fill out all fields.", ErrorMsg);
 				return;
 			}
 		}
@@ -100,7 +100,7 @@ Full_Textbox Custom_Screen::create = Full_Textbox("Finish", 800.f, 700.f, 100.f,
 	case ItemMod:
 		for (Full_TextInput& input : itemInputs) {
 			if (input.text.getString().getSize() == 0) {
-				showMessage(CustomScreen, "Please fill out all fields.", ErrorMsg);
+				openMessage(CustomScreen, "Please fill out all fields.", ErrorMsg);
 				return;
 			}
 		}
@@ -141,7 +141,7 @@ Full_Textbox Custom_Screen::create = Full_Textbox("Finish", 800.f, 700.f, 100.f,
 	case SpellMod:
 		for (Full_TextInput& input : spellInputs) {
 			if (input.text.getString().getSize() == 0) {
-				showMessage(CustomScreen, "Please fill out all fields.", ErrorMsg);
+				openMessage(CustomScreen, "Please fill out all fields.", ErrorMsg);
 				return;
 			}
 		}
@@ -180,7 +180,7 @@ Full_Textbox Custom_Screen::create = Full_Textbox("Finish", 800.f, 700.f, 100.f,
 			input.text.setString("");
 		break;
 	}
-	showMessage(CustomScreen, "Successfully created entity.\nReset game to see changes.", SuccessMsg);
+	openMessage(CustomScreen, "Successfully created entity.\nReset game to see changes.", SuccessMsg);
 	addContent = updateContent = false;
 });
 
@@ -195,7 +195,7 @@ Full_Textbox Custom_Screen::delContent = Full_Textbox("Delete", 1000.f, 700.f, 1
 		break;
 	}
 	Database_Manager::executeNonSelectStatement(std::format("DELETE FROM {} WHERE id = {}", delTable, updateID).c_str());
-	showMessage(CustomScreen, "Successfully deleted entity.\nReset game to see changes.", SuccessMsg);
+	openMessage(CustomScreen, "Successfully deleted entity.\nReset game to see changes.", SuccessMsg);
 	addContent = updateContent = false;
 });
 
@@ -209,14 +209,14 @@ std::map<unsigned int, Spell>::iterator Custom_Screen::spellIter;
 std::map<unsigned int, Item>::iterator Custom_Screen::itemIter;
 
 Custom_Screen::Custom_Screen() : Screen(true) {
-	setupTextbox("Enemies", 50.f, 20.f, 120.f, 50.f, []() {
+	textboxH("Enemies", 50.f, 20.f, 120.f, 50.f, []() {
 		line.setPosition(80.f, 60.f);
 		currentMod = EnemyMod;
 		addContent = updateContent = false;
 		boxIndex = 0;
 		getEnemies();
 	});
-	setupTextbox("Items", 250.f, 20.f, 100.f, 50.f, []() {
+	textboxH("Items", 250.f, 20.f, 100.f, 50.f, []() {
 		idOffset = 100;
 		line.setPosition(265.f, 60.f);
 		currentMod = ItemMod;
@@ -224,7 +224,7 @@ Custom_Screen::Custom_Screen() : Screen(true) {
 		boxIndex = 0;
 		getItems();
 	});
-	setupTextbox("Spells", 450.f, 20.f, 100.f, 50.f, []() {
+	textboxH("Spells", 450.f, 20.f, 100.f, 50.f, []() {
 		idOffset = 100;
 		line.setPosition(465.f, 60.f);
 		currentMod = SpellMod;
@@ -233,7 +233,7 @@ Custom_Screen::Custom_Screen() : Screen(true) {
 		getSpells();
 	});
 
-	setupTextbox("Previous Page", 640.f, 20.f, 200.f, 50.f, []() {
+	textboxH("Previous Page", 640.f, 20.f, 200.f, 50.f, []() {
 		if (boxIndex >= 20) {
 			boxIndex -= 20;
 
@@ -250,7 +250,7 @@ Custom_Screen::Custom_Screen() : Screen(true) {
 			}
 		}
 	});
-	setupTextbox("Next Page", 850.f, 20.f, 160.f, 50.f, []() {
+	textboxH("Next Page", 850.f, 20.f, 160.f, 50.f, []() {
 		switch (currentMod) {
 		case EnemyMod:
 			if (boxIndex + 20 < Enemy::enemies.size()) {
@@ -273,7 +273,7 @@ Custom_Screen::Custom_Screen() : Screen(true) {
 		}
 
 	});
-	setupTextbox("+", 1035.f, 20.f, 50.f, 50.f, []() {
+	textboxH("+", 1035.f, 20.f, 50.f, 50.f, []() {
 		addContent = !addContent;
 		updateContent = false;
 	}, 28.f);
@@ -381,9 +381,9 @@ Custom_Screen::Custom_Screen() : Screen(true) {
 	itemInputs.push_back(Full_TextInput("", 1, 700.f, 450.f, 110.f, 50.f, NumberValidation));
 }
 
-bool Custom_Screen::click_event_handler() {
-	if (mouse_in_button(ExitButton)) {
-		switch_screen(display, TitleScreen, false, true);
+bool Custom_Screen::handleClickEvent() {
+	if (mouseInButton(ExitButton)) {
+		switchScreen(display, TitleScreen, false, true);
 		return true;
 	}
 	if (addContent || updateContent) {
@@ -416,7 +416,7 @@ bool Custom_Screen::click_event_handler() {
 	return false;
 }
 
-void Custom_Screen::hover_event_handler() {
+void Custom_Screen::handleHoverEvent() {
 	for (Full_Textbox& textbox : boxes)
 		textbox.hover();
 	create.hover();
@@ -471,16 +471,16 @@ void Custom_Screen::draw() {
 	}
 }
 
-void Custom_Screen::change_theme() {
-	line.flip_theme();
-	create.text.flip_theme();
-	create.rect.flip_theme();
-	delContent.text.flip_theme();
-	delContent.rect.flip_theme();
+void Custom_Screen::changeTheme() {
+	line.changeTheme();
+	create.text.changeTheme();
+	create.rect.changeTheme();
+	delContent.text.changeTheme();
+	delContent.rect.changeTheme();
 
 	for (unsigned int i = 0; i < boxes.size(); i++) {
-		boxes[i].text.flip_theme();
-		boxes[i].rect.flip_theme();
+		boxes[i].text.changeTheme();
+		boxes[i].rect.changeTheme();
 	}
 }
 

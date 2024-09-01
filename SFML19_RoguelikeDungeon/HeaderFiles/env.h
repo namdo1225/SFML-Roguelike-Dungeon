@@ -11,7 +11,6 @@
 #define ENV_H
 
 // Production database version
-
 constexpr unsigned int DATABASE_VERSION = 1;
 
 // Array variables

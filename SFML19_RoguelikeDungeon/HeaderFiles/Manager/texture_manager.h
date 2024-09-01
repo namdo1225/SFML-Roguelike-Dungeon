@@ -1,20 +1,16 @@
-/**
-*
-* File: texture_manager.h
-* Description: Contain the declaration of the Texture_Manager class, which represents a class that manages the game's textures and sprites.
-*
-*/
-
-#ifndef TEXTURE_H
-#define TEXTURE_H
-
 #include <map>
 #include <SFML/Graphics/Texture.hpp>
 #include <vector>
 
+#ifndef TEXTURE_H
+#define TEXTURE_H
+
+/**
+* A class that manages the game's textures and sprites.
+*/
 class Texture_Manager {
 public:
-	static bool assets_loaded;
+	static bool loaded;
 	static std::map<unsigned int, sf::Texture> tex_enemies;
 	static std::vector<sf::Texture> tex_rooms;
 
@@ -26,7 +22,6 @@ public:
 	static sf::Texture interactible;
 	static sf::Texture interactibleInactive;
 
-
 	/**
 	* Constructor for Texture_Manager.
 	*/
@@ -36,7 +31,7 @@ public:
 	* Method to load textures.
 	*
 	* Return:
-	*	a bool. true if all assets are successfully loaded.
+	*	true if all assets are successfully loaded.
 	*/
 	static bool load();
 };

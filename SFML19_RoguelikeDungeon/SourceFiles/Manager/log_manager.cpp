@@ -1,9 +1,15 @@
+/**
+*
+* File: log_manager.cpp
+* Description: Contains the implementation of the Log_Manager class.
+*
+*/
+
 #include "Manager/log_manager.h"
 #include <Shape/full_text.h>
 #include <vector>
 
 const unsigned int Log_Manager::LOG_SIZE;
-const unsigned int Log_Manager::MAX_INV_SPELL_SLOTS;
 
 std::vector<Full_Text> Log_Manager::logs;
 

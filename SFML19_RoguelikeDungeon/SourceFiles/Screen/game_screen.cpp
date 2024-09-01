@@ -63,126 +63,126 @@ Game_Screen::Game_Screen() : Screen(false, false) {
 	ranges[2] = Full_Rectangle(600.f, 440.f, 40.f, 40.f, false, true, sf::Color::Transparent, sf::Color(255, 0, 0, 100));
 	ranges[3] = Full_Rectangle(600.f, 400.f, 40.f, 40.f, false, true, sf::Color::Transparent, sf::Color(255, 0, 0, 100));
 
-	setupHoverableText("<", 985.f, 260.f, [this]() {
-		Game_Manager::itm_select_shortcut('l');
-		if (Game_Manager::inv_select) {
-			textboxes[2].text.setString(Game_Manager::inv_select->abbrev);
+	hoverableTextH("<", 985.f, 260.f, [this]() {
+		Game_Manager::findItemShortcut('l');
+		if (Game_Manager::selectedInv) {
+			textboxes[2].text.setString(Game_Manager::selectedInv->abbrev);
 			textboxes[2].recenterText();
 		}
 	});
-	setupHoverableText(">", 1145.f, 260.f, [this]() {
-		Game_Manager::itm_select_shortcut('r');
-		if (Game_Manager::inv_select) {
-			textboxes[2].text.setString(Game_Manager::inv_select->abbrev);
+	hoverableTextH(">", 1145.f, 260.f, [this]() {
+		Game_Manager::findItemShortcut('r');
+		if (Game_Manager::selectedInv) {
+			textboxes[2].text.setString(Game_Manager::selectedInv->abbrev);
 			textboxes[2].recenterText();
 		}
 	});
-	setupHoverableText("<", 985.f, 380.f, [this]() {
-		Game_Manager::sp_select_shortcut('l');
-		if (Game_Manager::spell_select) {
-			textboxes[3].text.setString(Game_Manager::spell_select->abbrev);
+	hoverableTextH("<", 985.f, 380.f, [this]() {
+		Game_Manager::findSpellShortcut('l');
+		if (Game_Manager::selectedSpell) {
+			textboxes[3].text.setString(Game_Manager::selectedSpell->abbrev);
 			textboxes[3].recenterText();
 		}
 	});
-	setupHoverableText(">", 1145.f, 380.f, [this]() {
-		Game_Manager::sp_select_shortcut('r');
-		if (Game_Manager::spell_select) {
-			textboxes[3].text.setString(Game_Manager::spell_select->abbrev);
+	hoverableTextH(">", 1145.f, 380.f, [this]() {
+		Game_Manager::findSpellShortcut('r');
+		if (Game_Manager::selectedSpell) {
+			textboxes[3].text.setString(Game_Manager::selectedSpell->abbrev);
 			textboxes[3].recenterText();
 		}
 	});
 
 	// level
-	setupTextbox(NULL, 950.f, 100.f, 230.f, 100.f, []() {
-		map_txts["stat_left"].setString(std::to_string(Game_Manager::player.get_pts()));
-		switch_screen(GameScreen, LevelScreen, false, true);
+	textboxH(NULL, 950.f, 100.f, 230.f, 100.f, []() {
+		map_txts["stat_left"].setString(std::to_string(Game_Manager::player.getStatPts()));
+		switchScreen(GameScreen, LevelScreen, false, true);
 		});
 	// HP/MP
-	setupTextbox(NULL, 950.f, 5.f, 230.f, 80.f, []() {
-		switch_screen(GameScreen, StatusScreen, true);
+	textboxH(NULL, 950.f, 5.f, 230.f, 80.f, []() {
+		switchScreen(GameScreen, StatusScreen, true);
 	});
 
 	// use item shortcut
-	setupTextbox(NULL, 1045.f, 250.f, 50.f, 50.f, [this]() {
+	textboxH(NULL, 1045.f, 250.f, 50.f, 50.f, [this]() {
 		// Use item
-		if (Game_Manager::inv_select)
-			Game_Manager::item_use();
+		if (Game_Manager::selectedInv)
+			Game_Manager::useItem();
 		// Selects new item
 		else {
-			Game_Manager::itm_select_shortcut('l');
-			if (Game_Manager::inv_select) {
-				textboxes[2].text.setString(Game_Manager::inv_select->abbrev);
+			Game_Manager::findItemShortcut('l');
+			if (Game_Manager::selectedInv) {
+				textboxes[2].text.setString(Game_Manager::selectedInv->abbrev);
 				textboxes[2].recenterText();
 			}
 		}
 	});
 	// use spell shortcut
-	setupTextbox(NULL, 1045.f, 370.f, 50.f, 50.f, [this]() {
+	textboxH(NULL, 1045.f, 370.f, 50.f, 50.f, [this]() {
 		// use spell in shortcut
-		if (Game_Manager::spell_select) {
-			if (Game_Manager::spell_select->type == Functional) {
-				std::string name = Game_Manager::spell_select->name;
-				bool success = Game_Manager::spell_use();
+		if (Game_Manager::selectedSpell) {
+			if (Game_Manager::selectedSpell->type == Functional) {
+				std::string name = Game_Manager::selectedSpell->name;
+				bool success = Game_Manager::useSpell();
 				Game_Manager::log_add(success ? std::format("You used {}.", name).c_str() :
 					std::format("You failed to cast {}.", name).c_str()
 				);
 			}
 			else
-				show_dialog(GameScreen, SpellAttackScreen);
+				openDialog(GameScreen, SpellAttackScreen);
 		}
 		// select new spell
 		else {
-			Game_Manager::sp_select_shortcut('l');
-			if (Game_Manager::spell_select) {
-				textboxes[3].text.setString(Game_Manager::spell_select->abbrev);
+			Game_Manager::findSpellShortcut('l');
+			if (Game_Manager::selectedSpell) {
+				textboxes[3].text.setString(Game_Manager::selectedSpell->abbrev);
 				textboxes[3].recenterText();
 			}
 		}
 	});
 
 	// grid
-	setupTextbox("G", 10.f, 730.f, 50.f, 50.f, []() {
+	textboxH("G", 10.f, 730.f, 50.f, 50.f, []() {
 		grid = !grid;
 	});
 	// opacity
-	setupTextbox("O", 80.f, 730.f, 50.f, 50.f, [this]() {
-		change_opacity();
+	textboxH("O", 80.f, 730.f, 50.f, 50.f, [this]() {
+		changeOpacity();
 	});
 	// range
-	setupTextbox("R", 150.f, 730.f, 50.f, 50.f, []() {
+	textboxH("R", 150.f, 730.f, 50.f, 50.f, []() {
 		range = !range;
-		if (range) change_range();
+		if (range) changeRange();
 	});
 	// scan
-	setupTextbox("S", 220.f, 730.f, 50.f, 50.f, []() {
+	textboxH("S", 220.f, 730.f, 50.f, 50.f, []() {
 		scan = !scan;
 	});
 	// zoom options
-	setupTextbox("+", 290.f, 730.f, 50.f, 50.f, []() {
+	textboxH("+", 290.f, 730.f, 50.f, 50.f, []() {
 		if (worldZoomLevel < 3) {
 			worldZoomLevel++;
 			viewWorld.zoom(0.5f);
-			Game_Manager::center_floor();
+			Game_Manager::centerFloor();
 		}
 	});
-	setupTextbox("-", 360.f, 730.f, 50.f, 50.f, []() {
+	textboxH("-", 360.f, 730.f, 50.f, 50.f, []() {
 		if (worldZoomLevel > 0) {
 			worldZoomLevel--;
 			viewWorld.zoom(2.f);
-			Game_Manager::center_floor();
+			Game_Manager::centerFloor();
 		}
 	});
 	// menu
-	setupTextbox("...", 430.f, 730.f, 50.f, 50.f, []() {
-		show_dialog(Screen::display, MenuScreen);
+	textboxH("...", 430.f, 730.f, 50.f, 50.f, []() {
+		openDialog(Screen::display, MenuScreen);
 	}, 26.0f);
 
 	// log button
-	setupTextbox("...", 1150.f, 500.f, 25.f, 25.f, []() {
+	textboxH("...", 1150.f, 500.f, 25.f, 25.f, []() {
 		log_view(true);
-		show_dialog(Screen::display, LogScreen);
+		openDialog(Screen::display, LogScreen);
 	}, 5.0f);
-	setupTextbox("O", 1150.f, 525.f, 25.f, 25.f, [this]() {
+	textboxH("O", 1150.f, 525.f, 25.f, 25.f, [this]() {
 		sf::Color fill = rects[0].getFillColor();
 		sf::Color outline = rects[0].getOutlineColor();
 
@@ -192,29 +192,29 @@ Game_Screen::Game_Screen() : Screen(false, false) {
 	}, 5.0f);
 
 	// history
-	setup_helper(NULL, 750.f, 500.f, 425.f, 275.f, false, true);
+	textRectH(NULL, 750.f, 500.f, 425.f, 275.f, false, true);
 
-	setup_helper("Items:", 950.f, 210.f, NULL, 3.f, false, true);
-	setup_helper("Spells:", 950.f, 330.f, NULL, 3.f, false, true);
-	setup_helper("History:", 950.f, 455.f, NULL, 3.f, false, true);
-	setup_helper("Floor:", 10.f, 50.f, NULL, 3.f, false, true);
-	setup_helper("Gold:", 10.f, 90.f, NULL, 3.f, false, true);
+	textRectH("Items:", 950.f, 210.f, NULL, 3.f, false, true);
+	textRectH("Spells:", 950.f, 330.f, NULL, 3.f, false, true);
+	textRectH("History:", 950.f, 455.f, NULL, 3.f, false, true);
+	textRectH("Floor:", 10.f, 50.f, NULL, 3.f, false, true);
+	textRectH("Gold:", 10.f, 90.f, NULL, 3.f, false, true);
 
 	for (unsigned int i = 0; i < 4; i++)
-		setup_helper(StatConst::ABR_STATS[i + 2], 10.f, 130 + (30 * i), 18, 3.f, false, true);
+		textRectH(StatConst::ABR_STATS[i + 2], 10.f, 130 + (30 * i), 18, 3.f, false, true);
 
 	// texts that can be changed:
 	// floor num
-	setup_helper("1", 100.f, 50.f, NULL, 3.f, false, true);
+	textRectH("1", 100.f, 50.f, NULL, 3.f, false, true);
 	// gold num
-	setup_helper("0", 100.f, 90.f, NULL, 3.f, false, true);
+	textRectH("0", 100.f, 90.f, NULL, 3.f, false, true);
 	// name
-	setup_helper("Player", 10.f, 10.f, NULL, 3.f, false, true);
+	textRectH("Player", 10.f, 10.f, NULL, 3.f, false, true);
 	// log limit
-	setup_helper("0 / 50", 1060.f, 455.f, NULL, 3.f, false, true);
+	textRectH("0 / 50", 1060.f, 455.f, NULL, 3.f, false, true);
 	// other stats
 	for (unsigned int i = 0; i < 4; i++)
-		setup_helper("0", 90.f, 130 + (30 * i), 18.f, 3.f, false, true);
+		textRectH("0", 90.f, 130 + (30 * i), 18.f, 3.f, false, true);
 
 	for (unsigned int i = 0; i < textboxes.size(); i++) {
 		textboxes[i].text.setThemeAndHover(true, true);
@@ -226,31 +226,31 @@ Game_Screen::Game_Screen() : Screen(false, false) {
 	}
 }
 
-bool Game_Screen::click_event_handler() {
-	unsigned int rgn = Game_Manager::pl_weapon->range;
+bool Game_Screen::handleClickEvent() {
+	unsigned int rgn = Game_Manager::plWeapon->range;
 	if (x >= 600 && x <= 640 && y >= 360 - ((rgn - 1) * 40) && y <= 400) {
-		Game_Manager::handle_player_action('u', 1);
+		Game_Manager::handlePlayerAct('u', 1);
 		return true;
 	}
 	else if (x >= 640 && x <= 680 + ((rgn - 1) * 40) && y >= 400 && y <= 440) {
-		Game_Manager::handle_player_action('r', 1);
+		Game_Manager::handlePlayerAct('r', 1);
 		return true;
 	}
 	else if (x >= 600 && x <= 640 && y >= 440 && y <= 480 + ((rgn - 1) * 40)) {
-		Game_Manager::handle_player_action('d', 1);
+		Game_Manager::handlePlayerAct('d', 1);
 		return true;
 	}
 	else if (x >= 560 - ((rgn - 1) * 40) && x <= 400 && y >= 400 && y <= 440) {
 		return true;
-		Game_Manager::handle_player_action('l', 1);
+		Game_Manager::handlePlayerAct('l', 1);
 	}
 }
 
-void Game_Screen::hover_event_handler() {
+void Game_Screen::handleHoverEvent() {
 	if (scan) {
 		bool enemy_found = false;
 		for (Enemy& enemy : Game_Manager::enemies) {
-			if (enemy.contains(world_x, world_y)) {
+			if (enemy.contains(worldX, worldY)) {
 				enemy_found = true;
 				scan_txt.setString(std::format(
 					"{}\nHP: {}"
@@ -302,23 +302,23 @@ void Game_Screen::draw() {
 		window.draw(logs[i]);
 }
 
-void Game_Screen::key_event_handler() {
+void Game_Screen::handleKeyEvent() {
 	if (clock.getElapsedTime().asMilliseconds() > KEY_PRESS_TIME_LIMIT) {
 		clock.restart();
-		if (!Game_Manager::player.is_stuck(0) && event.key.code == sf::Keyboard::Up) {
-			Game_Manager::handle_player_action('u', 0);
+		if (!Game_Manager::player.isStuck(0) && event.key.code == sf::Keyboard::Up) {
+			Game_Manager::handlePlayerAct('u', 0);
 			window.setView(viewWorld);
 		}
-		else if (!Game_Manager::player.is_stuck(1) && event.key.code == sf::Keyboard::Right) {
-			Game_Manager::handle_player_action('r', 0);
+		else if (!Game_Manager::player.isStuck(1) && event.key.code == sf::Keyboard::Right) {
+			Game_Manager::handlePlayerAct('r', 0);
 			window.setView(viewWorld);
 		}
-		else if (!Game_Manager::player.is_stuck(2) && event.key.code == sf::Keyboard::Down) {
-			Game_Manager::handle_player_action('d', 0);
+		else if (!Game_Manager::player.isStuck(2) && event.key.code == sf::Keyboard::Down) {
+			Game_Manager::handlePlayerAct('d', 0);
 			window.setView(viewWorld);
 		}
-		else if (!Game_Manager::player.is_stuck(3) && event.key.code == sf::Keyboard::Left) {
-			Game_Manager::handle_player_action('l', 0);
+		else if (!Game_Manager::player.isStuck(3) && event.key.code == sf::Keyboard::Left) {
+			Game_Manager::handlePlayerAct('l', 0);
 			window.setView(viewWorld);
 		}
 	}
@@ -326,76 +326,76 @@ void Game_Screen::key_event_handler() {
 		clock.restart();
 
 	if (event.key.code == sf::Keyboard::W) {
-		Game_Manager::handle_turn();
+		Game_Manager::handleTurn();
 		window.setView(viewWorld);
 	}
 	else if (event.key.code == sf::Keyboard::Q) {
-		Game_Manager::next_level();
+		Game_Manager::goUpFloor();
 		window.setView(viewWorld);
 	}
 	else if (event.key.code == sf::Keyboard::G)
 		grid = !grid;
 	else if (event.key.code == sf::Keyboard::O)
-		change_opacity();
+		changeOpacity();
 	else if (event.key.code == sf::Keyboard::R)
-		change_range();
-	else if (event.key.code == sf::Keyboard::S && Game_Manager::floor.shop_intersect(Game_Manager::player.get_rect())) {
-		Game_Manager::inv_select = NULL;
-		Game_Manager::special_select = NULL;
-		Game_Manager::spell_select = NULL;
-		switch_screen(GameScreen, ShopScreen, false, true);
+		changeRange();
+	else if (event.key.code == sf::Keyboard::S && Game_Manager::floor.intersectShop(Game_Manager::player.getRect())) {
+		Game_Manager::selectedInv = NULL;
+		Game_Manager::selectedSpecial = NULL;
+		Game_Manager::selectedSpell = NULL;
+		switchScreen(GameScreen, ShopScreen, false, true);
 	}
 }
 
-void Game_Screen::update_draw() {
-	if (Game_Manager::game_over()) {
-		switch_screen(GameScreen, TitleScreen, true);
+void Game_Screen::updateDraw() {
+	if (Game_Manager::gameOver()) {
+		switchScreen(GameScreen, TitleScreen, true);
 		return;
 	}
 
 	textboxes[0].text.setString(std::format("LVL: {}\nCUR: {}\nNEED: {}",
-		Game_Manager::player.get_lvl(), Game_Manager::player.get_cur_exp(), Game_Manager::player.get_lvl_up()));
+		Game_Manager::player.getLVL(), Game_Manager::player.getCurEXP(), Game_Manager::player.getLVLUpEXP()));
 	textboxes[0].recenterText();
 
 	textboxes[1].text.setString(std::format("HP: {} / {}\nMP: {} / {}",
-		Game_Manager::player.get_stat(Hp), Game_Manager::player.get_stat(Max_Hp),
-		Game_Manager::player.get_stat(Mp), Game_Manager::player.get_stat(Max_Mp)));
+		Game_Manager::player.getStat(Hp), Game_Manager::player.getStat(Max_Hp),
+		Game_Manager::player.getStat(Mp), Game_Manager::player.getStat(Max_Mp)));
 	textboxes[1].recenterText();
 
-	texts[9].setString(std::to_string(Game_Manager::player.get_floor()));
-	texts[10].setString(std::to_string(Game_Manager::player.get_gold()));
+	texts[9].setString(std::to_string(Game_Manager::player.getFloor()));
+	texts[10].setString(std::to_string(Game_Manager::player.getGold()));
 
-	texts[11].setString(Game_Manager::player.get_name());
+	texts[11].setString(Game_Manager::player.getName());
 
 	texts[12].setString(std::format("{} / 50", logs.size()));
 
-	texts[13].setString(std::to_string(Game_Manager::player.get_stat(Str)));
-	texts[14].setString(std::to_string(Game_Manager::player.get_stat(Def)));
-	texts[15].setString(std::to_string(Game_Manager::player.get_stat(Mgk)));
-	texts[16].setString(std::to_string(Game_Manager::player.get_stat(Res)));
+	texts[13].setString(std::to_string(Game_Manager::player.getStat(Str)));
+	texts[14].setString(std::to_string(Game_Manager::player.getStat(Def)));
+	texts[15].setString(std::to_string(Game_Manager::player.getStat(Mgk)));
+	texts[16].setString(std::to_string(Game_Manager::player.getStat(Res)));
 }
 
-void Game_Screen::change_theme() {
-	scan_rect.flip_theme();
-	scan_txt.flip_theme();
+void Game_Screen::changeTheme() {
+	scan_rect.changeTheme();
+	scan_txt.changeTheme();
 
 	fog.setAreaColor(Setting_Manager::light ? Full_Rectangle::light_bg[theme] : Full_Rectangle::dark_bg[theme]);
 
 	for (Item& item : Game_Manager::items)
 		item.changeTheme();
-	for (Item& item : Game_Manager::item_stocks)
+	for (Item& item : Game_Manager::stockItem)
 		item.changeTheme();
 
 	for (Spell& spell : Game_Manager::spells)
 		spell.changeTheme();
-	for (Spell& spell : Game_Manager::spell_stocks)
+	for (Spell& spell : Game_Manager::stockSpell)
 		spell.changeTheme();
 
-	for (Special& special : Game_Manager::special_stocks)
+	for (Special& special : Game_Manager::stockSpecial)
 		special.changeTheme();
 }
 
-void Game_Screen::change_opacity() {
+void Game_Screen::changeOpacity() {
 	opacity = (opacity + 17) % 255;
 	if (opacity == 0)
 		opacity = 255;
@@ -439,8 +439,8 @@ void Game_Screen::change_opacity() {
 	}
 }
 
-void Game_Screen::change_range() {
-	unsigned int range = Game_Manager::pl_weapon->range;
+void Game_Screen::changeRange() {
+	unsigned int range = Game_Manager::plWeapon->range;
 	ranges[0].setPosition(600.f, 400.f - (40.f * range));
 	ranges[0].setSize(sf::Vector2f(40.f, 40.f * range));
 

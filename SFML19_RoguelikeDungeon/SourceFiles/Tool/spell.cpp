@@ -56,19 +56,19 @@ bool Spell::setup() {
 	spells.insert(std::make_pair(id++, Spell("HE", id, 50, 20, Functional, 0, 3, 5,
 		"Heal the player.\n\nPLAYER HP+: 5 + (MGK * 0.5)", "Heal", 0.5f,
 		[](int quantity, double percent) {
-			const unsigned int hp = Game_Manager::player.get_stat(Hp);
-			const unsigned int max_hp = Game_Manager::player.get_stat(Max_Hp);
-			const unsigned int mgk = Game_Manager::player.get_stat(Mgk);
+			const unsigned int hp = Game_Manager::player.getStat(Hp);
+			const unsigned int max_hp = Game_Manager::player.getStat(Max_Hp);
+			const unsigned int mgk = Game_Manager::player.getStat(Mgk);
 
 			unsigned int new_hp = hp + quantity + mgk * percent;
-			Game_Manager::player.set_stat(Hp, new_hp > max_hp ? max_hp : new_hp);
+			Game_Manager::player.setStat(Hp, new_hp > max_hp ? max_hp : new_hp);
 	})));
 
 	spells.insert(std::make_pair(id++, Spell("DA", id, 100, 40, Functional, 0, 8, 4,
 		"Damage all enemies while\n ignoring DEF/RES.\n\nENEMY HP-: 4 + (MGK * 0.10)",
 		"Damage All", 0.1f,
 		[](int quantity, double percent) {
-			const unsigned int mgk = Game_Manager::player.get_stat(Mgk);
+			const unsigned int mgk = Game_Manager::player.getStat(Mgk);
 			for (unsigned int i = 0; i < Game_Manager::enemies.size(); i++)
 				Game_Manager::enemies[i].stat.hp -= quantity + mgk * percent;
 	})));
@@ -76,21 +76,21 @@ bool Spell::setup() {
 	spells.insert(std::make_pair(id++, Spell("SU", id, 200, 50, Functional, 0, 5, 3,
 		"Increases strength for 8 turns.\n\nPLAYER STR+: 3 + (MGK * 0.25)", "Strength Up", 0.25f,
 		[](int quantity, double percent) {
-			Game_Manager::player.set_effect(Str, quantity + Game_Manager::player.get_stat(Mgk) * percent, 8);
+			Game_Manager::player.setEffect(Str, quantity + Game_Manager::player.getStat(Mgk) * percent, 8);
 	})));
 	spells.insert(std::make_pair(id++, Spell("DU", id, 200, 50, Functional, 0, 5, 3,
 		"Increases strength for 10 turns.\n\nPLAYER STR+: 3 + (MGK * 0.20)", "Defense Up", 0.2f,
 		[](int quantity, double percent) {
-			Game_Manager::player.set_effect(Def, quantity + Game_Manager::player.get_stat(Mgk) * percent, 8);
+			Game_Manager::player.setEffect(Def, quantity + Game_Manager::player.getStat(Mgk) * percent, 8);
 	})));
 	return true;
 }
 
 bool Spell::usePlayerMP() const {
-	long pl_mp = Game_Manager::player.get_stat(Mp);
+	long pl_mp = Game_Manager::player.getStat(Mp);
 	if (pl_mp < mp)
 		return false;
-	Game_Manager::player.set_stat(Mp, pl_mp - mp);
+	Game_Manager::player.setStat(Mp, pl_mp - mp);
 	return true;
 }
 
@@ -104,6 +104,6 @@ bool Spell::use() const {
 }
 
 std::array<int, 3> Spell::atk() { 
-	std::array<int, 3> return_arr = { quantity + Game_Manager::player.get_stat(Mgk) * percentage, range, mp };
+	std::array<int, 3> return_arr = { quantity + Game_Manager::player.getStat(Mgk) * percentage, range, mp };
 	return return_arr;
 }

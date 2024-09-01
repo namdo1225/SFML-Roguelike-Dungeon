@@ -52,8 +52,8 @@ Interface::Interface() {
     Screen::setup();
     Game_Manager::setup();
 
-    Audio_Manager::set_music_volume(Setting_Manager::music_volume);
-    Audio_Manager::set_sfx_volume(Setting_Manager::sfx_volume);
+    Audio_Manager::setMusicVolume(Setting_Manager::music_volume);
+    Audio_Manager::setSFXVolume(Setting_Manager::sfxVolume);
 
     Screen::screens[TitleScreen] =  std::make_unique<Title_Screen>();
     Screen::screens[ExitScreen] = std::make_unique<Exit_Screen>();
@@ -76,7 +76,7 @@ Interface::Interface() {
 
     Screen::change_settings();
     Game_Manager::player = Player();
-    Game_Manager::reset_game();
+    Game_Manager::resetGame();
 }
 
 Interface::~Interface() {}
@@ -86,64 +86,64 @@ Interface& Interface::get() {
     return singleton;
 }
 
-void Interface::window_loop() {
+void Interface::loopWindow() {
     while (window.isOpen())
     {
-        handle_event();
-        Game_Manager::ene_dead();
+        handleEvent();
+        Game_Manager::delEnemy();
 
         window.clear();
-        draw_interface();
+        draw();
         window.display();
     }
 }
-void Interface::draw_interface() {
+void Interface::draw() {
     for (unsigned int i = 0; i < ExitScreen + 1; i++)
         if (Screen::visibilities[i]) {
             if (Screen::screens[i]->get_update())
-                Screen::screens[i]->update_draw();
+                Screen::screens[i]->updateDraw();
             Screen::screens[i]->draw();
         }
 }
-void Interface::handle_event() {
+void Interface::handleEvent() {
     sf::Event& event = Screen::event;
 
     while (window.pollEvent(event)) {
-        Game_Manager::pl_move_obstacle();
-        Screen::mouse_pos = sf::Mouse::getPosition(window);
-        Screen::mouse_world = window.mapPixelToCoords(Screen::mouse_pos);
-        Screen::x = Screen::mouse_world.x;
-        Screen::y = Screen::mouse_world.y;
+        Game_Manager::checkPlayerPath();
+        Screen::mousePos = sf::Mouse::getPosition(window);
+        Screen::mouseWorld = window.mapPixelToCoords(Screen::mousePos);
+        Screen::x = Screen::mouseWorld.x;
+        Screen::y = Screen::mouseWorld.y;
         sf::Vector2f ui = Screen::viewUI.getCenter();
         sf::Vector2f world = Screen::viewWorld.getCenter();
         sf::Vector2f slot = Screen::viewSlots.getCenter();
 
         float dist_x = ui.x - world.x;
         float dist_y = ui.y - world.y;
-        Screen::world_x = Screen::x - dist_x;
-        Screen::world_y = Screen::y - dist_y;
+        Screen::worldX = Screen::x - dist_x;
+        Screen::worldY = Screen::y - dist_y;
 
         float disSlotX = ui.x - slot.x;
         float distSlotY = ui.y - slot.y;
-        Screen::slot_x = Screen::x - disSlotX;
-        Screen::slot_y = Screen::y - distSlotY;
+        Screen::slotX = Screen::x - disSlotX;
+        Screen::slotY = Screen::y - distSlotY;
 
         if (event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
-            Screen::show_dialog(Screen::display, ExitScreen);
+            Screen::openDialog(Screen::display, ExitScreen);
         }
         else if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
-            Screen::click() || Screen::screens[Screen::display]->click_event_handler();
+            Screen::click() || Screen::screens[Screen::display]->handleClickEvent();
         if (event.type == sf::Event::MouseButtonPressed || event.type == sf::Event::MouseButtonReleased ||
             event.type == sf::Event::MouseMoved || event.type == sf::Event::MouseWheelScrolled)
-            Screen::screens[Screen::display]->mouse_event_handler();
+            Screen::screens[Screen::display]->handleMouseEvent();
 
-        Screen::screens[Screen::display]->hover_event_handler();
+        Screen::screens[Screen::display]->handleHoverEvent();
         Screen::screens[Screen::display]->hover();
 
         if (event.type == sf::Event::TextEntered)
             Screen::screens[Screen::display]->handleTextEvent();
 
         if (event.type == sf::Event::KeyPressed)
-            Screen::screens[Screen::display]->key_event_handler();
+            Screen::screens[Screen::display]->handleKeyEvent();
     }
 }

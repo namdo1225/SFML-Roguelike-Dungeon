@@ -30,7 +30,7 @@ Room::Room() {
 
 }
 
-void Room::set_pos_and_size(int x, int y, int sx, int sy) {
+void Room::setPosSize(int x, int y, int sx, int sy) {
 	if (sx != -1 && sy != -1) {
 		setSize(sf::Vector2f(sx, sy));
 		setTextureRect(sf::IntRect(0, 0, getSize().x, getSize().y));
@@ -38,24 +38,24 @@ void Room::set_pos_and_size(int x, int y, int sx, int sy) {
 	setPosition(x, y);
 }
 
-void Room::set_door(int x, int y, int purpose) {
-	if (purpose > -1) {
-		door_rotation = (Door)purpose;
+void Room::setDoor(int x, int y, int rotation) {
+	if (rotation > -1) {
+		doorRotation = (Door)rotation;
 		door = true;
-		(purpose % 2 == 1) ? dr_draw.setSize(sf::Vector2f(0, 120)) : dr_draw.setSize(sf::Vector2f(120, 0));
+		(rotation % 2 == 1) ? doorRect.setSize(sf::Vector2f(0, 120)) : doorRect.setSize(sf::Vector2f(120, 0));
 
-		dr_draw.setFillColor(sf::Color::Black);
-		dr_draw.setOutlineColor(sf::Color::White);
-		dr_draw.setOutlineThickness(1.5f);
+		doorRect.setFillColor(sf::Color::Black);
+		doorRect.setOutlineColor(sf::Color::White);
+		doorRect.setOutlineThickness(1.5f);
 	}
-	else if (purpose == -2)
-		dr_draw.setSize(sf::Vector2f(x, y));
+	else if (rotation == -2)
+		doorRect.setSize(sf::Vector2f(x, y));
 
-	if (purpose >= -1)
-		dr_draw.setPosition(x, y);
+	if (rotation >= -1)
+		doorRect.setPosition(x, y);
 }
 
-int Room::get_rm(char z) {
+int Room::getRoom(char z) {
 	float x = getPosition().x;
 	float y = getPosition().y;
 
@@ -80,18 +80,18 @@ int Room::get_rm(char z) {
 	}
 }
 
-int Room::get_door(char z) {
+int Room::getDoor(char z) {
 	switch (z) {
 	case 'x':
-		return dr_draw.getPosition().x;
+		return doorRect.getPosition().x;
 	case 'y':
-		return dr_draw.getPosition().y;
+		return doorRect.getPosition().y;
 	case 'w':
-		return dr_draw.getSize().x;
+		return doorRect.getSize().x;
 	case 'h':
-		return dr_draw.getSize().y;
+		return doorRect.getSize().y;
 	case 'r':
-		return door_rotation;
+		return doorRotation;
 	case Top:
 		return doors[Top];
 	case Right:
@@ -103,32 +103,32 @@ int Room::get_door(char z) {
 	}
 }
 
-bool Room::in_room(int x, int y, int x2, int y2) {
+bool Room::inRoom(int x, int y, int x2, int y2) {
 	return (x >= getPosition().x && y >= getPosition().y &&
 		x2 <= getPosition().x + getSize().x && y2 <= getPosition().y + getSize().y);
 }
 
-bool Room::door_exist() { return door; }
+bool Room::existDoor() { return door; }
 
-bool Room::touch_door(int x, int y, int x2, int y2) {
+bool Room::touchDoor(int x, int y, int x2, int y2) {
 	// if door does not exist, return false.
 	if (!door)
 		return false;
 	// if the door is horizontal
-	else if (door_rotation % 2 == 0)
-		return ((y == dr_draw.getPosition().y || y2 == dr_draw.getPosition().y) &&
-			(x >= dr_draw.getPosition().x && x2 <= dr_draw.getPosition().x + 120));
+	else if (doorRotation % 2 == 0)
+		return ((y == doorRect.getPosition().y || y2 == doorRect.getPosition().y) &&
+			(x >= doorRect.getPosition().x && x2 <= doorRect.getPosition().x + 120));
 	// if the door is vertical
 	else
-		return ((x == dr_draw.getPosition().x || x2 == dr_draw.getPosition().x) &&
-			(y >= dr_draw.getPosition().y && y2 <= dr_draw.getPosition().y + 120));
+		return ((x == doorRect.getPosition().x || x2 == doorRect.getPosition().x) &&
+			(y >= doorRect.getPosition().y && y2 <= doorRect.getPosition().y + 120));
 }
 
-bool Room::get_doors(unsigned int i) { return doors[i]; }
+bool Room::getDoors(unsigned int i) { return doors[i]; }
 
-void Room::set_doors(unsigned int i, bool j) { doors[i] = j; }
+void Room::setDoors(unsigned int i, bool j) { doors[i] = j; }
 
-void Room::draw(char d) { (d == 'r') ? SF_Manager::window.draw(*this) : SF_Manager::window.draw(dr_draw); }
+void Room::draw(bool door) { door ? SF_Manager::window.draw(doorRect) : SF_Manager::window.draw(*this); }
 
 bool Room::intersects(const sf::FloatRect& rect) {
 	return getGlobalBounds().intersects(rect);

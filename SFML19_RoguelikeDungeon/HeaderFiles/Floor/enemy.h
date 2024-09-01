@@ -1,5 +1,6 @@
 #include "floor_object.h"
 #include <map>
+#include <stat.h>
 #include <string>
 
 #ifndef ENEMY_H
@@ -30,8 +31,10 @@ struct EnemyConstant {
 	float resGrowth;
 	float expGrowth;
 
+	/** Minimum floor when enemy will appear.
+	*/
 	int minimumFloor = 1;
-	bool type = true;
+	Attack type = Physical;
 };
 
 /**
@@ -43,7 +46,7 @@ struct EnemyFull {
 };
 
 /**
-* This class abstracts an enemy which can attack/kill the player.
+* An enemy which can attack/kill the player.
 */
 class Enemy : public Floor_Object {
 public:
@@ -51,31 +54,36 @@ public:
 	EnemyStat stat;
 	EnemyConstant* constant;
 
+	/**
+	* Load enemies from the database.
+	* 
+	* Return:
+	*	true if loading is successful.
+	*/
 	static bool setup();
 
 	/**
 	* Constructor for Enemy.
 	*
 	* Parameter:
-	*	floor: an int for the player's current floor.
-	*	id: an int for enemy's id.
-	*	x: float for enemy's x position.
-	*	y: float for enemy's y position.
-	* 	hp: an int for the enemy's hp.
+	*	id: Enemy's id.
+	*	x: Enemy's x position.
+	*	y: Enemy's y position.
+	* 	hp: Enemy's hp. If hp = -1, hp is calculated by floors.
 	*/
-	Enemy(int floor, unsigned int id, float x, float y, int hp = -1);
+	Enemy(unsigned int id, float x, float y, int hp = -1);
 
 	/**
 	* Getter for enemy's position.
 	*
 	* Parameter:
-	*	type: bool. Player's attack type.
-	*	amount: int. Player's attack amount.
+	*	type: Player's attack type.
+	*	amount: Player's attack amount.
 	*
 	* Return:
-	*	an int of enemy's new hp after being attacked by player.
+	*	Enemy's new hp after being attacked by player.
 	*/
-	int damageEnemy(bool type, int amount);
+	int damageEnemy(Attack type, int amount);
 };
 
 #endif

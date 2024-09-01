@@ -1,15 +1,10 @@
-/**
-*
-* File: screen.h
-* Description: Contain the declaration of the Screen class, which represents a game scene.
-*/
-
 #include "Manager/log_manager.h"
 #include "Manager/setting_manager.h"
 #include "Shape/full_rectangle.h"
 #include "Shape/full_text.h"
 #include "Shape/full_textbox.h"
 #include <functional>
+#include <Manager/sf_manager.h>
 #include <map>
 #include <memory>
 #include <Shape/full_textinput.h>
@@ -19,23 +14,35 @@
 #ifndef SCREEN_H
 #define SCREEN_H
 
+/**
+* Enum for all available screens in the program.
+*/
 enum Display { TitleScreen, NameScreen, StatScreen,
 	GameScreen, MenuScreen, LevelScreen, InventoryScreen, SpellScreen, MapScreen, ShopScreen,
 	LoadScreen, SpellAttackScreen, LogScreen, StatusScreen, SettingScreen, CustomScreen, MessageScreen, ExitScreen
 };
 
+/**
+* Enum for all reusable buttons for the screen.
+*/
 enum ReusableButton { ExitButton, ConfirmButton, StatFulLButton, StatIncreaseButton, UseButton, DiscardButton,
 ClearButton, };
 
+/**
+* Enum for message types for the MessageScreen.
+*/
 enum Msg { NormalMsg, ErrorMsg, SuccessMsg };
 
-class Screen : public Log_Manager, protected Setting_Manager {
+/**
+* Contain the declaration of the Screen class, which represents a game scene.
+*/
+class Screen : public Log_Manager, public SF_Manager, protected Setting_Manager {
 protected:
 	static bool loaded;
-	bool exit_button = false;
-	bool confirm_button = false;
+	bool exitButton = false;
+	bool confirmButton = false;
 	bool clearButton = false;
-	bool show_bg = true;
+	bool showBG = true;
 
 	std::vector<Full_Text> texts;
 	std::vector<Full_Text> hoverableTexts;
@@ -65,7 +72,7 @@ protected:
 	*	hoverable: true if shape is hoverable.
 	*	override_theme: true if theme is no longer in effect.
 	*/
-	void setup_helper(const char* text, float x, float y, float sx, float sy,
+	void textRectH(const char* text, float x, float y, float sx, float sy,
 		bool hoverable = true, bool override_theme = false);
 
 	/*
@@ -81,7 +88,7 @@ protected:
 	*	fontSize: text's size.
 	*	fontOutline: text's outline size.
 	*/
-	void setupTextbox(const char* text, float x, float y, float sx, float sy, std::function<void()> func, float fontSize = 0, float fontOutline = 0);
+	void textboxH(const char* text, float x, float y, float sx, float sy, std::function<void()> func, float fontSize = 0, float fontOutline = 0);
 
 	/*
 	* Helper to setup hoverable and clickable texts.
@@ -94,12 +101,12 @@ protected:
 	*	fontSize: text's size.
 	*	fontOutline: text's outline size.
 	*/
-	void setupHoverableText(const char* text, float x, float y, std::function<void()> func, float fontSize = 0, float fontOutline = 0);
+	void hoverableTextH(const char* text, float x, float y, std::function<void()> func, float fontSize = 0, float fontOutline = 0);
 
 	/*
 	* Helper to setup hoverable and clickable texts.
 	*/
-	void setupTextInput(const char* defaultText, unsigned int length, float x, float y, float w, float h, InputValidation validation, float fontSize = 0.f, float fontOutline = 0.f);
+	void textInputH(const char* defaultText, unsigned int length, float x, float y, float w, float h, InputValidation validation, float fontSize = 0.f, float fontOutline = 0.f);
 
 	/**
 	* Helper method to check mouse in shape.
@@ -111,7 +118,7 @@ protected:
 	* Return:
 	*	true if mouse is in shape.
 	*/
-	bool mouse_in_helper(bool element, unsigned int i);
+	bool mouseInH(bool element, unsigned int i);
 
 	/**
 	* Helper method to check mouse in a pre-defined button.
@@ -122,7 +129,7 @@ protected:
 	* Return:
 	*	true if mouse is in button.
 	*/
-	static bool mouse_in_button(ReusableButton button);
+	static bool mouseInButton(ReusableButton button);
 
 	/**
 	* Check if mouse is in slow.
@@ -133,7 +140,7 @@ protected:
 	* Return:
 	*	true if mouse is in slot.
 	*/
-	bool mouse_in_slot(unsigned int i);
+	bool mouseInSlot(unsigned int i);
 
 	/**
 	* Helper method to check hover in a pre-defined button.
@@ -141,7 +148,7 @@ protected:
 	* Parameter:
 	*	button: the button to check.
 	*/
-	static void hover_button(ReusableButton button);
+	static void hoverButton(ReusableButton button);
 
 	/**
 	* Helper method to set hover status for an inventory slot.
@@ -149,7 +156,7 @@ protected:
 	* Parameter:
 	*	i: the index of where the slow.
 	*/
-	void hover_slot(unsigned int i);
+	void hoverSlot(unsigned int i);
 
 	/**
 	* Returns to the previous screen.
@@ -157,18 +164,18 @@ protected:
 	* Parameter:
 	*	screen: the screen to leave.
 	*/
-	static void return_to_prev_screen(Display screen);
+	static void goToPrevScreen(Display screen);
 
 	/**
 	* Switches to another screen.
 	*
 	* Parameter:
-	*	old_screen: the screen to leave.
-	*	new_screen: the screen to enter.
+	*	oldScreen: the screen to leave.
+	*	newScreen: the screen to enter.
 	*	push: true to push old screen to history.
 	*	clear: clear screen history if true.
 	*/
-	static void switch_screen(Display old_screen, Display new_screen, bool push, bool clear = false);
+	static void switchScreen(Display oldScreen, Display newScreen, bool push, bool clear = false);
 
 	/**
 	* Set hover status of a textbox (text + rectangle).
@@ -180,7 +187,7 @@ protected:
 	* Return:
 	*	true if hovered over.
 	*/
-	bool hover_textbox(unsigned int i, int j);
+	bool hoverTextRect(unsigned int i, int j);
 
 	/**
 	* Helper method to set hover status.
@@ -192,12 +199,12 @@ protected:
 	* Return:
 	*	true if hovered over.
 	*/
-	bool hover_helper(bool element, unsigned int i);
+	bool hoverH(bool element, unsigned int i);
 
 	/**
 	* Helper method to change the theme for a screen.
 	*/
-	virtual void change_theme();
+	virtual void changeTheme();
 
 public:
 	bool update = false;
@@ -213,11 +220,12 @@ public:
 	* Constructor for Screen.
 	* 
 	* Parameter:
-	*	exit_button: true to display an exit button.
-	*	show_bg: true to display the bg.
-	*	confirm_button: true to display a confirm button.
+	*	exitButton: true to display an exit button.
+	*	showBG: true to display the bg.
+	*	confirmButton: true to display a confirm button.
+	*	clearButton: true to draw the clear button.
 	*/
-	Screen(bool exit_button = false, bool show_bg = true, bool confirm_button = false, bool clearButton = false);
+	Screen(bool exitButton = false, bool showBG = true, bool confirmButton = false, bool clearButton = false);
 
 	/**
 	* Draw the screen.
@@ -227,27 +235,27 @@ public:
 	/**
 	* Updates dynamic texts for a screen.
 	*/
-	virtual void update_draw();
+	virtual void updateDraw();
 
 	/**
 	* Mouse event handler for the screen.
 	*/
-	virtual void mouse_event_handler();
+	virtual void handleMouseEvent();
 
 	/**
 	* Click event handler for the screen.
 	*/
-	virtual bool click_event_handler();
+	virtual bool handleClickEvent();
 
 	/**
 	* Hover event handler for the screen.
 	*/
-	virtual void hover_event_handler();
+	virtual void handleHoverEvent();
 
 	/**
 	* Key press event handler for the screen.
 	*/
-	virtual void key_event_handler();
+	virtual void handleKeyEvent();
 
 	/**
 	* Performs setup work for Screen class.
@@ -258,12 +266,12 @@ public:
 	* Show a dialog.
 	*
 	* Parameter:
-	*	old_screen: the value of the old screen.
-	*	new_screen: the value of the dialog.
+	*	oldScreen: the value of the old screen.
+	*	newScreen: the value of the dialog.
 	*/
-	static void show_dialog(Display old_screen, Display new_screen);
+	static void openDialog(Display oldScreen, Display newScreen);
 
-	static void showMessage(Display old_screen, const char* newMsg, Msg category);
+	static void openMessage(Display oldScreen, const char* newMsg, Msg category);
 
 	/**
 	* Change UI appearance according to settings.
@@ -278,10 +286,19 @@ public:
 	*/
 	bool get_update();
 
+	/**
+	* General hover function to call hover event on as many visible elements as possible.
+	*/
 	void hover();
 
+	/**
+	* General click function to call click event on as many visible elements as possible.
+	*/
 	static bool click();
 
+	/**
+	* General function to handle text event.
+	*/
 	virtual void handleTextEvent();
 };
 

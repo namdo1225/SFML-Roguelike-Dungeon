@@ -1,16 +1,13 @@
-/**
-*
-* File: map_screen.h
-* Description: Contain the declaration of the Map_Screen class, which represents the map screen.
-*/
-
-#ifndef MAP_SCREEN_H
-#define MAP_SCREEN_H
-
 #include "screen.h"
 #include <SFML/Graphics/View.hpp>
 #include <SFML/System/Vector2.hpp>
 
+#ifndef MAP_SCREEN_H
+#define MAP_SCREEN_H
+
+/**
+* Represents the map screen.
+*/
 class Map_Screen : public Screen {
 private:
 	static sf::Vector2f oldPos;
@@ -20,9 +17,9 @@ private:
 public:
 	Map_Screen();
 
-	bool click_event_handler();
+	bool handleClickEvent();
 
-	void mouse_event_handler();
+	void handleMouseEvent();
 
 	void draw();
 };

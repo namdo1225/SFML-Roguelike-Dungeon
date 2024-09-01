@@ -1,30 +1,26 @@
-/**
-*
-* File: stat_screen.h
-* Description: Contain the declaration of the Stat_Screen class,
-* which represents the new game's stat selection screen.
-*/
+#include "screen.h"
 
 #ifndef STAT_SCREEN_H
 #define STAT_SCREEN_H
 
-#include "screen.h"
-
+/**
+* Represents the new game's stat selection screen.
+*/
 class Stat_Screen : public Screen {
 private:
 
 public:
 	Stat_Screen();
 
-	virtual void hover_event_handler();
+	void handleHoverEvent();
 
-	virtual void draw();
+	void draw();
 
-	virtual void update_draw();
+	void updateDraw();
 
-	void key_event_handler();
+	void handleKeyEvent();
 
-	bool click_event_handler();
+	bool handleClickEvent();
 };
 
 #endif

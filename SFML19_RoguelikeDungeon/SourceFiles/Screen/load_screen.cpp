@@ -10,7 +10,7 @@
 #include <SFML/Window/Keyboard.hpp>
 
 Load_Screen::Load_Screen() : Screen(true, true, true) {
-	setup_helper(
+	textRectH(
 		"When you click 'Confirm', you will be asked to select a .sav file."
 		"\nYou will be directed to play the game if the save loads successfully.",
 		150.f, 300.f, NULL, NULL);
@@ -18,20 +18,20 @@ Load_Screen::Load_Screen() : Screen(true, true, true) {
 	texts[0].setThemeAndHover(false);
 }
 
-bool Load_Screen::click_event_handler() {
-	if (mouse_in_button(ExitButton)) {
-		return_to_prev_screen(LoadScreen);
+bool Load_Screen::handleClickEvent() {
+	if (mouseInButton(ExitButton)) {
+		goToPrevScreen(LoadScreen);
 		return true;
 	}
-	else if (mouse_in_button(ConfirmButton)) {
-		Game_Manager::read_save() ? switch_screen(LoadScreen, GameScreen, false, true) :
-			showMessage(LoadScreen, "You cancelled the save dialog.", ErrorMsg);
+	else if (mouseInButton(ConfirmButton)) {
+		Game_Manager::readSave() ? switchScreen(LoadScreen, GameScreen, false, true) :
+			openMessage(LoadScreen, "You cancelled the save dialog.", ErrorMsg);
 		return true;
 	}
 	return false;
 }
 
-void Load_Screen::text_event_handler() {
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && Game_Manager::read_save())
-		switch_screen(LoadScreen, GameScreen, false, true);
+void Load_Screen::handleTextEvent() {
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && Game_Manager::readSave())
+		switchScreen(LoadScreen, GameScreen, false, true);
 }

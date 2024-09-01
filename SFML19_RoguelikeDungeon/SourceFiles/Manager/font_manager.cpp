@@ -12,16 +12,16 @@
 #include <vector>
 
 std::vector<sf::Font> Font_Manager::buffers;
-bool Font_Manager::assets_loaded = false;
+bool Font_Manager::loaded = false;
 unsigned int Font_Manager::selected_font = 0;
 
 Font_Manager::Font_Manager() {
-    if (!assets_loaded)
+    if (!loaded)
         load();
 }
 
 bool Font_Manager::load() {
-    if (assets_loaded)
+    if (loaded)
         return true;
 
     for (auto& file : std::filesystem::directory_iterator("Font")) {
@@ -33,12 +33,12 @@ bool Font_Manager::load() {
             return false;
     }
 
-    assets_loaded = !buffers.empty();
-    return assets_loaded;
+    loaded = !buffers.empty();
+    return loaded;
 }
 
 sf::Font& Font_Manager::get(unsigned int i) {
-    if (!assets_loaded)
+    if (!loaded)
         load();
 
     return (i < 0 && i >= buffers.size()) ? buffers[selected_font] : buffers[i];
@@ -50,7 +50,7 @@ void Font_Manager::set(unsigned int i) {
 }
 
 sf::Font& Font_Manager::get_selected() {
-    if (!assets_loaded)
+    if (!loaded)
         load();
 
     return buffers[selected_font];

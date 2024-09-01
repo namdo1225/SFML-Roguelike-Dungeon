@@ -1,18 +1,14 @@
-/**
-*
-* File: shop.h
-* Description: Contain the declaration of the Shop class, which represents a shop which player could
-* use to buy/sell items and spells.
-*
-*/
+#include "Floor/floor_object.h"
 
 #ifndef SHOP_H
 #define SHOP_H
 
-#include "Floor/floor_object.h"
-
+/**
+* Represents a shop on the map.
+*/
 class Shop : public Floor_Object {
 public:
+
 	/**
 	* Constructor for Shop.
 	*/
@@ -22,8 +18,8 @@ public:
 	* Constructor for Shop.
 	*
 	* Parameter:
-	*	x: a float for the shop's x position.
-	* 	y: a float for the shop's x position.
+	*	x: the shop's x position.
+	* 	y: the shop's y position.
 	*/
 	Shop(float x, float y);
 };

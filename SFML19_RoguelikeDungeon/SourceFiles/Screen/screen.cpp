@@ -76,8 +76,8 @@ std::vector<Full_Rectangle> Screen::inv_sp_slots;
 std::map<std::string, Full_Rectangle> Screen::map_rects;
 std::map<std::string, Full_Text> Screen::map_txts;
 
-Screen::Screen(bool exit_button, bool show_bg, bool confirm_button, bool clearButton):
-	exit_button(exit_button), show_bg(show_bg), confirm_button(confirm_button), clearButton(clearButton) {
+Screen::Screen(bool exitButton, bool showBG, bool confirmButton, bool clearButton):
+	exitButton(exitButton), showBG(showBG), confirmButton(confirmButton), clearButton(clearButton) {
 	if (!loaded)
 		setup();
 }
@@ -133,7 +133,7 @@ void Screen::setup() {
 }
 
 void Screen::draw() {
-	if (show_bg)
+	if (showBG)
 		window.draw(map_rects["background"]);
 
 	for (Full_Rectangle rect : rects)
@@ -156,18 +156,18 @@ void Screen::draw() {
 		window.draw(map_txts["clear"]);
 	}
 
-	if (confirm_button) {
+	if (confirmButton) {
 		window.draw(map_rects["confirm"]);
 		window.draw(map_txts["confirm"]);
 	}
 
-	if (exit_button) {
+	if (exitButton) {
 		window.draw(map_rects["exit"]);
 		window.draw(map_txts["exit"]);
 	}
 }
 
-void Screen::setup_helper(const char* text, float x, float y, float sx, float sy,
+void Screen::textRectH(const char* text, float x, float y, float sx, float sy,
 	bool hoverable, bool override_theme) {
 	if (text == NULL) {
 		rects.push_back(Full_Rectangle());
@@ -183,25 +183,25 @@ void Screen::setup_helper(const char* text, float x, float y, float sx, float sy
 	}		
 }
 
-void Screen::setupTextbox(const char* text, float x, float y, float sx, float sy, std::function<void()> func, float fontSize, float fontOutline) {
+void Screen::textboxH(const char* text, float x, float y, float sx, float sy, std::function<void()> func, float fontSize, float fontOutline) {
 	textboxes.push_back(Full_Textbox(text, x, y, sx, sy, func, fontSize, fontOutline));
 }
 
-void Screen::setupHoverableText(const char* text, float x, float y, std::function<void()> func, float fontSize, float fontOutline) {
+void Screen::hoverableTextH(const char* text, float x, float y, std::function<void()> func, float fontSize, float fontOutline) {
 	hoverableTexts.push_back(Full_Text(x, y, fontSize, text, true, false, func));
 	hoverableTexts[hoverableTexts.size() - 1].setPhysical(x, y, text, fontSize, fontOutline);
 }
 
-void Screen::setupTextInput(const char* defaultText, unsigned int length, float x, float y, float w, float h, InputValidation validation, float fontSize, float fontOutline) {
+void Screen::textInputH(const char* defaultText, unsigned int length, float x, float y, float w, float h, InputValidation validation, float fontSize, float fontOutline) {
 	textInputs.push_back(Full_TextInput(defaultText, length, x, y, w, h, validation, fontSize, fontOutline));
 }
 
-bool Screen::mouse_in_helper(bool element, unsigned int i) {
+bool Screen::mouseInH(bool element, unsigned int i) {
 	return (element && rects[i].getGlobalBounds().contains(sf::Vector2f(x, y))) ||
 		(!element && texts[i].getGlobalBounds().contains(sf::Vector2f(x, y)));
 }
 
-bool Screen::mouse_in_button(ReusableButton button) {
+bool Screen::mouseInButton(ReusableButton button) {
 	switch (button) {
 	case ExitButton:
 		return map_rects["exit"].getGlobalBounds().contains(sf::Vector2f(x, y));
@@ -217,7 +217,7 @@ bool Screen::mouse_in_button(ReusableButton button) {
 	return false;
 }
 
-void Screen::hover_button(ReusableButton button) {
+void Screen::hoverButton(ReusableButton button) {
 	Full_Rectangle* button_rect = &map_rects["exit"];
 	Full_Text* button_txt = &map_txts["exit"];
 
@@ -240,7 +240,7 @@ void Screen::hover_button(ReusableButton button) {
 		break;
 	}
 
-	bool in = mouse_in_button(button);
+	bool in = mouseInButton(button);
 	bool hover = button_rect->getHover();
 
 	if (in && !hover) {
@@ -253,7 +253,7 @@ void Screen::hover_button(ReusableButton button) {
 	}
 }
 
-void Screen::return_to_prev_screen(Display screen) {
+void Screen::goToPrevScreen(Display screen) {
 	Display prev = prev_displays[prev_displays.size() - 1];
 	prev_displays.pop_back();
 
@@ -262,26 +262,26 @@ void Screen::return_to_prev_screen(Display screen) {
 	display = prev;
 }
 
-void Screen::switch_screen(Display old_screen, Display new_screen, bool push, bool clear) {
-	visibilities[old_screen] = false;
-	visibilities[new_screen] = true;
-	display = new_screen;
+void Screen::switchScreen(Display oldScreen, Display newScreen, bool push, bool clear) {
+	visibilities[oldScreen] = false;
+	visibilities[newScreen] = true;
+	display = newScreen;
 	if (push)
-		prev_displays.push_back(old_screen);
+		prev_displays.push_back(oldScreen);
 	if (clear)
 		prev_displays.clear();
 }
 
-void Screen::show_dialog(Display old_screen, Display new_screen) {
-	visibilities[new_screen] = true;
-	display = new_screen;
-	prev_displays.push_back(old_screen);
+void Screen::openDialog(Display oldScreen, Display newScreen) {
+	visibilities[newScreen] = true;
+	display = newScreen;
+	prev_displays.push_back(oldScreen);
 }
 
-void Screen::showMessage(Display old_screen, const char* newMsg, Msg category) {
+void Screen::openMessage(Display oldScreen, const char* newMsg, Msg category) {
 	visibilities[MessageScreen] = true;
 	display = MessageScreen;
-	prev_displays.push_back(old_screen);
+	prev_displays.push_back(oldScreen);
 	screens[MessageScreen]->texts[0].setString(newMsg);
 	switch (category) {
 	case NormalMsg:
@@ -299,8 +299,8 @@ void Screen::showMessage(Display old_screen, const char* newMsg, Msg category) {
 	}
 }
 
-bool Screen::hover_textbox(unsigned int i, int j) {
-	bool in = mouse_in_helper(true, i);
+bool Screen::hoverTextRect(unsigned int i, int j) {
+	bool in = mouseInH(true, i);
 	bool hover = rects[i].getHover();
 
 	if (in && !hover) {
@@ -319,77 +319,77 @@ bool Screen::hover_textbox(unsigned int i, int j) {
 
 void Screen::change_settings() {
 	Setting_Manager::save();
-	Audio_Manager::set_music_volume(Setting_Manager::music_volume);
-	Audio_Manager::set_sfx_volume(Setting_Manager::sfx_volume);
+	Audio_Manager::setMusicVolume(Setting_Manager::music_volume);
+	Audio_Manager::setSFXVolume(Setting_Manager::sfxVolume);
 	Font_Manager::set(Setting_Manager::font);
 	
 	for (unsigned int i = 0; i < num_screens; i++) {
 		if (screens[i].get() != NULL) {
-			screens[i]->change_theme();
+			screens[i]->changeTheme();
 			for (Full_Rectangle& rect : screens[i]->rects)
-				rect.flip_theme();
+				rect.changeTheme();
 			for (Full_Text& text : screens[i]->texts) {
-				text.flip_theme();
+				text.changeTheme();
 				text.setFont(Font_Manager::get_selected());
 			}
 			for (Full_Text& text : screens[i]->hoverableTexts) {
-				text.flip_theme();
+				text.changeTheme();
 				text.setFont(Font_Manager::get_selected());
 			}
 			for (Full_Textbox& textbox : screens[i]->textboxes) {
-				textbox.text.flip_theme();
+				textbox.text.changeTheme();
 				textbox.text.setFont(Font_Manager::get_selected());
-				textbox.rect.flip_theme();
+				textbox.rect.changeTheme();
 			}
 		}
 	}
 
 	std::map<std::string, Full_Rectangle>::iterator it_r = map_rects.begin();
 	while (it_r != map_rects.end()) {
-		it_r->second.flip_theme();
+		it_r->second.changeTheme();
 		it_r++;
 	}
 
 	std::map<std::string, Full_Text>::iterator it_t = map_txts.begin();
 	while (it_t != map_txts.end()) {
-		it_t->second.flip_theme();
+		it_t->second.changeTheme();
 		it_t->second.setFont(Font_Manager::get_selected());
 		it_t++;
 	}
 
 	for (Full_Text& text : stat_full_txts) {
-		text.flip_theme();
+		text.changeTheme();
 		text.setFont(Font_Manager::get_selected());
 	}
 
 	for (Full_Text& text : stat_curr_txts) {
-		text.flip_theme();
+		text.changeTheme();
 		text.setFont(Font_Manager::get_selected());
 	}
 
 	for (Full_Text& text : stat_curr_arrows) {
-		text.flip_theme();
+		text.changeTheme();
 		text.setFont(Font_Manager::get_selected());
 	}
 
 	for (Full_Rectangle& rect : inv_sp_slots)
-		rect.flip_theme();
+		rect.changeTheme();
 
 	for (Full_Text& text : logs) {
-		text.flip_theme();
+		text.changeTheme();
 		text.setFont(Font_Manager::get_selected());
 	}
 }
 
-void Screen::key_event_handler() {
+void Screen::handleKeyEvent() {
 }
 
-bool Screen::mouse_in_slot(unsigned int i) {
-	return inv_sp_slots[i].getGlobalBounds().contains(sf::Vector2f(slot_x, slot_y));
+bool Screen::mouseInSlot(unsigned int i) {
+	return inv_sp_slots[i].getGlobalBounds().contains(sf::Vector2f(slotX, slotY));
 }
 
-void Screen::hover_slot(unsigned int i) {
-	bool in = mouse_in_slot(i);
+void Screen::hoverSlot(unsigned int i) {
+	bool in = mouseInSlot(i);
 	bool hover = inv_sp_slots[i].getHover();
 
 	if (in && !hover) {
@@ -402,16 +402,16 @@ void Screen::hover_slot(unsigned int i) {
 	}
 }
 
-void Screen::mouse_event_handler() {}
+void Screen::handleMouseEvent() {}
 
-bool Screen::click_event_handler() {
+bool Screen::handleClickEvent() {
 	return false;
 }
 
-void Screen::hover_event_handler() {}
+void Screen::handleHoverEvent() {}
 
-bool Screen::hover_helper(bool element, unsigned int i) {
-	bool in = mouse_in_helper(element, i);
+bool Screen::hoverH(bool element, unsigned int i) {
+	bool in = mouseInH(element, i);
 	bool hover = element ? rects[i].getHover() : texts[i].getHover();
 
 	if (in && !hover) {
@@ -428,21 +428,21 @@ bool Screen::get_update() {
 	return update;
 }
 
-void Screen::update_draw() {
+void Screen::updateDraw() {
 }
 
-void Screen::change_theme() {
+void Screen::changeTheme() {
 }
 
 void Screen::hover() {
-	if (exit_button)
-		hover_button(ExitButton);
+	if (exitButton)
+		hoverButton(ExitButton);
 
-	if (confirm_button)
-		hover_button(ConfirmButton);
+	if (confirmButton)
+		hoverButton(ConfirmButton);
 
 	if (clearButton)
-		hover_button(ClearButton);
+		hoverButton(ClearButton);
 
 	for (unsigned int i = 0; i < screens[display]->hoverableTexts.size(); i++)
 		screens[display]->hoverableTexts[i].hover();

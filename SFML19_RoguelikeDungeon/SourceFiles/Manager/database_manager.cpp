@@ -1,3 +1,10 @@
+/**
+*
+* File: database_manager.cpp
+* Description: Contains the implementation of the Database_Manager class.
+*
+*/
+
 #include "env.h"
 #include "Manager/database_manager.h"
 #include <cstdio>

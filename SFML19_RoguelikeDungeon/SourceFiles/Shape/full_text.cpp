@@ -14,11 +14,11 @@
 #include <SFML/System/Vector2.hpp>
 #include <Shape/full_shape.h>
 
-const sf::Color Full_Text::light[themes] = { sf::Color(87, 87, 87), sf::Color(100, 100, 100) };
-const sf::Color Full_Text::dark[themes] = { sf::Color(230, 230, 230), sf::Color(175, 175, 175)};
+const sf::Color Full_Text::light[THEMES] = { sf::Color(87, 87, 87), sf::Color(100, 100, 100) };
+const sf::Color Full_Text::dark[THEMES] = { sf::Color(230, 230, 230), sf::Color(175, 175, 175)};
 
-const sf::Color Full_Text::light_hover[themes] = { sf::Color::Black, sf::Color(200, 117, 117) };
-const sf::Color Full_Text::dark_hover[themes] = { sf::Color(50, 50, 50), sf::Color::White};
+const sf::Color Full_Text::light_hover[THEMES] = { sf::Color::Black, sf::Color(200, 117, 117) };
+const sf::Color Full_Text::dark_hover[THEMES] = { sf::Color(50, 50, 50), sf::Color::White};
 
 Full_Text::Full_Text() {
 	sf::Text::setOutlineColor(sf::Color::Black);
@@ -50,7 +50,7 @@ Full_Text::Full_Text(float x, float y, float size, const char* text,
 	clickCallback = click;
 }
 
-void Full_Text::flip_theme() {
+void Full_Text::changeTheme() {
 	sf::Color fill = getFillColor();
 	sf::Color theme_fill = Setting_Manager::light ? light[theme] : dark[theme];
 	sf::Text::setFillColor(sf::Color(theme_fill.r, theme_fill.g, theme_fill.g, fill.a ? fill.a : 255));

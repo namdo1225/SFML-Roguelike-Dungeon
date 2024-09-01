@@ -1,3 +1,10 @@
+/**
+*
+* File: util.cpp
+* Description: Contains the implementation of the Util class.
+*
+*/
+
 #include "util.h"
 #include <string>
 #include <vector>

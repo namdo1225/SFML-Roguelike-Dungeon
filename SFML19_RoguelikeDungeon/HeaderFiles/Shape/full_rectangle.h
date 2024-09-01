@@ -1,11 +1,3 @@
-/**
-*
-* File: full_rectangle.h
-* Description: Contain the declaration of the Full_Rectangle class,
-* which is a wrapper class around sf::RectangleShape that provide extra functionality.
-*
-*/
-
 #ifndef FULL_RECT_H
 #define FULL_RECT_H
 
@@ -13,19 +5,22 @@
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 
+/**
+* A wrapper class around sf::RectangleShape that provide extra functionality like theming.
+*/
 class Full_Rectangle : public sf::RectangleShape, public Full_Shape {
 public:
-	const static sf::Color light_bg[themes];
-	const static sf::Color dark_bg[themes];
+	const static sf::Color light_bg[THEMES];
+	const static sf::Color dark_bg[THEMES];
 
-	const static sf::Color light_edge[themes];
-	const static sf::Color dark_edge[themes];
+	const static sf::Color light_edge[THEMES];
+	const static sf::Color dark_edge[THEMES];
 
-	const static sf::Color light_bg_hover[themes];
-	const static sf::Color dark_bg_hover[themes];
+	const static sf::Color light_bg_hover[THEMES];
+	const static sf::Color dark_bg_hover[THEMES];
 
-	const static sf::Color light_edge_hover[themes];
-	const static sf::Color dark_edge_hover[themes];
+	const static sf::Color light_edge_hover[THEMES];
+	const static sf::Color dark_edge_hover[THEMES];
 
 	/*
 	* Constructor for Full_Rectangle.
@@ -42,13 +37,13 @@ public:
 	*	h: rectangle's height.
 	*	hoverable: true if shape is hoverable.
 	*	override_theme: true if theme is no longer in effect.
-	*	outline: rectangle's outline color.
 	*	fill: rectangle's fill color.
+	*	outline: rectangle's outline color.
 	*/
 	Full_Rectangle(float x, float y, float w, float h, bool hoverable = true, bool override_theme = false,
 		sf::Color fill = sf::Color::Transparent, sf::Color outline = sf::Color::Transparent);
 
-	void flip_theme();
+	void changeTheme();
 
 	void highlight(bool hovered = true);
 

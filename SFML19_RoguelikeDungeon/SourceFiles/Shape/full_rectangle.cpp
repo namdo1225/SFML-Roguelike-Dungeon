@@ -12,17 +12,17 @@
 #include <SFML/System/Vector2.hpp>
 #include <Shape/full_shape.h>
 
-const sf::Color Full_Rectangle::light_bg[themes] = { sf::Color::White, sf::Color(240, 240, 240) };
-const sf::Color Full_Rectangle::dark_bg[themes] = { sf::Color::Black, sf::Color(50, 50, 50) };
+const sf::Color Full_Rectangle::light_bg[THEMES] = { sf::Color::White, sf::Color(240, 240, 240) };
+const sf::Color Full_Rectangle::dark_bg[THEMES] = { sf::Color::Black, sf::Color(50, 50, 50) };
 
-const sf::Color Full_Rectangle::light_edge[themes] = { sf::Color(10, 10, 10), sf::Color(70, 70, 70) };
-const sf::Color Full_Rectangle::dark_edge[themes] = { sf::Color::White, sf::Color(220, 220, 220) };
+const sf::Color Full_Rectangle::light_edge[THEMES] = { sf::Color(10, 10, 10), sf::Color(70, 70, 70) };
+const sf::Color Full_Rectangle::dark_edge[THEMES] = { sf::Color::White, sf::Color(220, 220, 220) };
 
-const sf::Color Full_Rectangle::light_bg_hover[themes] = { sf::Color(230, 230, 230), sf::Color(220, 220, 220) };
-const sf::Color Full_Rectangle::dark_bg_hover[themes] = { sf::Color::White, sf::Color(70, 70, 70) };
+const sf::Color Full_Rectangle::light_bg_hover[THEMES] = { sf::Color(230, 230, 230), sf::Color(220, 220, 220) };
+const sf::Color Full_Rectangle::dark_bg_hover[THEMES] = { sf::Color::White, sf::Color(70, 70, 70) };
 
-const sf::Color Full_Rectangle::light_edge_hover[themes] = { sf::Color(60, 60, 60), sf::Color::Black };
-const sf::Color Full_Rectangle::dark_edge_hover[themes] = { sf::Color::Black, sf::Color(240, 240, 240) };
+const sf::Color Full_Rectangle::light_edge_hover[THEMES] = { sf::Color(60, 60, 60), sf::Color::Black };
+const sf::Color Full_Rectangle::dark_edge_hover[THEMES] = { sf::Color::Black, sf::Color(240, 240, 240) };
 
 Full_Rectangle::Full_Rectangle() {
 	setOutlineThickness(3.f);
@@ -48,7 +48,7 @@ Full_Rectangle::Full_Rectangle(float x, float y, float w, float h,
 	setSize(sf::Vector2f(w, h));
 }
 
-void Full_Rectangle::flip_theme() {
+void Full_Rectangle::changeTheme() {
 	sf::Color fill = getFillColor();
 	sf::Color outline = getOutlineColor();
 

@@ -28,30 +28,30 @@ bool Special::setup()
 	unsigned int id = 0;
 	specials.insert(std::make_pair(id++,
 		Special(id, 100, 0, "SP", "Increase item limit by 1.\nMax storage is 32.", "Storage Perk", []() {
-			if (Game_Manager::player.get_max_itm() < Game_Manager::MAX_INV_SPELL_SLOTS) {
-				Game_Manager::player.set_max_item(Game_Manager::player.get_max_itm() + 1);
+			if (Game_Manager::player.getMaxItems() < Game_Manager::MAX_INV_SPELL_SLOTS) {
+				Game_Manager::player.setMaxItem(Game_Manager::player.getMaxItems() + 1);
 				Game_Manager::log_add("Your item limit increased by 1.");
 			}
 		})));
 	specials.insert(std::make_pair(id++,
 		Special(id, 500, 0, "LP", "Move up a floor.\nStay in the shop\nuntil you close the\nwindow.", "Ladder Perk", []() {
-			Game_Manager::next_level(true);
+			Game_Manager::goUpFloor(true);
 		})));
 	specials.insert(std::make_pair(id++,
 		Special(id, 500, 0, "SB", "Increase STR by 5 for 20 turns.", "Strength Boost", []() {
-			Game_Manager::player.set_effect(Str, 5, 20);
+			Game_Manager::player.setEffect(Str, 5, 20);
 		})));
 	specials.insert(std::make_pair(id++,
 		Special(id, 500, 0, "MB", "Increase MGK by 10 for 10 turns.", "Magic Boost", []() {
-			Game_Manager::player.set_effect(Mgk, 10, 10);
+			Game_Manager::player.setEffect(Mgk, 10, 10);
 		})));
 	specials.insert(std::make_pair(id++,
 		Special(id, 500, 0, "DB", "Increase DEF by 3 for 30 turns.", "Defense Boost", []() {
-			Game_Manager::player.set_effect(Def, 3, 30);
+			Game_Manager::player.setEffect(Def, 3, 30);
 		})));
 	specials.insert(std::make_pair(id++,
 		Special(id, 500, 0, "RB", "Increase RES by 1 for 50 turns.", "Resistance Boost", []() {
-			Game_Manager::player.set_effect(Mgk, 1, 50);
+			Game_Manager::player.setEffect(Mgk, 1, 50);
 		})));
 
 	return true;

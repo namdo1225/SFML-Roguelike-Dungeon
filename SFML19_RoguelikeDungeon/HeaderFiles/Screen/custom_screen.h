@@ -1,9 +1,3 @@
-/**
-*
-* File: custom_screen.h
-* Description: Contain the declaration of the Custom_Screen class, which represents a screen for players to add custom assets.
-*/
-
 #include "screen.h"
 #include <Floor/enemy.h>
 #include <map>
@@ -20,6 +14,9 @@
 
 enum Mod { EnemyMod, ItemMod, SpellMod };
 
+/**
+* A screen for players to add custom assets.
+*/
 class Custom_Screen : public Screen {
 private:
 	static char* category;
@@ -58,22 +55,31 @@ private:
 	static unsigned int idOffset;
 	static unsigned int boxIndex;
 
+	/**
+	* Get enemies and display them in boxes.
+	*/
 	static void getEnemies();
 
+	/**
+	* Get spells and display them in boxes.
+	*/
 	static void getSpells();
 
+	/**
+	* Get items and display them in boxes.
+	*/
 	static void getItems();
 
 public:
 	Custom_Screen();
 
-	bool click_event_handler();
+	bool handleClickEvent();
 
-	void hover_event_handler();
+	void handleHoverEvent();
 
 	void draw();
 
-	void change_theme();
+	void changeTheme();
 
 	void handleTextEvent();
 };

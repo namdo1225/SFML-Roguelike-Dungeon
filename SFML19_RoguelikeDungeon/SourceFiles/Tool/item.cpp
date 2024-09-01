@@ -63,10 +63,10 @@ void Item::use() {
 	switch (type) {
 	case StatConsumable:
 		if (stat == Hp || stat == Mp) {
-			unsigned int max = Game_Manager::player.get_stat(stat == Hp ? Max_Hp : Max_Mp);
-			unsigned int cur = Game_Manager::player.get_stat(stat);
+			unsigned int max = Game_Manager::player.getStat(stat == Hp ? Max_Hp : Max_Mp);
+			unsigned int cur = Game_Manager::player.getStat(stat);
 			unsigned int diff = max - cur;
-			Game_Manager::player.set_stat(stat, diff > quantity ? cur + quantity : max);
+			Game_Manager::player.setStat(stat, diff > quantity ? cur + quantity : max);
 		}
 
 		return;
