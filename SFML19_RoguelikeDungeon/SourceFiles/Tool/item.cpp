@@ -76,3 +76,11 @@ void Item::use() {
 		return;
 	}
 }
+
+unsigned int Item::getType() {
+	return type;
+}
+
+Stat Item::getStat() {
+	return stat;
+}

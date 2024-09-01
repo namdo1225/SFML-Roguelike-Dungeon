@@ -27,19 +27,20 @@ private:
 	*/
 	bool usePlayerMP() const;
 
-protected:
-	std::function<void(int, double)> functionalUse = NULL;
-
-public:
-	static std::map<unsigned int, Spell> spells;
-
 	SpellType type{ Functional };
+
 	unsigned int mp{ 0 };
 
 	/*
 	* Scaling for the stats for attack spells;
 	*/
 	double percentage = 0.5;
+
+protected:
+	std::function<void(int, double)> functionalUse = NULL;
+
+public:
+	static std::map<unsigned int, Spell> spells;
 
 	/**
 	* Constructor for Spell.
@@ -98,6 +99,24 @@ public:
 	*	index 0 = attack value, 1 = range, 2 = cost
 	*/
 	std::array<int, 3> atk();
+
+	unsigned int getType();
+
+	/**
+	* Getter for spell's mp use.
+	*
+	* Return:
+	*	spell's mp use.
+	*/
+	unsigned int getMP();
+
+	/**
+	* Getter for spell's percentage scaling.
+	*
+	* Return:
+	*	spell's percentage scaling.
+	*/
+	double getPercentage();
 };
 
 #endif

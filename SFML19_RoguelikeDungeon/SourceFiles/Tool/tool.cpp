@@ -48,3 +48,43 @@ bool Tool::contains(float x, float y) {
 void Tool::changeTheme() {
 	icon.changeTheme();
 }
+
+std::string Tool::getName() {
+	return name;
+}
+
+std::string Tool::getOriginalDesc() {
+	return originalDesc;
+}
+
+std::string Tool::getDesc() {
+	return desc;
+}
+
+std::string Tool::getAbbrev() {
+	return abbrev;
+}
+
+unsigned int Tool::getID() {
+	return id;
+}
+
+unsigned int Tool::getRange() {
+	return range;
+}
+
+unsigned int Tool::getBuy() {
+	return buy;
+}
+
+unsigned int Tool::getSell() {
+	return sell;
+}
+
+int Tool::getQuantity() {
+	return quantity;
+}
+
+unsigned int Tool::getType() {
+	return 0;
+}

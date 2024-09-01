@@ -28,8 +28,8 @@ bool Spell_Screen::handleClickEvent() {
         return true;
     }
     else if (mouseInButton(UseButton) && Game_Manager::selectedSpell) {
-        if (Game_Manager::selectedSpell->type == Functional) {
-            std::string spell_name = Game_Manager::selectedSpell->name;
+        if (Game_Manager::selectedSpell->getType() == Functional) {
+            std::string spell_name = Game_Manager::selectedSpell->getName();
             texts[2].setString(Game_Manager::useSpell() ? std::format("You used {}.", spell_name) :
                     std::format("You failed to cast {}.", spell_name));
         }
@@ -58,7 +58,7 @@ bool Spell_Screen::handleClickEvent() {
             else if (!Game_Manager::selectedSpell) {
                 int sx = spell.getPos('x'), sy = spell.getPos('y');
                 map_rects["inv_sp_cur_slot"].setPosition(sx - 5, sy - 5);
-                map_txts["inv_sp_detail"].setString(spell.desc.c_str());
+                map_txts["inv_sp_detail"].setString(spell.getDesc());
                 Game_Manager::selectedSpell = &spell;
                 return true;
             }

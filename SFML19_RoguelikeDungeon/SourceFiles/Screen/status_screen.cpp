@@ -100,9 +100,9 @@ void Status_Screen::updateDraw() {
 	// stat points
 	texts[27].setString(std::to_string(Game_Manager::player.getStatPts()));
 	// weapon
-	texts[28].setString(Game_Manager::plWeapon->name);
+	texts[28].setString(Game_Manager::plWeapon->getName());
 	// armor
-	texts[29].setString(Game_Manager::plArmor->name);
+	texts[29].setString(Game_Manager::plArmor->getName());
 	// effects
 	std::string effects_str = "";
 	const std::vector<Effect> effects = Game_Manager::player.getEffect();

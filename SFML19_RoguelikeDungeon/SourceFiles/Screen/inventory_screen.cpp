@@ -31,8 +31,8 @@ bool Inventory_Screen::handleClickEvent() {
 		texts[4].setString("");
 		return true;
 	}
-	else if (mouseInButton(UseButton) && Game_Manager::selectedInv->type != Weapon && Game_Manager::selectedInv->type != Armor) {
-		texts[4].setString(std::format("You used a {}.", Game_Manager::selectedInv->name));
+	else if (mouseInButton(UseButton) && Game_Manager::selectedInv->getType() != Weapon && Game_Manager::selectedInv->getType() != Armor) {
+		texts[4].setString(std::format("You used a {}.", Game_Manager::selectedInv->getName()));
 		Game_Manager::useItem();
 		return true;
 	}
@@ -46,7 +46,7 @@ bool Inventory_Screen::handleClickEvent() {
 	for (Item& item : Game_Manager::items) {
 		if (item.contains(x, y)) {
 			bool inv_select_contain = Game_Manager::selectedInv && Game_Manager::selectedInv->contains(x, y);
-			unsigned int type = Game_Manager::selectedInv ? Game_Manager::selectedInv->type : -1;
+			unsigned int type = Game_Manager::selectedInv ? Game_Manager::selectedInv->getType() : -1;
 
 			// Unselects
 			if (type != -1 && inv_select_contain) {
@@ -54,7 +54,7 @@ bool Inventory_Screen::handleClickEvent() {
 				return true;
 			}
 			// Equips another weapon
-			else if ((Game_Manager::selectedInv == Game_Manager::plWeapon && item.type == Weapon) ||
+			else if ((Game_Manager::selectedInv == Game_Manager::plWeapon && item.getType() == Weapon) ||
 				(type == Weapon && mouseInH(true, 0))) {
 				Game_Manager::selectedInv == Game_Manager::plWeapon 
 					? Game_Manager::equipWeapon(&item) 
@@ -64,7 +64,7 @@ bool Inventory_Screen::handleClickEvent() {
 				return true;
 			}
 			// Equips another armor
-			else if ((Game_Manager::selectedInv == Game_Manager::plArmor && item.type == Armor) ||
+			else if ((Game_Manager::selectedInv == Game_Manager::plArmor && item.getType() == Armor) ||
 				(type == Armor && mouseInH(true, 1))) {
 				Game_Manager::selectedInv == Game_Manager::plArmor
 					? Game_Manager::equipArmor(&item)
@@ -89,7 +89,7 @@ bool Inventory_Screen::handleClickEvent() {
 				Audio_Manager::playSFX(4);
 				Game_Manager::selectedInv = &item;
 				map_rects["inv_sp_cur_slot"].setPosition(i1x - 5, i1y - 5);
-				map_txts["inv_sp_detail"].setString(item.desc.c_str());
+				map_txts["inv_sp_detail"].setString(item.getDesc());
 				return true;
 			}
 		}
@@ -120,7 +120,7 @@ void Inventory_Screen::draw() {
 	for (Item& itm : Game_Manager::items)
 		itm.draw();
 
-	if (Game_Manager::selectedInv && Game_Manager::selectedInv->type > Armor) {
+	if (Game_Manager::selectedInv && Game_Manager::selectedInv->getType() > Armor) {
 		window.draw(map_rects["inv_sp_use"]);
 		window.draw(map_txts["inv_sp_use"]);
 	}

@@ -13,6 +13,7 @@
 #include <string>
 #include <Tool/tool.h>
 #include <utility>
+#include <format>
 
 std::map<unsigned int, Special> Special::specials;
 
@@ -21,7 +22,9 @@ void Special::use() {
 }
 
 Special::Special(unsigned int id, unsigned int buy, unsigned int sell, std::string abbre, std::string desc, std::string name, std::function<void()> useSpecial) :
-	Tool(name, desc, abbre, id, buy, sell, 0, 0), useSpecial(useSpecial) {}
+	Tool(name, std::format("{}\n\n{}\n\nBUY: {}G\nSELL: {}G", name, desc, buy, sell), abbre, id, buy, sell, 0, 0), useSpecial(useSpecial) {
+	originalDesc = desc;
+}
 
 bool Special::setup()
 {
@@ -34,7 +37,7 @@ bool Special::setup()
 			}
 		})));
 	specials.insert(std::make_pair(id++,
-		Special(id, 500, 0, "LP", "Move up a floor.\nStay in the shop\nuntil you close the\nwindow.", "Ladder Perk", []() {
+		Special(id, 500, 0, "LP", "Move up a floor. Stay in the shop\nuntil you close the window.", "Ladder Perk", []() {
 			Game_Manager::goUpFloor(true);
 		})));
 	specials.insert(std::make_pair(id++,

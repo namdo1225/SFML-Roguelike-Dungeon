@@ -114,7 +114,7 @@ void Game_Manager::findItemShortcut(bool left) {
 
     while (true) {
         itemQuickIndex = (itemQuickIndex + (left ? -1 : 1)) % size;
-        if (items[itemQuickIndex].type != Weapon && items[itemQuickIndex].type != Armor) {
+        if (items[itemQuickIndex].getType() != Weapon && items[itemQuickIndex].getType() != Armor) {
             selectedInv = &items[itemQuickIndex];
             return;
         }
@@ -178,8 +178,8 @@ void Game_Manager::atkEnemy(unsigned int v) {
         return;
 
     Attack type = enemies[v].constant->type;
-    int quantity = plArmor->quantity;
-    Stat armor_stat = plArmor->stat;
+    int quantity = plArmor->getQuantity();
+    Stat armor_stat = plArmor->getStat();
     int armor = (type && armor_stat == Def) || (!type && armor_stat == Mgk) ? quantity : 0;
     int damage = player.hurtPlayer(type, enemies[v].stat.hp - armor);
 
@@ -395,7 +395,7 @@ void Game_Manager::pickUpItem() {
             Audio_Manager::playSFX(0);
             addItem(floor.collectibles[i].getID());
             floor.collectibles.erase(floor.collectibles.begin() + i);
-            log_add(std::format("You picked up: {}.", items[items.size() - 1].name).c_str());
+            log_add(std::format("You picked up: {}.", items[items.size() - 1].getName()).c_str());
             if (items.size() == player.getMaxItems())
                 log_add("You reached your items limit.");
             return;
@@ -534,7 +534,7 @@ void Game_Manager::playerAttack() {
             return;
 
     int stat{ en->constant->type ? en->stat.def : en->stat.res };
-    const int amount = player.getStat(plWeapon->stat) + plWeapon->quantity;
+    const int amount = player.getStat(plWeapon->getStat()) + plWeapon->getQuantity();
     int quantity{ stat >= amount ? 1 : amount - stat };
     en->stat.hp -= quantity;
 
@@ -722,7 +722,7 @@ void Game_Manager::addSpell(unsigned int id) {
 }
 
 void Game_Manager::equipWeapon(Item* weapon) {
-    if (weapon->type != Weapon)
+    if (weapon->getType() != Weapon)
         return;
     
     if (plWeapon != NULL)
@@ -733,7 +733,7 @@ void Game_Manager::equipWeapon(Item* weapon) {
 }
 
 void Game_Manager::equipArmor(Item* armor) {
-    if (armor->type != Armor)
+    if (armor->getType() != Armor)
         return;
 
     if (plArmor != NULL)
@@ -827,7 +827,7 @@ void Game_Manager::save() {
 
         if (!items.empty())
             for (Item itm : items)
-                j["inventory"].push_back(itm.id);
+                j["inventory"].push_back(itm.getID());
 
 
         for (int i = items.size() - 1; i >= 0; i--)
@@ -843,7 +843,7 @@ void Game_Manager::save() {
 
         if (!spells.empty())
             for (Spell sp : spells)
-                j["spell"].push_back(sp.id);
+                j["spell"].push_back(sp.getID());
 
         for (unsigned int i{ 0 }; i < floor.rooms.size(); i++) {
             j["floor"].push_back(json::object());
@@ -1119,7 +1119,7 @@ void Game_Manager::delSelectedSpell() {
 }
 
 void Game_Manager::useItem() {
-    if (selectedInv->type != Weapon && selectedInv->type != Armor)
+    if (selectedInv->getType() != Weapon && selectedInv->getType() != Armor)
         selectedInv->use();
 
     delSelectedItem();
@@ -1127,7 +1127,7 @@ void Game_Manager::useItem() {
 }
 
 bool Game_Manager::useSpell() {
-    if (selectedSpell->type != Offensive) {
+    if (selectedSpell->getType() != Offensive) {
         bool success = selectedSpell->use();
         selectedSpell = NULL;
         handleTurn();

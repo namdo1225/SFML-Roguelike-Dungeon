@@ -156,18 +156,18 @@ void Shop_Screen::draw() {
 }
 
 void Shop_Screen::shopItem(bool buy) {
-	unsigned int selectedInv = Game_Manager::selectedInv ? Game_Manager::selectedInv->id : 0;
+	unsigned int selectedInv = Game_Manager::selectedInv ? Game_Manager::selectedInv->getID() : 0;
 	std::vector<Item>& stocks = buy ? Game_Manager::stockItem : Game_Manager::items;
 
 	if (Game_Manager::selectedInv && mouseInButton(ConfirmButton)) {
-		if (buy && Game_Manager::player.useGold(Game_Manager::selectedInv->buy)) {
+		if (buy && Game_Manager::player.useGold(Game_Manager::selectedInv->getBuy())) {
 			Game_Manager::addItem(selectedInv);
 			Game_Manager::organizeInv();
-			texts[3].setString(std::format("Bought item {} for {}G.", Game_Manager::selectedInv->name, Game_Manager::selectedInv->buy));
+			texts[3].setString(std::format("Bought item {} for {}G.", Game_Manager::selectedInv->getName(), Game_Manager::selectedInv->getBuy()));
 		}
 		else if (!buy) {
-			Game_Manager::player.setGold(Game_Manager::player.getGold() + Game_Manager::selectedInv->sell);
-			texts[3].setString(std::format("Sold item {} for {}G.", Game_Manager::selectedInv->name, Game_Manager::selectedInv->sell));
+			Game_Manager::player.setGold(Game_Manager::player.getGold() + Game_Manager::selectedInv->getSell());
+			texts[3].setString(std::format("Sold item {} for {}G.", Game_Manager::selectedInv->getName(), Game_Manager::selectedInv->getSell()));
 			Game_Manager::delSelectedItem();
 		}
 		Game_Manager::selectedInv = NULL;
@@ -180,7 +180,7 @@ void Shop_Screen::shopItem(bool buy) {
 			if (!Game_Manager::selectedInv) {
 				Game_Manager::selectedInv = &item;
 				map_rects["inv_sp_cur_slot"].setPosition(sx - 5, sy - 5);
-				map_txts["inv_sp_detail"].setString(item.desc);
+				map_txts["inv_sp_detail"].setString(item.getDesc());
 				return;
 			}
 			// Unselects
@@ -193,18 +193,18 @@ void Shop_Screen::shopItem(bool buy) {
 }
 
 void Shop_Screen::shopSpell(bool buy) {
-	unsigned int sp_select = Game_Manager::selectedSpell ? Game_Manager::selectedSpell->id : 0;
+	unsigned int sp_select = Game_Manager::selectedSpell ? Game_Manager::selectedSpell->getID() : 0;
 	std::vector<Spell>& stocks = buy ? Game_Manager::stockSpell : Game_Manager::spells;
 
 	if (Game_Manager::selectedSpell && mouseInButton(ConfirmButton)) {
-		if (buy && Game_Manager::player.useGold(Game_Manager::selectedSpell->buy)) {
+		if (buy && Game_Manager::player.useGold(Game_Manager::selectedSpell->getBuy())) {
 			Game_Manager::addSpell(sp_select);
 			Game_Manager::organizeSpell();
-			texts[3].setString(std::format("Bought spell {} for {}G.", Game_Manager::selectedSpell->name, Game_Manager::selectedSpell->buy));
+			texts[3].setString(std::format("Bought spell {} for {}G.", Game_Manager::selectedSpell->getName(), Game_Manager::selectedSpell->getBuy()));
 		}
 		else if (!buy) {
-			Game_Manager::player.setGold(Game_Manager::player.getGold() + Game_Manager::selectedSpell->sell);
-			texts[3].setString(std::format("Sold spell {} for {}G.", Game_Manager::selectedSpell->name, Game_Manager::selectedSpell->sell));
+			Game_Manager::player.setGold(Game_Manager::player.getGold() + Game_Manager::selectedSpell->getSell());
+			texts[3].setString(std::format("Sold spell {} for {}G.", Game_Manager::selectedSpell->getName(), Game_Manager::selectedSpell->getSell()));
 			Game_Manager::delSelectedSpell();
 		}
 		Game_Manager::selectedSpell = NULL;
@@ -216,7 +216,7 @@ void Shop_Screen::shopSpell(bool buy) {
 			// Selects a spell
 			if (!Game_Manager::selectedSpell) {
 				Game_Manager::selectedSpell = &spell;
-				map_txts["inv_sp_detail"].setString(spell.desc);
+				map_txts["inv_sp_detail"].setString(spell.getDesc());
 				map_rects["inv_sp_cur_slot"].setPosition(sx - 5, sy - 5);
 				return;
 			}
@@ -233,13 +233,13 @@ void Shop_Screen::shopSpecial(bool buy) {
 	if (!buy)
 		return;
 
-	unsigned int sp_select = Game_Manager::selectedSpecial ? Game_Manager::selectedSpecial->id : 0;
+	unsigned int sp_select = Game_Manager::selectedSpecial ? Game_Manager::selectedSpecial->getID() : 0;
 	std::vector<Special>& stocks = Game_Manager::stockSpecial;
 
 	if (Game_Manager::selectedSpecial && mouseInButton(ConfirmButton)) {
-		if (buy && Game_Manager::player.useGold(Game_Manager::selectedSpecial->buy)) {
+		if (buy && Game_Manager::player.useGold(Game_Manager::selectedSpecial->getBuy())) {
 			Game_Manager::selectedSpecial->use();
-			texts[3].setString(std::format("Bought {} for {}G.", Game_Manager::selectedSpecial->name, Game_Manager::selectedSpecial->buy));
+			texts[3].setString(std::format("Bought {} for {}G.", Game_Manager::selectedSpecial->getName(), Game_Manager::selectedSpecial->getBuy()));
 		}
 		Game_Manager::selectedSpecial = NULL;
 	}
@@ -250,7 +250,7 @@ void Shop_Screen::shopSpecial(bool buy) {
 			// Selects a special
 			if (!Game_Manager::selectedSpecial) {
 				Game_Manager::selectedSpecial = &special;
-				map_txts["inv_sp_detail"].setString(special.desc);
+				map_txts["inv_sp_detail"].setString(special.getDesc());
 				map_rects["inv_sp_cur_slot"].setPosition(sx - 5, sy - 5);
 				return;
 			}

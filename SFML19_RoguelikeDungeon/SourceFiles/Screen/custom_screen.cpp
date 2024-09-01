@@ -521,23 +521,23 @@ void Custom_Screen::getEnemies() {
 void Custom_Screen::getSpells() {
 	unsigned int i = 0;
 	for (spellIter = std::next(Spell::spells.begin(), boxIndex); spellIter != Spell::spells.end() && i < 20; spellIter++, i++) {
-		unsigned int id = spellIter->second.id;
+		unsigned int id = spellIter->second.getID();
 		Spell* spell = &Spell::spells[id];
 
-		boxes[i].text.setString(std::format("{}. {}\n{}", id, spell->name, spell->type == Offensive ? "Editable" : "Uneditable"));
-		spell->type == Offensive ? boxes[i].updateCallback([id]() {
+		boxes[i].text.setString(std::format("{}. {}\n{}", id, spell->getName(), spell->getType() == Offensive ? "Editable" : "Uneditable"));
+		spell->getType() == Offensive ? boxes[i].updateCallback([id]() {
 			updateContent = true;
 			updateID = id;
 			Spell* spell = &Spell::spells[id];
-			spellInputs[0].text.setString(spell->name);
-			spellInputs[1].text.setString(spell->originalDesc);
-			spellInputs[2].text.setString(spell->abbrev);
-			spellInputs[3].text.setString(std::to_string(spell->buy));
-			spellInputs[4].text.setString(std::to_string(spell->sell));
-			spellInputs[5].text.setString(std::to_string(spell->range));
-			spellInputs[6].text.setString(std::to_string(spell->quantity));
-			spellInputs[7].text.setString(std::to_string(spell->mp));
-			spellInputs[8].text.setString(std::to_string(int(spell->percentage * 100)));
+			spellInputs[0].text.setString(spell->getName());
+			spellInputs[1].text.setString(spell->getOriginalDesc());
+			spellInputs[2].text.setString(spell->getAbbrev());
+			spellInputs[3].text.setString(std::to_string(spell->getBuy()));
+			spellInputs[4].text.setString(std::to_string(spell->getSell()));
+			spellInputs[5].text.setString(std::to_string(spell->getRange()));
+			spellInputs[6].text.setString(std::to_string(spell->getQuantity()));
+			spellInputs[7].text.setString(std::to_string(spell->getMP()));
+			spellInputs[8].text.setString(std::to_string(int(spell->getPercentage() * 100)));
 			}) : boxes[i].updateCallback([](){});
 		boxes[i].recenterText();
 	}
@@ -552,23 +552,23 @@ void Custom_Screen::getSpells() {
 void Custom_Screen::getItems() {
 	unsigned int i = 0;
 	for (itemIter = std::next(Item::items.begin(), boxIndex); itemIter != Item::items.end() && i < 20; itemIter++, i++) {
-		unsigned int id = itemIter->second.id;
+		unsigned int id = itemIter->second.getID();
 		Item* item = &Item::items[id];
 
-		boxes[i].text.setString(std::format("{}. {}\n{}", id, item->name, item->type <= Armor ? "Editable" : "Uneditable"));
-		item->type <= Armor ? boxes[i].updateCallback([id]() {
+		boxes[i].text.setString(std::format("{}. {}\n{}", id, item->getName(), item->getType() <= Armor ? "Editable" : "Uneditable"));
+		item->getType() <= Armor ? boxes[i].updateCallback([id]() {
 			updateContent = true;
 			updateID = id;
 			Item* item = &Item::items[id];
-			itemInputs[0].text.setString(item->name);
-			itemInputs[1].text.setString(item->originalDesc);
-			itemInputs[2].text.setString(item->abbrev);
-			itemInputs[3].text.setString(std::to_string(item->buy));
-			itemInputs[4].text.setString(std::to_string(item->sell));
-			itemInputs[5].text.setString(std::to_string(item->range));
-			itemInputs[6].text.setString(std::to_string(item->quantity));
-			itemInputs[7].text.setString(std::to_string(item->type));
-			itemInputs[8].text.setString(std::to_string(item->stat));
+			itemInputs[0].text.setString(item->getName());
+			itemInputs[1].text.setString(item->getOriginalDesc());
+			itemInputs[2].text.setString(item->getAbbrev());
+			itemInputs[3].text.setString(std::to_string(item->getBuy()));
+			itemInputs[4].text.setString(std::to_string(item->getSell()));
+			itemInputs[5].text.setString(std::to_string(item->getRange()));
+			itemInputs[6].text.setString(std::to_string(item->getQuantity()));
+			itemInputs[7].text.setString(std::to_string(item->getType()));
+			itemInputs[8].text.setString(std::to_string(item->getStat()));
 			}) : boxes[i].updateCallback([]() {});
 			boxes[i].recenterText();
 	}

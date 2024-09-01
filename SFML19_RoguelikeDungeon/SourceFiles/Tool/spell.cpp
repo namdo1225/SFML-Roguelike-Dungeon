@@ -107,3 +107,15 @@ std::array<int, 3> Spell::atk() {
 	std::array<int, 3> return_arr = { quantity + Game_Manager::player.getStat(Mgk) * percentage, range, mp };
 	return return_arr;
 }
+
+unsigned int Spell::getType() {
+	return type;
+}
+
+unsigned int Spell::getMP() {
+	return mp;
+}
+
+double Spell::getPercentage() {
+	return percentage;
+}

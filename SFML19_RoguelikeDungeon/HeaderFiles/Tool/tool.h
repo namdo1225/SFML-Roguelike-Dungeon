@@ -13,6 +13,15 @@ class Tool {
 protected:
 	Full_Text icon;
 
+	unsigned int id = 0, range = 0, buy = 0, sell = 0;
+	std::string name = "", originalDesc = "", desc = "", abbrev = "";
+
+	/**
+	* Represents tool's value (eg. spell attack damage against enemy).
+	* For healing potion, it would be amounts healed.
+	*/
+	int quantity{ 0 };
+
 	/**
 	* Useful for boundary detection with the mouse.
 	*/
@@ -37,15 +46,6 @@ protected:
 		unsigned int range = 0);
 
 public:
-	unsigned int id = 0, range = 0, buy = 0, sell = 0;
-	std::string name = "", originalDesc = "", desc = "", abbrev = "";
-
-	/**
-	* Represents tool's value (eg. spell attack damage against enemy).
-	* For healing potion, it would be amounts healed.
-	*/
-	int quantity{ 0 };
-
 	/**
 	* Draw many aspects of the item on the SFML window.
 	*/
@@ -87,6 +87,86 @@ public:
 	* Change the SFML components' theme.
 	*/
 	void changeTheme();
+
+	/**
+	* Getter for tool's name.
+	* 
+	* Return:
+	*	tool's name.
+	*/
+	std::string getName();
+
+	/**
+	* Getter for tool's original description.
+	*
+	* Return:
+	*	tool's original description.
+	*/
+	std::string getOriginalDesc();
+
+	/**
+	* Getter for tool's description.
+	*
+	* Return:
+	*	tool's description.
+	*/
+	std::string getDesc();
+
+	/**
+	* Getter for tool's abbreviation.
+	*
+	* Return:
+	*	tool's abbreviation.
+	*/
+	std::string getAbbrev();
+	
+	/**
+	* Getter for tool's id.
+	*
+	* Return:
+	*	tool's id.
+	*/
+	unsigned int getID();
+
+	/**
+	* Getter for tool's range.
+	*
+	* Return:
+	*	tool's range.
+	*/
+	unsigned int getRange();
+
+	/**
+	* Getter for tool's buy gold.
+	*
+	* Return:
+	*	tool's buy gold.
+	*/
+	unsigned int getBuy();
+
+	/**
+	* Getter for tool's sell gold.
+	*
+	* Return:
+	*	tool's sell gold.
+	*/
+	unsigned int getSell();
+
+	/**
+	* Getter for tool's quantity.
+	*
+	* Return:
+	*	tool's quantity.
+	*/
+	int getQuantity();
+
+	/**
+	* Getter for tool's type.
+	*
+	* Return:
+	*	tool's type.
+	*/
+	virtual unsigned int getType();
 };
 
 #endif

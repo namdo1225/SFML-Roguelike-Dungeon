@@ -66,28 +66,28 @@ Game_Screen::Game_Screen() : Screen(false, false) {
 	hoverableTextH("<", 985.f, 260.f, [this]() {
 		Game_Manager::findItemShortcut('l');
 		if (Game_Manager::selectedInv) {
-			textboxes[2].text.setString(Game_Manager::selectedInv->abbrev);
+			textboxes[2].text.setString(Game_Manager::selectedInv->getAbbrev());
 			textboxes[2].recenterText();
 		}
 	});
 	hoverableTextH(">", 1145.f, 260.f, [this]() {
 		Game_Manager::findItemShortcut('r');
 		if (Game_Manager::selectedInv) {
-			textboxes[2].text.setString(Game_Manager::selectedInv->abbrev);
+			textboxes[2].text.setString(Game_Manager::selectedInv->getAbbrev());
 			textboxes[2].recenterText();
 		}
 	});
 	hoverableTextH("<", 985.f, 380.f, [this]() {
 		Game_Manager::findSpellShortcut('l');
 		if (Game_Manager::selectedSpell) {
-			textboxes[3].text.setString(Game_Manager::selectedSpell->abbrev);
+			textboxes[3].text.setString(Game_Manager::selectedSpell->getAbbrev());
 			textboxes[3].recenterText();
 		}
 	});
 	hoverableTextH(">", 1145.f, 380.f, [this]() {
 		Game_Manager::findSpellShortcut('r');
 		if (Game_Manager::selectedSpell) {
-			textboxes[3].text.setString(Game_Manager::selectedSpell->abbrev);
+			textboxes[3].text.setString(Game_Manager::selectedSpell->getAbbrev());
 			textboxes[3].recenterText();
 		}
 	});
@@ -111,7 +111,7 @@ Game_Screen::Game_Screen() : Screen(false, false) {
 		else {
 			Game_Manager::findItemShortcut('l');
 			if (Game_Manager::selectedInv) {
-				textboxes[2].text.setString(Game_Manager::selectedInv->abbrev);
+				textboxes[2].text.setString(Game_Manager::selectedInv->getAbbrev());
 				textboxes[2].recenterText();
 			}
 		}
@@ -120,8 +120,8 @@ Game_Screen::Game_Screen() : Screen(false, false) {
 	textboxH(NULL, 1045.f, 370.f, 50.f, 50.f, [this]() {
 		// use spell in shortcut
 		if (Game_Manager::selectedSpell) {
-			if (Game_Manager::selectedSpell->type == Functional) {
-				std::string name = Game_Manager::selectedSpell->name;
+			if (Game_Manager::selectedSpell->getType() == Functional) {
+				std::string name = Game_Manager::selectedSpell->getName();
 				bool success = Game_Manager::useSpell();
 				Game_Manager::log_add(success ? std::format("You used {}.", name).c_str() :
 					std::format("You failed to cast {}.", name).c_str()
@@ -134,7 +134,7 @@ Game_Screen::Game_Screen() : Screen(false, false) {
 		else {
 			Game_Manager::findSpellShortcut('l');
 			if (Game_Manager::selectedSpell) {
-				textboxes[3].text.setString(Game_Manager::selectedSpell->abbrev);
+				textboxes[3].text.setString(Game_Manager::selectedSpell->getAbbrev());
 				textboxes[3].recenterText();
 			}
 		}
@@ -227,7 +227,7 @@ Game_Screen::Game_Screen() : Screen(false, false) {
 }
 
 bool Game_Screen::handleClickEvent() {
-	unsigned int rgn = Game_Manager::plWeapon->range;
+	unsigned int rgn = Game_Manager::plWeapon->getRange();
 	if (x >= 600 && x <= 640 && y >= 360 - ((rgn - 1) * 40) && y <= 400) {
 		Game_Manager::handlePlayerAct('u', 1);
 		return true;
@@ -440,7 +440,7 @@ void Game_Screen::changeOpacity() {
 }
 
 void Game_Screen::changeRange() {
-	unsigned int range = Game_Manager::plWeapon->range;
+	unsigned int range = Game_Manager::plWeapon->getRange();
 	ranges[0].setPosition(600.f, 400.f - (40.f * range));
 	ranges[0].setSize(sf::Vector2f(40.f, 40.f * range));
 

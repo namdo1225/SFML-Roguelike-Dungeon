@@ -18,13 +18,15 @@ enum ItemType { Weapon, Armor, StatConsumable, UtilityConsumable };
 * Also contains child classes from the Spell class to contain individual items.
 */
 class Item : public Tool {
-protected:
+private:
+	Stat stat{ Max_Hp };
+
+	ItemType type{ Weapon };
+
 	std::function<void()> utilityUse = NULL;
 
 public:
 	static std::map<unsigned int, Item> items;
-	Stat stat{ Max_Hp };
-	ItemType type{ Weapon };
 
 	/**
 	* Constructor for Item.
@@ -72,6 +74,16 @@ public:
 	* Use the item.
 	*/
 	void use();
+
+	unsigned int getType();
+
+	/**
+	* Getter for item's stat.
+	*
+	* Return:
+	*	item's stat.
+	*/
+	Stat getStat();
 };
 
 #endif
