@@ -505,7 +505,7 @@ void Custom_Screen::getEnemies() {
 			enemyInputs[9].text.setString(std::to_string(en.stat.range));
 			enemyInputs[10].text.setString(std::to_string(en.stat.exp));
 			enemyInputs[11].text.setString(std::to_string(int(en.growth.expGrowth * 100)));
-			enemyInputs[12].text.setString(std::to_string(en.stat.type));
+			enemyInputs[12].text.setString(std::to_string(en.growth.type));
 			enemyInputs[13].text.setString(std::to_string(en.growth.minimumFloor));
 			});
 		boxes[i].recenterText();

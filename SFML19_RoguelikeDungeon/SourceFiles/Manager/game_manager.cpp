@@ -177,7 +177,7 @@ void Game_Manager::ene_atk(unsigned int v) {
     )
         return;
 
-    unsigned int enemy_type = enemies[v].stat.type;
+    unsigned int enemy_type = enemies[v].constant->type;
     int quantity = pl_armor->quantity;
     Stat armor_stat = pl_armor->stat;
     int armor = (enemy_type && armor_stat == Def) || (!enemy_type && armor_stat == Mgk) ? quantity : 0;
@@ -396,7 +396,7 @@ void Game_Manager::handle_move_pick_itm() {
     for (int i{ static_cast<int>(floor.collectibles.size()) - 1 }; i > -1; i--) {
         if (floor.collectibles[i].intersects(rect)) {
             Audio_Manager::play_sfx(0);
-            add_item(floor.collectibles[i].get_id());
+            add_item(floor.collectibles[i].getID());
             floor.collectibles.erase(floor.collectibles.begin() + i);
             log_add(std::format("You picked up: {}.", items[items.size() - 1].name).c_str());
             if (items.size() == player.get_max_itm())
@@ -536,7 +536,7 @@ void Game_Manager::pl_atk() {
         !(pl_room->door_exist() && pl_room->touch_door(plx, ply, plx2, ply2) && pl_room->touch_door(enx, eny, enx2, eny2)))
             return;
 
-    int stat{ en->stat.type ? en->stat.def : en->stat.res };
+    int stat{ en->constant->type ? en->stat.def : en->stat.res };
     const int amount = player.get_stat(pl_weapon->stat) + pl_weapon->quantity;
     int quantity{ stat >= amount ? 1 : amount - stat };
     en->stat.hp -= quantity;
@@ -894,7 +894,7 @@ void Game_Manager::save() {
             j["items"].push_back(json::object());
             unsigned int i = j["items"].size() - 1;
             j["items"][i] = {
-                {"id", col.get_id()},
+                {"id", col.getID()},
                 {"x", col.getPosition().x},
                 {"y", col.getPosition().y},
             };

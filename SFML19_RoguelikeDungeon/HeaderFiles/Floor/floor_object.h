@@ -9,7 +9,9 @@
 #ifndef FLOOR_OBJECT_H
 #define FLOOR_OBJECT_H
 
-#include <SFML/Graphics.hpp>
+#include <SFML/Graphics/Rect.hpp>
+#include <SFML/Graphics/RectangleShape.hpp>
+#include <SFML/Graphics/Texture.hpp>
 
 class Floor_Object : public sf::RectangleShape {
 public:

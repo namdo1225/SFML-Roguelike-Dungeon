@@ -15,4 +15,4 @@ Collectible::Collectible(float x, float y, unsigned int id) : Floor_Object(x, y,
 	this->id = id;
 }
 
-unsigned int Collectible::get_id() { return id; }
+unsigned int Collectible::getID() { return id; }

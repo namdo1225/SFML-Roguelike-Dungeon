@@ -1,18 +1,13 @@
-/**
-* 
-* File: enemy.h
-* Description: This class abstracts an enemy which can attack/kill the player.
-* 
-*/
-
 #include "floor_object.h"
 #include <map>
-#include <memory>
 #include <string>
 
 #ifndef ENEMY_H
 #define ENEMY_H
 
+/**
+* Represents an enemy's stat as affected by the floor it's on.
+*/
 struct EnemyStat {
 	int hp = 1;
 	int atk = 1;
@@ -20,9 +15,11 @@ struct EnemyStat {
 	int res = 1;
 	int range = 1;
 	int exp = 1;
-	bool type = true;
 };
 
+/**
+* Represents an enemy's constant stat such as name.
+*/
 struct EnemyConstant {
 	std::string name;
 	unsigned int id = 0;
@@ -34,18 +31,25 @@ struct EnemyConstant {
 	float expGrowth;
 
 	int minimumFloor = 1;
+	bool type = true;
 };
 
+/**
+* A struct to contain an enemy's both scaled and constant stat.
+*/
 struct EnemyFull {
 	EnemyStat stat;
 	EnemyConstant growth;
 };
 
+/**
+* This class abstracts an enemy which can attack/kill the player.
+*/
 class Enemy : public Floor_Object {
 public:
 	static std::map<unsigned int, EnemyFull> enemies;
 	EnemyStat stat;
-	std::shared_ptr<EnemyConstant> constant;
+	EnemyConstant* constant;
 
 	static bool setup();
 
