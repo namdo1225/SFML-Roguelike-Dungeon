@@ -116,10 +116,17 @@ void Interface::handle_event() {
         Screen::y = Screen::mouse_world.y;
         sf::Vector2f ui = Screen::viewUI.getCenter();
         sf::Vector2f world = Screen::viewWorld.getCenter();
+        sf::Vector2f slot = Screen::viewSlots.getCenter();
+
         float dist_x = ui.x - world.x;
         float dist_y = ui.y - world.y;
         Screen::world_x = Screen::x - dist_x;
         Screen::world_y = Screen::y - dist_y;
+
+        float disSlotX = ui.x - slot.x;
+        float distSlotY = ui.y - slot.y;
+        Screen::slot_x = Screen::x - disSlotX;
+        Screen::slot_y = Screen::y - distSlotY;
 
         if (event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
             Screen::show_dialog(Screen::display, ExitScreen);

@@ -12,7 +12,6 @@
 #include <Floor/enemy.h>
 #include <format>
 #include <Manager/setting_manager.h>
-#include <memory>
 #include <Screen/screen.h>
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/System/Clock.hpp>

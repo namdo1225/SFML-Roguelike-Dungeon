@@ -370,6 +370,7 @@ void Game_Manager::next_level(bool bypass) {
 
     viewUI.reset(sf::FloatRect(0, 0, 1200, 800));
     viewWorld.reset(sf::FloatRect(0, 0, 1200, 800));
+    viewSlots.reset(sf::FloatRect(0, 0, 1200, 800));
 
     Audio_Manager::play_sfx(1);
     player.set_floor(player.get_floor() + 1);
@@ -663,6 +664,7 @@ void Game_Manager::add_item(unsigned int id) {
 void Game_Manager::reset_game(bool cheat) {
     viewUI.reset(sf::FloatRect(0, 0, 1200, 800));
     viewWorld.reset(sf::FloatRect(0, 0, 1200, 800));
+    viewSlots.reset(sf::FloatRect(0, 0, 1200, 800));
     worldZoomLevel = 0;
 
     player.reset(cheat);

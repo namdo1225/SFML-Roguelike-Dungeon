@@ -26,6 +26,7 @@ public:
 	static sf::View viewUI;
 	static sf::View viewWorld;
 	static sf::View viewLog;
+	static sf::View viewSlots;
 
 	/* min: 0, max(inclusive) : 3
 	*/
@@ -40,6 +41,9 @@ public:
 
 	static float world_x;
 	static float world_y;
+
+	static float slot_x;
+	static float slot_y;
 };
 
 #endif

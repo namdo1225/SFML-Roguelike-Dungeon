@@ -21,6 +21,9 @@ float SF_Manager::y;
 float SF_Manager::world_x;
 float SF_Manager::world_y;
 
+float SF_Manager::slot_x;
+float SF_Manager::slot_y;
+
 sf::RenderWindow SF_Manager::window = sf::RenderWindow();
 sf::Event SF_Manager::event;
 
@@ -30,5 +33,6 @@ sf::Vector2f SF_Manager::mouse_world;
 sf::View SF_Manager::viewUI{ sf::FloatRect(0, 0, DEFAULT_SCREEN_X, DEFAULT_SCREEN_Y) };
 sf::View SF_Manager::viewWorld{ sf::FloatRect(0, 0, DEFAULT_SCREEN_X, DEFAULT_SCREEN_Y) };
 sf::View SF_Manager::viewLog{ sf::FloatRect(0, 0, DEFAULT_SCREEN_X, DEFAULT_SCREEN_Y) };
+sf::View SF_Manager::viewSlots{ sf::FloatRect(0, 0, DEFAULT_SCREEN_X, DEFAULT_SCREEN_Y) };
 
 unsigned int SF_Manager::worldZoomLevel = 0;

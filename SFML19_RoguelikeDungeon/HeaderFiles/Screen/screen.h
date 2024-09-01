@@ -48,7 +48,7 @@ protected:
 	static Full_Text stat_curr_txts[NUM_NON_CUR_STATS];
 	static Full_Text stat_curr_arrows[NUM_NON_CUR_STATS * 2];
 
-	static Full_Rectangle inv_sp_slots[MAX_INV_SPELL_SLOTS];
+	static std::vector<Full_Rectangle> inv_sp_slots;
 
 	static std::map<std::string, Full_Rectangle> map_rects;
 	static std::map<std::string, Full_Text> map_txts;

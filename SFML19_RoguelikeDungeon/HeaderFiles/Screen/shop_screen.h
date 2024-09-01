@@ -15,7 +15,8 @@ class Shop_Screen : public Screen {
 private:
 	static bool buy;
 	static Stock stock;
-
+	static unsigned int curSlots;
+	
 	/*
 	* Handle item shop.
 	* 
@@ -51,6 +52,8 @@ public:
 	bool click_event_handler();
 
 	void hover_event_handler();
+
+	void mouse_event_handler();
 
 	void draw();
 

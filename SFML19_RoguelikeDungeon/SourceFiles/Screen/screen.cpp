@@ -19,9 +19,13 @@
 #include <Shape/full_text.h>
 #include <Shape/full_textbox.h>
 #include <Shape/full_textinput.h>
-#include <string>
-#include <vector>
 #include <stat.h>
+#include <string>
+#include <utility>
+#include <vector>
+#include <Tool/spell.h>
+#include <Tool/item.h>
+#include <Tool/special.h>
 
 Display Screen::display = TitleScreen;
 std::vector<Display> Screen::prev_displays = {};
@@ -67,7 +71,7 @@ Full_Text Screen::stat_curr_arrows[NUM_NON_CUR_STATS * 2] = {
 };
 
 const unsigned int Screen::MAX_INV_SPELL_SLOTS;
-Full_Rectangle Screen::inv_sp_slots[MAX_INV_SPELL_SLOTS];
+std::vector<Full_Rectangle> Screen::inv_sp_slots;
 
 std::map<std::string, Full_Rectangle> Screen::map_rects;
 std::map<std::string, Full_Text> Screen::map_txts;
@@ -82,11 +86,16 @@ void Screen::setup() {
 	loaded = true;
 	window.create(sf::VideoMode(DEFAULT_SCREEN_X, DEFAULT_SCREEN_Y), "RE: Dungeon");
 
-	for (unsigned int i = 0; i < MAX_INV_SPELL_SLOTS; i++) {
-		inv_sp_slots[i] = Full_Rectangle(200 + ((i % 6) * 80),
+	size_t SLOTS = MAX_INV_SPELL_SLOTS;
+	SLOTS = std::max(SLOTS, Spell::spells.size());
+	SLOTS = std::max(SLOTS, Item::items.size());
+	SLOTS = std::max(SLOTS, Special::specials.size());
+
+	for (unsigned int i = 0; i < SLOTS; i++) {
+		inv_sp_slots.push_back(Full_Rectangle(200 + ((i % 6) * 80),
 			240 + ((i / 6) * 80),
 			60.f,
-			60.f);
+			60.f));
 	}
 
 	map_rects["background"] = Full_Rectangle(-10, -10, 1210, 810, false);
@@ -376,7 +385,7 @@ void Screen::key_event_handler() {
 }
 
 bool Screen::mouse_in_slot(unsigned int i) {
-	return inv_sp_slots[i].getGlobalBounds().contains(sf::Vector2f(x, y));
+	return inv_sp_slots[i].getGlobalBounds().contains(sf::Vector2f(slot_x, slot_y));
 }
 
 void Screen::hover_slot(unsigned int i) {
