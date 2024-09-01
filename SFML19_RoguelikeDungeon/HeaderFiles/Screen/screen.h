@@ -36,7 +36,6 @@ protected:
 	bool confirm_button = false;
 	bool clearButton = false;
 	bool show_bg = true;
-	bool update = false;
 
 	std::vector<Full_Text> texts;
 	std::vector<Full_Text> hoverableTexts;
@@ -201,6 +200,8 @@ protected:
 	virtual void change_theme();
 
 public:
+	bool update = false;
+
 	static Display display;
 	static std::vector<Display> prev_displays;
 

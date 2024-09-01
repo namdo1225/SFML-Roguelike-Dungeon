@@ -19,6 +19,8 @@ unsigned int Setting_Screen::music_volume = 100;
 unsigned int Setting_Screen::font = 0;
 
 Setting_Screen::Setting_Screen() : Screen(true, true, true) {
+	update = true;
+
 	light_mode = Setting_Manager::light;
 	theme = Setting_Manager::theme;
 	sfx_volume = Setting_Manager::sfx_volume;
@@ -114,7 +116,7 @@ bool Setting_Screen::click_event_handler() {
 	}
 }
 
-void Setting_Screen::draw() {
-	texts[11].setString(std::to_string(Setting_Manager::music_volume).c_str());
-	Screen::draw();
+void Setting_Screen::update_draw() {
+	texts[11].setString(std::to_string(Setting_Manager::music_volume));
+	update = false;
 }

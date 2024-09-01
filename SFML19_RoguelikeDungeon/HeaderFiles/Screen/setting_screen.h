@@ -17,7 +17,7 @@ public:
 
 	bool click_event_handler();
 
-	virtual void draw();
+	void update_draw();
 
 	static bool light_mode;
 	static unsigned int theme;

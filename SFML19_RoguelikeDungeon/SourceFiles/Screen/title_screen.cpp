@@ -10,10 +10,11 @@
 #include <cstdio>
 #include <cstdlib>
 #include <format>
+#include <format>
 #include <Manager/game_manager.h>
 #include <Manager/setting_manager.h>
 #include <Screen/screen.h>
-#include <format>
+#include <string>
 
 // https://stackoverflow.com/questions/3037088/how-to-open-the-default-web-browser-in-windows-in-c
 #if defined(_WIN32)
@@ -39,11 +40,12 @@ Title_Screen::Title_Screen() : Screen() {
 	setupTextbox(std::format("Music: {}",
 		Audio_Manager::get_music_volume() ? "ON" : "OFF").c_str(),
 		410.f, 475.f, 150.f, 65.f, [this]() {
-			Audio_Manager::set_music_volume(Audio_Manager::get_music_volume() ? 0 : 100);
-			const float new_volume = Audio_Manager::get_music_volume();
-			Setting_Manager::music_volume = new_volume;
-			Setting_Manager::save();
-			textboxes[0].text.setString(std::format("Music: {}", new_volume == 0 ? "OFF" : "ON").c_str());
+		Audio_Manager::set_music_volume(Audio_Manager::get_music_volume() ? 0 : 100);
+		const float new_volume = Audio_Manager::get_music_volume();
+		Setting_Manager::music_volume = new_volume;
+		Setting_Manager::save();
+		textboxes[0].text.setString(std::format("Music: {}", new_volume == 0 ? "OFF" : "ON"));
+		Screen::screens[SettingScreen]->update = true;
 	});
 	setupTextbox("New Game", 250.f, 325.f, 150.f, 65.f, []() {
 		Game_Manager::reset_game();
