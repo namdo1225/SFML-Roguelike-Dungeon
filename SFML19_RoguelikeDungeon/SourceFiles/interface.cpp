@@ -128,7 +128,8 @@ void Interface::handleEvent() {
         Screen::slotX = Screen::x - disSlotX;
         Screen::slotY = Screen::y - distSlotY;
 
-        if (event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+        if ((event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) &&
+            Screen::display != ExitScreen) {
             Screen::openDialog(Screen::display, ExitScreen);
         }
         else if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)

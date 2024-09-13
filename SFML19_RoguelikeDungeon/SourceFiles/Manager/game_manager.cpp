@@ -619,7 +619,7 @@ void Game_Manager::addEnemy() {
         }
 
         auto it = Enemy::enemies.begin();
-        while (player.getFloor() < it->second.growth.minimumFloor)
+        while (player.getFloor() >= it->second.growth.minimumFloor)
             it = Enemy::enemies.begin();
 
         std::advance(it, rand() % Enemy::enemies.size());

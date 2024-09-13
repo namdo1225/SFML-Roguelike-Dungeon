@@ -41,11 +41,13 @@ Status_Screen::Status_Screen() : Screen(true, false) {
 	textRectH("Effects:", 600.f, 150.f, NULL, NULL);
 
 	// Stats
+	// index starts at 13
 	for (unsigned int i = 0; i < NUM_NON_CUR_STATS; i++) {
 		textRectH(StatConst::FULL_STATS[i], 400.f, 150.f + i * 50.f, NULL, NULL);
 	}
 
 	// changing stats:
+	// index starts at 19
 	for (unsigned int i = 0; i < 11; i++) {
 		textRectH("", 200.f, 150.f + i * 50.f, NULL, NULL);
 	}
@@ -54,6 +56,7 @@ Status_Screen::Status_Screen() : Screen(true, false) {
 	textRectH("", 720.f, 150.f, NULL, NULL);
 
     // stats
+	// index starts at 31
 	for (unsigned int i = 0; i < NUM_NON_CUR_STATS; i++)
 		textRectH("", 550.f, 150.f + i * 50.f, NULL, NULL);
 
