@@ -14,7 +14,6 @@
 #include <Floor/collectible.h>
 #include <Floor/gold_collectible.h>
 #include <Floor/interactible.h>
-#include <Floor/map.h>
 #include <Floor/room.h>
 #include <Floor/shop.h>
 #include <Floor/stair.h>
@@ -25,7 +24,6 @@ Floor::Floor(bool load) {
 		createRoomDoor();
 		createStair();
 		createShop();
-		map = Map(rooms);
 	}
 }
 
@@ -227,12 +225,17 @@ int Floor::getStairPos(char z) { return z == 'x' ? stair.getPosition().x : stair
 
 bool Floor::isShopExist() { return shopExist; }
 
-void Floor::draw() {
+void Floor::draw(bool map) {
 	for (Room rm : rooms)
-		rm.draw();
+		if (!map || rm.getVisited())
+			rm.draw();
 
 	for (Room rm : rooms)
-		rm.draw(true);
+		if (!map || rm.getVisited())
+			rm.draw(true);
+
+	if (map)
+		return;
 
 	SF_Manager::window.draw(stair);
 
@@ -254,7 +257,12 @@ void Floor::setShopPos(int x, int y) { shop.setPosition(x, y); }
 
 void Floor::setStairPos(int x, int y) { stair.setPosition(x, y); }
 
-void Floor::loadRoom(int x, int y, int sx, int sy) { rooms.push_back(Room()); rooms.back().setPosSize(x, y, sx, sy); }
+void Floor::loadRoom(int x, int y, int sx, int sy, bool visited) {
+	rooms.push_back(Room());
+	rooms.back().setPosSize(x, y, sx, sy);
+	if (visited)
+		rooms.back().setVisisted();
+}
 
 void Floor::loadDoor(int x, int y, int rot, int slot0, int slot1, int slot2, int slot3) { 
 	rooms.back().setDoor(x, y, rot); 
@@ -358,10 +366,6 @@ void Floor::makeInteractible(unsigned int floor) {
 			}
 		}
 	}
-}
-
-void Floor::makeMap() {
-	map = Map(rooms);
 }
 
 bool Floor::intersectStair(const sf::FloatRect& rect) {

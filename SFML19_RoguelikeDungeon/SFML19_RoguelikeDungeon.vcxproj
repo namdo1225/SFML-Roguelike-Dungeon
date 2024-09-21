@@ -154,7 +154,6 @@
     <ClCompile Include="SourceFiles\Shape\full_textinput.cpp" />
     <ClCompile Include="SourceFiles\stat.cpp" />
     <ClCompile Include="SourceFiles\Tool\item.cpp" />
-    <ClCompile Include="SourceFiles\Floor\map.cpp" />
     <ClCompile Include="SourceFiles\Manager\game_manager.cpp" />
     <ClCompile Include="SourceFiles\Manager\sf_manager.cpp" />
     <ClCompile Include="SourceFiles\player.cpp" />
@@ -208,7 +207,6 @@
     <ClInclude Include="HeaderFiles\Shape\full_textbox.h" />
     <ClInclude Include="HeaderFiles\Shape\full_textinput.h" />
     <ClInclude Include="HeaderFiles\Tool\item.h" />
-    <ClInclude Include="HeaderFiles\Floor\map.h" />
     <ClInclude Include="HeaderFiles\Manager\game_manager.h" />
     <ClInclude Include="HeaderFiles\Manager\sf_manager.h" />
     <ClInclude Include="HeaderFiles\player.h" />

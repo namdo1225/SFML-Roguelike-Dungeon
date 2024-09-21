@@ -8,14 +8,12 @@
 #include "Screen/map_screen.h"
 #include <Screen/screen.h>
 #include <SFML/Graphics/Rect.hpp>
-#include <SFML/Graphics/View.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Window/Event.hpp>
 #include <SFML/Window/Mouse.hpp>
 
 sf::Vector2f Map_Screen::oldPos;
 bool Map_Screen::moving = false;
-sf::View Map_Screen::viewMap;
 
 Map_Screen::Map_Screen() : Screen(true, false) {
 	textboxH("^", 1040.f, 490.f, 50.f, 50.f, []() {
@@ -37,14 +35,14 @@ Map_Screen::Map_Screen() : Screen(true, false) {
 		viewMap.zoom(2.f);
 	});
 	textboxH("Reset Position", 975.f, 330.f, 180.f, 50.f, []() {
-		viewMap.reset(sf::FloatRect(0, 0, DEFAULT_SCREEN_X, DEFAULT_SCREEN_Y));
+		Game_Manager::centerFloor();
 	});
 }
 
 bool Map_Screen::handleClickEvent() {
 	if (mouseInButton(ExitButton)) {
-		viewMap.reset(sf::FloatRect(0, 0, 1200, 800));
 		switchScreen(MapScreen, GameScreen, false, true);
+		Game_Manager::centerFloor();
 		return true;
 	}
 }
@@ -79,7 +77,7 @@ void Map_Screen::handleMouseEvent() {
 void Map_Screen::draw() {
 	window.draw(map_rects["background"]);
 	window.setView(viewMap);
-	Game_Manager::floor.map.draw();
+	Game_Manager::floor.draw(true);
 	window.setView(viewUI);
 	Screen::draw();
 }

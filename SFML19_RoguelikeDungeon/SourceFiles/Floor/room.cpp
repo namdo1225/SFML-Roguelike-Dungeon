@@ -133,3 +133,11 @@ void Room::draw(bool door) { door ? SF_Manager::window.draw(doorRect) : SF_Manag
 bool Room::intersects(const sf::FloatRect& rect) {
 	return getGlobalBounds().intersects(rect);
 }
+
+bool Room::getVisited() {
+	return visited;
+}
+
+void Room::setVisisted() {
+	visited = true;
+}

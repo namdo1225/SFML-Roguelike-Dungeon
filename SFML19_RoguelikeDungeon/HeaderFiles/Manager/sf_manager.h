@@ -22,6 +22,7 @@ public:
 	static sf::View viewWorld;
 	static sf::View viewLog;
 	static sf::View viewSlots;
+	static sf::View viewMap;
 
 	/* min: 0, max(inclusive) : 3
 	*/

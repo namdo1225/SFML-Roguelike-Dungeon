@@ -227,22 +227,22 @@ Game_Screen::Game_Screen() : Screen(false, false) {
 }
 
 bool Game_Screen::handleClickEvent() {
-	unsigned int rgn = Game_Manager::plWeapon->getRange();
-	if (x >= 600 && x <= 640 && y >= 360 - ((rgn - 1) * 40) && y <= 400) {
-		Game_Manager::handlePlayerAct('u', 1);
+	unsigned int rgn = (Game_Manager::plWeapon->getRange() - 1) * 40;
+	if (x >= 600 && x <= 640 && y >= 360 - rgn && y <= 400) {
+		Game_Manager::handlePlayerAct(sf::Keyboard::Up, 1);
 		return true;
 	}
-	else if (x >= 640 && x <= 680 + ((rgn - 1) * 40) && y >= 400 && y <= 440) {
-		Game_Manager::handlePlayerAct('r', 1);
+	else if (x >= 640 && x <= 680 + rgn && y >= 400 && y <= 440) {
+		Game_Manager::handlePlayerAct(sf::Keyboard::Right, 1);
 		return true;
 	}
-	else if (x >= 600 && x <= 640 && y >= 440 && y <= 480 + ((rgn - 1) * 40)) {
-		Game_Manager::handlePlayerAct('d', 1);
+	else if (x >= 600 && x <= 640 && y >= 440 && y <= 480 + rgn) {
+		Game_Manager::handlePlayerAct(sf::Keyboard::Down, 1);
 		return true;
 	}
-	else if (x >= 560 - ((rgn - 1) * 40) && x <= 400 && y >= 400 && y <= 440) {
+	else if (x >= 560 - rgn && x <= 400 && y >= 400 && y <= 440) {
 		return true;
-		Game_Manager::handlePlayerAct('l', 1);
+		Game_Manager::handlePlayerAct(sf::Keyboard::Left, 1);
 	}
 }
 
@@ -303,47 +303,40 @@ void Game_Screen::draw() {
 }
 
 void Game_Screen::handleKeyEvent() {
-	if (clock.getElapsedTime().asMilliseconds() > KEY_PRESS_TIME_LIMIT) {
+	if (clock.getElapsedTime().asMilliseconds() > KEY_PRESS_TIME_LIMIT &&
+		event.key.code <= sf::Keyboard::Down && event.key.code >= sf::Keyboard::Left) {
 		clock.restart();
-		if (!Game_Manager::player.isStuck(0) && event.key.code == sf::Keyboard::Up) {
-			Game_Manager::handlePlayerAct('u', 0);
-			window.setView(viewWorld);
-		}
-		else if (!Game_Manager::player.isStuck(1) && event.key.code == sf::Keyboard::Right) {
-			Game_Manager::handlePlayerAct('r', 0);
-			window.setView(viewWorld);
-		}
-		else if (!Game_Manager::player.isStuck(2) && event.key.code == sf::Keyboard::Down) {
-			Game_Manager::handlePlayerAct('d', 0);
-			window.setView(viewWorld);
-		}
-		else if (!Game_Manager::player.isStuck(3) && event.key.code == sf::Keyboard::Left) {
-			Game_Manager::handlePlayerAct('l', 0);
-			window.setView(viewWorld);
-		}
+		Game_Manager::handlePlayerAct(event.key.code, 0);
 	}
 	else if (clock.getElapsedTime().asMilliseconds() > KEY_PRESS_TIME_LIMIT * 30)
 		clock.restart();
-
-	if (event.key.code == sf::Keyboard::W) {
+	
+	switch (event.key.code) {
+	case sf::Keyboard::W:
 		Game_Manager::handleTurn();
 		window.setView(viewWorld);
-	}
-	else if (event.key.code == sf::Keyboard::Q) {
+		break;
+	case sf::Keyboard::Q:
 		Game_Manager::goUpFloor();
 		window.setView(viewWorld);
-	}
-	else if (event.key.code == sf::Keyboard::G)
+		break;
+	case sf::Keyboard::G:
 		grid = !grid;
-	else if (event.key.code == sf::Keyboard::O)
+		break;
+	case sf::Keyboard::O:
 		changeOpacity();
-	else if (event.key.code == sf::Keyboard::R)
+		break;
+	case sf::Keyboard::R:
 		changeRange();
-	else if (event.key.code == sf::Keyboard::S && Game_Manager::floor.intersectShop(Game_Manager::player.getRect())) {
-		Game_Manager::selectedInv = NULL;
-		Game_Manager::selectedSpecial = NULL;
-		Game_Manager::selectedSpell = NULL;
-		switchScreen(GameScreen, ShopScreen, false, true);
+		break;
+	case sf::Keyboard::S:
+		if (Game_Manager::floor.intersectShop(Game_Manager::player.getRect())) {
+			Game_Manager::selectedInv = NULL;
+			Game_Manager::selectedSpecial = NULL;
+			Game_Manager::selectedSpell = NULL;
+			switchScreen(GameScreen, ShopScreen, false, true);
+		}
+		break;
 	}
 }
 

@@ -34,5 +34,6 @@ sf::View SF_Manager::viewUI{ sf::FloatRect(0, 0, DEFAULT_SCREEN_X, DEFAULT_SCREE
 sf::View SF_Manager::viewWorld{ sf::FloatRect(0, 0, DEFAULT_SCREEN_X, DEFAULT_SCREEN_Y) };
 sf::View SF_Manager::viewLog{ sf::FloatRect(0, 0, DEFAULT_SCREEN_X, DEFAULT_SCREEN_Y) };
 sf::View SF_Manager::viewSlots{ sf::FloatRect(0, 0, DEFAULT_SCREEN_X, DEFAULT_SCREEN_Y) };
+sf::View SF_Manager::viewMap{ sf::FloatRect(0, 0, DEFAULT_SCREEN_X, DEFAULT_SCREEN_Y) };
 
 unsigned int SF_Manager::worldZoomLevel = 0;

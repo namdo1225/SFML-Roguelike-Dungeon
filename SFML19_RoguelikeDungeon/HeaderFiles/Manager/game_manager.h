@@ -5,6 +5,7 @@
 #include <Floor/enemy.h>
 #include <Floor/floor.h>
 #include <player.h>
+#include <SFML/Window/Keyboard.hpp>
 #include <Tool/item.h>
 #include <Tool/spell.h>
 #include <vector>
@@ -138,10 +139,10 @@ public:
 	* Handles player moving or attacking.
 	*
 	* Parameter:
-	*	input: 'u', 'l', 'r', & 'd' for up, left, right, & down.
+	*	input: up, left, right, & down direction.
 	*	mode: The mode. 0 = move. 1 = attack.
 	*/
-	static void handlePlayerAct(char input, unsigned int mode);
+	static void handlePlayerAct(sf::Keyboard::Key input, unsigned int mode);
 
 	/**
 	* Handles moving to the next floor.

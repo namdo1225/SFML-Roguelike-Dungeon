@@ -50,6 +50,7 @@ Save file MUST have the extension ```.sav```.
 					door2: 0 | 1,
 					door3: 0 | 1
 			}
+			visited: boolean
 		}
 	],
 	stair: {

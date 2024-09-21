@@ -128,7 +128,7 @@ public:
 	*	i: index for player's mobility in a certain direction.
 	* 
 	* Return:
-	*	true if player is dead.
+	*	true if player is stuck.
 	*/
 	bool isStuck(unsigned int i);
 

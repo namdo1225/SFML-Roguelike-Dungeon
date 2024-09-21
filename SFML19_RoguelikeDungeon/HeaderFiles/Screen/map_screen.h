@@ -12,7 +12,6 @@ class Map_Screen : public Screen {
 private:
 	static sf::Vector2f oldPos;
 	static bool moving;
-	static sf::View viewMap;
 
 public:
 	Map_Screen();

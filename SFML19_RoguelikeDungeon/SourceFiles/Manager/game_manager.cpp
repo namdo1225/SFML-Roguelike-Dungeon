@@ -24,16 +24,17 @@
 #include <iomanip>
 #include <iosfwd>
 #include <malloc.h>
+#include <nfd.h>
 #include <nlohmann/json.hpp>
 #include <ostream>
 #include <player.h>
 #include <SFML/Graphics/Rect.hpp>
+#include <SFML/Window/Keyboard.hpp>
 #include <stat.h>
 #include <Tool/item.h>
 #include <Tool/special.h>
 #include <Tool/spell.h>
 #include <vector>
-#include <nfd.h>
 
 using json = nlohmann::json;
 
@@ -329,33 +330,45 @@ void Game_Manager::atkWithSpell(unsigned int enI, std::array<int, 3> atkSpInfo) 
     log_add(std::format("Your spell did {} to {}.", atkSpInfo[0], enemies[enI].constant->name).c_str());
 }
 
-void Game_Manager::handlePlayerAct(char input, unsigned int mode) {
-    bool handle = (input == 'u' || input == 'r' || input == 'd' || input == 'l');
+void Game_Manager::handlePlayerAct(sf::Keyboard::Key input, unsigned int mode) {
+    bool handle = input >= sf::Keyboard::Left && input <= sf::Keyboard::Down;
+    if (!handle)
+        return;
 
     if (!mode) {
         int offx{ 0 }, offy{ 0 };
 
-        if (input == 'u')
-            offy = -40;
-        else if (input == 'd')
-            offy = 40;
+        switch (input) {
+        case sf::Keyboard::Up:
+            if (!player.isStuck(0))
+                offy = -40;
+            break;
+        case sf::Keyboard::Down:
+            if (!player.isStuck(2))
+                offy = 40;
+            break;
+        case sf::Keyboard::Left:
+            if (!player.isStuck(3))
+                offx = -40;
+            break;
+        case sf::Keyboard::Right:
+            if (!player.isStuck(1))
+                offx = 40;
+            break;
+        }
 
-        if (input == 'l')
-            offx = -40;
-        else if (input == 'r')
-            offx = 40;
+        if (offx || offy) {
+            player.setPosition(player.getPosition().x + offx, player.getPosition().y + offy);
+            viewWorld.move(offx, offy);
+            window.setView(viewWorld);
 
-        player.setPosition(player.getPosition().x + offx, player.getPosition().y + offy);
-        viewWorld.move(offx, offy);
-
-        if (handle) {
             handleTurn();
             pickUpItem();
             pickUpGold();
             stepOnInteractible();
         }
     }
-    else if (mode && handle) {
+    else {
         playerAttack();
         handleTurn();
     }
@@ -582,6 +595,7 @@ void Game_Manager::playerRandomPos() {
     int temp_x = ((rand() % (room.getRoom('w') / 40)) + (room.getRoom('x') / 40)) * 40,
         temp_y = ((rand() % (room.getRoom('h') / 40)) + (room.getRoom('y') / 40)) * 40;
 
+    room.setVisisted();
     PLACE_SHOP_ON_PLAYER ? player.setPosition(floor.getShopPos('x'), floor.getShopPos('y')) : player.setPosition(temp_x, temp_y);
 }
 
@@ -633,6 +647,7 @@ void Game_Manager::addEnemy() {
 
 void Game_Manager::centerFloor() {
     viewWorld.setCenter(player.getPosition().x, player.getPosition().y);
+    viewMap.setCenter(player.getPosition().x, player.getPosition().y);
 }
 
 void Game_Manager::addItem(unsigned int id) {
@@ -755,12 +770,13 @@ bool Game_Manager::gameOver() {
 void Game_Manager::checkPlayerPath() {
     float x{ player.getPosition().x }, y{ player.getPosition().y }, x2{ x + 40 }, y2{ y + 40 };
     // Check which room player is in & determines if they're touching a wall.
-    for (Room rm : floor.rooms)
+    for (Room& rm : floor.rooms)
         if (rm.inRoom(x, y, x2, y2)) {
             (y == rm.getRoom('y')) ? player.setStuck(0, 1) : player.setStuck(0, 0);
             (x2 == rm.getRoom('1')) ? player.setStuck(1, 1) : player.setStuck(1, 0);
             (y2 == rm.getRoom('2')) ? player.setStuck(2, 1) : player.setStuck(2, 0);
             (x == rm.getRoom('x')) ? player.setStuck(3, 1) : player.setStuck(3, 0);
+            rm.setVisisted();
             break;
         }
 
@@ -852,6 +868,7 @@ void Game_Manager::save() {
                 {"y", floor.rooms[i].getRoom('y')},
                 {"sizeX", floor.rooms[i].getRoom('w')},
                 {"sizeY", floor.rooms[i].getRoom('h')},
+                {"visited", floor.rooms[i].getVisited()},
             };
             if (floor.rooms[i].existDoor()) {
                 j["floor"][i]["door"] = {
@@ -1024,13 +1041,12 @@ bool Game_Manager::readSave() {
 
         floor = Floor(true);
         for (auto& room : j.at("floor")) {
-            floor.loadRoom(room.at("x"), room.at("y"), room.at("sizeX"), room.at("sizeY"));
+            floor.loadRoom(room.at("x"), room.at("y"), room.at("sizeX"), room.at("sizeY"), room.at("visited"));
             if (room.contains("door")) {
                 auto& door = room.at("door");
                 floor.loadDoor(door.at("x"), door.at("y"), door.at("rotation"), door.at("door0"), door.at("door1"), door.at("door2"), door.at("door3"));
             }
         }
-        floor.makeMap();
 
         floor.loadStair(j.at("stair").at("x"), j.at("stair").at("y"));
         if (j.contains("shop"))

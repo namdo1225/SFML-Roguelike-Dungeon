@@ -4,7 +4,6 @@
 #include "collectible.h"
 #include "gold_collectible.h"
 #include "interactible.h"
-#include "map.h"
 #include "room.h"
 #include "shop.h"
 #include "stair.h"
@@ -26,8 +25,6 @@ private:
 	void createRoomDoor();
 
 public:
-	Map map;
-
 	std::vector<Room> rooms;
 	std::vector<Collectible> collectibles;
 	std::vector<Gold_Collectible> golds;
@@ -142,8 +139,11 @@ public:
 
 	/**
 	* Draw the golds, collectibles, rooms, doors, etc. on the game's window.
+	* 
+	* Parameter:
+	*	map: Whether to draw the floor as a map.
 	*/
-	void draw();
+	void draw(bool map = false);
 
 	/**
 	* Load/Create room for the current floor from existing data.
@@ -153,8 +153,9 @@ public:
 	*	y: the room's y position.
 	*	sx: the room's width.
 	*	sy: the room's height.
+	*	visited: Whether the room is already visited by the player.
 	*/
-	void loadRoom(int x, int y, int sx, int sy);
+	void loadRoom(int x, int y, int sx, int sy, bool visited);
 
 	/**
 	* Load door for the current floor from existing data.
@@ -241,11 +242,6 @@ public:
 	*	floor: the current floor number.
 	*/
 	void makeInteractible(unsigned int floor);
-
-	/**
-	* Make the map for the current floor.
-	*/
-	void makeMap();
 
 	/**
 	* Checks if the stair intersect with a rectangle.

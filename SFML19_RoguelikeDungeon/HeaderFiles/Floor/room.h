@@ -18,7 +18,7 @@ class Room : private Floor_Object {
 private:
 	Door doorRotation = Top;
 
-	bool door{ false };
+	bool door{ false }, visited{ false };
 
 	/**
 	* false = no door / (slot available)
@@ -155,6 +155,16 @@ public:
 	*	true if intersection exist.
 	*/
 	bool intersects(const sf::FloatRect& rect);
+
+	/**
+	* Whether a player has visited the room or not.
+	*
+	* Return:
+	*	true if room is visited.
+	*/
+	bool getVisited();
+
+	void setVisisted();
 };
 
 
