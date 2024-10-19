@@ -35,11 +35,11 @@ Menu_Screen::Menu_Screen() : Screen(true, false) {
 		switchScreen(MenuScreen, MapScreen, false, true);
 	});
 	textboxH("Inventory", 1000.f, 500.f, 197.f, 99.f, []() {
-		Game_Manager::selectedInv = NULL;
+		Game_Manager::selectedInv = SelectNone;
 		switchScreen(MenuScreen, InventoryScreen, false, true);
 	});
 	textboxH("Spells", 1000.f, 600.f, 197.f, 99.f, []() {
-		Game_Manager::selectedSpell = NULL;
+		Game_Manager::selectedSpell = SelectNone;
 		switchScreen(MenuScreen, SpellScreen, false, true);
 	});
 	textboxH("Load", 800.f, 700.f, 197.f, 99.f, []() {

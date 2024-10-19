@@ -32,8 +32,8 @@ Save file MUST have the extension ```.sav```.
 		res: int
 	},
 	inventory: [int],
-	weaponSlot: int,
-	armorSlot: int,
+	weaponID: int,
+	armorID: int,
 	spell: [int],
 	floor: [
 		{

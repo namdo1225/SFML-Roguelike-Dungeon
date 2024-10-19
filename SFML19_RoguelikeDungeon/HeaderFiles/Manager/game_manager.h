@@ -1,13 +1,9 @@
+#include "Manager/game_state_manager.h"
 #include "Manager/log_manager.h"
 #include "sf_manager.h"
-#include "Tool/special.h"
-#include <array>
-#include <Floor/enemy.h>
-#include <Floor/floor.h>
-#include <player.h>
 #include <SFML/Window/Keyboard.hpp>
 #include <Tool/item.h>
-#include <Tool/spell.h>
+#include <Tool/tool.h>
 #include <vector>
 
 #ifndef GAME_MANAGER_H
@@ -16,7 +12,7 @@
 /**
 * A class that manages the gameplay data.
 */
-class Game_Manager : public Log_Manager, public SF_Manager {
+class Game_Manager : public Game_State_Manager, public Log_Manager, public SF_Manager {
 private:
 	/**
 	* Constructor for Setting_Manager.
@@ -71,33 +67,6 @@ private:
 	static void moveEnemyRand(unsigned int v);
 
 public:
-	static unsigned int enemyRespawns;
-	static int offX, offY;
-	static bool floorCopied;
-
-	// shortcut
-	static int itemQuickIndex;
-	static int spellQuickIndex;
-
-	static Player player;
-	static Floor floor;
-	static std::vector<Enemy> enemies;
-
-	static std::vector<Item> items;
-	static std::vector<Spell> spells;
-
-	static Item* plWeapon;
-	static Item* plArmor;
-
-	static Item* selectedInv;
-	static Spell* selectedSpell;
-	static Special* selectedSpecial;
-
-	// shop
-	static std::vector<Item> stockItem;
-	static std::vector<Spell> stockSpell;
-	static std::vector<Special> stockSpecial;
-
 	static void setup();
 
 	/**
@@ -106,9 +75,12 @@ public:
 	static void delEnemy();
 
 	/**
-	* Organize player's inventory.
+	* Organize player's tool.
+	* 
+	* Parameter:
+	*	type: the type of tool to add.
 	*/
-	static void organizeInv();
+	static void organizeTool(ToolEnum type);
 
 	/**
 	* Picks an item to be on the quick item slot/shortcut.
@@ -131,9 +103,8 @@ public:
 	* 
 	* Parameter:
 	*	enI: enemy's index.
-	*	atkSpInfo: offensive spell's info on enemy.
 	*/
-	static void atkWithSpell(unsigned int enI, std::array<int, 3> atkSpInfo);
+	static void atkWithSpell(unsigned int enI);
 
 	/**
 	* Handles player moving or attacking.
@@ -193,8 +164,9 @@ public:
 	*
 	* Parameter:
 	*	id: id for item to be added.
+	*	type: the type of tool to add.
 	*/
-	static void addItem(unsigned int id);
+	static void addTool(unsigned int id, ToolEnum type);
 
 	/**
 	* Reset the game in preparation for a new playthrough.
@@ -205,28 +177,13 @@ public:
 	static void resetGame(bool cheat = false);
 
 	/**
-	* Add a spell to the spell list.
+	* Equip a weapon or armor.
 	*
 	* Parameter:
-	*	id: id for spell to be added.
+	*	position: The position of the weapon/armor in items.
+	* 
 	*/
-	static void addSpell(unsigned int id);
-
-	/**
-	* Equip a weapon.
-	*
-	* Parameter:
-	*	weapon: The weapon to be equipped.
-	*/
-	static void equipWeapon(Item* weapon);
-
-	/**
-	* Equip an armor.
-	*
-	* Parameter:
-	*	armor: The armor to be equipped.
-	*/
-	static void equipArmor(Item* armor);
+	static void equipItem(unsigned int position, ItemType type);
 
 	/**
 	* Handles player dying and resetting the game. The title screen is loaded again.
@@ -254,20 +211,13 @@ public:
 	*/
 	static bool readSave();
 
-	/**
-	* Organize player's spell list.
-	*/
-	static void organizeSpell();
-
 	/*
-	* Delete selected item.
+	* Delete selected tool.
+	* 
+	* Parameter:
+	*	type: The tool to delete
 	*/
-	static void delSelectedItem();
-
-	/*
-	* Delete selected spell.
-	*/
-	static void delSelectedSpell();
+	static void delSelectedTool(ToolEnum type);
 
 	/*
 	* Use an item.
@@ -286,6 +236,17 @@ public:
 	* Handles a turn in the game world.
 	*/
 	static void handleTurn();
+
+	/**
+	* Get selected item.
+	* 
+	* Parameter:
+	*	stocks: The stock of items to pick from.
+	* 
+	* Return:
+	*	The selected item or null pointer.
+	*/
+	static Item* getSelectedItem(std::vector<Item>& stocks = items);
 };
 
 

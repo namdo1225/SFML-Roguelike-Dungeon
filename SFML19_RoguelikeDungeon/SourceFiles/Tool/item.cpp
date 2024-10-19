@@ -14,22 +14,19 @@
 #include <Tool/tool.h>
 #include <utility>
 #include <Manager/database_manager.h>
-#include <format>
 
 std::map<unsigned int, Item> Item::items;
 
 Item::Item(unsigned int id, ItemType type, Stat stat, int quantity,
 	unsigned int range, unsigned int buy, unsigned int sell, std::string abbre,
-	std::string desc, std::string name, std::function<void()> utilityUse):
-	Tool(name, std::format("{}\n\n{}\n\nBUY: {}G\nSELL: {}G\n\nRANGE: {}\n\nQUANTITY: {}", name, desc, buy, sell, range, quantity
-	), abbre, id, buy, sell, quantity, range), type(type), stat(stat), utilityUse(utilityUse) {
-	originalDesc = desc;
+	std::string passedDesc, std::string name, std::function<void()> utilityUse):
+	Tool(name, "", abbre, id, buy, sell, quantity, passedDesc, range), type(type), stat(stat), utilityUse(utilityUse) {
 }
 
-Item::Item() : Tool("", "", "", 0, 0, 0, 0, 0) {}
+Item::Item() : Tool("", "", "", 0, 0, 0, 0, "", 0) {}
 
 Item::Item(unsigned int id) : Item(id, items[id].type, items[id].stat, items[id].quantity,
-	items[id].range, items[id].buy, items[id].sell, items[id].abbrev, items[id].desc, items[id].name, items[id].utilityUse) {}
+	items[id].range, items[id].buy, items[id].sell, items[id].abbrev, items[id].originalDesc, items[id].name, items[id].utilityUse) {}
 
 bool Item::setup()
 {

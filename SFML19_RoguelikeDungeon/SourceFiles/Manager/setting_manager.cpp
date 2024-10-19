@@ -7,18 +7,20 @@
 
 #include "Manager/setting_manager.h"
 #include <exception>
+#include <fstream>
 #include <iomanip>
 #include <iosfwd>
-#include <ostream>
-#include <fstream>
 #include <nlohmann/json.hpp>
+#include <ostream>
+#include <string>
 
 using json = nlohmann::json;
 unsigned int Setting_Manager::theme = 0;
-unsigned int Setting_Manager::music_volume = 100;
+unsigned int Setting_Manager::musicVolume = 100;
 unsigned int Setting_Manager::sfxVolume = 100;
 bool Setting_Manager::light = false;
 unsigned int Setting_Manager::font = 0;
+std::string Setting_Manager::saveLocation = "";
 
 const unsigned int Setting_Manager::THEMES;
 
@@ -39,8 +41,10 @@ bool Setting_Manager::load()
         theme = j.at("theme");
         light = j.at("light");
         sfxVolume = j.at("sfxVolume");
-        music_volume = j.at("musicVolume");
+        musicVolume = j.at("musicVolume");
         font = j.at("font");
+        saveLocation = j.at("saveLocation");
+
     }
     catch (const std::exception&) {
         save();
@@ -56,8 +60,9 @@ bool Setting_Manager::save(bool create)
         j["theme"] = create ? 0 : theme;
         j["light"] = create ? false : light;
         j["sfxVolume"] = create ? 100 : sfxVolume;
-        j["musicVolume"] = create ? 100 : music_volume;
+        j["musicVolume"] = create ? 100 : musicVolume;
         j["font"] = create ? 0 : font;
+        j["saveLocation"] = create ? "" : saveLocation;
     }
     catch (const std::exception&) {
         return false;

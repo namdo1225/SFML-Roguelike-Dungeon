@@ -7,6 +7,7 @@ Setting file MUST have the following file name: ```settings.json```.
 	light: boolean,
 	sfxVolume: int (0 <= x <= 100),
 	musicVolume: int (0 <= x <= 100),
-	font: 0 | 1
+	font: int
+	saveLocation: string
 }
 ```

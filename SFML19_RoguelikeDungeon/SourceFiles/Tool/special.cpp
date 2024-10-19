@@ -22,8 +22,9 @@ void Special::use() {
 }
 
 Special::Special(unsigned int id, unsigned int buy, unsigned int sell, std::string abbre, std::string desc, std::string name, std::function<void()> useSpecial) :
-	Tool(name, std::format("{}\n\n{}\n\nBUY: {}G\nSELL: {}G", name, desc, buy, sell), abbre, id, buy, sell, 0, 0), useSpecial(useSpecial) {
-	originalDesc = desc;
+	Tool(name, "", abbre, id, buy, sell, 0, desc, 0), useSpecial(useSpecial) {
+	std::string origin = desc;
+	originalDesc = origin;
 }
 
 bool Special::setup()

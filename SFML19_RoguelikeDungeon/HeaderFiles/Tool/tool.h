@@ -7,6 +7,11 @@
 #define TOOL_H
 
 /**
+* Available tool types.
+*/
+enum ToolEnum { ItemTool, SpellTool, SpecialTool };
+
+/**
 * This parent class abstracts a tool that the player can use (whether it's an item or tool).
 */
 class Tool {
@@ -33,17 +38,18 @@ protected:
 	* 
 	* Parameter:
 	*	name: the full name of the tool.
-	*	desc: the description of the tool.
+	*	passedDesc: the description of the tool.
 	*	abbrev: the shortened name of the tool.
 	*	id: tool's id.
 	*	buy: tool's buy price.
 	*	sell: tool's sell price.
 	*	quanitty: tool's known quantity (can represent spell dmg for example).
+	*	originalDesc: the original description of the tool.
 	*	range: tool's range if applicable.
 	*/
-	Tool(std::string name, std::string desc, std::string abbrev,
+	Tool(std::string name, std::string passedDesc, std::string abbrev,
 		unsigned int id, unsigned int buy, unsigned int sell, int quantity,
-		unsigned int range = 0);
+		std::string originalDesc, unsigned int range = 0);
 
 public:
 	/**

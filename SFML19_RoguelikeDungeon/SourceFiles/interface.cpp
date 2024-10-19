@@ -52,7 +52,7 @@ Interface::Interface() {
     Screen::setup();
     Game_Manager::setup();
 
-    Audio_Manager::setMusicVolume(Setting_Manager::music_volume);
+    Audio_Manager::setMusicVolume(Setting_Manager::musicVolume);
     Audio_Manager::setSFXVolume(Setting_Manager::sfxVolume);
 
     Screen::screens[TitleScreen] =  std::make_unique<Title_Screen>();
@@ -74,7 +74,7 @@ Interface::Interface() {
     Screen::screens[CustomScreen] = std::make_unique<Custom_Screen>();
     Screen::screens[MessageScreen] = std::make_unique<Message_Screen>();
 
-    Screen::change_settings();
+    Screen::changeSettings();
     Game_Manager::player = Player();
     Game_Manager::resetGame();
 }
@@ -100,7 +100,7 @@ void Interface::loopWindow() {
 void Interface::draw() {
     for (unsigned int i = 0; i < ExitScreen + 1; i++)
         if (Screen::visibilities[i]) {
-            if (Screen::screens[i]->get_update())
+            if (Screen::screens[i]->getUpdate())
                 Screen::screens[i]->updateDraw();
             Screen::screens[i]->draw();
         }
@@ -110,23 +110,24 @@ void Interface::handleEvent() {
 
     while (window.pollEvent(event)) {
         Game_Manager::checkPlayerPath();
-        Screen::mousePos = sf::Mouse::getPosition(window);
-        Screen::mouseWorld = window.mapPixelToCoords(Screen::mousePos);
-        Screen::x = Screen::mouseWorld.x;
-        Screen::y = Screen::mouseWorld.y;
-        sf::Vector2f ui = Screen::viewUI.getCenter();
-        sf::Vector2f world = Screen::viewWorld.getCenter();
-        sf::Vector2f slot = Screen::viewSlots.getCenter();
+        sf::Vector2i mousePos = sf::Mouse::getPosition(window);
 
-        float dist_x = ui.x - world.x;
-        float dist_y = ui.y - world.y;
-        Screen::worldX = Screen::x - dist_x;
-        Screen::worldY = Screen::y - dist_y;
+        window.setView(Game_Manager::viewWorld);
+        sf::Vector2f mouseWorld = window.mapPixelToCoords(mousePos);
+        window.setView(Game_Manager::viewUI);
 
-        float disSlotX = ui.x - slot.x;
-        float distSlotY = ui.y - slot.y;
-        Screen::slotX = Screen::x - disSlotX;
-        Screen::slotY = Screen::y - distSlotY;
+        sf::Vector2f mouseUI = window.mapPixelToCoords(mousePos);
+        Screen::x = mouseUI.x;
+        Screen::y = mouseUI.y;
+
+        Screen::worldX = mouseWorld.x;
+        Screen::worldY = mouseWorld.y;
+
+        window.setView(Game_Manager::viewSlots);
+        sf::Vector2f mouseSlots = window.mapPixelToCoords(mousePos);
+        Screen::slotX = mouseSlots.x;
+        Screen::slotY = mouseSlots.y;
+        window.setView(Game_Manager::viewUI);
 
         if ((event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) &&
             Screen::display != ExitScreen) {

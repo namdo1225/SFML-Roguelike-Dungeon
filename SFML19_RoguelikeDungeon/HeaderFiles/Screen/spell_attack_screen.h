@@ -1,5 +1,4 @@
 #include "screen.h"
-#include <array>
 #include <Shape/full_rectangle.h>
 
 #ifndef SPELL_ATTACK_SCREEN_H
@@ -10,8 +9,8 @@
 */
 class Spell_Attack_Screen : public Screen {
 private:
-	static std::array<int, 3> atkSpInfo;
-	static Full_Rectangle ranges[4];
+	static int spellID;
+	static Full_Rectangle rangeBox;
 
 	/*
 	* Change range display of spell.

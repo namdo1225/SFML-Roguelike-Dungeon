@@ -1,6 +1,5 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/View.hpp>
-#include <SFML/System/Vector2.hpp>
 #include <SFML/Window/Event.hpp>
 
 #ifndef SF_MANAGER_H
@@ -16,6 +15,7 @@ public:
 
 	const static unsigned int MAX_INV_SPELL_SLOTS = 32;
 	const static unsigned int NUM_NON_CUR_STATS = 6;
+	const static unsigned int TILE = 40;
 
 	static sf::RenderWindow window;
 	static sf::View viewUI;
@@ -29,8 +29,6 @@ public:
 	static unsigned int worldZoomLevel;
 
 	static sf::Event event;
-	static sf::Vector2i mousePos;
-	static sf::Vector2f mouseWorld;
 
 	static float x;
 	static float y;

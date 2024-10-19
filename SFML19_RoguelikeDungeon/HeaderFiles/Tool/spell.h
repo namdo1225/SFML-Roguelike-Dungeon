@@ -1,5 +1,4 @@
 #include "tool.h"
-#include <array>
 #include <functional>
 #include <map>
 #include <string>
@@ -91,14 +90,6 @@ public:
 	*	true if spell executed successfully.
 	*/
 	bool use() const;
-
-	/**
-	* Use an offensive spell.
-	* 
-	* Return:
-	*	index 0 = attack value, 1 = range, 2 = cost
-	*/
-	std::array<int, 3> atk();
 
 	unsigned int getType();
 

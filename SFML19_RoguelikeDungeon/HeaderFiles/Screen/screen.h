@@ -34,6 +34,11 @@ ClearButton, };
 enum Msg { NormalMsg, ErrorMsg, SuccessMsg };
 
 /**
+* Enum for type of view.
+*/
+enum View { UIView, WorldView, SlotView };
+
+/**
 * Contain the declaration of the Screen class, which represents a game scene.
 */
 class Screen : public Log_Manager, public SF_Manager, protected Setting_Manager {
@@ -114,11 +119,12 @@ protected:
 	* Parameter:
 	*	element: true if shape is a rectangle. false for text.
 	*	i: the index of where the shape is located.
+	*	view: The type of view to get coordinates from.
 	* 
 	* Return:
 	*	true if mouse is in shape.
 	*/
-	bool mouseInH(bool element, unsigned int i);
+	bool mouseInH(bool element, unsigned int i, View view = UIView);
 
 	/**
 	* Helper method to check mouse in a pre-defined button.
@@ -276,7 +282,7 @@ public:
 	/**
 	* Change UI appearance according to settings.
 	*/
-	static void change_settings();
+	static void changeSettings();
 
 	/**
 	* Getters for update.
@@ -284,7 +290,7 @@ public:
 	* Return:
 	*	update value.
 	*/
-	bool get_update();
+	bool getUpdate();
 
 	/**
 	* General hover function to call hover event on as many visible elements as possible.

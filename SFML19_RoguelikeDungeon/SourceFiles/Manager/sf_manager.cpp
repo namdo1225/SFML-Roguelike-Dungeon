@@ -9,7 +9,6 @@
 #include <SFML/Graphics/Rect.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/View.hpp>
-#include <SFML/System/Vector2.hpp>
 #include <SFML/Window/Event.hpp>
 
 const float SF_Manager::DEFAULT_SCREEN_X = 1200.f;
@@ -26,9 +25,6 @@ float SF_Manager::slotY;
 
 sf::RenderWindow SF_Manager::window = sf::RenderWindow();
 sf::Event SF_Manager::event;
-
-sf::Vector2i SF_Manager::mousePos;
-sf::Vector2f SF_Manager::mouseWorld;
 
 sf::View SF_Manager::viewUI{ sf::FloatRect(0, 0, DEFAULT_SCREEN_X, DEFAULT_SCREEN_Y) };
 sf::View SF_Manager::viewWorld{ sf::FloatRect(0, 0, DEFAULT_SCREEN_X, DEFAULT_SCREEN_Y) };

@@ -41,7 +41,7 @@ Title_Screen::Title_Screen() : Screen() {
 		410.f, 475.f, 150.f, 65.f, [this]() {
 		Audio_Manager::setMusicVolume(Audio_Manager::getMusicVolume() ? 0 : 100);
 		const float new_volume = Audio_Manager::getMusicVolume();
-		Setting_Manager::music_volume = new_volume;
+		Setting_Manager::musicVolume = new_volume;
 		Setting_Manager::save();
 		textboxes[0].text.setString(std::format("Music: {}", new_volume == 0 ? "OFF" : "ON"));
 		Screen::screens[SettingScreen]->update = true;

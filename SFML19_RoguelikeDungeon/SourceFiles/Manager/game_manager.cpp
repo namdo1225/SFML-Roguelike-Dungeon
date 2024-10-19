@@ -8,7 +8,6 @@
 #include "env.h"
 #include "Manager/audio_manager.h"
 #include "Manager/game_manager.h"
-#include <array>
 #include <cstdio>
 #include <cstdlib>
 #include <effect.h>
@@ -24,46 +23,21 @@
 #include <iomanip>
 #include <iosfwd>
 #include <malloc.h>
+#include <Manager/game_state_manager.h>
+#include <Manager/setting_manager.h>
 #include <nfd.h>
 #include <nlohmann/json.hpp>
 #include <ostream>
-#include <player.h>
 #include <SFML/Graphics/Rect.hpp>
 #include <SFML/Window/Keyboard.hpp>
 #include <stat.h>
 #include <Tool/item.h>
 #include <Tool/special.h>
 #include <Tool/spell.h>
+#include <Tool/tool.h>
 #include <vector>
 
 using json = nlohmann::json;
-
-unsigned int Game_Manager::enemyRespawns = 5;
-int Game_Manager::offX = 0;
-int Game_Manager::offY = 0;
-
-int Game_Manager::itemQuickIndex = 0;
-int Game_Manager::spellQuickIndex = 0;
-
-Player Game_Manager::player;
-Floor Game_Manager::floor = NULL;
-std::vector<Enemy> Game_Manager::enemies;
-
-std::vector<Item> Game_Manager::items;
-std::vector<Spell> Game_Manager::spells;
-
-Item* Game_Manager::plWeapon = NULL;
-Item* Game_Manager::plArmor = NULL;
-
-Item* Game_Manager::selectedInv = NULL;
-Spell* Game_Manager::selectedSpell = NULL;
-Special* Game_Manager::selectedSpecial = NULL;
-
-bool Game_Manager::floorCopied = false;
-
-std::vector<Item> Game_Manager::stockItem;
-std::vector<Spell> Game_Manager::stockSpell;
-std::vector<Special> Game_Manager::stockSpecial;
 
 void Game_Manager::setup() {
     unsigned int i = 0;
@@ -83,40 +57,14 @@ void Game_Manager::setup() {
     }
 }
 
-void Game_Manager::organizeInv() {
-    int size = items.size();
-    if (size <= 2)
-        return;
-
-    for (unsigned int i{ 0 }; i < player.getMaxItems() && i < size; i++) {
-        int z{ 0 };
-        int x = 200 + ((i % 6) * 80), y = 240 + ((i / 6) * 80);
-
-        for (; z < size; z++) {
-            if (&items[z] == plWeapon || &items[z] == plArmor)
-                continue;
-            if (items[z].getPos('x') == x && items[z].getPos('y') == y) {
-                z = -1;
-                break;
-            }
-        }
-
-        if (z != -1)
-            items[--z].setPos(x, y);
-    }
-}
-
 void Game_Manager::findItemShortcut(bool left) {
     unsigned int size = items.size();
-    if (size <= 2)
-        return;
-
     int stop{ itemQuickIndex };
 
     while (true) {
         itemQuickIndex = (itemQuickIndex + (left ? -1 : 1)) % size;
         if (items[itemQuickIndex].getType() != Weapon && items[itemQuickIndex].getType() != Armor) {
-            selectedInv = &items[itemQuickIndex];
+            selectedInv = itemQuickIndex;
             return;
         }
         else if (stop == itemQuickIndex)
@@ -154,7 +102,7 @@ void Game_Manager::findSpellShortcut(bool left) {
         return;
 
     spellQuickIndex = (spellQuickIndex + (left ? -1 : 1)) % size;
-    selectedSpell = &spells[spellQuickIndex];
+    selectedSpell = spellQuickIndex;
 }
 
 void Game_Manager::atkEnemy(unsigned int v) {
@@ -179,8 +127,8 @@ void Game_Manager::atkEnemy(unsigned int v) {
         return;
 
     Attack type = enemies[v].constant->type;
-    int quantity = plArmor->getQuantity();
-    Stat armor_stat = plArmor->getStat();
+    int quantity = plArmor.getQuantity();
+    Stat armor_stat = plArmor.getStat();
     int armor = (type && armor_stat == Def) || (!type && armor_stat == Mgk) ? quantity : 0;
     int damage = player.hurtPlayer(type, enemies[v].stat.hp - armor);
 
@@ -322,12 +270,18 @@ void Game_Manager::moveEnemyRand(unsigned int v) {
     }
 }
 
-void Game_Manager::atkWithSpell(unsigned int enI, std::array<int, 3> atkSpInfo) {
-    player.useMP(atkSpInfo[2]);
-    enemies[enI].stat.hp -= enemies[enI].stat.res >= atkSpInfo[0] ? 1 : atkSpInfo[0] - enemies[enI].stat.res;
-    selectedSpell = NULL;
+void Game_Manager::atkWithSpell(unsigned int enI) {
+    Spell* selected = selectedSpell != SelectNone ? &spells[selectedSpell] : NULL;
+    if (!selected)
+        return;
+
+    const int finalDamage = selected->getQuantity() + player.getStat(Mgk) * selected->getPercentage();
+
+    player.useMP(selected->getMP());
+    enemies[enI].stat.hp -= enemies[enI].stat.res >= finalDamage ? 1 : finalDamage - enemies[enI].stat.res;
+    selectedSpell = SelectNone;
     actEnemy();
-    log_add(std::format("Your spell did {} to {}.", atkSpInfo[0], enemies[enI].constant->name).c_str());
+    log_add(std::format("Your spell did {} to {}.", finalDamage, enemies[enI].constant->name).c_str());
 }
 
 void Game_Manager::handlePlayerAct(sf::Keyboard::Key input, unsigned int mode) {
@@ -406,7 +360,7 @@ void Game_Manager::pickUpItem() {
     for (int i{ static_cast<int>(floor.collectibles.size()) - 1 }; i > -1; i--) {
         if (floor.collectibles[i].intersects(rect)) {
             Audio_Manager::playSFX(0);
-            addItem(floor.collectibles[i].getID());
+            addTool(floor.collectibles[i].getID(), ItemTool);
             floor.collectibles.erase(floor.collectibles.begin() + i);
             log_add(std::format("You picked up: {}.", items[items.size() - 1].getName()).c_str());
             if (items.size() == player.getMaxItems())
@@ -495,7 +449,7 @@ void Game_Manager::stepOnInteractible() {
                 log_add("You will lose 2 MP for 5 turns.");
             }
             else if (effect >= 70 && effect < 75) {
-                addItem(2);
+                addTool(2, ItemTool);
                 log_add("You found a Rejuvenate Potion.");
             }
             else if (effect >= 75 && effect < 80) {
@@ -547,7 +501,7 @@ void Game_Manager::playerAttack() {
             return;
 
     int stat{ en->constant->type ? en->stat.def : en->stat.res };
-    const int amount = player.getStat(plWeapon->getStat()) + plWeapon->getQuantity();
+    const int amount = player.getStat(plWeapon.getStat()) + plWeapon.getQuantity();
     int quantity{ stat >= amount ? 1 : amount - stat };
     en->stat.hp -= quantity;
 
@@ -568,6 +522,20 @@ void Game_Manager::delEnemy() {
             enemies.erase(enemies.begin() + i);
             updateEXP();
         }
+}
+
+void Game_Manager::organizeTool(ToolEnum type) {
+    unsigned int size = items.size();
+    unsigned int secondSize = player.getMaxItems();
+    if (type == SpellTool) {
+        size = spells.size();
+        secondSize = MAX_INV_SPELL_SLOTS;
+    }
+
+    for (unsigned int i{ 0 }; i < secondSize && i < size; i++) {
+        int x = 200 + ((i % 6) * 80), y = 240 + ((i / 6) * 80);
+        (type == SpellTool) ? spells[i].setPos(x, y) : items[i].setPos(x, y);
+    }
 }
 
 void Game_Manager::updateEXP() {
@@ -595,8 +563,13 @@ void Game_Manager::playerRandomPos() {
     int temp_x = ((rand() % (room.getRoom('w') / 40)) + (room.getRoom('x') / 40)) * 40,
         temp_y = ((rand() % (room.getRoom('h') / 40)) + (room.getRoom('y') / 40)) * 40;
 
+    if (PLACE_SHOP_ON_PLAYER) {
+        temp_x = ((floor.getShopPos('x') + TILE / 2) / TILE) * TILE;
+        temp_y = ((floor.getShopPos('y') + TILE / 2) / TILE) * TILE;
+    }
+
     room.setVisisted();
-    PLACE_SHOP_ON_PLAYER ? player.setPosition(floor.getShopPos('x'), floor.getShopPos('y')) : player.setPosition(temp_x, temp_y);
+    player.setPosition(temp_x, temp_y);
 }
 
 void Game_Manager::addEnemy() {
@@ -604,7 +577,9 @@ void Game_Manager::addEnemy() {
         return;
 
     enemyRespawns -= 1;
-    int rand_enemy_num{ rand() % 7 + 1 + static_cast<int>((player.getFloor() * 0.1)) };
+    int rand_enemy_num{ rand() % (7 + static_cast<int>((player.getFloor() * 0.01)))
+        + 1 
+        + static_cast<int>((player.getFloor() * 0.05)) };
 
     for (unsigned int z{ 0 }; z < rand_enemy_num; z++) {
         // Check which room player is not in.
@@ -638,7 +613,7 @@ void Game_Manager::addEnemy() {
 
         std::advance(it, rand() % Enemy::enemies.size());
         unsigned int id = it->first;
-        enemies.push_back(Enemy(player.getFloor(), id, temp_x, temp_y));
+        enemies.push_back(Enemy(id, temp_x, temp_y, -1));
     }
 
     if (enemyRespawns == 0)
@@ -650,30 +625,28 @@ void Game_Manager::centerFloor() {
     viewMap.setCenter(player.getPosition().x, player.getPosition().y);
 }
 
-void Game_Manager::addItem(unsigned int id) {
-    if (items.size() == player.getMaxItems()) {
-        log_add("You reached your items limit.");
+void Game_Manager::addTool(unsigned int id, ToolEnum type) {
+    unsigned __int64 size = type == ItemTool ? items.size() : spells.size();
+    unsigned __int64 x{ 200 + ((size % 6) * 80) }, y{ 240 + ((size / 6) * 80) };
+
+    switch (type) {
+    case ItemTool:
+        if (size == player.getMaxItems()) {
+            log_add("You reached your items limit.");
+            return;
+        }
+
+        items.push_back(Item(id));
+        items[size].setPos(x, y);
+        return;
+    case SpellTool:
+        if (size == MAX_INV_SPELL_SLOTS)
+            return;
+
+        spells.push_back(Spell(id));
+        spells[size].setPos(x, y);
         return;
     }
-
-    items.push_back(Item(id));
-
-    int x{ 0 }, y{ 0 };
-
-    for (unsigned int i{ 0 }; i < player.getMaxItems(); i++) {
-        bool spot_taken{ false };
-        x = 200 + ((i % 6) * 80), y = 240 + ((i / 6) * 80);
-
-        for (unsigned int j{ 0 }; j < items.size() - 1; j++)
-            if (items[j].getPos('x') == x && items[j].getPos('y') == y) {
-                spot_taken = true;
-                break;
-            }
-
-        if (!spot_taken)
-            items[items.size() - 1].setPos(x, y);
-    }
-    organizeInv();
 }
 
 void Game_Manager::resetGame(bool cheat) {
@@ -693,69 +666,47 @@ void Game_Manager::resetGame(bool cheat) {
     floor.makeGold(player.getFloor());
     floor.makeInteractible(player.getFloor());
 
+    plWeapon = Item(5);
+    plArmor = Item(8);
+    plWeapon.setPos(200, 140);
+    plArmor.setPos(600, 140);
+
     items.clear();
-    addItem(5);
-    addItem(8);
-    addItem(0);
-    addItem(1);
+    addTool(0, ItemTool);
+    addTool(1, ItemTool);
+
+    addTool(6, ItemTool);
+    addTool(9, ItemTool);
 
     spells.clear();
-    addSpell(0);
+    addTool(5, SpellTool);
 
-    equipWeapon(&items[0]);
-    equipArmor(&items[1]);
-    organizeInv();
+    organizeTool(ItemTool);
     findItemShortcut('n');
 
     centerFloor();
     logs.clear();
 }
 
-void Game_Manager::addSpell(unsigned int id) {
-    if (spells.size() == MAX_INV_SPELL_SLOTS)
-        return;
-    spells.push_back(Spell(id));
+void Game_Manager::equipItem(unsigned int position, ItemType type) {
+    if (type >= StatConsumable || type != items[position].getType())
+        return;  
 
-    int x{ 0 }, y{ 0 };
+    unsigned int equippedItemID = type == Weapon ? plWeapon.getID() : plArmor.getID();
 
-    for (unsigned int i{ 0 }; i < MAX_INV_SPELL_SLOTS; i++) {
-        bool spot_taken{ false };
-        x = 200 + ((i % 6) * 80), y = 240 + ((i / 6) * 80);
+    addTool(equippedItemID, ItemTool);
 
-        for (unsigned int j{ 0 }; j < spells.size() - 1; j++) {
-            if (spells[j].getPos('x') == x && spells[j].getPos('y') == y) {
-                spot_taken = true;
-                break;
-            }
-        }
-
-        if (!spot_taken) {
-            spells[spells.size() - 1].setPos(x, y);
-            break;
-        }
+    if (type == Weapon) {
+        plWeapon = Item(items[position].getID());
+        plWeapon.setPos(200, 140);
     }
-}
+    else {
+        plArmor = Item(items[position].getID());
+        plArmor.setPos(600, 140);
+    }
+    items.erase(items.begin() + position);
 
-void Game_Manager::equipWeapon(Item* weapon) {
-    if (weapon->getType() != Weapon)
-        return;
-    
-    if (plWeapon != NULL)
-        plWeapon->setPos(weapon->getPos('x'), weapon->getPos('y'));
-
-    plWeapon = weapon;
-    plWeapon->setPos(200, 140);
-}
-
-void Game_Manager::equipArmor(Item* armor) {
-    if (armor->getType() != Armor)
-        return;
-
-    if (plArmor != NULL)
-        plArmor->setPos(armor->getPos('x'), armor->getPos('y'));
-
-    plArmor = armor;
-    plArmor->setPos(600, 140);
+    organizeTool(ItemTool);
 }
 
 bool Game_Manager::gameOver() {
@@ -846,16 +797,8 @@ void Game_Manager::save() {
                 j["inventory"].push_back(itm.getID());
 
 
-        for (int i = items.size() - 1; i >= 0; i--)
-            if (&items[i] == plWeapon) {
-                j["weaponSlot"] = i;
-                break;
-            }
-        for (int i = items.size() - 1; i >= 0; i--)
-            if (&items[i] == plArmor) {
-                j["armorSlot"] = i;
-                break;
-            }
+        j["weaponID"] = plWeapon.getID();
+        j["armorID"] = plArmor.getID();
 
         if (!spells.empty())
             for (Spell sp : spells)
@@ -953,19 +896,22 @@ void Game_Manager::save() {
     };
 
     nfdchar_t* outPath = NULL;
-    nfdresult_t result = NFD_OpenDialog("sav", NULL, &outPath);
 
-    if (result == NFD_CANCEL) {
-        log_add("You closed the save dialog.");
-        return;
-    }
-    else if (result != NFD_OKAY) {
-        log_add("Errors occured while saving.");
-        return;
+    if (Setting_Manager::saveLocation.empty()) {
+        nfdresult_t result = NFD_OpenDialog("sav", NULL, &outPath);
+
+        if (result == NFD_CANCEL) {
+            log_add("You closed the save dialog.");
+            return;
+        }
+        else if (result != NFD_OKAY) {
+            log_add("Errors occured while saving.");
+            return;
+        }
     }
 
     try {
-        std::ofstream file_out{ outPath };
+        std::ofstream file_out{ Setting_Manager::saveLocation.empty() ? outPath : Setting_Manager::saveLocation };
         if (!file_out) {
             log_add("Save not successful.");
             return;
@@ -983,21 +929,24 @@ void Game_Manager::save() {
 
 bool Game_Manager::readSave() {
     nfdchar_t* outPath = NULL;
-    nfdresult_t result = NFD_OpenDialog("sav", NULL, &outPath);
 
-    if (result == NFD_CANCEL) {
-        printf("Error: User pressed cancel.");
-        return false;
-    }
-    else if (result != NFD_OKAY) {
-        printf("Error: %s\n", NFD_GetError());
-        return false;
+    if (Setting_Manager::saveLocation.empty()) {
+        nfdresult_t result = NFD_OpenDialog("sav", NULL, &outPath);
+
+        if (result == NFD_CANCEL) {
+            printf("Error: User pressed cancel.");
+            return false;
+        }
+        else if (result != NFD_OKAY) {
+            printf("Error: %s\n", NFD_GetError());
+            return false;
+        }
     }
 
     try {
         std::ifstream file;
         file.exceptions(std::ifstream::badbit);
-        file.open(outPath);
+        file.open(Setting_Manager::saveLocation.empty() ? outPath : Setting_Manager::saveLocation);
         if (!file) {
             return false;
         }
@@ -1029,14 +978,15 @@ bool Game_Manager::readSave() {
 
         items.clear();
         for (auto& element : j.at("inventory")) {
-            addItem(element);
+            addTool(element, ItemTool);
         }
-        equipWeapon(&items[j.at("weaponSlot")]);
-        equipArmor(&items[j.at("armorSlot")]);
+
+        plWeapon = Item(j.at("weaponID"));
+        plArmor = Item(j.at("armorID"));
 
         spells.clear();
         for (auto& element : j.at("spell")) {
-            addSpell(element);
+            addTool(element, SpellTool);
         }
 
         floor = Floor(true);
@@ -1092,60 +1042,34 @@ bool Game_Manager::readSave() {
     return true;
 }
 
-void Game_Manager::organizeSpell() {
-    int size = spells.size();
-
-    for (unsigned int i{ 0 }; i < MAX_INV_SPELL_SLOTS && i < size; i++) {
-        int z{ 0 };
-        int x = 200 + ((i % 6) * 80), y = 240 + ((i / 6) * 80);
-
-        for (; z < size; z++) {
-            if (spells[z].getPos('x') == x && spells[z].getPos('y') == y) {
-                z = -1;
-                break;
-            }
-        }
-
-        if (z != -1) {
-            spells[--z].setPos(x, y);
-        }
+void Game_Manager::delSelectedTool(ToolEnum type) {
+    switch (type) {
+    case SpellTool:
+        spells.erase(spells.begin() + selectedSpell);
+        selectedSpell = SelectNone;
+        break;
+    case ItemTool:
+        items.erase(items.begin() + selectedInv);
+        selectedInv = SelectNone;
+        break;
     }
-}
-
-void Game_Manager::delSelectedItem() {    
-    for (int i = items.size() - 1; i >= 0; i--)
-        if (&items[i] == selectedInv) {
-            items.erase(items.begin() + i);
-            break;
-        }
-
-    selectedInv = NULL;
-    organizeInv();
-}
-
-void Game_Manager::delSelectedSpell() {
-    for (int i = spells.size() - 1; i >= 0; i--)
-        if (&spells[i] == selectedSpell) {
-            spells.erase(spells.begin() + i);
-            break;
-        }
-
-    selectedSpell = NULL;
-    organizeSpell();
+    organizeTool(type);
 }
 
 void Game_Manager::useItem() {
-    if (selectedInv->getType() != Weapon && selectedInv->getType() != Armor)
-        selectedInv->use();
+    ItemType type = (ItemType)items[selectedInv].getType();
+    if (type != Weapon && type != Armor)
+        items[selectedInv].use();
 
-    delSelectedItem();
+    delSelectedTool(ItemTool);
     handleTurn();
+    selectedInv = SelectNone;
 }
 
 bool Game_Manager::useSpell() {
-    if (selectedSpell->getType() != Offensive) {
-        bool success = selectedSpell->use();
-        selectedSpell = NULL;
+    if (spells[selectedSpell].getType() != Offensive) {
+        bool success = spells[selectedSpell].use();
+        selectedSpell = SelectNone;
         handleTurn();
         return success;
     }
@@ -1157,4 +1081,20 @@ void Game_Manager::handleTurn() {
     player.useEffect();
     actEnemy();
     addEnemy();
+}
+
+Item* Game_Manager::getSelectedItem(std::vector<Item>& stocks)
+{
+    switch (selectedInv) {
+    case SelectNone:
+        return NULL;
+    case SelectWeapon:
+        return &plWeapon;
+    case SelectArmor:
+        return &plArmor;
+    default:
+        return &stocks[selectedInv];
+    }
+
+    return NULL;
 }

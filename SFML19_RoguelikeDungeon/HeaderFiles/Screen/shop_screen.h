@@ -2,11 +2,7 @@
 #define SHOP_SCREEN_H
 
 #include "screen.h"
-
-/**
-* Available stock types in the shop.
-*/
-enum Stock {ItemStock, SpellStock, SpecialStock};
+#include <Tool/tool.h>
 
 /**
 * Represents the shop creen.
@@ -14,7 +10,7 @@ enum Stock {ItemStock, SpellStock, SpecialStock};
 class Shop_Screen : public Screen {
 private:
 	static bool buy;
-	static Stock stock;
+	static ToolEnum stock;
 	static unsigned int curSlots;
 	
 	/*

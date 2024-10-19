@@ -11,19 +11,21 @@
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/Text.hpp>
 #include <string>
+#include <format>
 
-Tool::Tool(std::string name, std::string desc, std::string abbrev,
+Tool::Tool(std::string name, std::string passedDesc, std::string abbrev,
 	unsigned int id, unsigned int buy, unsigned int sell, int quantity,
-	unsigned int range) : id(id),
-	name(name), desc(desc), abbrev(abbrev), range(range), buy(buy), sell(sell),
-	quantity(quantity) {
+	std::string originalDesc, unsigned int range) : id(id),
+	name(name),
+	desc(std::format("{}\n\n{}\n\n{}\n\nBUY: {}G\nSELL: {}G\n\nRANGE: {}\n\nQUANTITY: {}", name, originalDesc, passedDesc, buy, sell, range, quantity
+	)), abbrev(abbrev), range(range), buy(buy), sell(sell),
+	quantity(quantity), originalDesc(originalDesc) {
 	icon.setFillColor(sf::Color::White);
 	icon.setStyle(sf::Text::Bold);
 	icon.setCharacterSize(30);
 
 	icon.setFont(Font_Manager::get_selected());
 	icon.setString(abbrev);
-
 	changeTheme();
 }
 

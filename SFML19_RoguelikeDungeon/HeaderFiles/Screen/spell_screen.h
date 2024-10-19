@@ -14,6 +14,8 @@ public:
 
 	void handleHoverEvent();
 
+	void handleMouseEvent();
+
 	void draw();
 
 	void updateDraw();

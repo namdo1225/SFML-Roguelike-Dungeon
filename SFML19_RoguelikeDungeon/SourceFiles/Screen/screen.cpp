@@ -196,9 +196,22 @@ void Screen::textInputH(const char* defaultText, unsigned int length, float x, f
 	textInputs.push_back(Full_TextInput(defaultText, length, x, y, w, h, validation, fontSize, fontOutline));
 }
 
-bool Screen::mouseInH(bool element, unsigned int i) {
-	return (element && rects[i].getGlobalBounds().contains(sf::Vector2f(x, y))) ||
-		(!element && texts[i].getGlobalBounds().contains(sf::Vector2f(x, y)));
+bool Screen::mouseInH(bool element, unsigned int i, View view) {
+	float tmpX = x;
+	float tmpY = y;
+
+	switch (view) {
+	case WorldView:
+		tmpX = worldX;
+		tmpY = worldY;
+		break;
+	case SlotView:
+		tmpX = slotX;
+		tmpY = slotY;
+	}
+
+	return (element && rects[i].getGlobalBounds().contains(sf::Vector2f(tmpX, tmpY))) ||
+		(!element && texts[i].getGlobalBounds().contains(sf::Vector2f(tmpX, tmpY)));
 }
 
 bool Screen::mouseInButton(ReusableButton button) {
@@ -317,9 +330,9 @@ bool Screen::hoverTextRect(unsigned int i, int j) {
 	return false;
 }
 
-void Screen::change_settings() {
+void Screen::changeSettings() {
 	Setting_Manager::save();
-	Audio_Manager::setMusicVolume(Setting_Manager::music_volume);
+	Audio_Manager::setMusicVolume(Setting_Manager::musicVolume);
 	Audio_Manager::setSFXVolume(Setting_Manager::sfxVolume);
 	Font_Manager::set(Setting_Manager::font);
 	
@@ -424,7 +437,7 @@ bool Screen::hoverH(bool element, unsigned int i) {
 	return false;
 }
 
-bool Screen::get_update() {
+bool Screen::getUpdate() {
 	return update;
 }
 

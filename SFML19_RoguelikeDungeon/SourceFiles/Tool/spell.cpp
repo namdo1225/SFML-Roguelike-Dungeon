@@ -7,7 +7,6 @@
 
 #include "Manager/game_manager.h"
 #include "Tool/spell.h"
-#include <array>
 #include <format>
 #include <functional>
 #include <Manager/database_manager.h>
@@ -23,17 +22,18 @@ Spell::Spell(std::string abbre,
 	unsigned int id, unsigned int buy, unsigned int sell, SpellType type,
 	unsigned int range, unsigned int mp, int quantity,
 	std::string desc, std::string name, double percent, std::function<void(int, double)> functionalUse):
-	Tool(name, std::format("{}\n\n{}\n\nBUY: {}G\nSELL: {}G\n\n-{}MP\n\nRANGE: {}\n\n{}", name, desc, buy, sell, mp, range, type == Offensive ?
+	Tool(name, std::format("-{}MP\n\n{}", mp, type == Offensive ?
 		std::format("ENEMY HP-: {} + (MGK * {})\n- ENEMY RES", quantity, percent)
-		: "").c_str(),
-		abbre, id, buy, sell, quantity, range), type(type), mp(mp), functionalUse(functionalUse), percentage(percent) {
-	originalDesc = desc;
+		: ""),
+		abbre, id, buy, sell, quantity, desc, range), type(type), mp(mp), functionalUse(functionalUse), percentage(percent) {
+	std::string origin = desc;
+	originalDesc = origin;
 }
 
-Spell::Spell() : Tool("", "", "", 0, 0, 0, 0, 0) {}
+Spell::Spell() : Tool("", "", "", 0, 0, 0, 0, "", 0) {}
 
 Spell::Spell(unsigned int id) : Spell(spells[id].abbrev, id, spells[id].buy, spells[id].sell, spells[id].type, spells[id].range, spells[id].mp, spells[id].quantity,
-	spells[id].desc.c_str(), spells[id].name, spells[id].percentage, spells[id].functionalUse) {
+	spells[id].originalDesc, spells[id].name, spells[id].percentage, spells[id].functionalUse) {
 }
 
 bool Spell::setup() {
@@ -49,8 +49,6 @@ bool Spell::setup() {
 
 		return 0;
 	});
-
-
 
 	unsigned int id = 0;
 	spells.insert(std::make_pair(id++, Spell("HE", id, 50, 20, Functional, 0, 3, 5,
@@ -101,11 +99,6 @@ bool Spell::use() const {
 	}
 
 	return false;
-}
-
-std::array<int, 3> Spell::atk() { 
-	std::array<int, 3> return_arr = { quantity + Game_Manager::player.getStat(Mgk) * percentage, range, mp };
-	return return_arr;
 }
 
 unsigned int Spell::getType() {

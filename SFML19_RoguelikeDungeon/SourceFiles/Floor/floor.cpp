@@ -28,11 +28,11 @@ Floor::Floor(bool load) {
 }
 
 void Floor::createRoomDoor() {
-	// maximum floor size: 2160x2160, one square: 40x40
+	// maximum floor size: 2160x2160
 	int max_rm{ rand() % 10 + 2 };
 	for (unsigned int i{ 0 }; i < max_rm; i++) {
 		int sx{ (rand() % 6 + 4) * 120 }, sy{ (rand() % 6 + 4) * 120 },
-			x{ (rand() % 26 + 36) * 120 }, y{ (rand() % 26 + 36) * 120 };
+			x{ i ? (rand() % 26 + 36) * 120 : 0 }, y{ i ? (rand() % 26 + 36) * 120 : 0 };
 
 		while (!(x + sx <= 8640 && y + sy <= 8640 && x >= 4320 && y >= 4320))
 			x = (rand() % 26 + 36) * 120, y = (rand() % 26 + 36) * 120,

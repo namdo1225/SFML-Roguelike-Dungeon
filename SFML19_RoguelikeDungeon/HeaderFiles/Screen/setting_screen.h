@@ -1,4 +1,5 @@
 #include "screen.h"
+#include <string>
 
 #ifndef SETTING_SCREEN_H
 #define SETTING_SCREEN_H
@@ -19,8 +20,9 @@ public:
 	static bool light_mode;
 	static unsigned int theme;
 	static unsigned int sfxVolume;
-	static unsigned int music_volume;
+	static unsigned int musicVolume;
 	static unsigned int font;
+	static std::string saveLocation;
 };
 
 #endif

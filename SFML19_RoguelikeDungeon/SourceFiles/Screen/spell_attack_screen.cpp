@@ -6,7 +6,6 @@
 
 #include "Manager/game_manager.h"
 #include "Screen/spell_attack_screen.h"
-#include <array>
 #include <format>
 #include <Screen/screen.h>
 #include <SFML/Graphics/Color.hpp>
@@ -14,75 +13,92 @@
 #include <Shape/full_rectangle.h>
 #include <stat.h>
 #include <string>
+#include <Tool/spell.h>
 
-std::array<int, 3> Spell_Attack_Screen::atkSpInfo = {{0, 0, 0}};
-Full_Rectangle Spell_Attack_Screen::ranges[4];
+Full_Rectangle Spell_Attack_Screen::rangeBox;
+int Spell_Attack_Screen::spellID = -1;
 
 Spell_Attack_Screen::Spell_Attack_Screen() : Screen(true, false) {
 	textRectH("Spell range: ", 200.f, 10.f, NULL, 3.f);
 	textRectH("0", 400, 10.f, NULL, 3.f);
+	textRectH(" ", 200, 50.f, 12.f, 3.f);
 
-	unsigned int range = atkSpInfo[1];
-	ranges[0] = Full_Rectangle(400.f, 400.f - (40.f * range), 40.f, 40.f * range, false, true, sf::Color::Transparent, sf::Color(255, 0, 0, 100));
-	ranges[1] = Full_Rectangle(440.f, 400.f, 40.f * range, 40.f, false, true, sf::Color::Transparent, sf::Color(255, 0, 0, 100));
-	ranges[2] = Full_Rectangle(400.f, 440.f, 40.f, 40.f * range, false, true, sf::Color::Transparent, sf::Color(255, 0, 0, 100));
-	ranges[3] = Full_Rectangle(400.f - (40.f * range), 400.f, 40.f * range, 40.f, false, true, sf::Color::Transparent, sf::Color(255, 0, 0, 100));
+	rangeBox = Full_Rectangle(600.f, 400.f, 40.f, 40.f, false, true, sf::Color::Transparent, sf::Color(255, 0, 0, 100));
 }
 
 bool Spell_Attack_Screen::handleClickEvent() {
+	Spell* selected = Game_Manager::selectedSpell != SelectNone ? &Game_Manager::spells[Game_Manager::selectedSpell] : NULL;
+
 	if (mouseInButton(ExitButton)) {
 		resetSpell();
 		return true;
 	}
-	else if (atkSpInfo[2] > Game_Manager::player.getStat(Mp)) {
-		log_add(std::format("Insufficient MP for spell: requires {}.", atkSpInfo[3]).c_str());
+	else if (selected && selected->getMP() <= Game_Manager::player.getStat(Mp)) {
+		unsigned int range = selected->getRange() * 40;
+		unsigned int plX = Game_Manager::player.getPos('x');
+		unsigned int plY = Game_Manager::player.getPos('y');
+
+		if (rangeBox.getGlobalBounds().contains(worldX, worldY)) {
+			for (unsigned int i{ 0 }; i < Game_Manager::enemies.size(); i++)
+				if (Game_Manager::enemies[i].contains(worldX, worldY)) {
+					Game_Manager::atkWithSpell(i);
+					resetSpell();
+					Game_Manager::handleTurn();
+					return true;
+				}
+			log_add("No target in range.");
+			return true;
+		}
+
+		log_add("Out of range.");
+		return true;
+	}
+	else if (selected && selected->getMP() > Game_Manager::player.getStat(Mp)) {
+		log_add(std::format("Insufficient MP for spell: requires {}.", selected->getMP()).c_str());
 		resetSpell();
 		return true;
 	}
-	else if (x >= 400 - (atkSpInfo[1] * 40) && x <= 440 + (atkSpInfo[1] * 40) && y >= 400 - (atkSpInfo[1] * 40) && y <= 440 + (atkSpInfo[1] * 40))
-		for (unsigned int i{ 0 }; i < Game_Manager::enemies.size(); i++)
-			if (Game_Manager::enemies[i].contains(worldX, worldY)) {
-				Game_Manager::atkWithSpell(i, atkSpInfo);
-				resetSpell();
-				Game_Manager::handleTurn();
-				return true;
-			}
 }
 
 void Spell_Attack_Screen::handleHoverEvent() {
-	if (Game_Manager::selectedSpell != NULL && atkSpInfo[1] == 0) {
-		atkSpInfo = Game_Manager::selectedSpell->atk();
+	Spell* selected = Game_Manager::selectedSpell != SelectNone ? &Game_Manager::spells[Game_Manager::selectedSpell] : NULL;
+	if (selected && spellID != selected->getID())
 		changeRange();
-	}
 }
 
 void Spell_Attack_Screen::draw() {
 	Screen::draw();
 
-	if (atkSpInfo[1] != 0)
-		for (Full_Rectangle& rect : ranges)
-			window.draw(rect);
+	window.setView(viewWorld);
+	if (spellID > SelectNone)
+		window.draw(rangeBox);
+	window.setView(viewUI);
 }
 
 void Spell_Attack_Screen::changeRange() {
-	unsigned int range = atkSpInfo[1];
-	ranges[0].setPosition(400.f, 400.f - (40.f * range));
-	ranges[0].setSize(sf::Vector2f(40.f, 40.f * range));
+	Spell* selected = Game_Manager::selectedSpell != SelectNone ? &Game_Manager::spells[Game_Manager::selectedSpell] : NULL;
+	if (!selected)
+		return;
 
-	ranges[1].setPosition(440.f, 400.f);
-	ranges[1].setSize(sf::Vector2f(40.f * range, 40.f));
+	window.setView(viewWorld);
 
-	ranges[2].setPosition(400.f, 440.f);
-	ranges[2].setSize(sf::Vector2f(40.f, 40.f * range));
+	spellID = selected->getID();
+	unsigned int originalRange = selected->getRange();
+	float rangeArea = (originalRange * 2 + 1) * TILE;
 
-	ranges[3].setPosition(400.f - (40.f * range), 400.f);
-	ranges[3].setSize(sf::Vector2f(40.f * range, 40.f));
+	unsigned int plX = Game_Manager::player.getPos('x');
+	unsigned int plY = Game_Manager::player.getPos('y');
 
-	texts[1].setString(std::to_string(range));
+	rangeBox.setPosition(plX - originalRange * TILE, plY - originalRange * TILE);
+	rangeBox.setSize(sf::Vector2f(rangeArea, rangeArea));
+
+	texts[1].setString(std::to_string(originalRange));
+	texts[2].setString(selected->getDesc());
+
+	window.setView(viewUI);
 }
 
 void Spell_Attack_Screen::resetSpell() {
-	Game_Manager::selectedSpell = NULL;
-	atkSpInfo = { 0, 0, 0 };
+	Game_Manager::selectedSpell = spellID = SelectNone;
 	goToPrevScreen(SpellAttackScreen);
 }

@@ -19,18 +19,22 @@ private:
 	static bool grid;
 	static bool range;
 	static bool scan;
-	static unsigned int opacity;
-	static Full_Rectangle grids[50];
-	static Full_Rectangle ranges[4];
+	static bool enemyFound;
 
-	static Full_Rectangle scan_rect;
-	static Full_Text scan_txt;
+	static unsigned int opacity;
+	static Full_Rectangle grids[60];
+	static Full_Rectangle rangeBox;
+
+	static Full_Rectangle rectScan;
+	static Full_Text scanText;
 
 	static candle::LightingArea fog;
 	static candle::RadialLight light;
 
 	static sf::Clock clock;
 	const static float KEY_PRESS_TIME_LIMIT;
+
+	static Full_Text atkIcon;
 
 	/*
 	* Change opacity of the UI.
@@ -41,6 +45,11 @@ private:
 	* Change range display due to the player's weapon.
 	*/
 	static void changeRange();
+
+	/*
+	* Change grid display due to the player's zoom.
+	*/
+	static void changeGrid();
 
 public:
 	Game_Screen();

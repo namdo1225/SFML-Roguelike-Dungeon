@@ -1,3 +1,4 @@
+#include <string>
 #ifndef SETTING_H
 #define SETTING_H
 
@@ -15,9 +16,10 @@ public:
 	const static unsigned int THEMES = 2;
 	static unsigned int theme;
 	static unsigned int sfxVolume;
-	static unsigned int music_volume;
+	static unsigned int musicVolume;
 	static unsigned int font;
 	static bool light;
+	static std::string saveLocation;
 
 	/**
 	* Method to load settings from settings.json.

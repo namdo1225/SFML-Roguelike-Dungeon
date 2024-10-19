@@ -168,6 +168,9 @@
     <ClCompile Include="SourceFiles\stat.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SourceFiles\Manager\game_state_manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="HeaderFiles\effect.h">
@@ -324,6 +327,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="HeaderFiles\util.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HeaderFiles\Manager\game_state_manager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

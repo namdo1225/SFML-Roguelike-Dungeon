@@ -41,13 +41,13 @@ public:
 	* 	buy: item's buy gold.
 	* 	sell: item's sell gold.
 	*	abbre: a const char[3] for the items' name abbreviation.
-	*	desc: a const char* for the item's description.
+	*	passedDesc: a const char* for the item's description.
 	*	name: a const char* for item's name.
 	*	utilityUse: a function that can be called when utility consumable is used.
 	*/
 	Item(unsigned int id, ItemType type, Stat stat, int quantity,
 		unsigned int range, unsigned int buy, unsigned int sell,
-		std::string abbre, std::string desc, std::string name, std::function<void()> utilityUse = NULL);
+		std::string abbre, std::string passedDesc, std::string name, std::function<void()> utilityUse = NULL);
 
 	/**
 	* Constructor for Item.
