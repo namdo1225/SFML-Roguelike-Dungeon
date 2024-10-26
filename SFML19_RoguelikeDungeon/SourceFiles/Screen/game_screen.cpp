@@ -11,13 +11,13 @@
 #include <Candle/RadialLight.hpp>
 #include <Floor/enemy.h>
 #include <format>
+#include <State/game_state.h>
 #include <Manager/setting_manager.h>
 #include <Screen/screen.h>
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/System/Clock.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Window/Keyboard.hpp>
-#include <SFML/Window/Mouse.hpp>
 #include <Shape/full_rectangle.h>
 #include <Shape/full_text.h>
 #include <Shape/full_textbox.h>
@@ -106,8 +106,11 @@ Game_Screen::Game_Screen() : Screen(false, false) {
 	// use item shortcut
 	textboxH(NULL, 1045.f, 250.f, 50.f, 50.f, [this]() {
 		// Use item
-		if (Game_Manager::selectedInv != -1)
+		if (Game_Manager::selectedInv != -1) {
 			Game_Manager::useItem();
+			textboxes[2].text.setString("");
+			textboxes[2].recenterText();
+		}
 		// Selects new item
 		else {
 			Game_Manager::findItemShortcut('l');
@@ -124,7 +127,7 @@ Game_Screen::Game_Screen() : Screen(false, false) {
 			if (Game_Manager::spells[Game_Manager::selectedSpell].getType() == Functional) {
 				std::string name = Game_Manager::spells[Game_Manager::selectedSpell].getName();
 				bool success = Game_Manager::useSpell();
-				Game_Manager::log_add(success ? std::format("You used {}.", name).c_str() :
+				Game_Manager::addLog(success ? std::format("You used {}.", name).c_str() :
 					std::format("You failed to cast {}.", name).c_str()
 				);
 			}
@@ -332,7 +335,7 @@ void Game_Screen::handleKeyEvent() {
 		window.setView(viewWorld);
 		break;
 	case sf::Keyboard::Q:
-		Game_Manager::goUpFloor();
+		Game_Manager::changeFloor();
 		window.setView(viewWorld);
 		break;
 	case sf::Keyboard::G:
@@ -375,10 +378,15 @@ void Game_Screen::updateDraw() {
 
 	texts[12].setString(std::format("{} / 50", logs.size()));
 
-	texts[13].setString(std::to_string(Game_Manager::player.getStat(Str)));
-	texts[14].setString(std::to_string(Game_Manager::player.getStat(Def)));
-	texts[15].setString(std::to_string(Game_Manager::player.getStat(Mgk)));
-	texts[16].setString(std::to_string(Game_Manager::player.getStat(Res)));
+	int str = Game_State::plWeapon.getStat() == Str ? Game_State::plWeapon.getQuantity() : 0;
+	int mgk = Game_State::plWeapon.getStat() == Mgk ? Game_State::plWeapon.getQuantity() : 0;
+	int def = Game_State::plArmor.getStat() == Def ? Game_State::plArmor.getQuantity() : 0;
+	int res = Game_State::plArmor.getStat() == Res ? Game_State::plArmor.getQuantity() : 0;
+
+	texts[13].setString(std::format("{} {} {}", Game_Manager::player.getStat(Str), str >= 0 ? "+" : "-", str));
+	texts[14].setString(std::format("{} {} {}", Game_Manager::player.getStat(Def), def >= 0 ? "+" : "-", def));
+	texts[15].setString(std::format("{} {} {}", Game_Manager::player.getStat(Mgk), mgk >= 0 ? "+" : "-", mgk));
+	texts[16].setString(std::format("{} {} {}", Game_Manager::player.getStat(Res), res >= 0 ? "+" : "-", res));
 }
 
 void Game_Screen::changeTheme() {

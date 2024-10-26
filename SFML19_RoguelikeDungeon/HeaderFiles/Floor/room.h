@@ -5,11 +5,17 @@
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/Rect.hpp>
 #include <Shape/full_rectangle.h>
+#include <vector>
 
 /**
 * Enum to represent a door the side of a wall.
 */
 enum Door { Top, Right, Bottom, Left };
+
+/**
+* Enum to represent object in room.
+*/
+enum RoomObject { PlayerObject = -3, ObstacleObject, NoObject };
 
 /**
 * Represents a room which player could be in.
@@ -19,6 +25,10 @@ private:
 	Door doorRotation = Top;
 
 	bool door{ false }, visited{ false };
+
+	std::vector<std::vector<int>> grid = {};
+
+	unsigned int unscaledWidth = 0, unscaledHeight = 0;
 
 	/**
 	* false = no door / (slot available)
@@ -32,8 +42,14 @@ public:
 
 	/**
 	* Constructor for Room.
+	* 
+	* Parameter:
+	*	x: the room's x position.
+	*	y: the room's y position.
+	*	w: the room's unscaled width.
+	*	h: the room's unscaled height.
 	*/
-	Room();
+	Room(int x = -1, int y = -1, int w = -1, int h = -1);
 
 	/**
 	* Setter for room's position & size.

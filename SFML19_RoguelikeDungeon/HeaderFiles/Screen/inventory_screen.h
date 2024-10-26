@@ -2,14 +2,20 @@
 #define INVENTORY_SCREEN_H
 
 #include "screen.h"
+#include <Shape/full_textbox.h>
 #include <Tool/item.h>
 
 /**
 * Represents the inventory screen.
 */
 class Inventory_Screen : public Screen {
+protected:
+	void changeTheme();
+
 private:
 	static Item* selected;
+
+	static Full_Textbox dropButton;
 
 	/*
 	* Equips weapon or armor.

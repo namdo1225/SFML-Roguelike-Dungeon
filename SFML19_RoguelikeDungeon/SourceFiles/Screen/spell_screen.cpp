@@ -37,7 +37,7 @@ Spell_Screen::Spell_Screen() : Screen(true, false) {
         texts[2].setString("");
     });
 
-    textRectH(NULL, 50.f, -10.f, 650.f, 220.f, false);
+    textRectH(NULL, 150.f, -10.f, 550.f, 220.f, false);
 }
 
 bool Spell_Screen::handleClickEvent() {

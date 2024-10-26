@@ -12,8 +12,9 @@
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/Rect.hpp>
 #include <SFML/System/Vector2.hpp>
+#include <vector>
 
-Room::Room() {
+Room::Room(int x, int y, int sx, int sy) {
 	setFillColor(sf::Color::White);
 	setOutlineThickness(3.f);
 
@@ -28,6 +29,16 @@ Room::Room() {
 		setTexture(&Texture_Manager::tex_rooms[texture_num], false);
 	}
 
+	if (sx != -1 && sy != -1 && x != -1 && y != -1) {
+		unscaledWidth = sx;
+		unscaledHeight = sy;
+
+		grid = std::vector<std::vector<int>>(unscaledHeight, std::vector<int>(unscaledWidth, NoObject));
+
+		setPosition(x, y);
+		setSize(sf::Vector2f(sx * SF_Manager::TILE, sy * SF_Manager::TILE));
+		setTextureRect(sf::IntRect(0, 0, getSize().x, getSize().y));
+	}
 }
 
 void Room::setPosSize(int x, int y, int sx, int sy) {

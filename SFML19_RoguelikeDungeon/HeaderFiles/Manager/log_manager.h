@@ -28,7 +28,7 @@ public:
 	* Parameter:
 	*	log: Log's content.
 	*/
-	static void log_add(const char* log);
+	static void addLog(const char* log);
 };
 
 #endif

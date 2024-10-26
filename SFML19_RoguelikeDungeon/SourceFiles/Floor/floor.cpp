@@ -18,6 +18,7 @@
 #include <Floor/shop.h>
 #include <Floor/stair.h>
 #include <SFML/Graphics/Rect.hpp>
+#include <State/player_state.h>
 
 Floor::Floor(bool load) {
 	if (!load) {
@@ -29,7 +30,7 @@ Floor::Floor(bool load) {
 
 void Floor::createRoomDoor() {
 	// maximum floor size: 2160x2160
-	int max_rm{ rand() % 10 + 2 };
+	unsigned int max_rm{ rand() % 10 + 2 + (Player_State::player.getFloor() / 25) };
 	for (unsigned int i{ 0 }; i < max_rm; i++) {
 		int sx{ (rand() % 6 + 4) * 120 }, sy{ (rand() % 6 + 4) * 120 },
 			x{ i ? (rand() % 26 + 36) * 120 : 0 }, y{ i ? (rand() % 26 + 36) * 120 : 0 };
@@ -341,7 +342,7 @@ void Floor::makeGold(unsigned int floor) {
 }
 
 void Floor::makeInteractible(unsigned int floor) {
-	int rand_interact{ STARTING_INTERACTIBLES ? STARTING_INTERACTIBLES : rand() % 50 + static_cast<int>(floor * 0.50) };
+	int rand_interact{ STARTING_INTERACTIBLES ? STARTING_INTERACTIBLES : rand() % 10 + static_cast<int>(floor * 0.50) };
 
 	for (unsigned int i{ 0 }; i < rand_interact; i++) {
 		int rand_room{ rand() % static_cast<int>(rooms.size()) }, counter{ 0 },

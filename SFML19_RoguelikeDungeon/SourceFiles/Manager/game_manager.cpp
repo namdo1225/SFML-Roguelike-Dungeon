@@ -23,7 +23,7 @@
 #include <iomanip>
 #include <iosfwd>
 #include <malloc.h>
-#include <Manager/game_state_manager.h>
+#include <State/game_state.h>
 #include <Manager/setting_manager.h>
 #include <nfd.h>
 #include <nlohmann/json.hpp>
@@ -132,7 +132,7 @@ void Game_Manager::atkEnemy(unsigned int v) {
     int armor = (type && armor_stat == Def) || (!type && armor_stat == Mgk) ? quantity : 0;
     int damage = player.hurtPlayer(type, enemies[v].stat.hp - armor);
 
-    log_add(std::format("{} did {} damage to you.", enemies[v].constant->name, damage).c_str());
+    addLog(std::format("{} did {} damage to you.", enemies[v].constant->name, damage).c_str());
     Audio_Manager::playSFX(2);
 }
 
@@ -281,7 +281,7 @@ void Game_Manager::atkWithSpell(unsigned int enI) {
     enemies[enI].stat.hp -= enemies[enI].stat.res >= finalDamage ? 1 : finalDamage - enemies[enI].stat.res;
     selectedSpell = SelectNone;
     actEnemy();
-    log_add(std::format("Your spell did {} to {}.", finalDamage, enemies[enI].constant->name).c_str());
+    addLog(std::format("Your spell did {} to {}.", finalDamage, enemies[enI].constant->name).c_str());
 }
 
 void Game_Manager::handlePlayerAct(sf::Keyboard::Key input, unsigned int mode) {
@@ -328,7 +328,7 @@ void Game_Manager::handlePlayerAct(sf::Keyboard::Key input, unsigned int mode) {
     }
 }
 
-void Game_Manager::goUpFloor(bool bypass) {
+void Game_Manager::changeFloor(bool bypass, bool moveDown) {
     if (!bypass && !floor.intersectStair(player.getRect()))
         return;
 
@@ -337,7 +337,7 @@ void Game_Manager::goUpFloor(bool bypass) {
     viewSlots.reset(sf::FloatRect(0, 0, 1200, 800));
 
     Audio_Manager::playSFX(1);
-    player.setFloor(player.getFloor() + 1);
+    player.setFloor(player.getFloor() + (moveDown ? -1 : 1));
 
     floor = Floor();
     playerRandomPos();
@@ -362,9 +362,9 @@ void Game_Manager::pickUpItem() {
             Audio_Manager::playSFX(0);
             addTool(floor.collectibles[i].getID(), ItemTool);
             floor.collectibles.erase(floor.collectibles.begin() + i);
-            log_add(std::format("You picked up: {}.", items[items.size() - 1].getName()).c_str());
+            addLog(std::format("You picked up: {}.", items[items.size() - 1].getName()).c_str());
             if (items.size() == player.getMaxItems())
-                log_add("You reached your items limit.");
+                addLog("You reached your items limit.");
             return;
         }
     }
@@ -377,7 +377,7 @@ void Game_Manager::pickUpGold() {
             Audio_Manager::playSFX(0);
             int floor_gold = floor.golds[i].getGold();
             player.setGold(player.getGold() + floor_gold);
-            log_add(std::format("You collected {} golds.", floor_gold).c_str());
+            addLog(std::format("You collected {} golds.", floor_gold).c_str());
             floor.golds.erase(floor.golds.begin() + i);
             return;
         }
@@ -393,75 +393,75 @@ void Game_Manager::stepOnInteractible() {
             int effect = INTERACTIBLE_CHANCE == 0 ? rand() % 100 : INTERACTIBLE_CHANCE;
             if (effect < 5) {
                 addEnemy();
-                log_add("More enemies are spawned.");
+                addLog("More enemies are spawned.");
             }
             else if (effect >= 5 && effect < 10) {
                 player.setGold(player.getGold() * .90);
-                log_add("Your golds decreased by 10%.");
+                addLog("Your golds decreased by 10%.");
             }
             else if (effect >= 10 && effect < 15) {
                 player.setGold(player.getGold() + 25);
-                log_add("You found 25 golds!");
+                addLog("You found 25 golds!");
             }
             else if (effect >= 15 && effect < 20) {
                 player.setStat(Hp, player.getStat(Hp) * 1.5 > player.getStat(Max_Hp) ? player.getStat(Max_Hp) : player.getStat(Hp) * 1.5);
-                log_add("Your HP increased by 50%.");
+                addLog("Your HP increased by 50%.");
             }
             else if (effect >= 20 && effect < 25) {
                 player.setEffect(Def, 3, 3);
-                log_add("You will gain 3 DEF for 3 turns.");
+                addLog("You will gain 3 DEF for 3 turns.");
             }
             else if (effect >= 25 && effect < 30) {
                 player.setEffect(Mgk, -2, 5);
-                log_add("You will lose 2 MGK for 5 turns.");
+                addLog("You will lose 2 MGK for 5 turns.");
             }
             else if (effect >= 30 && effect < 35) {
                 player.setStat(Mp, player.getStat(Mp) * 1.5 > player.getStat(Max_Mp) ? player.getStat(Max_Mp) : player.getStat(Mp) * 1.5);
-                log_add("Your MP increased by 50%.");
+                addLog("Your MP increased by 50%.");
             }
             else if (effect >= 35 && effect < 40) {
-                goUpFloor(true);
-                log_add("You moved to the next floor.");
+                changeFloor(true);
+                addLog("You moved to the next floor.");
             }
             else if (effect >= 40 && effect < 45) {
                 handleTurn();
                 handleTurn();
-                log_add("You lost 2 turns.");
+                addLog("You lost 2 turns.");
             }
             else if (effect >= 45 && effect < 50) {
                 player.setStat(Mp, player.getStat(Mp) < 8 ? 0 : player.getStat(Mp) - 8);
-                log_add("You lose 8 MP.");
+                addLog("You lose 8 MP.");
             }
             else if (effect >= 50 && effect < 55) {
                 player.setEffect(Hp, 1, 5);
-                log_add("You will recover 1 HP for 5 turns.");
+                addLog("You will recover 1 HP for 5 turns.");
             }
             else if (effect >= 55 && effect < 60) {
                 player.setEffect(Res, -5, 2);
-                log_add("You will lose 5 RES for 2 turns.");
+                addLog("You will lose 5 RES for 2 turns.");
             }
             else if (effect >= 60 && effect < 65) {
                 player.setEffect(Hp, -1, 10);
-                log_add("You will lose 1 HP for 10 turns.");
+                addLog("You will lose 1 HP for 10 turns.");
             }
             else if (effect >= 65 && effect < 70) {
                 player.setEffect(Mp, -2, 5);
-                log_add("You will lose 2 MP for 5 turns.");
+                addLog("You will lose 2 MP for 5 turns.");
             }
             else if (effect >= 70 && effect < 75) {
                 addTool(2, ItemTool);
-                log_add("You found a Rejuvenate Potion.");
+                addLog("You found a Rejuvenate Potion.");
             }
             else if (effect >= 75 && effect < 80) {
                 player.setEffect(Str, -1, 7);
-                log_add("You will lose 1 STR for 7 turns.");
+                addLog("You will lose 1 STR for 7 turns.");
             }
             else if (effect >= 80 && effect < 90) {
                 player.setEffect(Res, 2, 4);
-                log_add("You will gain 2 RES for 4 turns.");
+                addLog("You will gain 2 RES for 4 turns.");
             }
             else
-                log_add("Nothing happened.");
+                addLog("Nothing happened.");
 
             floor.interactibles[i].setInactive();
         }
@@ -505,7 +505,7 @@ void Game_Manager::playerAttack() {
     int quantity{ stat >= amount ? 1 : amount - stat };
     en->stat.hp -= quantity;
 
-    log_add(std::format("You did {} damage to {}.",
+    addLog(std::format("You did {} damage to {}.",
         quantity,
         en->constant->name)
     .c_str());
@@ -553,7 +553,7 @@ void Game_Manager::updateEXP() {
 
     player.setLVLUpEXP(10 + (lvlUpExp / 10.f * 1.5));
 
-    log_add("You leveled up!");
+    addLog("You leveled up!");
 }
 
 void Game_Manager::playerRandomPos() {
@@ -617,7 +617,7 @@ void Game_Manager::addEnemy() {
     }
 
     if (enemyRespawns == 0)
-        log_add("No more enemies will spawn.");
+        addLog("No more enemies will spawn.");
 }
 
 void Game_Manager::centerFloor() {
@@ -632,7 +632,7 @@ void Game_Manager::addTool(unsigned int id, ToolEnum type) {
     switch (type) {
     case ItemTool:
         if (size == player.getMaxItems()) {
-            log_add("You reached your items limit.");
+            addLog("You reached your items limit.");
             return;
         }
 
@@ -892,7 +892,7 @@ void Game_Manager::save() {
         }
     }
     catch (const std::exception&) {
-        log_add("An error occurred while gathering data to save.");
+        addLog("An error occurred while gathering data to save.");
     };
 
     nfdchar_t* outPath = NULL;
@@ -901,11 +901,11 @@ void Game_Manager::save() {
         nfdresult_t result = NFD_OpenDialog("sav", NULL, &outPath);
 
         if (result == NFD_CANCEL) {
-            log_add("You closed the save dialog.");
+            addLog("You closed the save dialog.");
             return;
         }
         else if (result != NFD_OKAY) {
-            log_add("Errors occured while saving.");
+            addLog("Errors occured while saving.");
             return;
         }
     }
@@ -913,17 +913,17 @@ void Game_Manager::save() {
     try {
         std::ofstream file_out{ Setting_Manager::saveLocation.empty() ? outPath : Setting_Manager::saveLocation };
         if (!file_out) {
-            log_add("Save not successful.");
+            addLog("Save not successful.");
             return;
         }
 
         file_out << std::setw(4) << j << std::endl;
         file_out.close();
         free(outPath);
-        log_add("Saved successfully.");
+        addLog("Saved successfully.");
     }
     catch (const std::exception&) {
-        log_add("Save not successful.");
+        addLog("Save not successful.");
     }
 }
 
@@ -1030,8 +1030,8 @@ bool Game_Manager::readSave() {
         file.close();
         centerFloor();
 
-        log_add("The maze changed its appearance...");
-        log_add("Save loaded.");
+        addLog("The maze changed its appearance...");
+        addLog("Save loaded.");
 
         free(outPath);
     }

@@ -12,11 +12,19 @@
 #include <SFML/Graphics/Rect.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Window/Event.hpp>
+#include <Shape/full_textbox.h>
 #include <string>
 #include <Tool/item.h>
 #include <Tool/tool.h>
 
 Item* Inventory_Screen::selected = NULL;
+
+Full_Textbox Inventory_Screen::dropButton = Full_Textbox("Drop", 10.f, 300.f, 120.f, 70.f, []() {});;
+
+void Inventory_Screen::changeTheme() {
+	dropButton.rect.changeTheme();
+	dropButton.text.changeTheme();
+}
 
 void Inventory_Screen::equip(unsigned int i, ItemType type) {
 	selected == (type == Weapon ? &Game_Manager::plWeapon : &Game_Manager::plArmor)
@@ -28,6 +36,15 @@ void Inventory_Screen::equip(unsigned int i, ItemType type) {
 
 Inventory_Screen::Inventory_Screen() : Screen(true, false) {
 	update = true;
+	dropButton.updateCallback([this]() {
+		Game_Manager::floor.loadCollectible(Game_Manager::player.getPos('x'),
+		Game_Manager::player.getPos('y'),
+		selected->getID()
+		);
+		texts[4].setString(std::format("You dropped {}.", selected->getName()));
+		Game_Manager::delSelectedTool(ItemTool);
+		selected = NULL;
+	});
 
 	textRectH(      "Weapon", 200.f, 100.f, NULL, NULL);
 	textRectH(       "Armor", 600.f, 100.f, NULL, NULL);
@@ -48,7 +65,7 @@ Inventory_Screen::Inventory_Screen() : Screen(true, false) {
 		texts[4].setString("");
 		});
 
-	textRectH(NULL, 50.f, -10.f, 650.f, 140.f, false);
+	textRectH(NULL, 170.f, -10.f, 530.f, 140.f, false);
 }
 
 bool Inventory_Screen::handleClickEvent() {
@@ -58,6 +75,9 @@ bool Inventory_Screen::handleClickEvent() {
 		Game_Manager::selectedInv = SelectNone;
 		switchScreen(InventoryScreen, GameScreen, false, true);
 		texts[4].setString("");
+		return true;
+	}
+	else if (dropButton.click()) {
 		return true;
 	}
 	else if (selected) {
@@ -142,6 +162,7 @@ bool Inventory_Screen::handleClickEvent() {
 void Inventory_Screen::handleHoverEvent() {
 	hoverButton(UseButton);
 	hoverButton(DiscardButton);
+	dropButton.hover();
 
 	for (unsigned int i = 0; i < Game_Manager::player.getMaxItems(); i++)
 		hoverSlot(i);
@@ -177,6 +198,9 @@ void Inventory_Screen::draw() {
 	Screen::draw();
 
 	if (selected) {
+		window.draw(dropButton.rect);
+		window.draw(dropButton.text);
+
 		window.draw(map_rects["inv_sp_desc"]);
 		window.draw(map_txts["inv_sp_desc"]);
 		window.draw(map_txts["inv_sp_detail"]);

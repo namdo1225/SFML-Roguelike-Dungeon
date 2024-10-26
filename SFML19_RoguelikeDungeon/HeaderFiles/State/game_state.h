@@ -1,13 +1,13 @@
 #include "Tool/special.h"
 #include <Floor/enemy.h>
-#include <Floor/floor.h>
-#include <player.h>
 #include <Tool/item.h>
 #include <Tool/spell.h>
 #include <vector>
+#include "State/floor_state.h"
+#include "State/player_state.h"
 
-#ifndef GAME_STATE_MANAGER_H
-#define GAME_STATE_MANAGER_H
+#ifndef GAME_STATE_H
+#define GAME_STATE_H
 
 /**
 * Enum for the items array, to help select items properly.
@@ -21,7 +21,7 @@ enum SelectedItem {
 /**
 * A class that manages the gameplay data.
 */
-class Game_State_Manager {
+class Game_State : public Floor_State, public Player_State {
 public:
 	static unsigned int enemyRespawns;
 	static int offX, offY;
@@ -31,8 +31,6 @@ public:
 	static int itemQuickIndex;
 	static int spellQuickIndex;
 
-	static Player player;
-	static Floor floor;
 	static std::vector<Enemy> enemies;
 
 	static std::vector<Item> items;

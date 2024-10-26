@@ -34,12 +34,12 @@ bool Special::setup()
 		Special(id, 100, 0, "SP", "Increase item limit by 1.\nMax storage is 32.", "Storage Perk", []() {
 			if (Game_Manager::player.getMaxItems() < Game_Manager::MAX_INV_SPELL_SLOTS) {
 				Game_Manager::player.setMaxItem(Game_Manager::player.getMaxItems() + 1);
-				Game_Manager::log_add("Your item limit increased by 1.");
+				Game_Manager::addLog("Your item limit increased by 1.");
 			}
 		})));
 	specials.insert(std::make_pair(id++,
-		Special(id, 500, 0, "LP", "Move up a floor. Stay in the shop\nuntil you close the window.", "Ladder Perk", []() {
-			Game_Manager::goUpFloor(true);
+		Special(id, 500, 0, "SL", "Move up a floor. Stay in the shop\nuntil you close the window.", "Steel Ladder", []() {
+			Game_Manager::changeFloor(true);
 		})));
 	specials.insert(std::make_pair(id++,
 		Special(id, 500, 0, "SB", "Increase STR by 5 for 20 turns.", "Strength Boost", []() {
@@ -56,6 +56,11 @@ bool Special::setup()
 	specials.insert(std::make_pair(id++,
 		Special(id, 500, 0, "RB", "Increase RES by 1 for 50 turns.", "Resistance Boost", []() {
 			Game_Manager::player.setEffect(Mgk, 1, 50);
+		})));
+	specials.insert(std::make_pair(id++,
+		Special(id, 2000, 0, "RL", "Move down a floor (MAX: the 1st floor)", "Rope Ladder", []() {
+			if (Game_Manager::player.getFloor() > 1)
+				Game_Manager::changeFloor(true, true);
 		})));
 
 	return true;

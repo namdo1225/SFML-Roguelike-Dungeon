@@ -46,15 +46,15 @@ bool Spell_Attack_Screen::handleClickEvent() {
 					Game_Manager::handleTurn();
 					return true;
 				}
-			log_add("No target in range.");
+			addLog("No target in range.");
 			return true;
 		}
 
-		log_add("Out of range.");
+		addLog("Out of range.");
 		return true;
 	}
 	else if (selected && selected->getMP() > Game_Manager::player.getStat(Mp)) {
-		log_add(std::format("Insufficient MP for spell: requires {}.", selected->getMP()).c_str());
+		addLog(std::format("Insufficient MP for spell: requires {}.", selected->getMP()).c_str());
 		resetSpell();
 		return true;
 	}

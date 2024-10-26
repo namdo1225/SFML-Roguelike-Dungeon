@@ -1,4 +1,4 @@
-#include "Manager/game_state_manager.h"
+#include "State/game_state.h"
 #include "Manager/log_manager.h"
 #include "sf_manager.h"
 #include <SFML/Window/Keyboard.hpp>
@@ -12,7 +12,7 @@
 /**
 * A class that manages the gameplay data.
 */
-class Game_Manager : public Game_State_Manager, public Log_Manager, public SF_Manager {
+class Game_Manager : public Game_State, public Log_Manager, public SF_Manager {
 private:
 	/**
 	* Constructor for Setting_Manager.
@@ -116,13 +116,14 @@ public:
 	static void handlePlayerAct(sf::Keyboard::Key input, unsigned int mode);
 
 	/**
-	* Handles moving to the next floor.
+	* Handles moving floor.
 	* 
 	* Parameter:
 	*	bypass: true to bypass stair finding requirement to move up
 	*		to the next floor.
+	*	moveDown: true to move down a floor.
 	*/
-	static void goUpFloor(bool bypass = false);
+	static void changeFloor(bool bypass = false, bool moveDown = false);
 
 	/**
 	* Handles event for picking up item.

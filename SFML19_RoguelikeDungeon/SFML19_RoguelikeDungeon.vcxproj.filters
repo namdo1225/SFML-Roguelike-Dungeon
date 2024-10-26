@@ -168,7 +168,13 @@
     <ClCompile Include="SourceFiles\stat.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SourceFiles\Manager\game_state_manager.cpp">
+    <ClCompile Include="SourceFiles\State\game_state.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceFiles\State\floor_state.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SourceFiles\State\player_state.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -329,7 +335,13 @@
     <ClInclude Include="HeaderFiles\util.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="HeaderFiles\Manager\game_state_manager.h">
+    <ClInclude Include="HeaderFiles\State\game_state.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HeaderFiles\State\floor_state.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HeaderFiles\State\player_state.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

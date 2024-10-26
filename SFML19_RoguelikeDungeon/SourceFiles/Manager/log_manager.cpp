@@ -13,7 +13,7 @@ const unsigned int Log_Manager::LOG_SIZE;
 
 std::vector<Full_Text> Log_Manager::logs;
 
-void Log_Manager::log_add(const char* log) {
+void Log_Manager::addLog(const char* log) {
     unsigned int size = logs.size();
     if (size == LOG_SIZE) {
         logs.erase(logs.begin());
