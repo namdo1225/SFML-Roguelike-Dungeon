@@ -41,15 +41,14 @@ Save file MUST have the extension ```.sav```.
 			y: int,
 			sizeX: int,
 			sizeY: int,
-			door: {
+			doors: [{
 					x: int,
 					y: int,
-					rotation: int,
-					door0: 0 | 1,
-					door1: 0 | 1,
-					door2: 0 | 1,
-					door3: 0 | 1
-			}
+					size: int,
+					direction: int,
+					fromRoomId: int,
+					toRoomId: int
+			}]
 			visited: boolean
 		}
 	],

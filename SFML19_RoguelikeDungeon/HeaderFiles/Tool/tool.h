@@ -1,6 +1,8 @@
 #include "Shape/full_rectangle.h"
 #include "Shape/full_text.h"
+#include <array>
 #include <SFML/Graphics/Color.hpp>
+#include <stat.h>
 #include <string>
 
 #ifndef TOOL_H
@@ -20,6 +22,8 @@ protected:
 
 	unsigned int id = 0, range = 0, buy = 0, sell = 0;
 	std::string name = "", originalDesc = "", desc = "", abbrev = "";
+
+	std::array<long, StatConst::NUM_STATS> stat = { 0, 0, 0, 0, 0, 0, 0, 0 };
 
 	/**
 	* Represents tool's value (eg. spell attack damage against enemy).
@@ -173,6 +177,10 @@ public:
 	*	tool's type.
 	*/
 	virtual unsigned int getType();
+
+	std::array<long, StatConst::NUM_STATS> getStat();
+
+	void setStat(const std::array<long, StatConst::NUM_STATS> stat);
 };
 
 #endif

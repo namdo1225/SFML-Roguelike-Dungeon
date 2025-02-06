@@ -8,11 +8,13 @@
 #include "env.h"
 #include "Manager/audio_manager.h"
 #include "Manager/game_manager.h"
+#include "util.h"
 #include <cstdio>
 #include <cstdlib>
 #include <effect.h>
 #include <exception>
 #include <Floor/collectible.h>
+#include <Floor/door.h>
 #include <Floor/enemy.h>
 #include <Floor/floor.h>
 #include <Floor/gold_collectible.h>
@@ -23,18 +25,21 @@
 #include <iomanip>
 #include <iosfwd>
 #include <malloc.h>
-#include <State/game_state.h>
 #include <Manager/setting_manager.h>
+#include <Manager/sf_manager.h>
 #include <nfd.h>
 #include <nlohmann/json.hpp>
 #include <ostream>
 #include <SFML/Graphics/Rect.hpp>
+#include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Window/Keyboard.hpp>
 #include <stat.h>
+#include <State/game_state.h>
 #include <Tool/item.h>
 #include <Tool/special.h>
 #include <Tool/spell.h>
 #include <Tool/tool.h>
+#include <utility>
 #include <vector>
 
 using json = nlohmann::json;
@@ -74,25 +79,22 @@ void Game_Manager::findItemShortcut(bool left) {
 
 void Game_Manager::actEnemy() {
     delEnemy();
-    for (unsigned int i{ 0 }; i < enemies.size(); i++) {
+    for (Enemy& en : enemies) {
         // Decide whether player is in range
         float x{ player.getPosition().x }, y{ player.getPosition().y }, x_2{ x + 40 }, y_2{ y + 40 },
-            en_x{ enemies[i].getPosition().x }, en_y{ enemies[i].getPosition().y }, en_x2{ en_x + 40 }, en_y2{ en_y + 40 };
-        int chase_player_rand{ rand() % 3 };
+            en_x{ en.getPosition().x }, en_y{ en.getPosition().y }, en_x2{ en_x + 40 }, en_y2{ en_y + 40 };
+        int chasePlChance{ rand() % 3 };
 
         // If so, attack.
-        int range = enemies[i].stat.range;
-        if ((x >= en_x - (range * 40) && x_2 <= en_x && y == en_y) or
-            (x_2 <= en_x2 + (range * 40) && x >= en_x2 && y == en_y) or
-            (y_2 <= en_y && y >= en_y - (range * 40) && x == en_x) or
-            (y_2 <= en_y2 + (range * 40) && y >= en_y2 && x == en_x))
-            atkEnemy(i);
+        int range = en.stat.range;
+        if (en.intersectsRange(player.getRect()))
+            atkEnemy(en);
         // If not in range but detected, move closer.
-        else if (x >= en_x - 240 && y_2 <= en_y2 + 240 && chase_player_rand <= 1)
-            moveEnemyClose(i);
+        else if (x >= en_x - 240 && y_2 <= en_y2 + 240 && chasePlChance <= 1)
+            moveEnemyClose(en);
         // Otherwise, random movement or don't move at all.
         else
-            moveEnemyRand(i);
+            moveEnemyRand(en);
     }
 }
 
@@ -105,169 +107,143 @@ void Game_Manager::findSpellShortcut(bool left) {
     selectedSpell = spellQuickIndex;
 }
 
-void Game_Manager::atkEnemy(unsigned int v) {
-    float x{ player.getPosition().x }, y{ player.getPosition().y }, x2{ x + 40 }, y2{ y + 40 };
-    float enx{ enemies[v].getPosition().x }, eny{ enemies[v].getPosition().y }, enx2{ enx + 40 }, eny2{ eny + 40 };
-    unsigned int pl_room_pos{ 255 }, en_room_pos{ 255 };
-    Room* pl_room = NULL;
-    Room* en_room = NULL;
+void Game_Manager::atkEnemy(Enemy& en) {
+    Room* plRm = NULL;
+    Room* enRm = NULL;
 
     for (unsigned int i{ 0 }; i < floor.rooms.size(); i++) {
-        if (floor.rooms[i].inRoom(x, y, x2, y2))
-            pl_room = &floor.rooms[i];
-        if (floor.rooms[i].inRoom(enx, eny, enx2, eny2))
-            en_room = &floor.rooms[i];
+        if (floor.rooms[i].intersects(player.getRect()))
+            plRm = &floor.rooms[i];
+        if (floor.rooms[i].intersects(en.getGlobalBounds()))
+            enRm = &floor.rooms[i];
     }
 
-    // If they are both in different room, check if they are adjacent to each other, separated only by a door. If not, return.
-    if (pl_room != en_room &&
-        !(pl_room->existDoor() && pl_room->touchDoor(x, y, x2, y2) && pl_room->touchDoor(enx, eny, enx2, eny2)) &&
-        !(en_room->existDoor() && en_room->touchDoor(x, y, x2, y2) && en_room->touchDoor(enx, eny, enx2, eny2))
-    )
+    // If they are both in different room, check if they are both directly in the direction of the same door. If not, return.
+    if (plRm != enRm && !plRm->areEntitiesInDoorRange(enRm, player.getRect(), en.getGlobalBounds()))
         return;
 
-    Attack type = enemies[v].constant->type;
+    Attack type = en.constant->type;
     int quantity = plArmor.getQuantity();
     Stat armor_stat = plArmor.getStat();
     int armor = (type && armor_stat == Def) || (!type && armor_stat == Mgk) ? quantity : 0;
-    int damage = player.hurtPlayer(type, enemies[v].stat.hp - armor);
+    int damage = player.hurtPlayer(type, en.stat.hp - armor);
 
-    addLog(std::format("{} did {} damage to you.", enemies[v].constant->name, damage).c_str());
+    addLog(std::format("{} did {} damage to you.", en.constant->name, damage).c_str());
     Audio_Manager::playSFX(2);
 }
 
-void Game_Manager::moveEnemyClose(unsigned int v) {
-    float x{ player.getPosition().x }, y{ player.getPosition().y }, x2{ x + 40 }, y2{ y + 40 };
-    float enx{ enemies[v].getPosition().x }, eny{ enemies[v].getPosition().y }, enx2{ enx + 40 }, eny2{ eny + 40 };
-    unsigned int cur{ 255 }, return_now{ 0 };
-
-    // Find which room the enemy is in.
-    for (unsigned int i{ 0 }; i < floor.rooms.size(); i++)
-        if (floor.rooms[i].inRoom(enx, eny, enx2, eny2))
-            cur = i;
-
-    // 0 = enemy can move, 1 = enemy touch wall, can't move, 2 = enemy touch door, can move
-    if (x2 < enx && moveEnemyCloseH(v, -40, 0)) {
-        if (enx == floor.rooms[cur].getRoom('x')) {
-            return_now = 1;
-            for (unsigned int i{ 0 }; i < floor.rooms.size(); i++)
-                if (floor.rooms[i].touchDoor(enx, eny, enx2, eny2) && floor.rooms[i].getDoor('r') % 2 == 1)
-                    return_now = 2;
-        }
-
-        if (return_now != 1)
-            enemies[v].setPosition(enx - 40, eny);
-    }
-    else if (y2 < eny && moveEnemyCloseH(v, 0, -40)) {
-        if (eny == floor.rooms[cur].getRoom('y')) {
-            return_now = 1;
-            for (unsigned int i{ 0 }; i < floor.rooms.size(); i++)
-                if (floor.rooms[i].touchDoor(enx, eny, enx2, eny2) && floor.rooms[i].getDoor('r') % 2 == 0)
-                    return_now = 2;
-        }
-
-        if (return_now != 1)
-            enemies[v].setPosition(enx, eny - 40);
-    }
-    else if (x > enx2 && moveEnemyCloseH(v, 40, 0)) {
-        if (enx2 == floor.rooms[cur].getRoom('1')) {
-            return_now = 1;
-            for (unsigned int i{ 0 }; i < floor.rooms.size(); i++)
-                if (floor.rooms[i].touchDoor(enx, eny, enx2, eny2) && floor.rooms[i].getDoor('r') % 2 == 1)
-                    return_now = 2;
-        }
-
-        if (return_now != 1)
-            enemies[v].setPosition(enx + 40, eny);
-    }
-    else if (y > eny2 && moveEnemyCloseH(v, 0, 40)) {
-        if (eny2 == floor.rooms[cur].getRoom('2')) {
-            return_now = 1;
-            for (unsigned int i{ 0 }; i < floor.rooms.size(); i++)
-                if (floor.rooms[i].touchDoor(enx, eny, enx2, eny2) && floor.rooms[i].getDoor('r') % 2 == 0)
-                    return_now = 2;
-        }
-
-        if (return_now != 1)
-            enemies[v].setPosition(enx, eny + 40);
-    }
+void Game_Manager::moveEnemyClose(Enemy& en) {
+    for (Room& room : floor.rooms)
+        if (room.intersects(en.getGlobalBounds()))
+            moveEnemyCloseH2(en, room, false);
 }
 
-bool Game_Manager::moveEnemyCloseH(unsigned int v, int offx, int offy) {
-    // check for obstruction with other enemies and player
-    float x{ enemies[v].getPosition().x }, y{ enemies[v].getPosition().y };
+bool Game_Manager::touchDoorH(sf::FloatRect& entity, Direction direction) {
+    for (Room& room : floor.rooms)
+        if (room.touchDoor(direction, entity))
+            return true;
+    return false;
+}
 
-    for (unsigned int i{ 0 }; i < enemies.size(); i++) {
-        if (v == i)
-            continue;
+bool Game_Manager::canMoveEntity(sf::RectangleShape& entity, Direction direction) {
+    // check for obstruction with rooms, enemies, and/or player
+    sf::FloatRect oldEntityPos = entity.getGlobalBounds();
+    sf::FloatRect newEntityPos = entity.getGlobalBounds();
 
-        float enx{ enemies[i].getPosition().x }, eny{ enemies[i].getPosition().y };
+    float offx = 0;
+    float offy = 0;
 
-        if (x + offx == enx && y + offy == eny)
+    switch (direction) {
+    case Top:
+        offy -= TILE;
+        break;
+    case Right:
+        offx += TILE;
+        break;
+    case Bottom:
+        offy += TILE;
+        break;
+    case Left:
+        offx -= TILE;
+        break;
+    };
+
+    newEntityPos.left += offx;
+    newEntityPos.top += offy;
+
+    Room* rm = NULL;
+    for (Room& room : floor.rooms)
+        if (room.intersects(entity.getGlobalBounds()))
+            rm = &room;
+
+    for (Enemy& enemy : enemies)
+        if (&entity != &enemy && enemy.intersects(newEntityPos))
             return false;
+
+    if (((direction == Top && oldEntityPos.top == rm->getRoom('y')) ||
+        (direction == Right && oldEntityPos.left + TILE == rm->getRoom('1')) ||
+        (direction == Bottom && oldEntityPos.top + TILE == rm->getRoom('2')) ||
+        (direction == Left && oldEntityPos.left == rm->getRoom('x'))) && !touchDoorH(oldEntityPos, direction)
+    )
+        return false;
+
+    if (&entity == &player) {
+        rm->setVisisted();
+        return true;
     }
 
-    float plx{ player.getPosition().x }, ply{ player.getPosition().y };
-
-    return !(x + offx == plx && y + offy == ply);
+    return !(player.getRect().intersects(newEntityPos));
 }
 
-void Game_Manager::moveEnemyRand(unsigned int v) {
-    float enx{ enemies[v].getPosition().x }, eny{ enemies[v].getPosition().y }, enx2{ enx + 40 }, eny2{ eny + 40 };
-    unsigned int cur{ 255 }, return_now{ 0 };
+void Game_Manager::moveEnemyCloseH2(Enemy& en, Room& rm, bool randMovement) {
+    float x{ player.getPosition().x }, y{ player.getPosition().y }, x2{ x + 40 }, y2{ y + 40 };
+    float enx{ en.getPosition().x }, eny{ en.getPosition().y }, enx2{ enx + SF_Manager::TILE }, eny2{ eny + SF_Manager::TILE };
+    int offX = 0;
+    int offY = 0;
 
-    for (unsigned int i{ 0 }; i < floor.rooms.size(); i++)
-        if (floor.rooms[i].inRoom(enx, eny, enx2, eny2))
-            cur = i;
-
-    int rand_dir{ rand() % 5 };
+    unsigned int direction = rand() % 5;
 
     // 0 = enemy can move, 1 = enemy touch wall, can't move, 2 = enemy touch door, can move
-    // 0 = left, 1 = up, 2 = right, 3 = down
-    if (rand_dir == 0 && moveEnemyCloseH(v, -40, 0)) {
-        if (enx == floor.rooms[cur].getRoom('x')) {
-            return_now = 1;
-            for (unsigned int i{ 0 }; i < floor.rooms.size(); i++)
-                if (floor.rooms[i].touchDoor(enx, eny, enx2, eny2) && floor.rooms[i].getDoor('r') % 2 == 1)
-                    return_now = 2;
+    if (randMovement ? direction == Left : x2 < enx && canMoveEntity(en, Left)) {
+        if (enx == rm.getRoom('x')) {
+            for (Room& room : floor.rooms)
+                if (room.touchDoor(Left, en.getGlobalBounds()))
+                    offX = -40;
         }
-
-        if (return_now != 1)
-            enemies[v].setPosition(enx - 40, eny);
+        else offX = -40;
     }
-    else if (rand_dir == 1 && moveEnemyCloseH(v, 0, -40)) {
-        if (eny == floor.rooms[cur].getRoom('y')) {
-            return_now = 1;
-            for (unsigned int i{ 0 }; i < floor.rooms.size(); i++)
-                if (floor.rooms[i].touchDoor(enx, eny, enx2, eny2) && floor.rooms[i].getDoor('r') % 2 == 0)
-                    return_now = 2;
+    else if (randMovement ? direction == Top : y2 < eny && canMoveEntity(en, Top)) {
+        if (eny == rm.getRoom('y')) {
+            for (Room& room : floor.rooms)
+                if (room.touchDoor(Top, en.getGlobalBounds()))
+                    offY = -40;
         }
-
-        if (return_now != 1)
-            enemies[v].setPosition(enx, eny - 40);
+        else offY = -40;
     }
-    else if (rand_dir == 2 && moveEnemyCloseH(v, 40, 0)) {
-        if (enx2 == floor.rooms[cur].getRoom('1')) {
-            return_now = 1;
-            for (unsigned int i{ 0 }; i < floor.rooms.size(); i++)
-                if (floor.rooms[i].touchDoor(enx, eny, enx2, eny2) && floor.rooms[i].getDoor('r') % 2 == 1)
-                    return_now = 2;
+    else if (randMovement ? direction == Right : x > enx2 && canMoveEntity(en, Right)) {
+        if (enx2 == rm.getRoom('1')) {
+            for (Room& room : floor.rooms)
+                if (room.touchDoor(Right, en.getGlobalBounds()))
+                    offX = 40;
         }
-
-        if (return_now != 1)
-            enemies[v].setPosition(enx + 40, eny);
+        else offX = 40;
     }
-    else if (rand_dir == 3 && moveEnemyCloseH(v, 0, 40)) {
-        if (eny2 == floor.rooms[cur].getRoom('2')) {
-            return_now = 1;
-            for (unsigned int i{ 0 }; i < floor.rooms.size(); i++)
-                if (floor.rooms[i].touchDoor(enx, eny, enx2, eny2) && floor.rooms[i].getDoor('r') % 2 == 0)
-                    return_now = 2;
+    else if (randMovement ? direction == Bottom : y > eny2 && canMoveEntity(en, Bottom)) {
+        if (eny2 == rm.getRoom('2')) {
+            for (Room& room : floor.rooms)
+                if (room.touchDoor(Bottom, en.getGlobalBounds()))
+                    offY = 40;
         }
-
-        if (return_now != 1)
-            enemies[v].setPosition(enx, eny + 40);
+        else offY = 40;
     }
+
+    en.setPosition(en.getPosition().x + offX, en.getPosition().y + offY);
+}
+
+void Game_Manager::moveEnemyRand(Enemy& en) {
+    for (Room& room : floor.rooms)
+        if (room.intersects(en.getGlobalBounds()))
+            moveEnemyCloseH2(en, room, true);
 }
 
 void Game_Manager::atkWithSpell(unsigned int enI) {
@@ -281,7 +257,35 @@ void Game_Manager::atkWithSpell(unsigned int enI) {
     enemies[enI].stat.hp -= enemies[enI].stat.res >= finalDamage ? 1 : finalDamage - enemies[enI].stat.res;
     selectedSpell = SelectNone;
     actEnemy();
-    addLog(std::format("Your spell did {} to {}.", finalDamage, enemies[enI].constant->name).c_str());
+    addLog(std::format("Your spell did {} dmg to {}.", finalDamage, enemies[enI].constant->name).c_str());
+}
+
+bool Game_Manager::movePlayer(sf::Keyboard::Key input) {
+    int offx{ 0 }, offy{ 0 };
+
+    switch (input) {
+    case sf::Keyboard::Up:
+        if (canMoveEntity(player, Top))
+            offy = -40;
+        break;
+    case sf::Keyboard::Down:
+        if (canMoveEntity(player, Bottom))
+            offy = 40;
+        break;
+    case sf::Keyboard::Left:
+        if (canMoveEntity(player, Left))
+            offx = -40;
+        break;
+    case sf::Keyboard::Right:
+        if (canMoveEntity(player, Right))
+            offx = 40;
+        break;
+    }
+
+    player.setPosition(player.getPosition().x + offx, player.getPosition().y + offy);
+    viewWorld.move(offx, offy);
+
+    return (offx || offy);
 }
 
 void Game_Manager::handlePlayerAct(sf::Keyboard::Key input, unsigned int mode) {
@@ -289,41 +293,13 @@ void Game_Manager::handlePlayerAct(sf::Keyboard::Key input, unsigned int mode) {
     if (!handle)
         return;
 
-    if (!mode) {
-        int offx{ 0 }, offy{ 0 };
-
-        switch (input) {
-        case sf::Keyboard::Up:
-            if (!player.isStuck(0))
-                offy = -40;
-            break;
-        case sf::Keyboard::Down:
-            if (!player.isStuck(2))
-                offy = 40;
-            break;
-        case sf::Keyboard::Left:
-            if (!player.isStuck(3))
-                offx = -40;
-            break;
-        case sf::Keyboard::Right:
-            if (!player.isStuck(1))
-                offx = 40;
-            break;
-        }
-
-        if (offx || offy) {
-            player.setPosition(player.getPosition().x + offx, player.getPosition().y + offy);
-            viewWorld.move(offx, offy);
-            window.setView(viewWorld);
-
-            handleTurn();
-            pickUpItem();
-            pickUpGold();
-            stepOnInteractible();
-        }
+    if (!mode && movePlayer(input)) {
+        handleTurn();
+        pickUpItem();
+        pickUpGold();
+        stepOnInteractible();
     }
     else {
-        playerAttack();
         handleTurn();
     }
 }
@@ -343,9 +319,6 @@ void Game_Manager::changeFloor(bool bypass, bool moveDown) {
     playerRandomPos();
     enemies.clear();
     addEnemy();
-    floor.makeCollectible(player.getFloor());
-    floor.makeGold(player.getFloor());
-    floor.makeInteractible(player.getFloor());
 
     centerFloor();
     enemyRespawns = 5;
@@ -468,46 +441,22 @@ void Game_Manager::stepOnInteractible() {
     }
 }
 
-void Game_Manager::playerAttack() {
-    if (enemies.size() == 0)
-        return;
-
-    float plx{ player.getPosition().x }, ply{ player.getPosition().y }, plx2{ plx + 40 }, ply2{ ply + 40 };
-    Room* pl_room = NULL;
-    Room* en_room = NULL;
-    Enemy* en = NULL;
-
-    // Check which room the player is in and save that room index.
-    for (unsigned int i{ 0 }; i < floor.rooms.size(); i++)
-        if (floor.rooms[i].intersects(player.getRect()))
-            pl_room = &floor.rooms[i];
-
-    // Check whether the mouse is clicked on an enemy. If not, return.
-    for (unsigned int i{ 0 }; i < enemies.size(); i++)
-        if (enemies[i].contains(worldX, worldY))
-            en = &enemies[i];
-    if (en == NULL) return;
-
-    // Check what room the selected enemy is in and save that room index.
-    float enx{ en->getPosition().x }, eny{ en->getPosition().y }, enx2{enx + 40}, eny2{eny + 40};
-    for (unsigned int i{ 0 }; i < floor.rooms.size(); i++)
-        if (floor.rooms[i].inRoom(enx, eny, enx2, eny2))
-            en_room = &floor.rooms[i];
+void Game_Manager::playerAttack(Enemy& en) {
+    Room& plRm = floor.getRoomByPosition(player.getRect());
+    Room& enRm = floor.getRoomByPosition(en.getGlobalBounds());
 
     // If they are both in different room, check if they are adjacent to each other, separated only by a door. If not, return.
-    if (pl_room != en_room &&
-        !(en_room->existDoor() && en_room->touchDoor(plx, ply, plx2, ply2) && en_room->touchDoor(enx, eny, enx2, eny2)) &&
-        !(pl_room->existDoor() && pl_room->touchDoor(plx, ply, plx2, ply2) && pl_room->touchDoor(enx, eny, enx2, eny2)))
-            return;
+    if (&plRm != &enRm && !plRm.areEntitiesInDoorRange(&enRm, player.getRect(), en.getGlobalBounds()))
+        return;
 
-    int stat{ en->constant->type ? en->stat.def : en->stat.res };
+    int stat{ en.constant->type ? en.stat.def : en.stat.res };
     const int amount = player.getStat(plWeapon.getStat()) + plWeapon.getQuantity();
     int quantity{ stat >= amount ? 1 : amount - stat };
-    en->stat.hp -= quantity;
+    en.stat.hp -= quantity;
 
     addLog(std::format("You did {} damage to {}.",
         quantity,
-        en->constant->name)
+        en.constant->name)
     .c_str());
     Audio_Manager::playSFX(2);
 }
@@ -557,19 +506,19 @@ void Game_Manager::updateEXP() {
 }
 
 void Game_Manager::playerRandomPos() {
-    unsigned int i{ rand() % floor.rooms.size() };
-    Room& room = floor.rooms[i];
+    window.setView(viewWorld);
+    Room& rm = floor.rooms[rand() % floor.rooms.size()];
 
-    int temp_x = ((rand() % (room.getRoom('w') / 40)) + (room.getRoom('x') / 40)) * 40,
-        temp_y = ((rand() % (room.getRoom('h') / 40)) + (room.getRoom('y') / 40)) * 40;
+    int temp_x = Floor::calculateRandomPosition(rm, false);
+    int temp_y = Floor::calculateRandomPosition(rm, true);
 
     if (PLACE_SHOP_ON_PLAYER) {
-        temp_x = ((floor.getShopPos('x') + TILE / 2) / TILE) * TILE;
-        temp_y = ((floor.getShopPos('y') + TILE / 2) / TILE) * TILE;
+        temp_x = Util::nearestMultiple(floor.getShopPos('x'), TILE);
+        temp_y = Util::nearestMultiple(floor.getShopPos('y'), TILE);
     }
 
-    room.setVisisted();
-    player.setPosition(temp_x, temp_y);
+    player.setPos(temp_x, temp_y);
+    window.setView(viewUI);
 }
 
 void Game_Manager::addEnemy() {
@@ -583,37 +532,31 @@ void Game_Manager::addEnemy() {
 
     for (unsigned int z{ 0 }; z < rand_enemy_num; z++) {
         // Check which room player is not in.
-        int rand_room{ rand() % static_cast<int>(floor.rooms.size()) };
-        while (floor.rooms[rand_room].inRoom(player.getPosition().x, player.getPosition().y,
-            player.getPosition().x + 40, player.getPosition().y + 40))
-            rand_room = rand() % floor.rooms.size();
-        Room& room = floor.rooms[rand_room];
+        Room* rm = &floor.rooms[rand() % static_cast<int>(floor.rooms.size())];
 
-        // Place in room.
-        int temp_x{ -1 }, temp_y{ -1 }, counter{ 0 };
-        while (true) {
-            temp_x = ((rand() % (room.getRoom('w') / 40)) + (room.getRoom('x') / 40)) * 40,
-                temp_y = ((rand() % (room.getRoom('h') / 40)) + (room.getRoom('y') / 40)) * 40;
-
-            for (unsigned int i{ 0 }; i < enemies.size(); i++) {
-                float tmp_x{ enemies[i].getPosition().x }, tmp_y{ enemies[i].getPosition().y };
-                while ((temp_x == tmp_x && temp_y == tmp_y) || temp_x == -1 || temp_y == -1)
-                    temp_x = ((rand() % (room.getRoom('w') / 40)) + (room.getRoom('x') / 40)) * 40,
-                    temp_y = ((rand() % (room.getRoom('h') / 40)) + (room.getRoom('y') / 40)) * 40;
-                counter += 1;
-            }
-
-            if (enemies.size() == counter)
-                break;
+        while (rm->intersects(player.getRect())) {
+            rm = &floor.rooms[rand() % static_cast<int>(floor.rooms.size())];
         }
 
-        auto it = Enemy::enemies.begin();
-        while (player.getFloor() >= it->second.growth.minimumFloor)
-            it = Enemy::enemies.begin();
+        // Place in room.
+        int x{ Floor::calculateRandomPosition(*rm, false) }, y{ Floor::calculateRandomPosition(*rm, true) };
+        bool skipAdd = false;
+        for (Enemy& en : enemies)
+            if (en.contains(x, y)) {
+                skipAdd = true;
+                break;
+            }
 
+        if (skipAdd)
+            continue;
+
+        auto it = Enemy::enemies.begin();
         std::advance(it, rand() % Enemy::enemies.size());
+        while (player.getFloor() < it->second.growth.minimumFloor)
+            std::advance(it, rand() % Enemy::enemies.size());
+
         unsigned int id = it->first;
-        enemies.push_back(Enemy(id, temp_x, temp_y, -1));
+        enemies.push_back(Enemy(id, x, y, -1));
     }
 
     if (enemyRespawns == 0)
@@ -662,9 +605,6 @@ void Game_Manager::resetGame(bool cheat) {
     enemies.clear();
     addEnemy();
     enemyRespawns = rand() % 5 + 1;
-    floor.makeCollectible(player.getFloor());
-    floor.makeGold(player.getFloor());
-    floor.makeInteractible(player.getFloor());
 
     plWeapon = Item(5);
     plArmor = Item(8);
@@ -716,41 +656,6 @@ bool Game_Manager::gameOver() {
         return true;
     }
     return false;
-}
-
-void Game_Manager::checkPlayerPath() {
-    float x{ player.getPosition().x }, y{ player.getPosition().y }, x2{ x + 40 }, y2{ y + 40 };
-    // Check which room player is in & determines if they're touching a wall.
-    for (Room& rm : floor.rooms)
-        if (rm.inRoom(x, y, x2, y2)) {
-            (y == rm.getRoom('y')) ? player.setStuck(0, 1) : player.setStuck(0, 0);
-            (x2 == rm.getRoom('1')) ? player.setStuck(1, 1) : player.setStuck(1, 0);
-            (y2 == rm.getRoom('2')) ? player.setStuck(2, 1) : player.setStuck(2, 0);
-            (x == rm.getRoom('x')) ? player.setStuck(3, 1) : player.setStuck(3, 0);
-            rm.setVisisted();
-            break;
-        }
-
-    // Check rooms that have doors & whether player is touching a door. It then allows player the ability to move through it.
-    for (unsigned int i{ 0 }; i < floor.rooms.size(); i++)
-        if (floor.rooms[i].touchDoor(x, y, x2, y2)) {
-            player.setStuck(floor.rooms[i].getDoor('r') % 2, 0);
-            player.setStuck(floor.rooms[i].getDoor('r') % 2 + 2, 0);
-        }
-
-    // Check whether enemies are adjacent to the player or not. Block player from moving from the tile the enemy is on.
-    for (Enemy en : enemies) {
-        float enx{ en.getPosition().x }, eny{ en.getPosition().y }, enx2{ enx + 40 }, eny2{ eny + 40 };
-
-        if (y - 40 == eny && y2 - 40 == eny2 && x == enx && x2 == enx2)
-            player.setStuck(0, 1);
-        if (x + 40 == enx && x2 + 40 == enx2 && y == eny && y2 == eny2)
-            player.setStuck(1, 1);
-        if (y + 40 == eny && y2 + 40 == eny2 && x == enx && x2 == enx2)
-            player.setStuck(2, 1);
-        if (x - 40 == enx && x2 - 40 == enx2 && y == eny && y2 == eny2)
-            player.setStuck(3, 1);
-    }
 }
 
 void Game_Manager::save() {
@@ -806,6 +711,7 @@ void Game_Manager::save() {
 
         for (unsigned int i{ 0 }; i < floor.rooms.size(); i++) {
             j["floor"].push_back(json::object());
+
             j["floor"][i] = {
                 {"x", floor.rooms[i].getRoom('x')},
                 {"y", floor.rooms[i].getRoom('y')},
@@ -813,17 +719,22 @@ void Game_Manager::save() {
                 {"sizeY", floor.rooms[i].getRoom('h')},
                 {"visited", floor.rooms[i].getVisited()},
             };
-            if (floor.rooms[i].existDoor()) {
-                j["floor"][i]["door"] = {
-                    {"x", floor.rooms[i].getDoor('x')},
-                    {"y", floor.rooms[i].getDoor('y')},
-                    {"rotation", floor.rooms[i].getDoor('r')},
-                    {"door0", floor.rooms[i].getDoor('0')},
-                    {"door1", floor.rooms[i].getDoor('1')},
-                    {"door2", floor.rooms[i].getDoor('2')},
-                    {"door3", floor.rooms[i].getDoor('3')},
-                };
-            }
+
+            for (unsigned int k{ Top }; k <= Left; k++)
+                for (unsigned int m{ 0 }; m < floor.rooms[i].getDoors()[k].size(); m++) {
+                    j["floor"][i]["doors"].push_back(json::object());
+
+                    Door& dr = floor.rooms[i].getDoors()[k][m];
+
+                    j["floor"][i]["doors"][m] = {
+                        {"x", dr.getPosition().x},
+                        {"y", dr.getPosition().y},
+                        {"direction", dr.getDirection()},
+                        {"size", dr.getSize().x / SF_Manager::TILE},
+                        {"fromRoomId", dr.getFromRoomId()},
+                        {"toRoomId", dr.getToRoomId()},
+                    };
+                }
         }
 
         j["stair"] = {
@@ -990,12 +901,19 @@ bool Game_Manager::readSave() {
         }
 
         floor = Floor(true);
-        for (auto& room : j.at("floor")) {
+        for (auto& room : j.at("floor"))
             floor.loadRoom(room.at("x"), room.at("y"), room.at("sizeX"), room.at("sizeY"), room.at("visited"));
-            if (room.contains("door")) {
-                auto& door = room.at("door");
-                floor.loadDoor(door.at("x"), door.at("y"), door.at("rotation"), door.at("door0"), door.at("door1"), door.at("door2"), door.at("door3"));
-            }
+
+        for (auto& room : j.at("floor")) {
+            for (auto& door : j.at("floor").at("doors"))
+            floor.loadDoor(
+                door.at("fromRoomId"),
+                door.at("toRoomId"),
+                door.at("x"),
+                door.at("y"),
+                door.at("size"),
+                door.at("direction")
+            );
         }
 
         floor.loadStair(j.at("stair").at("x"), j.at("stair").at("y"));

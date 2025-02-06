@@ -6,12 +6,15 @@
 
 #include "Manager/game_manager.h"
 #include "Screen/spell_attack_screen.h"
+#include <Floor/enemy.h>
+#include <Floor/room.h>
 #include <format>
 #include <Screen/screen.h>
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <Shape/full_rectangle.h>
 #include <stat.h>
+#include <State/game_state.h>
 #include <string>
 #include <Tool/spell.h>
 
@@ -23,7 +26,7 @@ Spell_Attack_Screen::Spell_Attack_Screen() : Screen(true, false) {
 	textRectH("0", 400, 10.f, NULL, 3.f);
 	textRectH(" ", 200, 50.f, 12.f, 3.f);
 
-	rangeBox = Full_Rectangle(600.f, 400.f, 40.f, 40.f, false, true, sf::Color::Transparent, sf::Color(255, 0, 0, 100));
+	rangeBox = Full_Rectangle(600.f, 400.f, 40.f, 40.f, false, true, sf::Color(0, 0, 255, 50), sf::Color::Transparent);
 }
 
 bool Spell_Attack_Screen::handleClickEvent() {
@@ -38,14 +41,22 @@ bool Spell_Attack_Screen::handleClickEvent() {
 		unsigned int plX = Game_Manager::player.getPos('x');
 		unsigned int plY = Game_Manager::player.getPos('y');
 
+		Room& plRm = Game_Manager::floor.getRoomByPosition(Game_Manager::player.getRect());
+
 		if (rangeBox.getGlobalBounds().contains(worldX, worldY)) {
-			for (unsigned int i{ 0 }; i < Game_Manager::enemies.size(); i++)
-				if (Game_Manager::enemies[i].contains(worldX, worldY)) {
+			for (unsigned int i{ 0 }; i < Game_Manager::enemies.size(); i++) {
+				Enemy& en = Game_Manager::enemies[i];
+				Room& enRm = Game_Manager::floor.getRoomByPosition(en.getGlobalBounds());
+
+				if (en.contains(worldX, worldY) && (&enRm == &plRm ||
+					plRm.areEntitiesInDoorRange(&enRm,
+					Game_Manager::player.getRect(), en.getGlobalBounds()))) {
 					Game_Manager::atkWithSpell(i);
 					resetSpell();
 					Game_Manager::handleTurn();
 					return true;
 				}
+			}
 			addLog("No target in range.");
 			return true;
 		}
@@ -83,11 +94,11 @@ void Spell_Attack_Screen::changeRange() {
 	window.setView(viewWorld);
 
 	spellID = selected->getID();
-	unsigned int originalRange = selected->getRange();
+	int originalRange = selected->getRange();
 	float rangeArea = (originalRange * 2 + 1) * TILE;
 
-	unsigned int plX = Game_Manager::player.getPos('x');
-	unsigned int plY = Game_Manager::player.getPos('y');
+	int plX = Game_Manager::player.getPos('x');
+	int plY = Game_Manager::player.getPos('y');
 
 	rangeBox.setPosition(plX - originalRange * TILE, plY - originalRange * TILE);
 	rangeBox.setSize(sf::Vector2f(rangeArea, rangeArea));

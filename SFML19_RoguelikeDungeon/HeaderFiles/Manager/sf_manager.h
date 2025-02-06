@@ -13,9 +13,9 @@ public:
 	const static float DEFAULT_SCREEN_X;
 	const static float DEFAULT_SCREEN_Y;
 
-	const static unsigned int MAX_INV_SPELL_SLOTS = 32;
-	const static unsigned int NUM_NON_CUR_STATS = 6;
-	const static unsigned int TILE = 40;
+	const static int MAX_INV_SPELL_SLOTS = 32;
+	const static int NUM_NON_CUR_STATS = 6;
+	const static int TILE = 40;
 
 	static sf::RenderWindow window;
 	static sf::View viewUI;

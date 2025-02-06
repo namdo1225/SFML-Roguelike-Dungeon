@@ -6,6 +6,8 @@
 */
 
 #include "util.h"
+#include <cmath>
+#include <Manager/sf_manager.h>
 #include <string>
 #include <vector>
 
@@ -22,4 +24,17 @@ std::vector<std::string> Util::split(std::string s, std::string delimiter) {
 
     res.push_back(s.substr(pos_start));
     return res;
+}
+
+int Util::nearestMultiple(int value, int multiple) {
+    // https://stackoverflow.com/questions/29557459/round-to-nearest-multiple-of-a-number
+    int result = std::abs(value) + multiple / 2;
+    result -= result % multiple;
+    result *= value > 0 ? 1 : -1;
+
+    return result;
+}
+
+int Util::nearestTile(int value) {
+    return nearestMultiple(value, SF_Manager::TILE);
 }

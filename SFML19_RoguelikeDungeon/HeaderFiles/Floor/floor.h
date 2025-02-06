@@ -2,6 +2,7 @@
 #define FLOOR_H
 
 #include "collectible.h"
+#include "door.h"
 #include "gold_collectible.h"
 #include "interactible.h"
 #include "room.h"
@@ -15,6 +16,8 @@
 */
 class Floor {
 private:
+	static const unsigned int RETRY_LIMITS = 50;
+
 	bool shopExist{ false };
 	Shop shop;
 	Stair stair;
@@ -23,6 +26,34 @@ private:
 	* Constructs rooms and doors for a new floor.
 	*/
 	void createRoomDoor();
+
+	sf::FloatRect calculateRect(Room& rm);
+
+	/**
+	* Make item collectibles for the current floor.
+	*
+	* Parameter:
+	*	floor: the current floor number.
+	*/
+	void createCollectible();
+
+	/**
+	* Make gold collectibles for the current floor.
+	*
+	* Parameter:
+	*	floor: the current floor number.
+	*/
+	void createGold();
+
+	/**
+	* Make interactibles for the current floor.
+	*
+	* Parameter:
+	*	floor: the current floor number.
+	*/
+	void createInteractible();
+
+	int nearestNonErrorTile(Room& rm, bool useY);
 
 public:
 	std::vector<Room> rooms;
@@ -152,24 +183,12 @@ public:
 	*	x: the room's x position.
 	*	y: the room's y position.
 	*	sx: the room's width.
-	*	sy: the room's height.
+	*	h: the room's height.
 	*	visited: Whether the room is already visited by the player.
 	*/
-	void loadRoom(int x, int y, int sx, int sy, bool visited);
+	void loadRoom(int x, int y, int sx, int h, bool visited);
 
-	/**
-	* Load door for the current floor from existing data.
-	*
-	* Parameter:
-	*	x: the door's x position.
-	*	y: the door's y position.
-	*	rot: the door's rotation.
-	*	slot0: the door's filled slot 0.
-	*	slot1: the door's filled slot 1.
-	*	slot2: the door's filled slot 2.
-	*	slot3: the door's filled slot 3.
-	*/
-	void loadDoor(int x, int y, int rot, int slot0, int slot1, int slot2, int slot3);
+	void loadDoor(unsigned int from, unsigned int to, int x, int y, int size, Direction direction);
 
 	/**
 	* Load stair for the current floor from existing data.
@@ -220,30 +239,6 @@ public:
 	void loadInteractible(int x, int y, bool hidden);
 
 	/**
-	* Make item collectibles for the current floor.
-	*
-	* Parameter:
-	*	floor: the current floor number.
-	*/
-	void makeCollectible(unsigned int floor);
-
-	/**
-	* Make gold collectibles for the current floor.
-	*
-	* Parameter:
-	*	floor: the current floor number.
-	*/
-	void makeGold(unsigned int floor);
-
-	/**
-	* Make interactibles for the current floor.
-	*
-	* Parameter:
-	*	floor: the current floor number.
-	*/
-	void makeInteractible(unsigned int floor);
-
-	/**
 	* Checks if the stair intersect with a rectangle.
 	* 
 	* Parameter:
@@ -264,6 +259,10 @@ public:
 	*	true if an intersection exists.
 	*/
 	bool intersectShop(const sf::FloatRect& rect);
+
+	static int calculateRandomPosition(Room& rm, bool useY);
+	
+	Room& getRoomByPosition(const sf::FloatRect& rect);
 };
 
 #endif

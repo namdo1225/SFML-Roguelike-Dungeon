@@ -57,6 +57,12 @@ public:
 	*	true if intersection exists.
 	*/
 	bool intersects(const sf::FloatRect& rect);
+
+	/**
+	* Optional draw method that can be used to perform additional tasks in addition
+	* to drawing the object.
+	*/
+	virtual void draw();
 };
 
 #endif

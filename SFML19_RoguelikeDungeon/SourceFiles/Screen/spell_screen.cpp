@@ -13,6 +13,7 @@
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Window/Event.hpp>
 #include <Shape/full_rectangle.h>
+#include <State/game_state.h>
 #include <string>
 #include <Tool/spell.h>
 #include <Tool/tool.h>
@@ -76,16 +77,16 @@ bool Spell_Screen::handleClickEvent() {
             }
             // Swaps spell position
             else if (selected && spell != selected) {
-                int sx = selected->getPos('x'), sy = selected->getPos('y');
+                int sx = selected->getPos('x'), h = selected->getPos('y');
                 selected->setPos(spell->getPos('x'), spell->getPos('y'));
-                spell->setPos(sx, sy);
+                spell->setPos(sx, h);
                 Game_Manager::selectedSpell = SelectNone;
                 return true;
             }
             // Selects a spell
             else if (!selected) {
-                int sx = spell->getPos('x'), sy = spell->getPos('y');
-                map_rects["inv_sp_cur_slot"].setPosition(sx - 5, sy - 5);
+                int sx = spell->getPos('x'), h = spell->getPos('y');
+                map_rects["inv_sp_cur_slot"].setPosition(sx - 5, h - 5);
                 map_txts["inv_sp_detail"].setString(spell->getDesc());
                 Game_Manager::selectedSpell = i;
                 return true;

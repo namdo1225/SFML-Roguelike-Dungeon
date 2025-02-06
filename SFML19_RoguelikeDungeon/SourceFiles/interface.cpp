@@ -109,7 +109,6 @@ void Interface::handleEvent() {
     sf::Event& event = Screen::event;
 
     while (window.pollEvent(event)) {
-        Game_Manager::checkPlayerPath();
         sf::Vector2i mousePos = sf::Mouse::getPosition(window);
 
         window.setView(Game_Manager::viewWorld);

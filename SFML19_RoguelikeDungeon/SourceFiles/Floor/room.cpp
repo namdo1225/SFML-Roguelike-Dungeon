@@ -8,19 +8,23 @@
 #include "Floor/room.h"
 #include "Manager/sf_manager.h"
 #include "Manager/texture_manager.h"
+#include <array>
 #include <cstdlib>
+#include <Floor/door.h>
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/Rect.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <vector>
 
-Room::Room(int x, int y, int sx, int sy) {
-	setFillColor(sf::Color::White);
-	setOutlineThickness(3.f);
+const unsigned int Room::MAX_ROOMS;
+const unsigned int Room::MAX_WIDTH;
+const unsigned int Room::MAX_HEIGHT;
 
-	sf::Color rgb(rand() % 50 + 100, rand() % 75, rand() % 75);
-
-	setOutlineColor(rgb);
+Room::Room(float x, float y, int unscaledW, int unscaledH) {
+	//setFillColor(sf::Color::White);
+	//setOutlineThickness(2.f);
+	sf::Color rgb(rand() % 150 + 50, rand() % 150 + 50, rand() % 150 + 50, 100);
+	setFillColor(rgb);
 
 	int size = Texture_Manager::tex_rooms.size();
 
@@ -29,49 +33,27 @@ Room::Room(int x, int y, int sx, int sy) {
 		setTexture(&Texture_Manager::tex_rooms[texture_num], false);
 	}
 
-	if (sx != -1 && sy != -1 && x != -1 && y != -1) {
-		unscaledWidth = sx;
-		unscaledHeight = sy;
-
-		grid = std::vector<std::vector<int>>(unscaledHeight, std::vector<int>(unscaledWidth, NoObject));
-
+	if (unscaledW != -1 && unscaledH != -1 && x != -1 && y != -1) {
 		setPosition(x, y);
-		setSize(sf::Vector2f(sx * SF_Manager::TILE, sy * SF_Manager::TILE));
+		setSize(sf::Vector2f(unscaledW * SF_Manager::TILE, unscaledH * SF_Manager::TILE));
 		setTextureRect(sf::IntRect(0, 0, getSize().x, getSize().y));
 	}
 }
 
-void Room::setPosSize(int x, int y, int sx, int sy) {
-	if (sx != -1 && sy != -1) {
-		setSize(sf::Vector2f(sx, sy));
+void Room::setPosSize(int x, int y, int sx, int h) {
+	if (sx != -1 && h != -1) {
+		setSize(sf::Vector2f(sx, h));
 		setTextureRect(sf::IntRect(0, 0, getSize().x, getSize().y));
 	}
 	setPosition(x, y);
-}
-
-void Room::setDoor(int x, int y, int rotation) {
-	if (rotation > -1) {
-		doorRotation = (Door)rotation;
-		door = true;
-		(rotation % 2 == 1) ? doorRect.setSize(sf::Vector2f(0, 120)) : doorRect.setSize(sf::Vector2f(120, 0));
-
-		doorRect.setFillColor(sf::Color::Black);
-		doorRect.setOutlineColor(sf::Color::White);
-		doorRect.setOutlineThickness(1.5f);
-	}
-	else if (rotation == -2)
-		doorRect.setSize(sf::Vector2f(x, y));
-
-	if (rotation >= -1)
-		doorRect.setPosition(x, y);
 }
 
 int Room::getRoom(char z) {
 	float x = getPosition().x;
 	float y = getPosition().y;
 
-	float sx = getSize().x;
-	float sy = getSize().y;
+	float w = getSize().x;
+	float h = getSize().y;
 
 	switch (z) {
 	case 'x':
@@ -79,38 +61,15 @@ int Room::getRoom(char z) {
 	case 'y':
 		return y;
 	case 'w':
-		return sx;
+		return w;
 	case 'h':
-		return sy;
+		return h;
 	case '1':
-		return x + sx;
+		return x + w;
 	case '2':
-		return y + sy;
+		return y + h;
 	case '3':
-		return y + sx + sy;
-	}
-}
-
-int Room::getDoor(char z) {
-	switch (z) {
-	case 'x':
-		return doorRect.getPosition().x;
-	case 'y':
-		return doorRect.getPosition().y;
-	case 'w':
-		return doorRect.getSize().x;
-	case 'h':
-		return doorRect.getSize().y;
-	case 'r':
-		return doorRotation;
-	case Top:
-		return doors[Top];
-	case Right:
-		return doors[Right];
-	case Bottom:
-		return doors[Bottom];
-	case Left:
-		return doors[Left];
+		return y + w + h;
 	}
 }
 
@@ -119,30 +78,15 @@ bool Room::inRoom(int x, int y, int x2, int y2) {
 		x2 <= getPosition().x + getSize().x && y2 <= getPosition().y + getSize().y);
 }
 
-bool Room::existDoor() { return door; }
+std::array<std::vector<Door>, 4> Room::getDoors() { return doors; }
 
-bool Room::touchDoor(int x, int y, int x2, int y2) {
-	// if door does not exist, return false.
-	if (!door)
-		return false;
-	// if the door is horizontal
-	else if (doorRotation % 2 == 0)
-		return ((y == doorRect.getPosition().y || y2 == doorRect.getPosition().y) &&
-			(x >= doorRect.getPosition().x && x2 <= doorRect.getPosition().x + 120));
-	// if the door is vertical
+void Room::draw(bool drawDoor) {
+	if (drawDoor)
+		for (std::vector<Door>& doorDirection : doors)
+			for (Door& door : doorDirection)
+				SF_Manager::window.draw(door);
 	else
-		return ((x == doorRect.getPosition().x || x2 == doorRect.getPosition().x) &&
-			(y >= doorRect.getPosition().y && y2 <= doorRect.getPosition().y + 120));
-}
-
-bool Room::getDoors(unsigned int i) { return doors[i]; }
-
-void Room::setDoors(unsigned int i, bool j) { doors[i] = j; }
-
-void Room::draw(bool door) { door ? SF_Manager::window.draw(doorRect) : SF_Manager::window.draw(*this); }
-
-bool Room::intersects(const sf::FloatRect& rect) {
-	return getGlobalBounds().intersects(rect);
+		SF_Manager::window.draw(*this);
 }
 
 bool Room::getVisited() {
@@ -151,4 +95,29 @@ bool Room::getVisited() {
 
 void Room::setVisisted() {
 	visited = true;
+}
+
+void Room::addAdjacentRoom(Door door, Room* room) {
+	doors[door.getDirection()].push_back(door);
+	connectedRooms[door.getDirection()].push_back(room);
+}
+
+bool Room::areEntitiesInDoorRange(Room* otherRoom, const sf::FloatRect& entity1, const sf::FloatRect& entity2) {
+	for (unsigned int i = 0; i < connectedRooms.size(); i++)
+		for (unsigned int j = 0; j < connectedRooms[i].size(); j++)
+			if (doors[i][j].intersects(otherRoom->getGlobalBounds()))
+				return doors[i][j].canPass(entity1.left, entity1.top) && doors[i][j].canPass(entity2.left, entity2.top);
+	return false;
+}
+
+bool Room::touchDoor(Direction direction, const sf::FloatRect& entity) {
+	for (Door& dr : doors[direction])
+		if (dr.canPass(entity.left, entity.top, true))
+			return true;
+
+	for (Door& dr : doors[(direction + 2) % 4])
+		if (dr.canPass(entity.left, entity.top, true))
+			return true;
+
+	return false;
 }

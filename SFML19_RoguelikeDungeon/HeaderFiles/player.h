@@ -18,11 +18,6 @@ private:
 
 	std::string name = "Player";
 
-	/** value: false = free, true = stuck, can't move
-	* index: 0 = up, 1 = left, 2 = down, 3 = right
-	*/
-	std::array<bool, 4> stuck{ false, false, false, false };
-
 	unsigned int points{ 10 }, level{ 1 }, curEXP{ 0 }, lvlUpEXP{ 10 }, floor{ 1 }, gold{ 0 }, maxItem{ 10 };
 
 	// MAX_HP, MAX_MP, STR, MAG, DEF, RES, HP, MP
@@ -120,17 +115,6 @@ public:
 	*	the player's name.
 	*/
 	std::string getName();
-
-	/**
-	* Check if player is stuck.
-	*
-	* Parameter:
-	*	i: index for player's mobility in a certain direction.
-	* 
-	* Return:
-	*	true if player is stuck.
-	*/
-	bool isStuck(unsigned int i);
 
 	/**
 	* Check if player is dead (hp is 0 or smaller).
@@ -232,17 +216,6 @@ public:
 	* 	y: player's y position.
 	*/
 	void setPos(int x, int y);
-
-	/**
-	* Setter for player's stuck direction (they cannot move that way if stuck 
-	* in that direction).
-	*
-	* Parameter:
-	*	i: indexing of direction.
-	*		0 = up, 1 = left, 2 = down, 3 = right
-	*	j: true if stuck.
-	*/
-	void setStuck(unsigned int i, bool j);
 
 	/**
 	* Use player's mp & calculate remaining mp.

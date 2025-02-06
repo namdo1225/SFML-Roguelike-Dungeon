@@ -112,11 +112,7 @@ void Player::reset(bool cheat, bool replaceName) {
 	lvlUpEXP = 10;
 }
 
-bool Player::isStuck(unsigned int i) { return stuck[i]; }
-
 void Player::setPos(int x, int y) { setPosition(x, y); }
-
-void Player::setStuck(unsigned int i, bool j) { stuck[i] = j; }
 
 void Player::copyStat(std::array<long, 8>& stats) { stats = stat; }
 

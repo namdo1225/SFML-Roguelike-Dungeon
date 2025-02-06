@@ -22,6 +22,10 @@ public:
 	*	a list of separated strings.
 	*/
 	static std::vector<std::string> split(std::string s, std::string delimiter);
+
+	static int nearestMultiple(int value, int multiple);
+
+	static int nearestTile(int value);
 };
 
 #endif

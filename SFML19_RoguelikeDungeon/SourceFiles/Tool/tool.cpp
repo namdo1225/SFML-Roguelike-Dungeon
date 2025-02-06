@@ -8,10 +8,12 @@
 #include "Manager/font_manager.h"
 #include "Manager/game_manager.h"
 #include "Tool/tool.h"
+#include <array>
+#include <format>
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/Text.hpp>
+#include <stat.h>
 #include <string>
-#include <format>
 
 Tool::Tool(std::string name, std::string passedDesc, std::string abbrev,
 	unsigned int id, unsigned int buy, unsigned int sell, int quantity,
@@ -89,4 +91,12 @@ int Tool::getQuantity() {
 
 unsigned int Tool::getType() {
 	return 0;
+}
+
+std::array<long, StatConst::NUM_STATS> Tool::getStat() {
+	return stat;
+}
+
+void Tool::setStat(const std::array<long, StatConst::NUM_STATS> stat) {
+	this->stat = stat;
 }

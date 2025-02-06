@@ -10,11 +10,15 @@
 #include <cstdlib>
 #include <Floor/floor_object.h>
 #include <Manager/database_manager.h>
+#include <Manager/game_manager.h>
+#include <Manager/sf_manager.h>
 #include <map>
+#include <SFML/Graphics/Rect.hpp>
+#include <SFML/Graphics/RectangleShape.hpp>
+#include <SFML/System/Vector2.hpp>
 #include <stat.h>
 #include <string>
 #include <utility>
-#include <Manager/game_manager.h>
 
 std::map<unsigned int, EnemyFull> Enemy::enemies;
 
@@ -67,6 +71,10 @@ Enemy::Enemy(unsigned int id, float x, float y, int hp) :
 	stat.exp = info.stat.exp + (info.growth.expGrowth * floor);
 
 	constant = &info.growth;
+
+	float rangeArea = (stat.range * 2 + 1) * SF_Manager::TILE;
+	rangeBox.setSize(sf::Vector2f(rangeArea, rangeArea));
+	rangeBox.setOutlineThickness(0);
 }
 
 int Enemy::damageEnemy(Attack type, int amount) {
@@ -74,4 +82,24 @@ int Enemy::damageEnemy(Attack type, int amount) {
 	int quantity = std::max(1, amount - protect);
 	stat.hp -= quantity;
 	return quantity;
+}
+
+void Enemy::draw(bool range) {
+	Floor_Object::draw();
+	if (range)
+		SF_Manager::window.draw(rangeBox);
+
+}
+
+bool Enemy::intersectsRange(const sf::FloatRect& rect) {
+	return rangeBox.getGlobalBounds().intersects(rect);
+}
+
+void Enemy::setPosition(float x, float y) {
+	sf::RectangleShape::setPosition(x, y);
+
+	float rangeArea = (stat.range * 2 + 1) * SF_Manager::TILE;
+	rangeBox.setPosition(x - stat.range * SF_Manager::TILE, y - stat.range * SF_Manager::TILE);
+	rangeBox.setSize(sf::Vector2f(rangeArea, rangeArea));
+
 }

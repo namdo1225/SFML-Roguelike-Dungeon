@@ -25,7 +25,7 @@ public:
 	*	x: the gold's x position.
 	* 	y: the gold's x position.
 	*/
-	Gold_Collectible(unsigned int floor, unsigned int amount, float x, float y);
+	Gold_Collectible(float x, float y, unsigned int amount = 0);
 
 	/**
 	* Getter for the amount.

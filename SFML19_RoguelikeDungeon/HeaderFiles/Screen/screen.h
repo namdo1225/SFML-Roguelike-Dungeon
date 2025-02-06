@@ -73,11 +73,11 @@ protected:
 	*	x: shape's x position.
 	*	y: shape's y position.
 	*	sx: shape's width.
-	*	sy: shape's height.
+	*	h: shape's height.
 	*	hoverable: true if shape is hoverable.
 	*	override_theme: true if theme is no longer in effect.
 	*/
-	void textRectH(const char* text, float x, float y, float sx, float sy,
+	void textRectH(const char* text, float x, float y, float sx, float h,
 		bool hoverable = true, bool override_theme = false);
 
 	/*
@@ -88,12 +88,12 @@ protected:
 	*	x: shape's x position.
 	*	y: shape's y position.
 	*	sx: shape's width.
-	*	sy: shape's height.
+	*	h: shape's height.
 	*	void (*func)(): function for click textbox callback.
 	*	fontSize: text's size.
 	*	fontOutline: text's outline size.
 	*/
-	void textboxH(const char* text, float x, float y, float sx, float sy, std::function<void()> func, float fontSize = 0, float fontOutline = 0);
+	void textboxH(const char* text, float x, float y, float sx, float h, std::function<void()> func, float fontSize = 0, float fontOutline = 0);
 
 	/*
 	* Helper to setup hoverable and clickable texts.

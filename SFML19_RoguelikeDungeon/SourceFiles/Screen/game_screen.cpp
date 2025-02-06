@@ -57,12 +57,13 @@ Game_Screen::Game_Screen() : Screen(false, false) {
 	light.setFade(true);
 	light.setPosition(sf::Vector2f(620.f, 420.f));
 
-	for (unsigned int i = 0; i < 60; i++) {
+	for (int i = 0; i < 60; i++) {
 		grids[i] = i < 30 ? Full_Rectangle(i * 40.f, -10.f, 0.f, 900.f, false, true, sf::Color::Black, sf::Color::Black)
 			: Full_Rectangle(-10, (i - 30) * 40.f, 1300.f, 0.f, false, true, sf::Color::Black, sf::Color::Black);
 		grids[i].setOutlineThickness(1.f);
 	}
-	rangeBox = Full_Rectangle(600.f, 400.f, 40.f, 40.f, false, true, sf::Color::Transparent, sf::Color(255, 0, 0, 100));
+	rangeBox = Full_Rectangle(600.f, 400.f, 40.f, 40.f, false, true, sf::Color(0, 255, 0, 50), sf::Color::Transparent);
+	rangeBox.setOutlineThickness(0);
 
 	hoverableTextH("<", 985.f, 260.f, [this]() {
 		Game_Manager::findItemShortcut('l');
@@ -233,22 +234,11 @@ Game_Screen::Game_Screen() : Screen(false, false) {
 }
 
 bool Game_Screen::handleClickEvent() {
-	unsigned int rgn = (Game_Manager::plWeapon.getRange() - 1) * 40;
-	if (x >= 600 && x <= 640 && y >= 360 - rgn && y <= 400) {
-		Game_Manager::handlePlayerAct(sf::Keyboard::Up, 1);
-		return true;
-	}
-	else if (x >= 640 && x <= 680 + rgn && y >= 400 && y <= 440) {
-		Game_Manager::handlePlayerAct(sf::Keyboard::Right, 1);
-		return true;
-	}
-	else if (x >= 600 && x <= 640 && y >= 440 && y <= 480 + rgn) {
-		Game_Manager::handlePlayerAct(sf::Keyboard::Down, 1);
-		return true;
-	}
-	else if (x >= 560 - rgn && x <= 400 && y >= 400 && y <= 440) {
-		return true;
-		Game_Manager::handlePlayerAct(sf::Keyboard::Left, 1);
+	for (Enemy& enemy : Game_Manager::enemies) {
+		if (enemy.contains(worldX, worldY) && rangeBox.getGlobalBounds().intersects(enemy.getGlobalBounds())) {
+			Game_Manager::playerAttack(enemy);
+			return true;
+		}
 	}
 }
 
@@ -286,9 +276,6 @@ void Game_Screen::draw() {
 	window.setView(viewWorld);
 
 	Game_Manager::floor.draw();
-	window.draw(Game_Manager::player);
-	for (Enemy& en : Game_Manager::enemies)
-		window.draw(en);
 
 	if (grid)
 		for (Full_Rectangle& rect : grids)
@@ -297,6 +284,9 @@ void Game_Screen::draw() {
 	if (range)
 		window.draw(rangeBox);
 
+	window.draw(Game_Manager::player);
+	for (Enemy& en : Game_Manager::enemies)
+		en.draw(range);
 	window.setView(viewUI);
 
 	fog.clear();
@@ -458,14 +448,11 @@ void Game_Screen::changeOpacity() {
 void Game_Screen::changeRange() {
 	window.setView(viewWorld);
 
-	unsigned int x = Game_Manager::player.getPos('x');
-	unsigned int y = Game_Manager::player.getPos('y');
-
-	unsigned int range = Game_Manager::plWeapon.getRange();
+	int range = Game_Manager::plWeapon.getRange();
 	float rangeArea = (range * 2 + 1) * TILE;
 
-	unsigned int plX = Game_Manager::player.getPos('x');
-	unsigned int plY = Game_Manager::player.getPos('y');
+	int plX = Game_Manager::player.getPos('x');
+	int plY = Game_Manager::player.getPos('y');
 
 	rangeBox.setPosition(plX - range * TILE, plY - range * TILE);
 	rangeBox.setSize(sf::Vector2f(rangeArea, rangeArea));
@@ -476,11 +463,10 @@ void Game_Screen::changeRange() {
 void Game_Screen::changeGrid() {
 	window.setView(viewWorld);
 
-	unsigned int x = Game_Manager::player.getPos('x') - DEFAULT_SCREEN_X / 2;
-	unsigned int y = Game_Manager::player.getPos('y') - DEFAULT_SCREEN_Y / 2;
-	for (unsigned int i = 0; i < 60; i++) {
+	int x = Game_Manager::player.getPos('x') - DEFAULT_SCREEN_X / 2;
+	int y = Game_Manager::player.getPos('y') - DEFAULT_SCREEN_Y / 2;
+	for (int i = 0; i < 60; i++)
 		i < 30 ? grids[i].setPosition(sf::Vector2f(i * 40 + x, y)) : grids[i].setPosition(sf::Vector2f(x, (i - 30) * 40 + y));
-	}
 
 	window.setView(viewUI);
 }

@@ -1,6 +1,11 @@
-#include "State/game_state.h"
 #include "Manager/log_manager.h"
 #include "sf_manager.h"
+#include "State/game_state.h"
+#include <Floor/door.h>
+#include <Floor/enemy.h>
+#include <Floor/room.h>
+#include <SFML/Graphics/Rect.hpp>
+#include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Window/Keyboard.hpp>
 #include <Tool/item.h>
 #include <Tool/tool.h>
@@ -35,7 +40,7 @@ private:
 	* Parameter:
 	*	v: Enemy's index.
 	*/
-	static void atkEnemy(unsigned int v);
+	static void atkEnemy(Enemy& en);
 
 	/**
 	* Handles an enemy moving closer to the player.
@@ -43,7 +48,9 @@ private:
 	* Parameter:
 	*	v: Enemy's index.
 	*/
-	static void moveEnemyClose(unsigned int v);
+	static void moveEnemyClose(Enemy& en);
+
+	static bool touchDoorH(sf::FloatRect& entity, Direction direction);
 
 	/**
 	* A helper function for enemy moving closer.
@@ -56,7 +63,9 @@ private:
 	* Return:
 	*	Whether enemy can move closer.
 	*/
-	static bool moveEnemyCloseH(unsigned int v, int offsetX, int offsetY);
+	static bool canMoveEntity(sf::RectangleShape& entity, Direction direction);
+
+	static void moveEnemyCloseH2(Enemy& en, Room& rm, bool randMovement);
 
 	/**
 	* Handles an enemy making a random move.
@@ -64,7 +73,7 @@ private:
 	* Parameter:
 	*	v: Enemy's index.
 	*/
-	static void moveEnemyRand(unsigned int v);
+	static void moveEnemyRand(Enemy& en);
 
 public:
 	static void setup();
@@ -106,6 +115,8 @@ public:
 	*/
 	static void atkWithSpell(unsigned int enI);
 
+	static bool movePlayer(sf::Keyboard::Key input);
+
 	/**
 	* Handles player moving or attacking.
 	*
@@ -143,7 +154,7 @@ public:
 	/**
 	* Handles player attacking enemy.
 	*/
-	static void playerAttack();
+	static void playerAttack(Enemy& en);
 
 	/**
 	* Refreshes/updates player's exp, including leveling them up.
@@ -193,11 +204,6 @@ public:
 	*	true if the game is over.
 	*/
 	static bool gameOver();
-
-	/**
-	* Check if any obstacles (enemies, walls, etc) are stopping the player from moving.
-	*/
-	static void checkPlayerPath();
 
 	/**
 	* Save the status of the current playthrough into a file.

@@ -1,5 +1,9 @@
 #include "floor_object.h"
 #include <map>
+#include <SFML/Graphics/Color.hpp>
+#include <SFML/Graphics/Rect.hpp>
+#include <SFML/Graphics/RectangleShape.hpp>
+#include <Shape/full_rectangle.h>
 #include <stat.h>
 #include <string>
 
@@ -49,6 +53,11 @@ struct EnemyFull {
 * An enemy which can attack/kill the player.
 */
 class Enemy : public Floor_Object {
+private:
+	using sf::RectangleShape::setPosition;
+
+	Full_Rectangle rangeBox = Full_Rectangle(-100.f, -100.f, 40.f, 40.f, false, true, sf::Color(255, 0, 0, 50), sf::Color::Transparent);
+
 public:
 	static std::map<unsigned int, EnemyFull> enemies;
 	EnemyStat stat;
@@ -84,6 +93,12 @@ public:
 	*	Enemy's new hp after being attacked by player.
 	*/
 	int damageEnemy(Attack type, int amount);
+
+	void draw(bool range);
+
+	bool intersectsRange(const sf::FloatRect& rect);
+
+	void setPosition(float x, float y);
 };
 
 #endif

@@ -178,9 +178,9 @@ void Shop_Screen::shopItem(bool buy) {
 		Item* item = &stocks[i];
 		if (item->contains(slotX, slotY)) {
 			// Selects an item
-			int sx = item->getPos('x'), sy = item->getPos('y');
+			int sx = item->getPos('x'), h = item->getPos('y');
 			Game_Manager::selectedInv = i;
-			map_rects["inv_sp_cur_slot"].setPosition(sx - 5, sy - 5);
+			map_rects["inv_sp_cur_slot"].setPosition(sx - 5, h - 5);
 			map_txts["inv_sp_detail"].setString(item->getDesc());
 			return;
 		}
@@ -210,10 +210,10 @@ void Shop_Screen::shopSpell(bool buy) {
 		Spell* spell = &stocks[i];
 		// Selects a spell
 		if (spell->contains(slotX, slotY)) {
-			int sx = spell->getPos('x'), sy = spell->getPos('y');
+			int sx = spell->getPos('x'), h = spell->getPos('y');
 			Game_Manager::selectedSpell = i;
 			map_txts["inv_sp_detail"].setString(spell->getDesc());
-			map_rects["inv_sp_cur_slot"].setPosition(sx - 5, sy - 5);
+			map_rects["inv_sp_cur_slot"].setPosition(sx - 5, h - 5);
 			return;
 		}
 	}
@@ -238,10 +238,10 @@ void Shop_Screen::shopSpecial(bool buy) {
 		Special special = stocks[i];
 		// Selects a special
 		if (special.contains(slotX, slotY)) {
-			int sx = special.getPos('x'), sy = special.getPos('y');
+			int sx = special.getPos('x'), h = special.getPos('y');
 				Game_Manager::selectedSpecial = i;
 				map_txts["inv_sp_detail"].setString(special.getDesc());
-				map_rects["inv_sp_cur_slot"].setPosition(sx - 5, sy - 5);
+				map_rects["inv_sp_cur_slot"].setPosition(sx - 5, h - 5);
 				return;
 		}
 	}

@@ -1,16 +1,11 @@
 #ifndef ROOM_H
 #define ROOM_H
 
+#include "Floor/door.h"
 #include "Floor/floor_object.h"
-#include <SFML/Graphics/Color.hpp>
+#include <array>
 #include <SFML/Graphics/Rect.hpp>
-#include <Shape/full_rectangle.h>
 #include <vector>
-
-/**
-* Enum to represent a door the side of a wall.
-*/
-enum Door { Top, Right, Bottom, Left };
 
 /**
 * Enum to represent object in room.
@@ -20,25 +15,20 @@ enum RoomObject { PlayerObject = -3, ObstacleObject, NoObject };
 /**
 * Represents a room which player could be in.
 */
-class Room : private Floor_Object {
+class Room : public Floor_Object {
 private:
-	Door doorRotation = Top;
-
-	bool door{ false }, visited{ false };
-
-	std::vector<std::vector<int>> grid = {};
+	bool visited{ false };
 
 	unsigned int unscaledWidth = 0, unscaledHeight = 0;
 
-	/**
-	* false = no door / (slot available)
-	*/
-	bool doors[4] = { false, false, false, false };
+	std::array<std::vector<Door>, 4> doors = {std::vector<Door>(), std::vector<Door>(), std::vector<Door>(), std::vector<Door>() };
 
-	Full_Rectangle doorRect = Full_Rectangle(-100.f, -100.f, 0.f, 0.f, false, true,
-		sf::Color::Transparent, sf::Color::White);
+	std::array<std::vector<Room*>, 4> connectedRooms = { std::vector<Room*>(), std::vector<Room*>(), std::vector<Room*>(), std::vector<Room*>() };
 
 public:
+	const static unsigned int MAX_ROOMS = 50;
+	const static unsigned int MAX_WIDTH = 35;
+	const static unsigned int MAX_HEIGHT = 35;
 
 	/**
 	* Constructor for Room.
@@ -46,10 +36,10 @@ public:
 	* Parameter:
 	*	x: the room's x position.
 	*	y: the room's y position.
-	*	w: the room's unscaled width.
-	*	h: the room's unscaled height.
+	*	unscaledW: the room's unscaled width.
+	*	unscaledH: the room's unscaled height.
 	*/
-	Room(int x = -1, int y = -1, int w = -1, int h = -1);
+	Room(float x = -1, float y = -1, int unscaledW = -1, int unscaledH = -1);
 
 	/**
 	* Setter for room's position & size.
@@ -57,20 +47,10 @@ public:
 	* Parameter:
 	*	x: the room's new x position.
 	*	y: the room's new y position.
-	*	sx: the room's new width.
-	*	sy: the room's new height.
+	*	w: the room's new width.
+	*	h: the room's new height.
 	*/
-	void setPosSize(int x, int y, int sx, int sy);
-
-	/**
-	* Setter for door's position, size, and rotation.
-	*
-	* Parameter:
-	*	x: the door's new x position or width.
-	*	y: the door's new y position or height.
-	*	rotation: 0, 2 = horizontal door rotation. 1, 3 = vertical door rotation.
-	*/
-	void setDoor(int x, int y, int rotation);
+	void setPosSize(int x, int y, int w, int h);
 
 	/**
 	* Getter for info about the room.
@@ -84,18 +64,6 @@ public:
 	*	room's position or other useful info.
 	*/
 	int getRoom(char z);
-
-	/**
-	* Getter for info about the door.
-	*
-	* Parameter:
-	*	z: 'x' to get door's x. 'y' to get door's y.
-	*		'w' for width. 'h' for height. '0' - '3' for doors' filled slot.
-	* 
-	* Return:
-	*	the door's position or other useful info.
-	*/
-	int getDoor(char z);
 
 	/**
 	* Check whether two pairs of coordinate is in the room (representing a square).
@@ -112,28 +80,6 @@ public:
 	bool inRoom(int x, int y, int x2, int y2);
 
 	/**
-	* Check whether a door exist for the room.
-	*
-	* Return:
-	*	true if a door exist for the room.
-	*/
-	bool existDoor();
-
-	/**
-	* Check whether 2 pairs of coordinate is touching a door.
-	*
-	* Parameter:
-	*	x: the first x coordinate.
-	*	y: the first y coordinate.
-	*	x2: the second x coordinate.
-	*	y2: the second y coordinate.
-	*
-	* Return:
-	*	true if the pairs are touching the door.
-	*/
-	bool touchDoor(int x, int y, int x2, int y2);
-
-	/**
 	* Get door slot for the room.
 	*
 	* Parameter:
@@ -142,16 +88,7 @@ public:
 	* Return:
 	*	false = no door (slot available), true = door.
 	*/
-	bool getDoors(unsigned int i);
-
-	/**
-	* Set door slot for the room.
-	*
-	* Parameter:
-	*	i: index the door slot position.
-	*	j: the value of the door slot position.
-	*/
-	void setDoors(unsigned int i, bool j);
+	std::array<std::vector<Door>, 4> getDoors();
 
 	/**
 	* Draw the room on the game's window.
@@ -159,18 +96,7 @@ public:
 	* Parameter:
 	*	door: true if draw door. false if draw room.
 	*/
-	void draw(bool door = false);
-
-	/**
-	* Whether a rectangle intersect with the room.
-	* 
-	* Parameter:
-	*	rect: The rectangle to check for intersection.
-	* 
-	* Return:
-	*	true if intersection exist.
-	*/
-	bool intersects(const sf::FloatRect& rect);
+	void draw(bool drawDoor = false);
 
 	/**
 	* Whether a player has visited the room or not.
@@ -181,6 +107,12 @@ public:
 	bool getVisited();
 
 	void setVisisted();
+
+	void addAdjacentRoom(Door door, Room* room);
+
+	bool areEntitiesInDoorRange(Room* otherRoom, const sf::FloatRect& entity1, const sf::FloatRect& entity2);
+
+	bool touchDoor(Direction direction, const sf::FloatRect& entity);
 };
 
 

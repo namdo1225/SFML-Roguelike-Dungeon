@@ -70,7 +70,7 @@ Full_Text Screen::stat_curr_arrows[NUM_NON_CUR_STATS * 2] = {
 	Full_Text(660.f, 500.f, 24.f, ">"),
 };
 
-const unsigned int Screen::MAX_INV_SPELL_SLOTS;
+const int Screen::MAX_INV_SPELL_SLOTS;
 std::vector<Full_Rectangle> Screen::inv_sp_slots;
 
 std::map<std::string, Full_Rectangle> Screen::map_rects;
@@ -167,24 +167,24 @@ void Screen::draw() {
 	}
 }
 
-void Screen::textRectH(const char* text, float x, float y, float sx, float sy,
+void Screen::textRectH(const char* text, float x, float y, float sx, float h,
 	bool hoverable, bool override_theme) {
 	if (text == NULL) {
 		rects.push_back(Full_Rectangle());
 		unsigned int i = rects.size() - 1;
-		rects[i].setPhysical(x, y, sx, sy);
+		rects[i].setPhysical(x, y, sx, h);
 		rects[i].setThemeAndHover(hoverable, override_theme);
 	}
 	else {
 		texts.push_back(Full_Text());
 		unsigned int i = texts.size() - 1;
-		texts[i].setPhysical(x, y, text, sx, sy);
+		texts[i].setPhysical(x, y, text, sx, h);
 		texts[i].setThemeAndHover(hoverable, override_theme);
 	}		
 }
 
-void Screen::textboxH(const char* text, float x, float y, float sx, float sy, std::function<void()> func, float fontSize, float fontOutline) {
-	textboxes.push_back(Full_Textbox(text, x, y, sx, sy, func, fontSize, fontOutline));
+void Screen::textboxH(const char* text, float x, float y, float sx, float h, std::function<void()> func, float fontSize, float fontOutline) {
+	textboxes.push_back(Full_Textbox(text, x, y, sx, h, func, fontSize, fontOutline));
 }
 
 void Screen::hoverableTextH(const char* text, float x, float y, std::function<void()> func, float fontSize, float fontOutline) {

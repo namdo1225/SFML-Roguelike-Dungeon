@@ -134,6 +134,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="SourceFiles\Floor\door.cpp" />
     <ClCompile Include="SourceFiles\State\floor_state.cpp" />
     <ClCompile Include="SourceFiles\State\game_state.cpp" />
     <ClCompile Include="SourceFiles\Manager\log_manager.cpp" />
@@ -191,6 +192,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="HeaderFiles\env.h" />
+    <ClInclude Include="HeaderFiles\Floor\door.h" />
     <ClInclude Include="HeaderFiles\Floor\floor_object.h" />
     <ClInclude Include="HeaderFiles\Manager\audio_manager.h" />
     <ClInclude Include="HeaderFiles\Floor\collectible.h" />

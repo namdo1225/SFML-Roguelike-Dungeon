@@ -9,6 +9,7 @@
 #include <SFML/Graphics/Rect.hpp>
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/System/Vector2.hpp>
+#include <Manager/sf_manager.h>
 
 Floor_Object::Floor_Object() {
 	setSize(sf::Vector2f(40, 40));
@@ -29,4 +30,8 @@ bool Floor_Object::contains(float x, float y) {
 
 bool Floor_Object::intersects(const sf::FloatRect& rect) {
 	return getGlobalBounds().intersects(rect);
+}
+
+void Floor_Object::draw() {
+	SF_Manager::window.draw(*this);
 }
