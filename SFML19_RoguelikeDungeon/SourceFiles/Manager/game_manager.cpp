@@ -720,20 +720,20 @@ void Game_Manager::save() {
                 {"visited", floor.rooms[i].getVisited()},
             };
 
+            unsigned int doorI = 0;
             for (unsigned int k{ Top }; k <= Left; k++)
                 for (unsigned int m{ 0 }; m < floor.rooms[i].getDoors()[k].size(); m++) {
-                    j["floor"][i]["doors"].push_back(json::object());
-
                     Door& dr = floor.rooms[i].getDoors()[k][m];
 
-                    j["floor"][i]["doors"][m] = {
+                    j["floor"][i]["doors"][doorI] = {
                         {"x", dr.getPosition().x},
                         {"y", dr.getPosition().y},
                         {"direction", dr.getDirection()},
-                        {"size", dr.getSize().x / SF_Manager::TILE},
+                        {"size", dr.getSize().x},
                         {"fromRoomId", dr.getFromRoomId()},
                         {"toRoomId", dr.getToRoomId()},
                     };
+                    doorI++;
                 }
         }
 
@@ -905,7 +905,7 @@ bool Game_Manager::readSave() {
             floor.loadRoom(room.at("x"), room.at("y"), room.at("sizeX"), room.at("sizeY"), room.at("visited"));
 
         for (auto& room : j.at("floor")) {
-            for (auto& door : j.at("floor").at("doors"))
+            for (auto& door : room.at("doors"))
             floor.loadDoor(
                 door.at("fromRoomId"),
                 door.at("toRoomId"),

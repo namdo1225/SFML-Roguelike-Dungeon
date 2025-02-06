@@ -296,7 +296,7 @@ void Floor::loadRoom(int x, int y, int sx, int h, bool visited) {
 }
 
 void Floor::loadDoor(unsigned int from, unsigned int to, int x, int y, int size, Direction direction) {
-	rooms[from].addAdjacentRoom(Door(x, y, size, direction, from, to), &rooms[to]);
+	rooms[from].addAdjacentRoom(Door(x, y, size, direction, from, to, true), &rooms[to]);
 }
 
 void Floor::loadStair(int x, int y) { stair = Stair(x, y); }

@@ -20,7 +20,7 @@ private:
 	unsigned int toRoomId = 0;
 
 public:
-	Door(float x, float y, float size, Direction direction, unsigned int fromRoomId, unsigned int toRoomId);
+	Door(float x, float y, float size, Direction direction, unsigned int fromRoomId, unsigned int toRoomId, bool load = false);
 
 	bool canPass(float x, float y, bool haveToTouch = false);
 

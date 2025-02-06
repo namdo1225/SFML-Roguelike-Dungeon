@@ -3,8 +3,12 @@
 #include <SFML/System/Vector2.hpp>
 #include <Manager/sf_manager.h>
 
-Door::Door(float x, float y, float size, Direction direction, unsigned int fromRoomId, unsigned int toRoomId) {
-	setPosition(direction == Left || direction == Right ? x + 6 : x, direction == Top || direction == Bottom ? y - 6 : y);
+Door::Door(float x, float y, float size, Direction direction, unsigned int fromRoomId, unsigned int toRoomId, bool load) {
+	if (!load)
+		setPosition(direction == Left || direction == Right ? x + 6 : x, direction == Top || direction == Bottom ? y - 6 : y);
+	else
+		setPosition(x, y);
+
 	// To make it less confusing, size of the longest side of the door is always the width or x value.
 	setSize(sf::Vector2f(size, 9.f));
 
