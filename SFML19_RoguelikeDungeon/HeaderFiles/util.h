@@ -23,8 +23,27 @@ public:
 	*/
 	static std::vector<std::string> split(std::string s, std::string delimiter);
 
+	/**
+	* Get the nearest multiple of a value given the multiple.
+	* 
+	* Parameter:
+	*	value: The value to find multiple for.
+	*	multiple: Multiple to consider.
+	* 
+	* Return:
+	*	nearest multiple value.
+	*/
 	static int nearestMultiple(int value, int multiple);
 
+	/**
+	* Find the nearest valid tile coordinate for a given value.
+	* 
+	* Parameter:
+	*	value: The value to find nearest tile.
+	* 
+	* Return:
+	*	nearest tile value.
+	*/
 	static int nearestTile(int value);
 };
 

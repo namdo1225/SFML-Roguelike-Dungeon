@@ -15,8 +15,8 @@
 #include <stat.h>
 #include <string>
 
-std::array<long, StatConst::NUM_STATS> Level_Screen::backup_stats = { 0, 0, 0, 0, 0, 0, 0, 0 };
-unsigned int Level_Screen::backup_pts = 0;
+std::array<long, StatConst::NUM_STATS> Level_Screen::backupStats = { 0, 0, 0, 0, 0, 0, 0, 0 };
+unsigned int Level_Screen::backupPts = 0;
 bool Level_Screen::reset = true;
 
 Level_Screen::Level_Screen() : Screen(true, true, true, true) {
@@ -38,18 +38,18 @@ bool Level_Screen::handleClickEvent() {
 	}
 	else if (mouseInButton(ExitButton)) {
 		for (Stat i = Max_Hp; i < Hp; i++)
-			Game_Manager::player.setStat(i, backup_stats[i]);
-		Game_Manager::player.setStatPoint(backup_pts);
-		map_txts["stat_left"].setString(std::to_string(backup_pts));
+			Game_Manager::player.setStat(i, backupStats[i]);
+		Game_Manager::player.setStatPoint(backupPts);
+		map_txts["stat_left"].setString(std::to_string(backupPts));
 		reset = true;
 		switchScreen(LevelScreen, GameScreen, false, true);
 		return true;
 	}
 	else if (mouseInButton(ClearButton)) {
 		for (Stat i = Max_Hp; i < Hp; i++)
-			Game_Manager::player.setStat(i, backup_stats[i]);
-		Game_Manager::player.setStatPoint(backup_pts);
-		map_txts["stat_left"].setString(std::to_string(backup_pts));
+			Game_Manager::player.setStat(i, backupStats[i]);
+		Game_Manager::player.setStatPoint(backupPts);
+		map_txts["stat_left"].setString(std::to_string(backupPts));
 		reset = true;
 		return true;
 	}
@@ -107,8 +107,8 @@ void Level_Screen::updateDraw() {
 	}
 
 	if (reset) {
-		Game_Manager::player.copyStat(backup_stats);
-		backup_pts = Game_Manager::player.getStatPts();
+		Game_Manager::player.copyStat(backupStats);
+		backupPts = Game_Manager::player.getStatPts();
 		reset = false;
 	}
 }

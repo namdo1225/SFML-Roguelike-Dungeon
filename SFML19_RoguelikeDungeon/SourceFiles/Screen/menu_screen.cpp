@@ -7,6 +7,7 @@
 #include "Manager/game_manager.h"
 #include "Screen/menu_screen.h"
 #include <Screen/screen.h>
+#include <State/game_state.h>
 #include <string>
 
 bool Menu_Screen::help = false;

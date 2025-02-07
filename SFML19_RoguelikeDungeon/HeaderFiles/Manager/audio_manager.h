@@ -11,12 +11,16 @@
 */
 class Audio_Manager {
 private:
-	static std::array<sf::SoundBuffer, 30> buffers;
-	static std::array<sf::Sound, 30> sounds;
-	static sf::Music music;
+	static const unsigned int SOUNDS = 5;
+	static const unsigned int MUSICS = 1;
+
+	static std::array<sf::SoundBuffer, SOUNDS> buffers;
+	static std::array<sf::Sound, SOUNDS> sounds;
+	static std::array <sf::Music, MUSICS> musics;
 
 	static bool loaded;
 	static float sfxVolume;
+	static float musicVolume;
 
 	/**
 	* Constructor for Audio_Manager.
@@ -29,7 +33,7 @@ public:
 	* Method to load sounds and music.
 	*
 	* Return:
-	*	a bool. true if all assets are successfully loaded.
+	*	true if all assets are successfully loaded.
 	*/
 	static bool load();
 	

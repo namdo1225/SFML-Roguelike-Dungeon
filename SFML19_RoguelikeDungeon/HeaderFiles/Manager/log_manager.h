@@ -20,7 +20,7 @@ public:
 	*	screen: true if setting positions for the log screen.
 	*		Otherwise, it's the game screen.
 	*/
-	static void log_view(bool screen = false);
+	static void logView(bool screen = false);
 
 	/**
 	* Add a log.

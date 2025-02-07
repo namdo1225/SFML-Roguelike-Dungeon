@@ -6,6 +6,7 @@
 #include <Shape/full_rectangle.h>
 #include <stat.h>
 #include <string>
+#include <Manager/sf_manager.h>
 
 #ifndef ENEMY_H
 #define ENEMY_H
@@ -56,7 +57,7 @@ class Enemy : public Floor_Object {
 private:
 	using sf::RectangleShape::setPosition;
 
-	Full_Rectangle rangeBox = Full_Rectangle(-100.f, -100.f, 40.f, 40.f, false, true, sf::Color(255, 0, 0, 50), sf::Color::Transparent);
+	Full_Rectangle rangeBox = Full_Rectangle(-100.f, -100.f, SF_Manager::TILE, SF_Manager::TILE, false, true, sf::Color(255, 0, 0, 50), sf::Color::Transparent);
 
 public:
 	static std::map<unsigned int, EnemyFull> enemies;
@@ -94,9 +95,22 @@ public:
 	*/
 	int damageEnemy(Attack type, int amount);
 
+	/**
+	* Draw enemy.
+	* 
+	* Parameter:
+	*	range: Whether to draw enemy's range box.
+	*/
 	void draw(bool range);
 
+	/**
+	* Whether a rectangle intersects the enemy's range box.
+	* 
+	* Parameter:
+	*	rect: The rectangle to consider.
+	*/
 	bool intersectsRange(const sf::FloatRect& rect);
+
 
 	void setPosition(float x, float y);
 };

@@ -178,8 +178,20 @@ public:
 	*/
 	virtual unsigned int getType();
 
+	/**
+	* Getter for stat.
+	* 
+	* Return:
+	*	Tool's stat
+	*/
 	std::array<long, StatConst::NUM_STATS> getStat();
 
+	/**
+	* Setter for stat.
+	* 
+	* Parameter:
+	*	The stat parameter to set.
+	*/
 	void setStat(const std::array<long, StatConst::NUM_STATS> stat);
 };
 

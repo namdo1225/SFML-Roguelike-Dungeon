@@ -96,10 +96,9 @@ bool Enemy::intersectsRange(const sf::FloatRect& rect) {
 }
 
 void Enemy::setPosition(float x, float y) {
-	sf::RectangleShape::setPosition(x, y);
+	Floor_Object::setPosition(x, y);
 
 	float rangeArea = (stat.range * 2 + 1) * SF_Manager::TILE;
 	rangeBox.setPosition(x - stat.range * SF_Manager::TILE, y - stat.range * SF_Manager::TILE);
 	rangeBox.setSize(sf::Vector2f(rangeArea, rangeArea));
-
 }

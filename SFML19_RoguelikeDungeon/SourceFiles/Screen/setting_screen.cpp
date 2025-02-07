@@ -83,7 +83,7 @@ Setting_Screen::Setting_Screen() : Screen(true, true, true) {
 	// starting with index 8
 	textRectH(       std::to_string(theme).c_str(), 1000.f, 150.f, NULL, NULL, false);
 	textRectH(       light_mode ? "Light" : "Dark", 1000.f, 200.f, NULL, NULL, false);
-	textRectH(Font_Manager::get_selected().getInfo().family.c_str(), 1000.f, 250.f, NULL, NULL, false);
+	textRectH(Font_Manager::getSelected().getInfo().family.c_str(), 1000.f, 250.f, NULL, NULL, false);
 	textRectH(  std::to_string(sfxVolume).c_str(), 1000.f, 300.f, NULL, NULL, false);
 	textRectH(std::to_string(musicVolume).c_str(), 1000.f, 350.f, NULL, NULL, false);
 	textRectH(saveLocation.c_str(), 300.f, 400.f, 14.f, NULL, false);
@@ -130,7 +130,7 @@ bool Setting_Screen::handleClickEvent() {
 		saveLocation = Setting_Manager::saveLocation;
 		texts[8].setString(std::to_string(theme));
 		texts[9].setString(light_mode ? "Light" : "Dark");
-		texts[10].setString(Font_Manager::get_selected().getInfo().family);
+		texts[10].setString(Font_Manager::getSelected().getInfo().family);
 		texts[11].setString(std::to_string(sfxVolume));
 		texts[12].setString(std::to_string(musicVolume));
 		texts[13].setString(saveLocation);

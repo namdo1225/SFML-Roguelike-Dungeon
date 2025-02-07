@@ -1,5 +1,4 @@
 #include "screen.h"
-#include <SFML/Graphics/View.hpp>
 #include <SFML/System/Vector2.hpp>
 
 #ifndef MAP_SCREEN_H

@@ -66,20 +66,6 @@ public:
 	int getRoom(char z);
 
 	/**
-	* Check whether two pairs of coordinate is in the room (representing a square).
-	*
-	* Parameter:
-	*	x: the first x coordinate.
-	*	y: the first y coordinate.
-	*	x2: the second x coordinate.
-	*	y2: the second y coordinate.
-	*
-	* Return:
-	*	true if coordinates are in the room.
-	*/
-	bool inRoom(int x, int y, int x2, int y2);
-
-	/**
 	* Get door slot for the room.
 	*
 	* Parameter:
@@ -106,12 +92,43 @@ public:
 	*/
 	bool getVisited();
 
+	/**
+	* Sets a room as visited by player.
+	*/
 	void setVisisted();
 
+	/**
+	* Add adjacent room for current room and connect by door.
+	* 
+	* Parameter:
+	*	door: The door to connect the rooms.
+	*	room: The connecting room.
+	*/
 	void addAdjacentRoom(Door door, Room* room);
 
+	/**
+	* Check if 2 entities are in door range.
+	* 
+	* Parameter:
+	*	otherRoom: the room that the opposing entity is in.
+	*	entity1: The rectangle of the first entity.
+	*	entity2: The rectangle of the second entity.
+	* 
+	* Return:
+	*	Whether entities are in range.
+	*/
 	bool areEntitiesInDoorRange(Room* otherRoom, const sf::FloatRect& entity1, const sf::FloatRect& entity2);
 
+	/**
+	* Check if entity moving in a certain direction if it touches a door in that direction.
+	* 
+	* Parameter:
+	*	direction: Direction of movement.
+	*	entity: Entity touching the door.
+	* 
+	* Return:
+	*	Whether entity touch door.
+	*/
 	bool touchDoor(Direction direction, const sf::FloatRect& entity);
 };
 

@@ -2,17 +2,16 @@
 #define PLAYER_H
 
 #include "effect.h"
+#include "Floor/floor_object.h"
 #include "stat.h"
 #include <array>
-#include <SFML/Graphics/Rect.hpp>
-#include <SFML/Graphics/RectangleShape.hpp>
 #include <string>
 #include <vector>
 
 /**
 * Class to contain player's information and helps process the player's actions.
 */
-class Player : public sf::RectangleShape {
+class Player : public Floor_Object {
 private:
 	std::vector<Effect> effects;
 
@@ -282,14 +281,6 @@ public:
 	*	list of effects
 	*/
 	std::vector<Effect> getEffect();
-
-	/**
-	* Gets player's rectangle.
-	*
-	* Return:
-	*	Player's rectangle.
-	*/
-	sf::FloatRect getRect();
 };
 
 #endif

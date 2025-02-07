@@ -55,7 +55,7 @@ public:
 	* Return:
 	*	the sf::Font object.
 	*/
-	static sf::Font& get_selected();
+	static sf::Font& getSelected();
 
 	static unsigned int getNumFonts();
 

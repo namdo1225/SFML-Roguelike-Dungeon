@@ -12,6 +12,7 @@
 #include <SFML/Graphics/Rect.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Window/Event.hpp>
+#include <State/game_state.h>
 #include <string>
 #include <Tool/item.h>
 #include <Tool/special.h>

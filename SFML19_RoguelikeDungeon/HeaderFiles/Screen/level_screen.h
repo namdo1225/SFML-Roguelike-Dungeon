@@ -10,8 +10,8 @@
 */
 class Level_Screen : public Screen {
 private:
-	static std::array<long, StatConst::NUM_STATS> backup_stats;
-	static unsigned int backup_pts;
+	static std::array<long, StatConst::NUM_STATS> backupStats;
+	static unsigned int backupPts;
 	static bool reset;
 
 public:

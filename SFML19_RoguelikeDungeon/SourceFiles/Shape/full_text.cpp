@@ -22,7 +22,7 @@ const sf::Color Full_Text::dark_hover[THEMES] = { sf::Color(50, 50, 50), sf::Col
 
 Full_Text::Full_Text() {
 	sf::Text::setOutlineColor(sf::Color::Black);
-	setFont(get_selected());
+	setFont(getSelected());
 	setCharacterSize(24.f);
 	setStyle(sf::Text::Bold);
 }
@@ -44,7 +44,7 @@ Full_Text::Full_Text(float x, float y, float size, const char* text,
 
 	setCharacterSize(size > 0.f ? size : 24.f);
 	setString(text);
-	setFont(get_selected());
+	setFont(getSelected());
 	setStyle(sf::Text::Bold);
 
 	clickCallback = click;
@@ -54,7 +54,7 @@ void Full_Text::changeTheme() {
 	sf::Color fill = getFillColor();
 	sf::Color theme_fill = Setting_Manager::light ? light[theme] : dark[theme];
 	sf::Text::setFillColor(sf::Color(theme_fill.r, theme_fill.g, theme_fill.g, fill.a ? fill.a : 255));
-	setFont(Font_Manager::get_selected());
+	setFont(Font_Manager::getSelected());
 }
 
 void Full_Text::highlight(bool hovered) {

@@ -73,11 +73,6 @@ int Room::getRoom(char z) {
 	}
 }
 
-bool Room::inRoom(int x, int y, int x2, int y2) {
-	return (x >= getPosition().x && y >= getPosition().y &&
-		x2 <= getPosition().x + getSize().x && y2 <= getPosition().y + getSize().y);
-}
-
 std::array<std::vector<Door>, 4> Room::getDoors() { return doors; }
 
 void Room::draw(bool drawDoor) {

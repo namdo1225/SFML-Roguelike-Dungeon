@@ -11,8 +11,8 @@
 #include <Candle/RadialLight.hpp>
 #include <Floor/enemy.h>
 #include <format>
-#include <State/game_state.h>
 #include <Manager/setting_manager.h>
+#include <Manager/sf_manager.h>
 #include <Screen/screen.h>
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/System/Clock.hpp>
@@ -22,6 +22,7 @@
 #include <Shape/full_text.h>
 #include <Shape/full_textbox.h>
 #include <stat.h>
+#include <State/game_state.h>
 #include <string>
 #include <Tool/item.h>
 #include <Tool/special.h>
@@ -58,11 +59,11 @@ Game_Screen::Game_Screen() : Screen(false, false) {
 	light.setPosition(sf::Vector2f(620.f, 420.f));
 
 	for (int i = 0; i < 60; i++) {
-		grids[i] = i < 30 ? Full_Rectangle(i * 40.f, -10.f, 0.f, 900.f, false, true, sf::Color::Black, sf::Color::Black)
-			: Full_Rectangle(-10, (i - 30) * 40.f, 1300.f, 0.f, false, true, sf::Color::Black, sf::Color::Black);
+		grids[i] = i < 30 ? Full_Rectangle(i * TILE, -10.f, 0.f, 900.f, false, true, sf::Color::Black, sf::Color::Black)
+			: Full_Rectangle(-10, (i - 30) * TILE, 1300.f, 0.f, false, true, sf::Color::Black, sf::Color::Black);
 		grids[i].setOutlineThickness(1.f);
 	}
-	rangeBox = Full_Rectangle(600.f, 400.f, 40.f, 40.f, false, true, sf::Color(0, 255, 0, 50), sf::Color::Transparent);
+	rangeBox = Full_Rectangle(600.f, 400.f, TILE, TILE, false, true, sf::Color(0, 255, 0, 50), sf::Color::Transparent);
 	rangeBox.setOutlineThickness(0);
 
 	hoverableTextH("<", 985.f, 260.f, [this]() {
@@ -186,7 +187,7 @@ Game_Screen::Game_Screen() : Screen(false, false) {
 
 	// log button
 	textboxH("...", 1150.f, 500.f, 25.f, 25.f, []() {
-		log_view(true);
+		logView(true);
 		openDialog(Screen::display, LogScreen);
 	}, 5.0f);
 	textboxH("O", 1150.f, 525.f, 25.f, 25.f, [this]() {
@@ -268,7 +269,7 @@ void Game_Screen::handleHoverEvent() {
 	}
 
 	if (!enemyFound)
-		scanText.setString("Hover\nover\nenemies\nfor their\nstats.");
+		scanText.setString("Hover\nover\nenemies\nfor\nstats.");
 }
 
 void Game_Screen::draw() {
@@ -466,7 +467,7 @@ void Game_Screen::changeGrid() {
 	int x = Game_Manager::player.getPos('x') - DEFAULT_SCREEN_X / 2;
 	int y = Game_Manager::player.getPos('y') - DEFAULT_SCREEN_Y / 2;
 	for (int i = 0; i < 60; i++)
-		i < 30 ? grids[i].setPosition(sf::Vector2f(i * 40 + x, y)) : grids[i].setPosition(sf::Vector2f(x, (i - 30) * 40 + y));
+		i < 30 ? grids[i].setPosition(sf::Vector2f(i * TILE + x, y)) : grids[i].setPosition(sf::Vector2f(x, (i - 30) * TILE + y));
 
 	window.setView(viewUI);
 }

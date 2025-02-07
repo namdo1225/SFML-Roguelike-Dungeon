@@ -17,11 +17,12 @@
 #include <stat.h>
 #include <string>
 #include <vector>
+#include <Manager/sf_manager.h>
 
 Player::Player() {
-	setSize(sf::Vector2f(40, 40));
+	setSize(sf::Vector2f(SF_Manager::TILE, SF_Manager::TILE));
 	setFillColor(sf::Color::White);
-	setTextureRect(sf::IntRect(0, 0, 40, 40));
+	setTextureRect(sf::IntRect(0, 0, SF_Manager::TILE, SF_Manager::TILE));
 	setTexture(&Texture_Manager::player);
 }
 
@@ -154,8 +155,4 @@ void Player::resetEffect() {
 
 std::vector<Effect> Player::getEffect() {
 	return effects;
-}
-
-sf::FloatRect Player::getRect() {
-	return getGlobalBounds();
 }

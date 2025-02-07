@@ -40,7 +40,7 @@ private:
 	* Parameter:
 	*	v: Enemy's index.
 	*/
-	static void atkEnemy(Enemy& en);
+	static bool atkEnemy(Enemy& en);
 
 	/**
 	* Handles an enemy moving closer to the player.

@@ -13,6 +13,7 @@
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Window/Event.hpp>
 #include <Shape/full_textbox.h>
+#include <State/game_state.h>
 #include <string>
 #include <Tool/item.h>
 #include <Tool/tool.h>

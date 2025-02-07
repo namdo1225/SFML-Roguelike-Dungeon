@@ -81,14 +81,14 @@ void Game_Manager::actEnemy() {
     delEnemy();
     for (Enemy& en : enemies) {
         // Decide whether player is in range
-        float x{ player.getPosition().x }, y{ player.getPosition().y }, x_2{ x + 40 }, y_2{ y + 40 },
-            en_x{ en.getPosition().x }, en_y{ en.getPosition().y }, en_x2{ en_x + 40 }, en_y2{ en_y + 40 };
+        float x{ player.getPosition().x }, y{ player.getPosition().y }, x_2{ x + TILE }, y_2{ y + TILE },
+            en_x{ en.getPosition().x }, en_y{ en.getPosition().y }, en_x2{ en_x + TILE }, en_y2{ en_y + TILE };
         int chasePlChance{ rand() % 3 };
 
         // If so, attack.
         int range = en.stat.range;
-        if (en.intersectsRange(player.getRect()))
-            atkEnemy(en);
+        if (en.intersectsRange(player.getRect()) && atkEnemy(en))
+            return;
         // If not in range but detected, move closer.
         else if (x >= en_x - 240 && y_2 <= en_y2 + 240 && chasePlChance <= 1)
             moveEnemyClose(en);
@@ -107,7 +107,7 @@ void Game_Manager::findSpellShortcut(bool left) {
     selectedSpell = spellQuickIndex;
 }
 
-void Game_Manager::atkEnemy(Enemy& en) {
+bool Game_Manager::atkEnemy(Enemy& en) {
     Room* plRm = NULL;
     Room* enRm = NULL;
 
@@ -120,7 +120,7 @@ void Game_Manager::atkEnemy(Enemy& en) {
 
     // If they are both in different room, check if they are both directly in the direction of the same door. If not, return.
     if (plRm != enRm && !plRm->areEntitiesInDoorRange(enRm, player.getRect(), en.getGlobalBounds()))
-        return;
+        return false;
 
     Attack type = en.constant->type;
     int quantity = plArmor.getQuantity();
@@ -130,6 +130,8 @@ void Game_Manager::atkEnemy(Enemy& en) {
 
     addLog(std::format("{} did {} damage to you.", en.constant->name, damage).c_str());
     Audio_Manager::playSFX(2);
+
+    return true;
 }
 
 void Game_Manager::moveEnemyClose(Enemy& en) {
@@ -196,7 +198,7 @@ bool Game_Manager::canMoveEntity(sf::RectangleShape& entity, Direction direction
 }
 
 void Game_Manager::moveEnemyCloseH2(Enemy& en, Room& rm, bool randMovement) {
-    float x{ player.getPosition().x }, y{ player.getPosition().y }, x2{ x + 40 }, y2{ y + 40 };
+    float x{ player.getPosition().x }, y{ player.getPosition().y }, x2{ x + TILE }, y2{ y + TILE };
     float enx{ en.getPosition().x }, eny{ en.getPosition().y }, enx2{ enx + SF_Manager::TILE }, eny2{ eny + SF_Manager::TILE };
     int offX = 0;
     int offY = 0;
@@ -208,33 +210,33 @@ void Game_Manager::moveEnemyCloseH2(Enemy& en, Room& rm, bool randMovement) {
         if (enx == rm.getRoom('x')) {
             for (Room& room : floor.rooms)
                 if (room.touchDoor(Left, en.getGlobalBounds()))
-                    offX = -40;
+                    offX = -TILE;
         }
-        else offX = -40;
+        else offX = -TILE;
     }
     else if (randMovement ? direction == Top : y2 < eny && canMoveEntity(en, Top)) {
         if (eny == rm.getRoom('y')) {
             for (Room& room : floor.rooms)
                 if (room.touchDoor(Top, en.getGlobalBounds()))
-                    offY = -40;
+                    offY = -TILE;
         }
-        else offY = -40;
+        else offY = -TILE;
     }
     else if (randMovement ? direction == Right : x > enx2 && canMoveEntity(en, Right)) {
         if (enx2 == rm.getRoom('1')) {
             for (Room& room : floor.rooms)
                 if (room.touchDoor(Right, en.getGlobalBounds()))
-                    offX = 40;
+                    offX = TILE;
         }
-        else offX = 40;
+        else offX = TILE;
     }
     else if (randMovement ? direction == Bottom : y > eny2 && canMoveEntity(en, Bottom)) {
         if (eny2 == rm.getRoom('2')) {
             for (Room& room : floor.rooms)
                 if (room.touchDoor(Bottom, en.getGlobalBounds()))
-                    offY = 40;
+                    offY = TILE;
         }
-        else offY = 40;
+        else offY = TILE;
     }
 
     en.setPosition(en.getPosition().x + offX, en.getPosition().y + offY);
@@ -266,19 +268,19 @@ bool Game_Manager::movePlayer(sf::Keyboard::Key input) {
     switch (input) {
     case sf::Keyboard::Up:
         if (canMoveEntity(player, Top))
-            offy = -40;
+            offy = -TILE;
         break;
     case sf::Keyboard::Down:
         if (canMoveEntity(player, Bottom))
-            offy = 40;
+            offy = TILE;
         break;
     case sf::Keyboard::Left:
         if (canMoveEntity(player, Left))
-            offx = -40;
+            offx = -TILE;
         break;
     case sf::Keyboard::Right:
         if (canMoveEntity(player, Right))
-            offx = 40;
+            offx = TILE;
         break;
     }
 
@@ -822,14 +824,14 @@ void Game_Manager::save() {
     }
 
     try {
-        std::ofstream file_out{ Setting_Manager::saveLocation.empty() ? outPath : Setting_Manager::saveLocation };
-        if (!file_out) {
+        std::ofstream output{ Setting_Manager::saveLocation.empty() ? outPath : Setting_Manager::saveLocation };
+        if (!output) {
             addLog("Save not successful.");
             return;
         }
 
-        file_out << std::setw(4) << j << std::endl;
-        file_out.close();
+        output << std::setw(4) << j << std::endl;
+        output.close();
         free(outPath);
         addLog("Saved successfully.");
     }
@@ -1001,8 +1003,7 @@ void Game_Manager::handleTurn() {
     addEnemy();
 }
 
-Item* Game_Manager::getSelectedItem(std::vector<Item>& stocks)
-{
+Item* Game_Manager::getSelectedItem(std::vector<Item>& stocks) {
     switch (selectedInv) {
     case SelectNone:
         return NULL;

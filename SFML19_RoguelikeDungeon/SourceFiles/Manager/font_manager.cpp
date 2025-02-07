@@ -49,7 +49,7 @@ void Font_Manager::set(unsigned int i) {
         selected_font = i;
 }
 
-sf::Font& Font_Manager::get_selected() {
+sf::Font& Font_Manager::getSelected() {
     if (!loaded)
         load();
 

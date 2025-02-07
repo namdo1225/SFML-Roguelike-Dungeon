@@ -13,7 +13,7 @@ Exit_Screen::Exit_Screen() : Screen(false, false) {
 	rects[0].setFillColor(sf::Color(0, 0, 0, 128));
 	rects[0].setOutlineThickness(0.f);
 
-	textRectH(NULL, 200.f, 200.f, 800.f, 400.f);
+	textRectH(NULL, 200.f, 200.f, 800.f, 400.f, false);
 	textRectH("Unsaved changes will be lost.\nDo you still want to quit?", 450, 220, NULL, NULL);
 
 	textboxH("Back", 470.f, 340.f, 280.f, 40.f, []() {
@@ -27,8 +27,4 @@ Exit_Screen::Exit_Screen() : Screen(false, false) {
 	textboxH("Quit", 470.f, 500.f, 280.f, 40.f, []() {
 		window.close();
 	});
-
-	rects[0].setThemeAndHover(false);
-	rects[1].setThemeAndHover(false);
-	texts[0].setThemeAndHover(false);
 }

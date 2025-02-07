@@ -26,7 +26,7 @@ Tool::Tool(std::string name, std::string passedDesc, std::string abbrev,
 	icon.setStyle(sf::Text::Bold);
 	icon.setCharacterSize(30);
 
-	icon.setFont(Font_Manager::get_selected());
+	icon.setFont(Font_Manager::getSelected());
 	icon.setString(abbrev);
 	changeTheme();
 }

@@ -9,6 +9,7 @@
 #include <Floor/enemy.h>
 #include <Floor/room.h>
 #include <format>
+#include <Manager/sf_manager.h>
 #include <Screen/screen.h>
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/System/Vector2.hpp>
@@ -26,7 +27,7 @@ Spell_Attack_Screen::Spell_Attack_Screen() : Screen(true, false) {
 	textRectH("0", 400, 10.f, NULL, 3.f);
 	textRectH(" ", 200, 50.f, 12.f, 3.f);
 
-	rangeBox = Full_Rectangle(600.f, 400.f, 40.f, 40.f, false, true, sf::Color(0, 0, 255, 50), sf::Color::Transparent);
+	rangeBox = Full_Rectangle(600.f, 400.f, SF_Manager::TILE, SF_Manager::TILE, false, true, sf::Color(0, 0, 255, 50), sf::Color::Transparent);
 }
 
 bool Spell_Attack_Screen::handleClickEvent() {
@@ -37,7 +38,7 @@ bool Spell_Attack_Screen::handleClickEvent() {
 		return true;
 	}
 	else if (selected && selected->getMP() <= Game_Manager::player.getStat(Mp)) {
-		unsigned int range = selected->getRange() * 40;
+		unsigned int range = selected->getRange() * SF_Manager::TILE;
 		unsigned int plX = Game_Manager::player.getPos('x');
 		unsigned int plY = Game_Manager::player.getPos('y');
 

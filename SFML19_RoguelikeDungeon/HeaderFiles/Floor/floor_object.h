@@ -63,6 +63,23 @@ public:
 	* to drawing the object.
 	*/
 	virtual void draw();
+
+	/**
+	* Gets object's rectangle.
+	*
+	* Return:
+	*	Object's rectangle.
+	*/
+	sf::FloatRect getRect();
+
+	/**
+	* Set floor object's position.
+	* 
+	* Parameter:
+	*	x: the object's new x position.
+	*	y: the object's new y position.
+	*/
+	virtual void setPosition(float x, float y);
 };
 
 #endif

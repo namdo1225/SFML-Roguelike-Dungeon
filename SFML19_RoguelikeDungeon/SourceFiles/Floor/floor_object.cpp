@@ -12,8 +12,8 @@
 #include <Manager/sf_manager.h>
 
 Floor_Object::Floor_Object() {
-	setSize(sf::Vector2f(40, 40));
-	setTextureRect(sf::IntRect(0, 0, 40, 40));
+	setSize(sf::Vector2f(SF_Manager::TILE, SF_Manager::TILE));
+	setTextureRect(sf::IntRect(0, 0, SF_Manager::TILE, SF_Manager::TILE));
 }
 
 Floor_Object::Floor_Object(const sf::Texture &texture) : Floor_Object() {
@@ -34,4 +34,12 @@ bool Floor_Object::intersects(const sf::FloatRect& rect) {
 
 void Floor_Object::draw() {
 	SF_Manager::window.draw(*this);
+}
+
+sf::FloatRect Floor_Object::getRect() {
+	return getGlobalBounds();
+}
+
+void Floor_Object::setPosition(float x, float y) {
+	sf::RectangleShape::setPosition(x, y);
 }

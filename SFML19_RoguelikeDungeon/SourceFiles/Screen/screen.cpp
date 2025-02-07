@@ -343,15 +343,12 @@ void Screen::changeSettings() {
 				rect.changeTheme();
 			for (Full_Text& text : screens[i]->texts) {
 				text.changeTheme();
-				text.setFont(Font_Manager::get_selected());
 			}
 			for (Full_Text& text : screens[i]->hoverableTexts) {
 				text.changeTheme();
-				text.setFont(Font_Manager::get_selected());
 			}
 			for (Full_Textbox& textbox : screens[i]->textboxes) {
 				textbox.text.changeTheme();
-				textbox.text.setFont(Font_Manager::get_selected());
 				textbox.rect.changeTheme();
 			}
 		}
@@ -366,32 +363,23 @@ void Screen::changeSettings() {
 	std::map<std::string, Full_Text>::iterator it_t = map_txts.begin();
 	while (it_t != map_txts.end()) {
 		it_t->second.changeTheme();
-		it_t->second.setFont(Font_Manager::get_selected());
 		it_t++;
 	}
 
-	for (Full_Text& text : stat_full_txts) {
+	for (Full_Text& text : stat_full_txts)
 		text.changeTheme();
-		text.setFont(Font_Manager::get_selected());
-	}
 
-	for (Full_Text& text : stat_curr_txts) {
+	for (Full_Text& text : stat_curr_txts)
 		text.changeTheme();
-		text.setFont(Font_Manager::get_selected());
-	}
 
-	for (Full_Text& text : stat_curr_arrows) {
+	for (Full_Text& text : stat_curr_arrows)
 		text.changeTheme();
-		text.setFont(Font_Manager::get_selected());
-	}
 
 	for (Full_Rectangle& rect : inv_sp_slots)
 		rect.changeTheme();
 
-	for (Full_Text& text : logs) {
+	for (Full_Text& text : logs)
 		text.changeTheme();
-		text.setFont(Font_Manager::get_selected());
-	}
 }
 
 void Screen::handleKeyEvent() {

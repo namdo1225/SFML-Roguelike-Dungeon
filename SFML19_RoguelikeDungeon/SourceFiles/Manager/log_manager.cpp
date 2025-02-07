@@ -29,7 +29,7 @@ void Log_Manager::addLog(const char* log) {
         logs[i].setPosition(755.f, 500.f + 30.f * offset);
 }
 
-void Log_Manager::log_view(bool screen) {
+void Log_Manager::logView(bool screen) {
     if (screen) {
         for (unsigned int i = 0; i < logs.size(); i++)
             logs[i].setPosition(60.f, 120.f + 30.f * i);
