@@ -93,8 +93,9 @@ void Level_Screen::draw() {
 		window.draw(text);
 	for (Full_Text& text : stat_curr_txts)
 		window.draw(text);
-	for (unsigned int i = NUM_NON_CUR_STATS; i < NUM_NON_CUR_STATS * 2; i++)
-		window.draw(stat_curr_arrows[i]);
+	if (Game_Manager::player.getStatPts() > 0)
+		for (unsigned int i = NUM_NON_CUR_STATS; i < NUM_NON_CUR_STATS * 2; i++)
+			window.draw(stat_curr_arrows[i]);
 }
 
 void Level_Screen::updateDraw() {

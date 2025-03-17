@@ -84,8 +84,13 @@ void Stat_Screen::draw() {
 		window.draw(text);
 	for (Full_Text& text : stat_curr_txts)
 		window.draw(text);
-	for (Full_Text& text : stat_curr_arrows)
-		window.draw(text);
+	for (unsigned int i = 0; i < NUM_NON_CUR_STATS * 2; i++) {
+		Stat st = (Stat)(i % 6);
+		long curStat = Game_Manager::player.getStat(st);
+
+		if ((i < NUM_NON_CUR_STATS && curStat > (i == Max_Hp ? 5 : 0)) || (i >= NUM_NON_CUR_STATS && Game_Manager::player.getStatPts() > 0))
+			window.draw(stat_curr_arrows[i]);
+	}
 }
 
 void Stat_Screen::updateDraw() {
