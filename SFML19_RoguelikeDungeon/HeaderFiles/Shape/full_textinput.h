@@ -1,6 +1,7 @@
 #include "full_rectangle.h"
 #include "full_text.h"
 #include "Manager/sf_manager.h"
+#include <climits>
 
 #ifndef FULL_TEXTINPUT_H
 #define FULL_TEXTINPUT_H
@@ -33,6 +34,9 @@ private:
 	InputValidation validation = AllValidation;
 	static Full_TextInput* chosenInput;
 
+	int minNumber = INT_MIN;
+	int maxNumber = INT_MAX;
+
 public:
 	Full_Rectangle rect;
 	Full_Text text;
@@ -51,7 +55,8 @@ public:
 	*	fontSize: optional font size.
 	*	fontOutline: optional font outline.
 	*/
-	Full_TextInput(const char* defaultText, unsigned int length, float x, float y, float w, float h, InputValidation validation, float fontSize = 0.f, float fontOutline = 0.f);
+	Full_TextInput(const char* defaultText, unsigned int length, float x, float y, float w, float h, InputValidation validation,
+		float fontSize = 0.f, float fontOutline = 0.f, int minNumber = INT_MIN, int maxNumber = INT_MAX);
 
 	/**
 	* Manages the focus of the text input
@@ -70,6 +75,11 @@ public:
 	* Clears text input.
 	*/
 	void clear();
+
+	/*
+	* Unfocuses currently chosen input if available.
+	*/
+	static void unfocus();
 };
 
 #endif

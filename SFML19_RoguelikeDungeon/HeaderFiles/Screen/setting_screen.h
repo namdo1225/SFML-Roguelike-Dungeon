@@ -19,8 +19,6 @@ public:
 
 	static bool light_mode;
 	static unsigned int theme;
-	static unsigned int sfxVolume;
-	static unsigned int musicVolume;
 	static unsigned int font;
 	static std::string saveLocation;
 };

@@ -192,8 +192,11 @@ void Screen::hoverableTextH(const char* text, float x, float y, std::function<vo
 	hoverableTexts[hoverableTexts.size() - 1].setPhysical(x, y, text, fontSize, fontOutline);
 }
 
-void Screen::textInputH(const char* defaultText, unsigned int length, float x, float y, float w, float h, InputValidation validation, float fontSize, float fontOutline) {
-	textInputs.push_back(Full_TextInput(defaultText, length, x, y, w, h, validation, fontSize, fontOutline));
+void Screen::textInputH(const char* defaultText, unsigned int length, float x, float y, float w, float h, InputValidation validation,
+	float fontSize, float fontOutline, int minNumber, int maxNumber) {
+	textInputs.push_back(
+		Full_TextInput(defaultText, length, x, y, w, h, validation, fontSize, fontOutline, minNumber, maxNumber)
+	);
 }
 
 bool Screen::mouseInH(bool element, unsigned int i, View view) {
@@ -283,12 +286,14 @@ void Screen::switchScreen(Display oldScreen, Display newScreen, bool push, bool 
 		prev_displays.push_back(oldScreen);
 	if (clear)
 		prev_displays.clear();
+	Full_TextInput::unfocus();
 }
 
 void Screen::openDialog(Display oldScreen, Display newScreen) {
 	visibilities[newScreen] = true;
 	display = newScreen;
 	prev_displays.push_back(oldScreen);
+	Full_TextInput::unfocus();
 }
 
 void Screen::openMessage(Display oldScreen, const char* newMsg, Msg category) {
@@ -310,6 +315,7 @@ void Screen::openMessage(Display oldScreen, const char* newMsg, Msg category) {
 		screens[MessageScreen]->texts[0].setFillColor(sf::Color::Green);
 		break;
 	}
+	Full_TextInput::unfocus();
 }
 
 bool Screen::hoverTextRect(unsigned int i, int j) {
@@ -348,6 +354,10 @@ void Screen::changeSettings() {
 				text.changeTheme();
 			}
 			for (Full_Textbox& textbox : screens[i]->textboxes) {
+				textbox.text.changeTheme();
+				textbox.rect.changeTheme();
+			}
+			for (Full_TextInput& textbox : screens[i]->textInputs) {
 				textbox.text.changeTheme();
 				textbox.rect.changeTheme();
 			}

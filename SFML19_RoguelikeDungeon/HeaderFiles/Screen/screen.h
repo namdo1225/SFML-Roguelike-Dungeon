@@ -3,6 +3,7 @@
 #include "Shape/full_rectangle.h"
 #include "Shape/full_text.h"
 #include "Shape/full_textbox.h"
+#include <climits>
 #include <functional>
 #include <Manager/sf_manager.h>
 #include <map>
@@ -111,7 +112,8 @@ protected:
 	/*
 	* Helper to setup hoverable and clickable texts.
 	*/
-	void textInputH(const char* defaultText, unsigned int length, float x, float y, float w, float h, InputValidation validation, float fontSize = 0.f, float fontOutline = 0.f);
+	void textInputH(const char* defaultText, unsigned int length, float x, float y, float w, float h, InputValidation validation, float fontSize = 0.f, float fontOutline = 0.f,
+		int minNumber = INT_MIN, int maxNumber = INT_MAX);
 
 	/**
 	* Helper method to check mouse in shape.
